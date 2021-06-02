@@ -111,8 +111,8 @@ for (i_indicator in indicators) {
     ) %>%
     mutate(
       age_group = fct_relevel(age_group, "Y020_024"),
-      area_idx.15to19 = ifelse(age_group != "Y015_019", area_idx, NA),
-      area_idx.25to29 = ifelse(age_group != "Y025_029", area_idx, NA)
+      area_idx.15to19 = ifelse(age_group == "Y015_019", area_idx, NA),
+      area_idx.25to29 = ifelse(age_group == "Y025_029", area_idx, NA)
     )
 
   df_15to24 <- df %>%
