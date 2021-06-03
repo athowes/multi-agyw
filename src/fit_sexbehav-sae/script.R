@@ -112,6 +112,7 @@ for (i_indicator in indicators) {
     mutate(
       age_group = fct_relevel(age_group, "Y020_024"),
       area_idx.15to19 = ifelse(age_group == "Y015_019", area_idx, NA),
+      area_idx.20to24 = ifelse(age_group == "Y020_024", area_idx, NA),
       area_idx.25to29 = ifelse(age_group == "Y025_029", area_idx, NA)
     )
 
@@ -124,8 +125,8 @@ for (i_indicator in indicators) {
   #' family = "xbinomial": binomial model with non-integer counts
 
   fit_age <- inla(x_eff ~ age_group +
-                    f(area_idx, model = "bym2", graph = adjM) +
                     f(area_idx.15to19, model = "bym2", graph = adjM) +
+                    f(area_idx.20to24, model = "bym2", graph = adjM) +
                     f(area_idx.25to29, model = "bym2", graph = adjM),
                   family = "xbinomial", Ntrials = n_eff_kish, data = df_age,
                   control.predictor = list(link = 1),
@@ -138,7 +139,7 @@ for (i_indicator in indicators) {
                      control.compute = list(config = TRUE))
 
   df_age <- df_age %>%
-    select(-area_idx.15to19, - area_idx.25to29) %>%
+    select(-area_idx.15to19, -area_idx.20to24, -area_idx.25to29) %>%
     bind_cols(
       select(fit_age$summary.fitted.values,
              mean,
