@@ -53,10 +53,12 @@ database: ~
 # The fields must not clash with built-in field names.
 fields: ~
 
-remote:
-  real:
-    driver: orderly.sharepoint::orderly_remote_sharepoint
-    args:
-      url: https://imperiallondon.sharepoint.com
-      site: HIVInferenceGroup-WP
-      path: Shared Documents/orderly/naomi-data-orderly
+# # Add this eventually
+#
+# remote:
+#   real:
+#     driver: orderly.sharepoint::orderly_remote_sharepoint
+#     args:
+#       url: https://imperiallondon.sharepoint.com
+#       site: HIVInferenceGroup-WP
+#       path: Shared Documents/orderly/naomi-data-orderly
