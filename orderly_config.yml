@@ -62,3 +62,6 @@ fields: ~
 #       url: https://imperiallondon.sharepoint.com
 #       site: HIVInferenceGroup-WP
 #       path: Shared Documents/orderly/naomi-data-orderly
+
+global_resources:
+  global
