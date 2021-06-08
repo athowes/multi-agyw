@@ -1,0 +1,21 @@
+script: script.R
+
+artefacts: ~
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+
+depends:
+  fit_sexbehav-sae:
+    id: latest
+    use:
+      depends/smoothed-district-sexbehav.csv: smoothed-district-sexbehav.csv
