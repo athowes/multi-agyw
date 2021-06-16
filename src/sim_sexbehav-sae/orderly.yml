@@ -1,5 +1,11 @@
 script: script.R
 
+artefacts:
+  - data:
+      description: Simulated multinomial data
+      filenames:
+        - simulated-sexbehav.csv
+
 parameters:
   iso3:
     default: MWI

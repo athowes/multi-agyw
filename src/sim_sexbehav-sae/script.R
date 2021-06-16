@@ -1,5 +1,5 @@
-orderly::orderly_develop_start("sim_sexbehav-sae")
-setwd("src/sim_sexbehav-sae/")
+# orderly::orderly_develop_start("sim_sexbehav-sae")
+# setwd("src/sim_sexbehav-sae/")
 
 #' Create df dataframe from which to add simulated data
 
@@ -76,3 +76,5 @@ samp_Y025_029 <- tall_rmultinomial(n = m * nrow(areas_model), prob = prob_Y025_0
 
 #' Add multinomial samples data to df
 df$y <- c(samp_Y015_019, samp_Y020_024, samp_Y025_029)
+
+write_csv(df, "simulated-sexbehav.csv", na = "")

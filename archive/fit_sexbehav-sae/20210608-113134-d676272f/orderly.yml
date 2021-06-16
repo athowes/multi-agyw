@@ -1,0 +1,57 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Smoothed district indicator estimates
+      filenames:
+        - smoothed-district-sexbehav.csv
+        - smoothed-district-sexbehav.pdf
+
+displayname: Malawi smoothed sexual behaviour indicator estimates
+
+description: |
+   For each indicator, create a dataset containing
+   * Raw district level observations
+   * 'Level 1' aggregated estimate
+   * Spatially smoothed district estimates with BYM2 model
+
+   Two separate models are fit for age stratified (15-19, 20-24, 25-29) and
+   aggregate 15-24 age group estimate. But it would be preferable to derive
+   the age 15-24 estimate as a weighted aggregation of the 15-19 and 20-24
+   age groups.
+
+   The way this is written assumes that only a single survey is used and
+   that there is only 1 row per district / indicator / age group stratification.
+   This can be written differently if needed.
+
+parameters:
+  iso3:
+    default: MWI
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+
+# # To be included if in naomi-orderly
+#
+# depends:
+# mwi_data_areas:
+#   id: latest
+#   use:
+#     depends/mwi_areas.geojson: mwi_areas.geojson
+# mwi_data_survey_behav:
+#   id: latest
+#   use:
+#     depends/mwi_survey_indicators_sexbehav.csv: mwi_survey_indicators_sexbehav.csv
+
+global_resources:
+  depends/mwi_areas.geojson: mwi_areas.geojson
+  depends/mwi_survey_indicators_sexbehav.csv: mwi_survey_indicators_sexbehav.csv
