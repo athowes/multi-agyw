@@ -1,0 +1,21 @@
+script: script.R
+
+parameters:
+  iso3:
+    default: MWI
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+
+global_resources:
+  depends/mwi_areas.geojson: mwi_areas.geojson
+  depends/mwi_survey_indicators_sexbehav.csv: mwi_survey_indicators_sexbehav.csv
