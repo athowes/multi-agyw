@@ -12,7 +12,10 @@ This repository is an [`orderly`](https://github.com/vimc/orderly) project, with
 ## To-do
 
 - [ ] Format data from the most recent DHS survey in Malawi for multinomial model, and resolve any issues
-- [ ] Generate simulated data to test model and allow model building concurrently
+- [x] Generate simulated data to test model and allow model building concurrently
+  - See `src/sim_sexbehav`
+- [ ] Figure out how to deal with survey weights for multinomial data (see if Jeff or Seth knows anything about this)
+  - Example found by Kinh [Multinomial additive hazard model to assess the disability burdenusing cross-sectional data](https://core.ac.uk/download/pdf/95690175.pdf), where they put the weights in the log-likelihood
 - [ ] Fit model (to simulated data) using `R-INLA` and Poisson trick or `TMB`
 - [ ] Decide smoothing structure (space and age) between categories
 - [ ] Decide structure for multinomial model (baseline category, nested, etc.)
