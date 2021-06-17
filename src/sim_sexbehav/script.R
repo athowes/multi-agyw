@@ -84,6 +84,7 @@ samp_Y025_029 <- tall_rmultinomial(n = m * nrow(areas_model), prob = prob_Y025_0
 stopifnot(nrow(df) == nrow(areas_model) * m * length(age_groups) * K)
 
 df <- df %>%
+  arrange(age_group) %>%
   mutate(obs_idx = rep(1:(m * nrow(areas_model) * length(age_groups)), each = K),
          y = c(samp_Y015_019, samp_Y020_024, samp_Y025_029))
 
