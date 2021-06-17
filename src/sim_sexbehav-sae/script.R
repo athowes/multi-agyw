@@ -1,3 +1,4 @@
+#' Uncomment and run the two line below to resume development of this script
 # orderly::orderly_develop_start("sim_sexbehav-sae")
 # setwd("src/sim_sexbehav-sae/")
 
@@ -62,7 +63,7 @@ m <- 50
 df <- df %>%
   dplyr::slice(rep(1:n(), each = K)) %>%
   dplyr::mutate(cat_idx = rep(1:K, times = n() / K)) %>%
-  dplyr::slice(rep(1:n(), each = m))
+  dplyr::slice(rep(row_number(), m))
 
 #' Tall format: (1 x n * length(prob))) length vector
 tall_rmultinomial <- function(n, prob) {
