@@ -54,6 +54,7 @@ prob <- matrix(
 )
 
 rownames(prob) <- c("Y015_019", "Y020_024", "Y025_029")
+colnames(prob) <- c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")
 cbind(truth = colMeans(prob), pred = exp(etas) / sum(exp(etas)))
 
 #' Model 3.
@@ -64,22 +65,38 @@ cbind(truth = colMeans(prob), pred = exp(etas) / sum(exp(etas)))
 df <- mutate(df, age_idx = case_when(
   age_group == "Y015_019" ~ 1,
   age_group == "Y020_024" ~ 2,
-  age_group == "Y025_029" ~ 3
+  age_group == "Y025_029" ~ NA_real_
 ))
 
 formula3 <- y ~ -1 + f(obs_idx, initial = -10, fixed = TRUE) +
-  f(cat_idx, model = "iid") +
-  f(age_idx, model = "iid")
+  f(cat_idx, model = "iid", fixed = TRUE, constr = TRUE) +
+  f(age_idx, model = "iid", fixed = TRUE, constr = TRUE)
 
 fit3 <- inla(formula3, data = df, family = "Poisson",
              control.predictor = list(link = 1),
              control.compute = list(config = TRUE))
 
 #' The first indexes for 15-19 are 1:4, 20-24 are 133:136 and 25-29 are 265:268
-#' But for some reason the linear predictors are all the same
-fit3$summary.linear.predictor$mean[1:4]
-fit3$summary.linear.predictor$mean[133:136]
-fit3$summary.linear.predictor$mean[265:268]
+#' (but for some reason the linear predictors are all the same)
+
+calculate_pred <- function(fit) {
+  etas_Y015_019 <- fit$summary.linear.predictor$mean[1:4]
+  etas_Y020_024 <-fit$summary.linear.predictor$mean[133:136]
+  etas_Y025_029 <-fit$summary.linear.predictor$mean[265:268]
+
+  pred <- t(sapply(
+    list(etas_Y015_019, etas_Y020_024, etas_Y025_029),
+    function(x) exp(x) / sum(exp(x))
+  ))
+
+  rownames(pred) <- c("Y015_019", "Y020_024", "Y025_029")
+  colnames(pred) <- c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")
+
+  return(pred)
+}
+
+#' Getting this wrong still!
+list(truth = prob, pred = calculate_pred(fit3))
 
 #' The category specific random effects are the same as in Model 2
 fit3$summary.random$cat_idx
@@ -88,3 +105,24 @@ fit2$summary.random$cat_idx
 #' The age specific random effects are approximately zero
 #' Don't know why this is. Identifiability issues?
 fit3$summary.random$age_idx
+
+#' The empirical probabilities are as follows
+#' So it's not a problem wih the simulated data
+df %>%
+  group_by(age_group, cat_idx) %>%
+  summarise(y_mean = mean(y))
+
+#' Model 4.
+#' Trying age group as a covariate (?)
+#' Doesn't seem to be working
+
+formula4 <- y ~ -1 + f(obs_idx, initial = -10, fixed = TRUE) +
+  f(cat_idx, age_idx, model = "iid", fixed = TRUE, constr = TRUE)
+
+fit4 <- inla(formula4, data = df, family = "Poisson",
+             control.predictor = list(link = 1),
+             control.compute = list(config = TRUE))
+
+fit4$summary.random$cat_idx
+fit4$summary.linear.predictor
+calculate_pred(fit4)
