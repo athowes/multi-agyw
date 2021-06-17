@@ -1,8 +1,6 @@
 script: script.R
 
-parameters:
-  iso3:
-    default: MWI
+artefacts: ~
 
 packages:
   - dplyr
@@ -17,11 +15,7 @@ packages:
   - tidyr
 
 depends:
-mwi_data_areas:
-  id: latest
-  use:
-    depends/mwi_areas.geojson: mwi_areas.geojson
-mwi_data_survey_behav:
-  id: latest
-  use:
-    depends/mwi_survey_indicators_sexbehav.csv: mwi_survey_indicators_sexbehav.csv
+  sim_sexbehav:
+    id: latest
+    use:
+      depends/simulated-sexbehav.csv: simulated-sexbehav.csv
