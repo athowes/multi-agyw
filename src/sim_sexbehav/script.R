@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("sim_sexbehav-sae")
-# setwd("src/sim_sexbehav-sae/")
+# orderly::orderly_develop_start("sim_sexbehav")
+# setwd("src/sim_sexbehav/")
 
 #' Create df dataframe from which to add simulated data
 
@@ -36,9 +36,11 @@ areas_model <- areas_model %>%
   arrange(area_sort_order) %>%
   mutate(area_idx = row_number())
 
+#' Only using three age groups here
+age_groups <- c("Y015_019", "Y020_024", "Y025_029")
+
 df <- crossing(
-  #' Only using three age groups here
-  age_group = c("Y015_019", "Y020_024", "Y025_029"),
+  age_group = age_groups,
   areas_model %>%
     st_drop_geometry() %>%
     select(area_id, area_name, area_idx, area_id_aggr,
@@ -65,9 +67,10 @@ df <- df %>%
   dplyr::mutate(cat_idx = rep(1:K, times = n() / K)) %>%
   dplyr::slice(rep(row_number(), m))
 
-#' Tall format: (1 x n * length(prob))) length vector
+#' Tall format: (1 x n * K) length vector
 tall_rmultinomial <- function(n, prob) {
-  as.vector(replicate(n, rmultinom(1, 1, prob = prob), simplify = TRUE))
+  replicate(n, rmultinom(1, 1, prob = prob), simplify = TRUE) %>%
+    as.vector()
 }
 
 #' nrow(areas_model) is the number of areas
@@ -75,7 +78,13 @@ samp_Y015_019 <- tall_rmultinomial(n = m * nrow(areas_model), prob = prob_Y015_0
 samp_Y020_024 <- tall_rmultinomial(n = m * nrow(areas_model), prob = prob_Y020_024)
 samp_Y025_029 <- tall_rmultinomial(n = m * nrow(areas_model), prob = prob_Y025_029)
 
-#' Add multinomial samples data to df
-df$y <- c(samp_Y015_019, samp_Y020_024, samp_Y025_029)
+#' Add multinomial samples data, and index for the observation to df
+#' There are a total of m * nrow(areas_model) multinomial observations for each age category
+#' and the total number of rows of df is given as follows
+stopifnot(nrow(df) == nrow(areas_model) * m * length(age_groups) * K)
+
+df <- df %>%
+  mutate(obs_idx = rep(1:(m * nrow(areas_model) * length(age_groups)), each = K),
+         y = c(samp_Y015_019, samp_Y020_024, samp_Y025_029))
 
 write_csv(df, "simulated-sexbehav.csv", na = "")
