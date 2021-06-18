@@ -39,6 +39,42 @@ complete_sex12m <- use_data %>%
 
 nrow(complete_sex12m) / nrow(use_data)
 
+#' Study the incomplete rows
+incomplete_eversex <- use_data %>%
+  mutate(r_sum = nosex + sexcohab + sexnonreg + sexpaid12m) %>%
+  filter(r_sum != 1) %>%
+  select(-nosex12m)
+
+#' All of them have an r_sum value of 2
+summary(incomplete_eversex$r_sum)
+
+#' There is only joint occurrence of
+#' sexnonreg, sexpaid12m
+#' sexcohab, sexpaid12m
+#' which thankfully seems quite easy to solve
+incomplete_eversex %>%
+  group_by(nosex, sexcohab, sexnonreg, sexpaid12m) %>%
+  summarise(count = n())
+
+#' What about for sex12m?
+incomplete_sex12m <- use_data %>%
+  mutate(r_sum = nosex12m + sexcohab + sexnonreg + sexpaid12m) %>%
+  filter(r_sum != 1) %>%
+  select(-nosex)
+
+#' All of them also have an r_sum value of 2
+summary(incomplete_sex12m$r_sum)
+
+#' Here we have joint occurrence of
+#' sexnonreg, sexpaid12m
+#' sexcohab, sexpaid12m
+#' nosex12m, sexpaid12m
+#' which is a little more difficult (nosex12m and sexpaid12m!)
+#' but still quite simple
+incomplete_sex12m %>%
+  group_by(nosex12m, sexcohab, sexnonreg, sexpaid12m) %>%
+  summarise(count = n())
+
 #' Work with the complete_eversex for now
 complete <- complete_eversex
 
