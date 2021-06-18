@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-orderly::orderly_develop_start("dev_multi-sexbehav-sae")
-setwd("src/dev_multi-sexbehav-sae/")
+orderly::orderly_develop_start("fit_sim-multi-sexbehav-sae")
+setwd("src/fit_sim-multi-sexbehav-sae/")
 
 #' Add age specific identifier
 df <- read_csv("depends/simulated-sexbehav.csv")
