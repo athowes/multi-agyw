@@ -132,3 +132,17 @@ fit4 <- inla(formula4, data = df, family = "Poisson",
 
 #' Got it!
 list(truth = prob, pred = calculate_pred(fit4))
+
+#' Model 5.
+#' Kinh's version of the interaction
+
+formula5 <- y ~ -1 + f(obs_idx, hyper = list(prec = list(initial = log(0.000001), fixed = TRUE))) +
+  f(cat_idx, age_idx, model = "iid", constr = TRUE, hyper = list(prec = list(initial = log(0.001), fixed = TRUE)))
+
+fit5 <- inla(formula5, data = df, family = "Poisson",
+             control.predictor = list(link = 1),
+             control.compute = list(config = TRUE))
+
+#' Appears to be doing something different to Model 4.
+fit5$summary.random
+list(truth = prob, pred = calculate_pred(fit5))
