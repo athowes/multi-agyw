@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("data_prep")
-# setwd("src/data_prep")
+# orderly::orderly_develop_start("fit_multi-sexbehav-sae")
+# setwd("src/fit_multi-sexbehav-sae")
 
 #' Note that this script requires a specific version of the naomi.utils package
 #' This can be installed by following:
@@ -17,10 +17,15 @@ use_data <- sexbehav %>%
 	mutate(nosex12m = 1 - sex12m,
 	       nosex = 1 - eversex) %>%
   select(-sex12m, -eversex, -sti12m) %>%
+  relocate(nosex, nosex12m, .after = individual_id) %>%
 	bind_cols(select(dhs, cluster_id, sex, age, indweight))
 
-#' Check for overlapping (in more that one category) and ignore them for now
-#' TODO: Find a better way to deal with this
+#' Check the empirical proportions in each
+use_data %>%
+  select(nosex, nosex12m, sexcohab, sexnonreg, sexpaid12m) %>%
+  colMeans(na.rm = TRUE)
+
+#' Check for overlapping (in more that one category)
 
 #' First do this with eversex
 complete_eversex <- use_data %>%
@@ -85,7 +90,7 @@ data_indiv <- complete %>%
 	mutate(age_idx = findInterval(age, c(15, 20, 25, 30))) %>%
 	select(-survey_id, -individual_id, -indweight, -sex, -age) %>%
 	mutate(obs_idx = 1:n()) %>%
-	pivot_longer(sexcohab:nosex, values_to = "y", names_to = "cat_idx") %>%
+	pivot_longer(nosex:sexpaid12m, values_to = "y", names_to = "cat_idx") %>%
 	mutate(cat_idx = as.integer(as.factor(cat_idx)),
 	       age_cat_idx = interaction(age_idx, cat_idx))
 
@@ -103,9 +108,29 @@ fit_indiv <- inla(formula, data = data_indiv, family = "Poisson",
 data_indiv$eta <- fit_indiv$summary.linear.predictor$mean
 
 #' Compute probabilities
-#' TODO: Group by and filter to see the age_idx and cat_idx breakdown
 prob <- zoo::rollapply(data_indiv$eta, 4, by = 4, function(x) exp(x) / sum(exp(x)), partial = TRUE, align = "left")
 data_indiv$prob <- as.vector(t(prob))
+
+pred <- data_indiv %>%
+  group_by(age_idx, cat_idx) %>%
+  summarise(prob = mean(prob)) %>%
+  spread(key = cat_idx, value = prob) %>%
+  rename(prob_nosex = `1`,
+         prob_sexcohab = `2`,
+         prob_sexnonreg = `3`,
+         prob_sexpaid12m = `4`)
+
+#' These are the empirical probabilities from the data for each of the three age categories
+truth <- complete %>%
+  filter(sex == "female", age < 30) %>%
+  mutate(age_idx = findInterval(age, c(15, 20, 25, 30))) %>%
+  group_by(age_idx) %>%
+  summarise(prob_nosex = mean(nosex),
+            prob_sexcohab = mean(sexcohab),
+            prob_sexnonreg = mean(sexnonreg),
+            prob_sexpaid12m = mean(sexpaid12m))
+
+list(truth = truth, pred = pred)
 
 #' This considers each combination of age and cluster_id as a multinomial trial of n_i
 #' TODO: How to treat weights, n_eff_kish?
