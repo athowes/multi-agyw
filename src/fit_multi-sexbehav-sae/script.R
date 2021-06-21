@@ -80,12 +80,22 @@ incomplete_sex12m %>%
   group_by(nosex12m, sexcohab, sexnonreg, sexpaid12m) %>%
   summarise(count = n())
 
-#' Work with the complete_eversex for now
-complete <- complete_eversex
+#' Fix data by setting all rows with have sexpaid12m to be in that category
+#' Use eversex for now
+use_data <- use_data %>%
+  filter(sexpaid12m == 1) %>%
+  mutate(nosex = 0, nosex12m = 0, sexcohab = 0, sexnonreg = 0) %>%
+  select(-nosex12m)
+
+#' Verify no overlap
+stopifnot(
+  mutate(use_data, r_sum = nosex + sexcohab + sexnonreg + sexpaid12m) %>%
+    filter(r_sum != 1) %>% nrow() == 0
+)
 
 #' This considers each individual as a single multinomial trial
 #' It may be easier to get the weight into the likelihood but would take longer time to fit
-data_indiv <- complete %>%
+data_indiv <- use_data %>%
 	filter(sex == "female", age < 30) %>%
 	mutate(age_idx = findInterval(age, c(15, 20, 25, 30))) %>%
 	select(-survey_id, -individual_id, -indweight, -sex, -age) %>%
@@ -121,7 +131,7 @@ pred <- data_indiv %>%
          prob_sexpaid12m = `4`)
 
 #' These are the empirical probabilities from the data for each of the three age categories
-truth <- complete %>%
+truth <- use_data %>%
   filter(sex == "female", age < 30) %>%
   mutate(age_idx = findInterval(age, c(15, 20, 25, 30))) %>%
   group_by(age_idx) %>%
@@ -135,7 +145,7 @@ list(truth = truth, pred = pred)
 #' This considers each combination of age and cluster_id as a multinomial trial of n_i
 #' TODO: How to treat weights, n_eff_kish?
 #' TODO: Map cluster_id to regions of interest
-data_aggregate <- complete %>%
+data_aggregate <- use_data %>%
   filter(sex == 'female', age < 30) %>%
 	mutate(age_idx = findInterval(age, c(15, 20, 25, 30))) %>%
   select(-survey_id, -individual_id, -indweight, -sex, -age) %>%
