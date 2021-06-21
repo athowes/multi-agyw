@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-orderly::orderly_develop_start("fit_sim-multi-sexbehav-sae")
-setwd("src/fit_sim-multi-sexbehav-sae/")
+# orderly::orderly_develop_start("fit_sim-multi-sexbehav-sae")
+# setwd("src/fit_sim-multi-sexbehav-sae/")
 
 #' Add age specific identifier
 df <- read_csv("depends/simulated-sexbehav.csv")
@@ -76,19 +76,19 @@ fit3 <- inla(formula3, data = df, family = "Poisson",
              control.compute = list(config = TRUE))
 
 #' The first indexes for 15-19 are 1:4, 20-24 are 6601:6604 and 25-29 are 13201:13204
+i_start_Y015_019 <- min(which(df$age_idx == 1))
+i_start_Y020_024 <- min(which(df$age_idx == 2))
+i_start_Y025_029 <- min(which(df$age_idx == 3))
 
-min(which(df$age_idx == 2))
-min(which(df$age_idx == 3))
+#' Softmax function https://en.wikipedia.org/wiki/Softmax_function
+softmax <- function(x) exp(x) / sum(exp(x))
 
 calculate_pred <- function(fit) {
-  etas_Y015_019 <- fit$summary.linear.predictor$mean[1:4]
-  etas_Y020_024 <-fit$summary.linear.predictor$mean[6601:6604]
-  etas_Y025_029 <-fit$summary.linear.predictor$mean[13201:13204]
+  etas_Y015_019 <- fit$summary.linear.predictor$mean[i_start_Y015_019:(i_start_Y015_019 + 3)]
+  etas_Y020_024 <- fit$summary.linear.predictor$mean[i_start_Y020_024:(i_start_Y020_024 + 3)]
+  etas_Y025_029 <- fit$summary.linear.predictor$mean[i_start_Y025_029:(i_start_Y025_029 + 3)]
 
-  pred <- t(sapply(
-    list(etas_Y015_019, etas_Y020_024, etas_Y025_029),
-    function(x) exp(x) / sum(exp(x))
-  ))
+  pred <- t(sapply(list(etas_Y015_019, etas_Y020_024, etas_Y025_029), softmax))
 
   rownames(pred) <- c("Y015_019", "Y020_024", "Y025_029")
   colnames(pred) <- c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")
@@ -116,6 +116,7 @@ df %>%
 #' For example
 exp(etas) / sum(exp(etas))
 exp(etas + 1) / sum(exp(etas + 1))
+#' So there is no use in having an age effect without the interaction
 
 #' Model 4.
 #' Age x category interactions rather than age random effects
@@ -133,16 +134,59 @@ fit4 <- inla(formula4, data = df, family = "Poisson",
 #' Got it!
 list(truth = prob, pred = calculate_pred(fit4))
 
-#' Model 5.
-#' Kinh's version of the interaction
+#' Take S samples from the full posterior
+S <- 1000
+full_samples <- inla.posterior.sample(n = S, result = fit4)
+prob_samples <- lapply(full_samples, function(x) {
+  df <- t(data.frame(
+    Y015_019 = softmax(x$latent[i_start_Y015_019:(i_start_Y015_019 + 3)]),
+    Y020_024 = softmax(x$latent[i_start_Y020_024:(i_start_Y020_024 + 3)]),
+    Y025_029 = softmax(x$latent[i_start_Y025_029:(i_start_Y025_029 + 3)])
+  ))
+  colnames(df) <- c("Not sexually active", "Cohabiting partner", "Non-regular partner(s)", "Key populations")
+  rownames(df) <- c("15-19", "20-24", "25-29")
+  return(df)
+})
 
-formula5 <- y ~ -1 + f(obs_idx, hyper = list(prec = list(initial = log(0.000001), fixed = TRUE))) +
-  f(cat_idx, age_idx, model = "iid", constr = TRUE, hyper = list(prec = list(initial = log(0.001), fixed = TRUE)))
+list_to_df <- function(list){
+  data.frame(dplyr::bind_rows(list, .id = "replicate"))
+}
 
-fit5 <- inla(formula5, data = df, family = "Poisson",
-             control.predictor = list(link = 1),
-             control.compute = list(config = TRUE))
+tall_df <- lapply(prob_samples, function(x) as.data.frame(as.table(x))) %>%
+  list_to_df() %>%
+  rename(age_group = Var1,
+         category = Var2,
+         value = Freq)
 
-#' Appears to be doing something different to Model 4.
-fit5$summary.random
-list(truth = prob, pred = calculate_pred(fit5))
+#' Plots to represent the category probabilities and uncertainty
+
+#' Barplot with standard error
+tall_df %>%
+  group_by(age_group, category) %>%
+  summarise(est = mean(value),
+            se = sd(value) / sqrt(n())) %>%
+  ggplot(aes(x = category, y = est, fill = category)) +
+    geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
+    geom_errorbar(aes(ymin = est - 2 * se, ymax = est + 2 * se),
+                  width  = 0.2, position = position_dodge(0.9)) +
+    facet_wrap(~age_group) +
+    viridis::scale_fill_viridis(discrete = TRUE) +
+    scale_y_continuous(labels = scales::percent) +
+    labs(y = "Proportion", fill = "Risk group") +
+    theme(axis.title.x=element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank())
+
+#' Stacked barplot
+tall_df %>%
+  group_by(age_group, category) %>%
+  summarise(est = mean(value),
+            se = sd(value) / sqrt(n())) %>%
+  ggplot(aes(x = age_group, y = est, fill = forcats::fct_rev(category))) +
+  geom_bar(stat = "identity", position = "fill", alpha = 0.8) +
+  viridis::scale_fill_viridis(discrete = TRUE, direction = -1) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(x = "Age", y = "Proportion", fill = "Risk group")
+
+#' TODO: Add more ways to represent the uncertainty
+#' https://twitter.com/SolomonKurz/status/1372916628715868162
