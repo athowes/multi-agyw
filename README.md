@@ -37,3 +37,5 @@ This repository is an [`orderly`](https://github.com/vimc/orderly) project, with
 * [Multinomial Response Models](https://data.princeton.edu/wws509/notes/c6.pdf) by Rodriguez
 * [Ordinal Regression](https://betanalpha.github.io/assets/case_studies/ordinal_regression.html) case study by Betancourt
 * [Poisson GLMs and the Multinomial model](http://www.statslab.cam.ac.uk/~qz280/teaching/modelling-2020/L14.pdf) lecture notes from Cambridge
+* [Online lecture material](https://online.stat.psu.edu/stat504/lesson/8/8.4) from PennState
+* [`orderly`](https://www.vaccineimpact.org/orderly/index.html) documentation
