@@ -11,22 +11,34 @@ This repository is an [`orderly`](https://github.com/vimc/orderly) project, with
 
 ## To-do
 
+- [H] Next meeting with Jeff/Seth (1 to 6 before straying to far?)
+
 - [ ] Format data from the most recent DHS survey in Malawi for multinomial model, and resolve any issues
-  - [x] Create a table of conflicts for overlapping categories and propose a mapping. So far this isn't too difficult, see `src/fit_multi-sexbehav-sae`. It seems natural to assign all conflicts (individuals in multiple risk categories) to the highest risk category they are in.
-  - [ ] Decide if we should use `sex12m` or `eversex`
-- [x] Generate simulated data to test model and allow model building concurrently. See `src/sim_sexbehav`
+  - [5] Create a table of conflicts for overlapping categories and propose a mapping
+  - [6] Show differences in the outcomes using `sex12m` versus `eversex` to derive `no sex`
+  - [1] Pull spatial data for MW data
+- [x] Generate simulated data to test model and allow model building concurrently -- see `src/sim_sexbehav`
   - [ ] Add different types of simulated data e.g. spatial structure
-- [ ] Figure out how to deal with survey weights for multinomial data (see if Jeff or Seth knows anything about this)
-  - Example found by Kinh [Multinomial additive hazard model to assess the disability burdenusing cross-sectional data](https://core.ac.uk/download/pdf/95690175.pdf), where they put the weights in the log-likelihood
-- [ ] Fit model (to simulated data) using `R-INLA` and Poisson trick or `TMB`
-  - [x] Can do this for "individual" data structure. See `src/fit_sim-multi-sexbehav-sae`
+- Fit model (to simulated data) using `R-INLA` and Poisson trick or `TMB`
+  - [x] Can do this for "individual" data structure -- see `src/fit_sim-multi-sexbehav-sae`
   - [ ] Do it for "aggregated" data structure as well
+- Fit model to real MW data
+  - Individual format (depends on 1)
+    - [4] Ignoring weight version + BYM + age
+    - [ ] Individual weighted log-likelihood (TMB/as INLA not doable)
+  - Aggregate format (depends on 1)
+    - [2] Ignoring weight version + BYM + age
+    - [3] Kish's weighted (like Jeff's) + BYM + age
 - [ ] Decide smoothing structure (space and age) between categories
 - [ ] Decide structure for multinomial model (baseline category, nested, etc.)
   - How does this interplay with the Poisson trick?
-- [ ] Possibility to include covariates
-- [ ] Extend Malawi model by adding more surveys (PHIA and MICS). Requires adding time and temporal smoothing. Problems with multiple surveys: biases -- could use survey specific intercepts
-- [ ] Extend model to more countries
+- [11] Possibility to include covariates
+- Extend Malawi model by considering effect of survey years
+  - [9] DHS, requires adding time and temporal smoothing, could use survey specific intercepts
+  - [10] Adding PHIA and MICS
+- Extend model to more countries
+  - [7] Fit a model for all DHS countries – separately (depend on previous steps)
+  - [8] Fit a model for all DHS countries – jointly
 
 ## Resources
 
@@ -39,3 +51,4 @@ This repository is an [`orderly`](https://github.com/vimc/orderly) project, with
 * [Poisson GLMs and the Multinomial model](http://www.statslab.cam.ac.uk/~qz280/teaching/modelling-2020/L14.pdf) lecture notes from Cambridge
 * [Online lecture material](https://online.stat.psu.edu/stat504/lesson/8/8.4) from PennState
 * [`orderly`](https://www.vaccineimpact.org/orderly/index.html) documentation
+* [Example using survey weight in multinomial model](https://core.ac.uk/download/pdf/95690175.pdf), where they put the weights in the log-likelihood
