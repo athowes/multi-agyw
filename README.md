@@ -11,34 +11,36 @@ This repository is an [`orderly`](https://github.com/vimc/orderly) project, with
 
 ## To-do
 
-- [H] Next meeting with Jeff/Seth (1 to 6 before straying to far?)
+Numbers indicate priority.
+1:6 are the highest priority items!
 
 - [ ] Format data from the most recent DHS survey in Malawi for multinomial model, and resolve any issues
-  - [5] Create a table of conflicts for overlapping categories and propose a mapping
-  - [6] Show differences in the outcomes using `sex12m` versus `eversex` to derive `no sex`
-  - [1] Pull spatial data for MW data
+  - [ ] 5. Create a table of conflicts for overlapping categories and propose a mapping
+  - [ ] 6. Show differences in the outcomes using `sex12m` versus `eversex` to derive `no sex`
+  - [ ] 1. Pull spatial data for Malawi data
+    - Copy code from Katie's `naomi-orderly` task for this
 - [x] Generate simulated data to test model and allow model building concurrently -- see `src/sim_sexbehav`
   - [ ] Add different types of simulated data e.g. spatial structure
-- Fit model (to simulated data) using `R-INLA` and Poisson trick or `TMB`
+- Fit model (to simulated data) using `R-INLA` and Poisson trick
   - [x] Can do this for "individual" data structure -- see `src/fit_sim-multi-sexbehav-sae`
   - [ ] Do it for "aggregated" data structure as well
-- Fit model to real MW data
+- Fit model to real Malawi data
   - Individual format (depends on 1)
-    - [4] Ignoring weight version + BYM + age
-    - [ ] Individual weighted log-likelihood (TMB/as INLA not doable)
+    - [ ] 4. Ignoring weight version + BYM + age
+    - [ ] Individual weighted log-likelihood (`TMB`, as `R-INLA` is not doable?)
   - Aggregate format (depends on 1)
-    - [2] Ignoring weight version + BYM + age
-    - [3] Kish's weighted (like Jeff's) + BYM + age
+    - [ ] 2. Ignoring weight version + BYM + age
+    - [ ] 3. Kish's weighted (like Jeff's) + BYM + age
 - [ ] Decide smoothing structure (space and age) between categories
 - [ ] Decide structure for multinomial model (baseline category, nested, etc.)
   - How does this interplay with the Poisson trick?
-- [11] Possibility to include covariates
+- [ ] 11. Possibility to include covariates
 - Extend Malawi model by considering effect of survey years
-  - [9] DHS, requires adding time and temporal smoothing, could use survey specific intercepts
-  - [10] Adding PHIA and MICS
+  - [ ] 9. DHS, requires adding time and temporal smoothing, could use survey specific intercepts
+  - [ ] 10. Adding PHIA and MICS
 - Extend model to more countries
-  - [7] Fit a model for all DHS countries – separately (depend on previous steps)
-  - [8] Fit a model for all DHS countries – jointly
+  - [ ] 7. Fit a model for all DHS countries – separately (depend on previous steps)
+  - [ ] 8. Fit a model for all DHS countries – jointly
 
 ## Resources
 
