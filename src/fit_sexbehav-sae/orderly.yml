@@ -40,18 +40,11 @@ packages:
   - spdep
   - tidyr
 
-# # To be included if in naomi-orderly
-#
-# depends:
-# mwi_data_areas:
-#   id: latest
-#   use:
-#     depends/mwi_areas.geojson: mwi_areas.geojson
-# mwi_data_survey_behav:
-#   id: latest
-#   use:
-#     depends/mwi_survey_indicators_sexbehav.csv: mwi_survey_indicators_sexbehav.csv
+depends:
+  mwi_data_survey_behav:
+    id: latest
+    use:
+      depends/mwi_survey_indicators_sexbehav.csv: mwi_survey_indicators_sexbehav.csv
 
 global_resources:
   depends/mwi_areas.geojson: mwi_areas.geojson
-  depends/mwi_survey_indicators_sexbehav.csv: mwi_survey_indicators_sexbehav.csv
