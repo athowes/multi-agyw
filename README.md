@@ -1,6 +1,6 @@
 # multi-agyw
 
-Code for the project *A multinomial spatio-temporal model for  for sexual risk behaviour*.
+Code for the project *A multinomial spatio-temporal model for sexual risk behaviour*.
 This repository is an [`orderly`](https://github.com/vimc/orderly) project, with directories: 
 
 * `src`: containing all reports
@@ -15,9 +15,10 @@ Numbers indicate priority.
 1:6 are the highest priority items!
 
 - [ ] Format data from the most recent DHS survey in Malawi for multinomial model, and resolve any issues
-  - [ ] 5. Create a table of conflicts for overlapping categories and propose a mapping
-  - [ ] 6. Show differences in the outcomes using `sex12m` versus `eversex` to derive `no sex`
-  - [ ] 1. Pull spatial data for Malawi data
+  - [x] 5. Create a table of conflicts for overlapping categories and propose a mapping
+  - [ ] 6. Show differences in the outcomes using `sex12m` versus `eversex` to derive `nosex`
+    - [ ] Eventually generalise 5. and 6. to other surveys, moving this analysis earlier in the pipeline. May be quite hard to have a generalised task for `parameters: iso3` and have to be country by country.
+  - [ ] 1. Pull spatial data for Malawi, link the `cluster_id` to area
     - Copy code from Katie's `naomi-orderly` task for this
 - [x] Generate simulated data to test model and allow model building concurrently -- see `src/sim_sexbehav`
   - [ ] Add different types of simulated data e.g. spatial structure
@@ -28,9 +29,11 @@ Numbers indicate priority.
   - Individual format (depends on 1)
     - [ ] 4. Ignoring weight version + BYM + age
     - [ ] Individual weighted log-likelihood (`TMB`, as `R-INLA` is not doable?)
+      - Google group [discussion](https://groups.google.com/g/r-inla-discussion-group/c/Q-STkrFXR0g/m/6PWxRV4tBQAJ) about survey weights in `R-INLA` suggests that the weights scale the log-likelihood
   - Aggregate format (depends on 1)
     - [ ] 2. Ignoring weight version + BYM + age
     - [ ] 3. Kish's weighted (like Jeff's) + BYM + age
+      - `xPoisson` may be useful for this, see `INLA::inla.doc("xPoisson")`
 - [ ] Decide smoothing structure (space and age) between categories
 - [ ] Decide structure for multinomial model (baseline category, nested, etc.)
   - How does this interplay with the Poisson trick?
@@ -41,6 +44,8 @@ Numbers indicate priority.
 - Extend model to more countries
   - [ ] 7. Fit a model for all DHS countries – separately (depend on previous steps)
   - [ ] 8. Fit a model for all DHS countries – jointly
+    - Biases and variation in methodology for key population data which vary by country. Survey estimates have more comparable methodology but depending on KP features (for example proportion in households included in survey sampling frame) may have varying bias. See working paper "Laga - Mapping the population size of female sex worker in countries across sub-Saharan Africa"
+    - Survey question "did you have sex in exchange for money or goods" has been critisied 
 
 ## Resources
 
