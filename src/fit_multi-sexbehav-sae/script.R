@@ -187,6 +187,7 @@ list(truth = truth, pred = pred)
 
 #' This considers each combination of age and cluster_id as a multinomial trial of n_i
 #' TODO: How to treat weights, n_eff_kish?
+#' Note that the weight corresponds to the individual, not to any feature of the question
 #' TODO: Map cluster_id to regions of interest
 data_aggregate <- use_data %>%
   select(-survey_id, -individual_id, -indweight, -sex, -age) %>%
