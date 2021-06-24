@@ -9,6 +9,19 @@ This repository is an [`orderly`](https://github.com/vimc/orderly) project, with
 * `data`: copies of data used in the reports
 * `tutorials`: miscellaneous code used to study models etc.
 
+## How to run and commit reports
+
+After installing [`orderly`](https://github.com/vimc/orderly) (from either CRAN or Github) a report, let's say called `example`, may be run by:
+
+`orderly::orderly_run(name = "src/example")`
+
+The results of this run will appear in the `draft/` folder.
+To commit the draft (with associated `id`) to the `archive/` folder use:
+
+`orderly::orderly_commit(id)`
+
+Any outputs of this report will then be available to use as dependencies within other reports.
+
 ## To-do
 
 Numbers indicate priority.
