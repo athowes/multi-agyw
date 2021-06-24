@@ -164,7 +164,7 @@ data_indiv$eta <- fit_indiv$summary.linear.predictor$mean
 prob <- zoo::rollapply(data_indiv$eta, 4, by = 4, function(x) exp(x) / sum(exp(x)), partial = TRUE, align = "left")
 data_indiv$prob <- as.vector(t(prob))
 
-pred <- data_indiv %>%
+pred_indiv <- data_indiv %>%
   group_by(age_idx, cat_idx) %>%
   summarise(prob = mean(prob)) %>%
   spread(key = cat_idx, value = prob) %>%
@@ -181,11 +181,12 @@ truth <- use_data %>%
             prob_sexnonreg = mean(sexnonreg),
             prob_sexpaid12m = mean(sexpaid12m))
 
-list(truth = truth, pred = pred)
+#' There is some variation from the emprical probabilities
+list(truth = truth, pred = pred_indiv)
 
 #' 3. Fit aggregate level model
 
-#' This considers each combination of age and cluster_id as a multinomial trial of n_i
+#' This considers each combination of age and cluster_id as a multinomial trial of size n_i
 #' TODO: How to treat weights, n_eff_kish?
 #' Note that the weight corresponds to the individual, not to any feature of the question
 #' TODO: Map cluster_id to regions of interest
@@ -197,22 +198,36 @@ data_aggregate <- use_data %>%
 						sexnonreg = sum(sexnonreg),
 						sexpaid12m = sum(sexpaid12m)) %>%
 	ungroup() %>%
-  mutate(obs_idx = 1:n()) %>%
+  mutate(m = nosex12m + sexcohab + sexnonreg + sexpaid12m,
+         obs_idx = 1:n()) %>%
 	pivot_longer(nosex12m:sexpaid12m, values_to = "y", names_to = "cat_idx") %>%
   mutate(cat_idx = as.integer(as.factor(cat_idx)),
          age_cat_idx = interaction(age_idx, cat_idx))
 
-#' #' Test a model, using the Poisson trick
-#' formula <- y ~ -1 +
-#' 	f(obs_idx, fixed = TRUE) +
-#' 	f(cat_idx, age_idx, fixed = TRUE, constr = TRUE)
-#' 	#' f(cluster_id, model = "besag", graph = G, constr = T)
-#' 	#' TODO: make graph for id cluster
-#'
-#' fit_aggregate <- inla(formula, data = data_aggregate, family = 'Poisson',
-#' 					            control.predictor = list(link = 1), control.compute = list(config = TRUE))
-#'
-#' #' TODO: get prediction of prob.
-#' fit_aggregate$summary.fitted %>% str
-#' fit_aggregate$summary.random$cat_idx$mean
-#' fit_aggregate$summary.random$obs_idx$mean %>% plot
+#' Model for the aggregated data, using the Poisson trick
+#' TODO: Does the sample size n_i play into this at all?_
+formula <- y ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
+  #' TODO: Make graph for cluster_id
+  #' f(cluster_id, model = "besag", graph = G, constr = T)
+
+fit_aggregate <- inla(formula, data = data_aggregate, family = 'Poisson',
+					            control.predictor = list(link = 1), control.compute = list(config = TRUE))
+
+data_aggregate$eta <- fit_aggregate$summary.linear.predictor$mean
+
+#' Compute probabilities
+prob <- zoo::rollapply(data_aggregate$eta, 4, by = 4, function(x) exp(x) / sum(exp(x)), partial = TRUE, align = "left")
+data_aggregate$prob <- as.vector(t(prob))
+
+pred_aggregate <- data_aggregate %>%
+  group_by(age_idx, cat_idx) %>%
+  summarise(prob = mean(prob)) %>%
+  spread(key = cat_idx, value = prob) %>%
+  rename(prob_nosex = `1`,
+         prob_sexcohab = `2`,
+         prob_sexnonreg = `3`,
+         prob_sexpaid12m = `4`)
+
+#' Close to exactly recovering the empirical probabilities
+list(truth = truth, pred = pred_aggregate)
