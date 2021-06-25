@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("fit_multi-sexbehav-sae")
-# setwd("src/fit_multi-sexbehav-sae")
+# orderly::orderly_develop_start("fit_multi-sexbehav-sae-kinh")
+# setwd("src/fit_multi-sexbehav-sae-kinh")
 
 #' Note that this script requires a specific version of the naomi.utils package
 #' This can be installed by following:
