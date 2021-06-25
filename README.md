@@ -24,39 +24,31 @@ Any outputs of this report will then be available to use as dependencies within 
 
 ## To-do
 
-Numbers indicate priority.
-1:6 are the highest priority items!
+Numbers, when present, indicate priority.
 
-- [ ] Format data from the most recent DHS survey in Malawi for multinomial model, and resolve any issues
-  - [x] 5. Create a table of conflicts for overlapping categories and propose a mapping
-  - [ ] 6. Show differences in the outcomes using `sex12m` versus `eversex` to derive `nosex`
-    - [ ] Eventually generalise 5. and 6. to other surveys, moving this analysis earlier in the pipeline. May be quite hard to have a generalised task for `parameters: iso3` and have to be country by country.
-  - [ ] 1. Pull spatial data for Malawi, link the `cluster_id` to area
-    - Copy code from Katie's `naomi-orderly` task for this
-- [x] Generate simulated data to test model and allow model building concurrently -- see `src/sim_sexbehav`
-  - [ ] Add different types of simulated data e.g. spatial structure
-- Fit model (to simulated data) using `R-INLA` and Poisson trick
-  - [x] Can do this for "individual" data structure -- see `src/fit_sim-multi-sexbehav-sae`
-  - [ ] Do it for "aggregated" data structure as well
-- Fit model to real Malawi data
-  - Individual format (depends on 1)
-    - [ ] 4. Ignoring weight version + BYM + age
-    - [ ] Individual weighted log-likelihood (`TMB`, as `R-INLA` is not doable?)
-      - Google group [discussion](https://groups.google.com/g/r-inla-discussion-group/c/Q-STkrFXR0g/m/6PWxRV4tBQAJ) about survey weights in `R-INLA` suggests that the weights scale the log-likelihood
-  - Aggregate format (depends on 1)
-    - [ ] 2. Ignoring weight version + BYM + age
-    - [ ] 3. Kish's weighted (like Jeff's) + BYM + age
+- [ ] Create individual data that links the `cluster_id` to area by modifying `mwi_data_survey_behav` (currently it's only the aggregate data that is output)
+- Fit model to Malawi data from `mwi_data_survey_behav`
+  - Aggregate format
+    - [ ] Ignoring weights, BYM2 on space (which structure?), age, space category interaction (?), age category interaction (?)
+    - [ ] Kish weights (following Jeff), BYM2 on space, age, space category interaction, age category interaction
       - `xPoisson` may be useful for this, see `INLA::inla.doc("xPoisson")`
-- [ ] Decide smoothing structure (space and age) between categories
+  - Individual format
+    - [ ] Ignoring weights, BYM2 on space (which structure?), age, space category interaction (?), age category interaction (?)
+    - Individual weighted log-likelihood in `R-INLA` might not be possible, see Google group [discussion](https://groups.google.com/g/r-inla-discussion-group/c/Q-STkrFXR0g/m/6PWxRV4tBQ. Could try `TMB`
+- [ ] Create simulated data in `sim_sexbehav` and try to recover truth with `fit_sim-multisexbehav-sae`
+- [ ] Add other different types of simulated data e.g. spatial structure to `sim_sexbehav` and try to recover
 - [ ] Decide structure for multinomial model (baseline category, nested, etc.)
   - How does this interplay with the Poisson trick?
-- [ ] 11. Possibility to include covariates
+- [ ] Generalise modifications of individual data higher in the analysis pipeline. May be quite hard to have a generalised task for `parameters: iso3` and have to be country by country
+- [ ] More detailed comparison of differences in the outcomes using `sex12m` versus `eversex` to derive `nosex`
+- [ ] Add age at first sex question to help deal with `NA` entries in `eversex`
+- [ ] Possibility to include covariates
 - Extend Malawi model by considering effect of survey years
-  - [ ] 9. DHS, requires adding time and temporal smoothing, could use survey specific intercepts
-  - [ ] 10. Adding PHIA and MICS
+  - [ ] DHS, requires adding time and temporal smoothing, could use survey specific intercepts
+  - [ ] Adding PHIA and MICS
 - Extend model to more countries
-  - [ ] 7. Fit a model for all DHS countries – separately (depend on previous steps)
-  - [ ] 8. Fit a model for all DHS countries – jointly
+  - [ ] Fit a model for all DHS countries – separately (depend on previous steps)
+  - [ ] Fit a model for all DHS countries – jointly
     - Biases and variation in methodology for key population data which vary by country. Survey estimates have more comparable methodology but depending on KP features (for example proportion in households included in survey sampling frame) may have varying bias. See working paper "Laga - Mapping the population size of female sex worker in countries across sub-Saharan Africa"
     - Survey question "did you have sex in exchange for money or goods" has been critisied 
 
