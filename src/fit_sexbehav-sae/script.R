@@ -3,7 +3,6 @@
 # setwd("src/fit_sexbehav-sae")
 
 analysis_level <- c("MWI" = 5)
-
 admin1_level <- c("MWI" = 1)
 
 stopifnot(iso3 %in% names(analysis_level))
@@ -21,7 +20,6 @@ areas <- select(areas, area_id, area_name, area_level, area_level_label,
 areas_model <- filter(areas, area_level == analysis_level)
 
 #' Add area_id for admin1 observation
-
 areas_model <- areas_model %>%
   left_join(
     areas %>%
@@ -68,8 +66,7 @@ df <- crossing(
 )
 
 #' Add district observations
-
-filter(ind, estimate > 1) # There's a couple of estimates > 1; unsure how, but use pmin() to constrain
+filter(ind, estimate > 1) #' There's a couple of estimates > 1; unsure how, but use pmin() to constrain
 
 df <- df %>%
   left_join(
@@ -84,7 +81,6 @@ df <- df %>%
   )
 
 #' Add aggregate admin1 observations
-
 df <- df %>%
   left_join(
     ind %>%
@@ -97,7 +93,6 @@ df <- df %>%
   )
 
 #' Fit models
-
 res <- list()
 
 for (i_indicator in indicators) {
