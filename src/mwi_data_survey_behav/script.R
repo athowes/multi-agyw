@@ -19,7 +19,7 @@ survey_meta <- create_survey_meta_dhs(surveys)
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
 
 #' "Add REGVAR to surveys dataset"
-#' TODO: What's REGVAR? Here it's "shdist"
+#' REGVAR are regional variables in the household dataset. Here it's "shdist"
 surveys <- surveys_add_dhs_regvar(surveys, survey_region_boundaries)
 
 #' MW2015DHS HR dataset has four city REGCODES that do not appear in boundaries:
@@ -111,13 +111,39 @@ pdf(paste0("check/", tolower(iso3), "_dhs-cluster-check.pdf"), h = 7, w = 6)
 p_coord_check
 dev.off()
 
-#' # Individual dataset
+#' Individual dataset
 individuals <- create_individual_hiv_dhs(surveys)
 
 survey_individuals <- create_survey_individuals_dhs(individuals)
 survey_biomarker <- create_survey_biomarker_dhs(individuals)
 survey_sexbehav <- create_sexbehav_dhs(surveys)
-survey_other <- list(survey_sexbehav)
+
+#' Add code to clean survey_sexbehav here
+#' TODO: At some point move this into naomi.utils::create_sexbehav_dhs
+#' (that would be supposing it's generalisable between DHS surveys)
+survey_sexbehav_modified <- survey_sexbehav %>%
+         #' When sex12m = 0, set sexpaid12m = 0
+         #' This removes all of the NA entries in sexpaid12m
+  mutate(sexpaid12m = ifelse(sex12m == 0, 0, sexpaid12m),
+         #' Set all rows with sexpaid12m to be in that category
+         eversex = ifelse(sexpaid12m == 1, 1, eversex),
+         sex12m = ifelse(sexpaid12m == 1, 1, sex12m),
+         sexcohab = ifelse(sexpaid12m == 1, 0, sexcohab),
+         sexnonreg = ifelse(sexpaid12m == 1, 0, sexnonreg),
+         #' If sex12m = 1, set eversex = 1
+         eversex = ifelse(sex12m == 1, 1, eversex))
+
+#' Remaining NA are all in eversex and sti12m
+#' TODO: Add additional variables like age at first sex (in DHS, PHIA, MICS) to help resolve
+survey_sexbehav_modified %>% is.na() %>% colSums()
+
+#' Verify no overlap
+stopifnot(
+  mutate(survey_sexbehav_modified, r_sum = (1 - sex12m) + sexcohab + sexnonreg + sexpaid12m) %>%
+    filter(r_sum != 1) %>% nrow() == 0
+)
+
+survey_other <- list(survey_sexbehav_modified)
 
 age_group_include <- c("Y015_019", "Y020_024", "Y025_029","Y015_024")
 sex <- c("female")

@@ -127,7 +127,9 @@ use_data <- use_data %>%
   mutate(nosex = ifelse(sexpaid12m == 1, 0, nosex),
          nosex12m = ifelse(sexpaid12m == 1, 0, nosex12m),
          sexcohab = ifelse(sexpaid12m == 1, 0, sexcohab),
-         sexnonreg = ifelse(sexpaid12m == 1, 0, sexnonreg)) %>%
+         sexnonreg = ifelse(sexpaid12m == 1, 0, sexnonreg),
+         #' If sex in last 12m then surely ever
+         nosex = ifelse(nosex12m == 0, 0, nosex)) %>%
   select(-nosex)
 
 #' Verify no overlap
