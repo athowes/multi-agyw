@@ -59,7 +59,7 @@ data %>%
   ) %>%
   mutate_all(round, 2)
 
-#' When nosex = 1, set sexpaid12m to be 0
+#' When nosex12m = 1, set sexpaid12m to be 0
 data <- data %>%
   mutate(sexpaid12m = ifelse(nosex12m == 1, 0, sexpaid12m))
 
