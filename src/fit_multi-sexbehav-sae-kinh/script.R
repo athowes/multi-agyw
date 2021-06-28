@@ -207,7 +207,7 @@ data_aggregate <- use_data %>%
          age_cat_idx = interaction(age_idx, cat_idx))
 
 #' Model for the aggregated data, using the Poisson trick
-#' TODO: Does the sample size n_i play into this at all?_
+#' TODO: Does the sample size n_i play into this at all?
 formula <- y ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
   #' TODO: Make graph for cluster_id
