@@ -105,15 +105,8 @@ df <- df %>%
 #' Equal to the number of age groups times the number of areas
 df$obs_idx %>% max()
 
-#' Model 1: age x category random effects (IID)
+#' Functions preparing to fit models
 tau_prior <- function(x) list(prec = list(initial = log(x), fixed = TRUE))
-
-formula1 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
-
-fit1 <- inla(formula1, data = df, family = 'xPoisson',
-             control.predictor = list(link = 1),
-             control.compute = list(config = TRUE))
 
 inla_multinomial_mean <- function(fit) {
   zoo::rollapply(
@@ -125,10 +118,21 @@ inla_multinomial_mean <- function(fit) {
     as.vector()
 }
 
-#' Assign model number and compute mean probabilities
-df1 <- df %>%
-  mutate(model = "Model 1",
-         mean = inla_multinomial_mean(fit1))
+multinomial_model <- function(formula, model) {
+  fit <- inla(formula, data = df, family = 'xPoisson',
+              control.predictor = list(link = 1),
+              control.compute = list(config = TRUE))
+
+  df_out <- df %>%
+    mutate(model = model,
+           mean = inla_multinomial_mean(fit))
+
+  return(df_out)
+}
+
+#' Model 1: age x category random effects (IID)
+formula1 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
 #' Model 2: space x category random effects (IID)
 formula2 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
@@ -138,14 +142,6 @@ formula2 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.4, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
-fit2 <- inla(formula2, data = df, family = 'xPoisson',
-             control.predictor = list(link = 1),
-             control.compute = list(config = TRUE))
-
-df2 <- df %>%
-  mutate(model = "Model 2",
-         mean = inla_multinomial_mean(fit2))
-
 #' Model 3: space x category random effects (BYM2)
 formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
@@ -154,16 +150,13 @@ formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.4, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001))
 
-fit3 <- inla(formula3, data = df, family = 'xPoisson',
-             control.predictor = list(link = 1),
-             control.compute = list(config = TRUE))
+#' Fit the models
+res <- purrr::pmap(
+  list(formula = list(formula1, formula2, formula3), model = list("Model 1", "Model 2", "Model 3")),
+  multinomial_model
+)
 
-df3 <- df %>%
-  mutate(model = "Model 3",
-         mean = inla_multinomial_mean(fit3))
-
-#' Probably the above could be done in a loop over formula
-res <- rbind(df1, df2, df3)
+res <- bind_rows(res)
 
 write_csv(res, "multinomial-smoothed-district-sexbehav.csv", na = "")
 
