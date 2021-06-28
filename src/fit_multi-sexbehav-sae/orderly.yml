@@ -1,6 +1,11 @@
 script: script.R
 
-artefacts: ~
+artefacts:
+  - data:
+      description: Smoothed district indicator estimates for various multinomial models
+      filenames:
+        - multinomial-smoothed-district-sexbehav.csv
+        - multinomial-smoothed-district-sexbehav.pdf
 
 parameters:
   iso3:

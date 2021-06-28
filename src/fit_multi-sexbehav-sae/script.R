@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-orderly::orderly_develop_start("fit_multi-sexbehav-sae")
-setwd("src/fit_multi-sexbehav-sae")
+# orderly::orderly_develop_start("fit_multi-sexbehav-sae")
+# setwd("src/fit_multi-sexbehav-sae")
 
 analysis_level <- c("MWI" = 5)
 admin1_level <- c("MWI" = 1)
@@ -66,14 +66,10 @@ df <- crossing(
            area_sort_order, center_x, center_y)
 )
 
-#' Add district observations
-
 #' Verify that there are no estimates > 1
-stopifnot(
-  filter(ind, estimate > 1) %>%
-    nrow() == 0
-)
+stopifnot(filter(ind, estimate > 1) %>% nrow() == 0)
 
+#' Add district observations
 #' Note that df here has 528 rows: 33 areas, 4 categories, 4 age groups
 df <- df %>%
   left_join(
@@ -89,30 +85,111 @@ df <- df %>%
 
 to_int <- function(x) as.integer(as.factor(x))
 
-#' Add age, category, age x category interaction, and observation indicators
+#' Add age, category, age x category interaction, observation,
+#' space x category interaction indices
 df <- df %>%
   mutate(cat_idx = to_int(indicator),
          age_idx = to_int(age_group),
          age_cat_idx = interaction(age_idx, cat_idx),
          #' Not sure if this is the best way to do it for obs_idx
          #' Perhaps it can be added earlier in the pipeline
-         obs_idx = to_int(interaction(age_idx, area_idx))) %>%
+         obs_idx = to_int(interaction(age_idx, area_idx)),
+         #' Likewise probably a better way to do this, but having
+         #' separate indices seems useful for Besag model
+         area_idx.1 = ifelse(cat_idx == 1, area_idx, NA),
+         area_idx.2 = ifelse(cat_idx == 2, area_idx, NA),
+         area_idx.3 = ifelse(cat_idx == 3, area_idx, NA),
+         area_idx.4 = ifelse(cat_idx == 4, area_idx, NA)) %>%
   arrange(obs_idx)
 
 #' Equal to the number of age groups times the number of areas
 df$obs_idx %>% max()
 
-#' Model for the aggregated data, using the Poisson trick
+#' Model 1: age x category random effects (IID)
 tau_prior <- function(x) list(prec = list(initial = log(x), fixed = TRUE))
 
-formula <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+formula1 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
-fit <- inla(formula, data = df, family = 'xPoisson',
+fit1 <- inla(formula1, data = df, family = 'xPoisson',
             control.predictor = list(link = 1), control.compute = list(config = TRUE))
 
-df$eta <- fit$summary.linear.predictor$mean
+inla_multinomial_mean <- function(fit) {
+  zoo::rollapply(
+    fit$summary.linear.predictor$mean, 4, by = 4,
+    function(x) exp(x) / sum(exp(x)),
+    partial = TRUE, align = "left"
+  ) %>%
+    t() %>%
+    as.vector()
+}
 
-#' Compute probabilities
-mean <- zoo::rollapply(df$eta, 4, by = 4, function(x) exp(x) / sum(exp(x)), partial = TRUE, align = "left")
-df$mean <- as.vector(t(mean))
+#' Assign model number and compute mean probabilities
+df1 <- df %>%
+  mutate(model = "Model 1",
+         mean = inla_multinomial_mean(fit1))
+
+#' Model 2: space x category random effects (IID)
+formula2 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx.1, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx.2, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx.4, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
+
+fit2 <- inla(formula2, data = df, family = 'xPoisson',
+             control.predictor = list(link = 1), control.compute = list(config = TRUE))
+
+df2 <- df %>%
+  mutate(model = "Model 2",
+         mean = inla_multinomial_mean(fit2))
+
+#' Probably the above could be done in a loop over formula
+res <- rbind(df1, df2)
+
+write_csv(res, "multinomial-smoothed-district-sexbehav.csv", na = "")
+
+#' Create plotting data
+res_plot <- res %>%
+  rename(
+    estimate_raw = estimate,
+    estimate_smoothed = mean
+  ) %>%
+  pivot_longer(
+    cols = c(starts_with("estimate")),
+    names_to = c(".value", "source"),
+    names_pattern = "(.*)\\_(.*)"
+  ) %>%
+  left_join(
+    select(areas, area_id),
+    by = "area_id"
+  ) %>%
+  st_as_sf() %>%
+  split(~indicator + model)
+
+pdf("multinomial-smoothed-district-sexbehav.pdf", h = 11, w = 8.5)
+lapply(res_plot, function(x)
+  x %>%
+    mutate(
+      age_group = fct_relevel(age_group, "Y015_024") %>%
+        fct_recode("15-24" = "Y015_024", "15-19" = "Y015_019", "20-24" = "Y020_024", "25-29" = "Y025_029"),
+      source = fct_relevel(source, "raw", "smoothed", "aggregate") %>%
+        fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed", "Admin 1 aggregate" = "aggr")
+    ) %>%
+    ggplot(aes(fill = estimate)) +
+    geom_sf(size = 0.1) +
+    scale_fill_viridis_c(option = "C", label = label_percent()) +
+    facet_grid(age_group ~ source) +
+    theme_minimal() +
+    labs(title = paste0(iso3, ": ", x$indicator[1], " (", x$model[1], ")")) +
+    theme(
+      axis.text = element_blank(),
+      axis.ticks = element_blank(),
+      panel.grid = element_blank(),
+      strip.text = element_text(face = "bold"),
+      plot.title = element_text(face = "bold"),
+      legend.position = "bottom",
+      legend.key.width = unit(4, "lines")
+    )
+)
+dev.off()
