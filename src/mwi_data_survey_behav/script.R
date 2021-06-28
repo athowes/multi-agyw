@@ -137,14 +137,9 @@ survey_sexbehav_modified <- survey_sexbehav %>%
 #' TODO: Add additional variables like age at first sex (in DHS, PHIA, MICS) to help resolve
 survey_sexbehav_modified %>% is.na() %>% colSums()
 
-#' The indicators required are nosex12m, sexcohab, sexnonreg and sexpaid12m
-survey_sexbehav_modified <- survey_sexbehav_modified %>%
-  mutate(nosex12m = 1 - sex12m, .after = individual_id) %>%
-  select(-eversex, -sex12m, -sti12m)
-
 #' Verify no overlap
 stopifnot(
-  mutate(survey_sexbehav_modified, r_sum = nosex12m + sexcohab + sexnonreg + sexpaid12m) %>%
+  mutate(survey_sexbehav_modified, r_sum = (1 - sex12m) + sexcohab + sexnonreg + sexpaid12m) %>%
     filter(r_sum != 1) %>% nrow() == 0
 )
 
