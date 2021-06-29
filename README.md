@@ -32,9 +32,9 @@ Numbers, when present, indicate priority.
     - [x] Model 1: Age-category interaction
     - [x] Model 2: Age-category interaction, space-category intercation (IID)
     - [x] Model 3: Age-category interaction, space-category interaction (BYM2)
-    - [ ] Model 4: $\ldots$
-  - Individual format (ignore weights). Individual weighted log-likelihood in `R-INLA` might not be possible, see Google group [discussion](https://groups.google.com/g/r-inla-discussion-group/c/Q-STkrFXR0g/m/6PWxRV4tBQ. Could try `TMB`
-    - [ ] Model 1: $\ldots$
+    - [ ] Model 4: ...
+  - Individual format (ignore weights). Individual weighted log-likelihood in `R-INLA` might not be possible, see Google group [discussion](https://groups.google.com/g/r-inla-discussion-group/c/Q-STkrFXR0g/m/6PWxRV4tBQ). Could try `TMB`
+    - [ ] Model 1: ...
 - [ ] Create simulated data in `sim_sexbehav` and try to recover truth with `fit_sim-multisexbehav-sae`
 - [ ] Add other different types of simulated data e.g. spatial structure to `sim_sexbehav` and try to recover
 - [ ] Decide structure for multinomial model (baseline category, nested, etc.)
