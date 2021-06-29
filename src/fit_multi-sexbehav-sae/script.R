@@ -111,23 +111,6 @@ tau_prior <- function(x) list(prec = list(initial = log(x), fixed = TRUE))
 
 softmax <- function(x) exp(x) / sum(exp(x))
 
-#' Calculate multinomial probabilities.
-#'
-#' Takes sequential non-overlapping four entries of the linear predictor
-#' and computes the softmax to give category probabilities.
-#' TODO: Could be a more reliable way to do this using the obs_idx indicator.
-#'
-#' @param fit A model fit using `R-INLA`.
-#' @return A vector containing the mean of the multinomial probabilities.
-inla_multinomial_mean <- function(fit) {
-  zoo::rollapply(
-    fit$summary.linear.predictor$mean, 4, by = 4,
-    softmax, partial = TRUE, align = "left"
-  ) %>%
-    t() %>%
-    as.vector()
-}
-
 #' Fit multinomial model using Poisson trick.
 #'
 #' @param formula A formula object passed to `R-INLA`.
@@ -138,12 +121,20 @@ multinomial_model <- function(formula, model) {
               control.predictor = list(link = 1),
               control.compute = list(config = TRUE))
 
-  df_out <- mutate(df,
-    model = model,
-    mean = inla_multinomial_mean(fit)
-  )
-
-  return(df_out)
+  df %>%
+    #' Add mean of linear predictor
+    mutate(eta = fit$summary.linear.predictor$mean) %>%
+    #' Split by observation indicator and lapply softmax
+    split(.$obs_idx) %>%
+    lapply(function(x)
+      x %>%
+        mutate(mean = softmax(eta))
+    ) %>%
+    bind_rows() %>%
+    #' Remove eta
+    select(-eta) %>%
+    #' Add model identifier
+    mutate(model = model)
 }
 
 #' Model 1: age x category random effects (IID)
