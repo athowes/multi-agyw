@@ -55,6 +55,7 @@ adjM <- spdep::poly2nb(areas_model)
 adjM <- spdep::nb2mat(adjM, style = "B", zero.policy = TRUE)
 colnames(adjM) <- rownames(adjM)
 
+#' Using nosex12m rather than e.g. nosex for now
 indicators <- c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")
 
 df <- crossing(
@@ -108,24 +109,39 @@ df$obs_idx %>% max()
 #' Functions preparing to fit models
 tau_prior <- function(x) list(prec = list(initial = log(x), fixed = TRUE))
 
+softmax <- function(x) exp(x) / sum(exp(x))
+
+#' Calculate multinomial probabilities.
+#'
+#' Takes sequential non-overlapping four entries of the linear predictor
+#' and computes the softmax to give category probabilities.
+#' TODO: Could be a more reliable way to do this using the obs_idx indicator.
+#'
+#' @param fit A model fit using `R-INLA`.
+#' @return A vector containing the mean of the multinomial probabilities.
 inla_multinomial_mean <- function(fit) {
   zoo::rollapply(
     fit$summary.linear.predictor$mean, 4, by = 4,
-    function(x) exp(x) / sum(exp(x)),
-    partial = TRUE, align = "left"
+    softmax, partial = TRUE, align = "left"
   ) %>%
     t() %>%
     as.vector()
 }
 
+#' Fit multinomial model using Poisson trick.
+#'
+#' @param formula A formula object passed to `R-INLA`.
+#' @param model A string containing the name of the model.
+#' @return A dataframe adding columns to `df`.
 multinomial_model <- function(formula, model) {
   fit <- inla(formula, data = df, family = 'xPoisson',
               control.predictor = list(link = 1),
               control.compute = list(config = TRUE))
 
-  df_out <- df %>%
-    mutate(model = model,
-           mean = inla_multinomial_mean(fit))
+  df_out <- mutate(df,
+    model = model,
+    mean = inla_multinomial_mean(fit)
+  )
 
   return(df_out)
 }
@@ -143,6 +159,9 @@ formula2 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(area_idx.4, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
 #' Model 3: space x category random effects (BYM2)
+#' TODO: Perhaps this can be done without so many idx
+#' Certainly Model 2 can be. Could do things like creating a
+#' graph with four connected components?
 formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
@@ -152,7 +171,10 @@ formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
 
 #' Fit the models
 res <- purrr::pmap(
-  list(formula = list(formula1, formula2, formula3), model = list("Model 1", "Model 2", "Model 3")),
+  list(
+    formula = list(formula1, formula2, formula3),
+    model = list("Model 1", "Model 2", "Model 3")
+  ),
   multinomial_model
 )
 
