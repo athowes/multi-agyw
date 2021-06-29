@@ -27,14 +27,14 @@ Any outputs of this report will then be available to use as dependencies within 
 Numbers, when present, indicate priority.
 
 - [ ] Create individual data that links the `cluster_id` to area by modifying `mwi_data_survey_behav` (currently it's only the aggregate data that is output)
-- Fit model to Malawi data from `mwi_data_survey_behav`
-  - Aggregate format
-    - [ ] Ignoring weights, BYM2 on space (which structure?), age, space category interaction (?), age category interaction (?)
-    - [ ] Kish weights (following Jeff), BYM2 on space, age, space category interaction, age category interaction
-      - `xPoisson` may be useful for this, see `INLA::inla.doc("xPoisson")`
-  - Individual format
-    - [ ] Ignoring weights, BYM2 on space (which structure?), age, space category interaction (?), age category interaction (?)
-    - Individual weighted log-likelihood in `R-INLA` might not be possible, see Google group [discussion](https://groups.google.com/g/r-inla-discussion-group/c/Q-STkrFXR0g/m/6PWxRV4tBQ. Could try `TMB`
+- [ ] Fit model to Malawi data from `mwi_data_survey_behav`
+  - Aggregate format using Kish weights and `xPoisson`, see `INLA::inla.doc("xPoisson")`
+    - [x] Model 1: Age-category interaction
+    - [x] Model 2: Age-category interaction, space-category intercation (IID)
+    - [x] Model 3: Age-category interaction, space-category interaction (BYM2)
+    - [ ] Model 4: $\ldots$
+  - Individual format (ignore weights). Individual weighted log-likelihood in `R-INLA` might not be possible, see Google group [discussion](https://groups.google.com/g/r-inla-discussion-group/c/Q-STkrFXR0g/m/6PWxRV4tBQ. Could try `TMB`
+    - [ ] Model 1: $\ldots$
 - [ ] Create simulated data in `sim_sexbehav` and try to recover truth with `fit_sim-multisexbehav-sae`
 - [ ] Add other different types of simulated data e.g. spatial structure to `sim_sexbehav` and try to recover
 - [ ] Decide structure for multinomial model (baseline category, nested, etc.)
