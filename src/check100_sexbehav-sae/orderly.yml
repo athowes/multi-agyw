@@ -23,3 +23,7 @@ depends:
     id: latest
     use:
       depends/smoothed-district-sexbehav.csv: smoothed-district-sexbehav.csv
+  fit_multi-sexbehav-sae:
+    id: latest
+    use:
+      depends/multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
