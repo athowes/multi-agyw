@@ -1,0 +1,30 @@
+script: tza_survey_behav.R
+
+artefacts:
+  - data:
+      description: survey indicator dataset
+      filenames:
+        - tza_survey_indicators_sexbehav.csv
+  - data:
+      description: hiv indicator dataset
+      filenames:
+        - tza_hiv_indicators_sexbehav.csv
+
+packages:
+  - sf
+  - spud
+  - dplyr
+  - readr
+  - forcats
+  - ggplot2
+  - naomi
+  - naomi.utils
+  - rdhs
+
+depends:
+  tza_data_areas:
+    id: latest
+    use:
+      depends/tza_areas.geojson: tza_areas.geojson
+
+

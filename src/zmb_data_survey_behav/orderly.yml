@@ -1,0 +1,33 @@
+script: zmb_survey_behav.R
+
+artefacts:
+  - data:
+      description: survey indicator dataset
+      filenames:
+        - zmb_survey_indicators_sexbehav.csv
+  - data:
+      description: hiv indicator dataset
+      filenames:
+        - zmb_hiv_indicators_sexbehav.csv
+
+packages:
+  - dplyr
+  - spud
+  - readr
+  - stringr
+  - sf
+  - tidyr
+  - naomi
+  - survey
+  - rdhs
+  - naomi.utils
+
+
+
+depends:
+  zmb_data_areas:
+    id: latest
+    use:
+      depends/zmb_areas.geojson: zmb_areas.geojson
+
+

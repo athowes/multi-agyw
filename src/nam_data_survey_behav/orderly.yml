@@ -1,0 +1,31 @@
+script: nam_survey_behav.R
+
+artefacts:
+  - data:
+      description: survey indicator dataset
+      filenames:
+        - nam_survey_indicators_sexbehav.csv
+  - data:
+      description: hiv indicator dataset
+      filenames:
+        - nam_hiv_indicators_sexbehav.csv
+
+packages:
+  - dplyr
+  - forcats
+  - haven
+  - parallel
+  - rdhs
+  - naomi
+  - readr
+  - sf
+  - spud
+  - survey
+  - tidyr
+  - naomi.utils
+
+depends:
+  nam_data_areas:
+    id: latest
+    use:
+      depends/nam_areas.geojson: nam_areas.geojson

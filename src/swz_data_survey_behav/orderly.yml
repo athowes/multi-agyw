@@ -1,0 +1,33 @@
+script: swz_survey_behav.R
+
+artefacts:
+  - data:
+      description: survey indicator dataset
+      filenames:
+        - swz_survey_indicators_sexbehav.csv
+  - data:
+      description: hiv indicator dataset
+      filenames:
+        - swz_hiv_indicators_sexbehav.csv
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - spud
+  - readr
+  - sf
+  - tidyr
+  - naomi
+  - naomi.utils
+  - rdhs
+
+
+
+depends:
+  swz_data_areas:
+    id: latest
+    use:
+      depends/swz_areas.geojson: swz_areas.geojson
+
+

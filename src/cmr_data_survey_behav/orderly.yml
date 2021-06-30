@@ -1,0 +1,31 @@
+script: cmr_survey_behav.R
+
+artefacts:
+  - data:
+      description: survey indicator dataset
+      filenames:
+        - cmr_survey_indicators_sexbehav.csv
+  - data:
+      description: hiv indicator dataset
+      filenames:
+        - cmr_hiv_indicators_sexbehav.csv
+
+packages:
+  - dplyr
+  - forcats
+  - spud
+  - readr
+  - sf
+  - tidyr
+  - naomi
+  - naomi.utils
+  - rdhs
+
+
+depends:
+  cmr_data_areas:
+    id: latest
+    use:
+      depends/cmr_areas.geojson: cmr_areas.geojson
+
+

@@ -1,0 +1,27 @@
+script: ken_survey_behav.R
+
+artefacts:
+  - data:
+      description: survey indicator dataset
+      filenames:
+        - ken_survey_indicators_sexbehav.csv
+  - data:
+      description: hiv indicator dataset
+      filenames:
+        - ken_hiv_indicators_sexbehav.csv
+
+packages:
+  - dplyr
+  - naomi
+  - readr
+  - sf
+  - spud
+  - forcats
+  - rdhs
+  - naomi.utils
+
+depends:
+  ken_data_areas:
+    id: latest
+    use:
+      depends/ken_areas.geojson: ken_areas.geojson

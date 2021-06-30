@@ -1,0 +1,36 @@
+script: moz_survey_behav.R
+
+artefacts:
+  - data:
+      description: survey indicator dataset
+      filenames:
+        - moz_survey_indicators_sexbehav.csv
+  - data:
+      description: hiv indicator dataset
+      filenames:
+        - moz_hiv_indicators_sexbehav.csv
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - spud
+  - readr
+  - stringr
+  - sf
+  - tidyr
+  - naomi
+  - haven
+  - parallel
+  - naomi.utils
+  - rdhs
+
+
+
+depends:
+  moz_data_areas:
+    id: latest
+    use:
+      depends/moz_areas.geojson: moz_areas.geojson
+
+

@@ -1,0 +1,33 @@
+script: uga_survey_behav.R
+
+artefacts:
+  - data:
+      description: survey indicator dataset
+      filenames:
+        - uga_survey_indicators_sexbehav.csv
+  - data:
+      description: hiv indicator dataset
+      filenames:
+        - uga_hiv_indicators_sexbehav.csv
+
+packages:
+  - dplyr
+  - forcats
+  - spud
+  - readr
+  - stringr
+  - sf
+  - tidyr
+  - naomi
+  - survey
+  - rdhs
+  - naomi.utils
+
+
+depends:
+  uga_data_areas:
+    id: latest
+    use:
+      depends/uga_areas.geojson: uga_areas.geojson
+
+
