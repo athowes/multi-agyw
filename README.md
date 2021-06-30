@@ -26,7 +26,7 @@ Any outputs of this report will then be available to use as dependencies within 
 
 ### High priority
 
-- [ ] Create upper and lower credible estimates of probabilities using `inla.posterior.sample`
+- [x] Create upper and lower credible estimates of probabilities using `inla.posterior.sample`. See the `multinomial_model` function
 - Aggregate format using Kish weights and `xPoisson`, see `INLA::inla.doc("xPoisson")`
   - [x] Model 1: Age-category interaction
   - [x] Model 2: Age-category interaction, space-category intercation (IID)

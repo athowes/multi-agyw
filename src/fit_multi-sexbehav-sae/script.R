@@ -104,11 +104,11 @@ df <- df %>%
   arrange(obs_idx)
 
 #' Equal to the number of age groups times the number of areas
-df$obs_idx %>% max()
+stopifnot(
+  df$obs_idx %>% max() == length(unique(df$age_group)) * length(unique(df$area_id))
+)
 
 #' Functions preparing to fit models
-tau_prior <- function(x) list(prec = list(initial = log(x), fixed = TRUE))
-
 softmax <- function(x) exp(x) / sum(exp(x))
 
 #' Fit multinomial model using Poisson trick.
@@ -116,12 +116,12 @@ softmax <- function(x) exp(x) / sum(exp(x))
 #' @param formula A formula object passed to `R-INLA`.
 #' @param model A string containing the name of the model.
 #' @return A dataframe adding columns to `df`.
-multinomial_model <- function(formula, model) {
+multinomial_model <- function(formula, model, S = 100) {
   fit <- inla(formula, data = df, family = 'xPoisson',
               control.predictor = list(link = 1),
               control.compute = list(config = TRUE))
 
-  df %>%
+  df <- df %>%
     #' Add mean of linear predictor
     mutate(eta = fit$summary.linear.predictor$mean) %>%
     #' Split by observation indicator and lapply softmax
@@ -135,7 +135,46 @@ multinomial_model <- function(formula, model) {
     select(-eta) %>%
     #' Add model identifier
     mutate(model = model)
+
+  #' Number of samples from the posterior, keep it low to begin with
+  full_samples <- inla.posterior.sample(n = S, result = fit)
+
+  #' Calculate the probabilities for each sample from the posterior
+  x <- lapply(
+    seq_along(full_samples),
+    function(i)
+      full_samples[[i]]$latent %>%
+      data.frame() %>%
+      tibble::rownames_to_column() %>%
+      rename(eta = paste0("sample.", i)) %>%
+      filter(substr(rowname, 1, 10) == "Predictor:") %>%
+      mutate(obs_idx = df$obs_idx,
+             cat_idx = df$cat_idx) %>%
+      split(.$obs_idx) %>%
+      lapply(function(x)
+        x %>%
+          mutate(prob = softmax(eta))
+      ) %>%
+      bind_rows() %>%
+      mutate(sample = i)
+  ) %>%
+    bind_rows()
+
+  #' Obtain the median, upper and lower quantiles from the Monte Carlo samples
+  df <- df %>%
+    left_join(
+      x %>%
+        group_by(obs_idx, cat_idx) %>%
+        summarise(median = quantile(prob, 0.5),
+                  lower = quantile(prob, 0.025),
+                  upper = quantile(prob, 0.975)),
+      by = c("obs_idx", "cat_idx")
+    )
+
+  return(df)
 }
+
+tau_prior <- function(x) list(prec = list(initial = log(x), fixed = TRUE))
 
 #' Model 1: age x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
