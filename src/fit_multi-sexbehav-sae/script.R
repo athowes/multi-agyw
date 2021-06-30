@@ -119,7 +119,8 @@ softmax <- function(x) exp(x) / sum(exp(x))
 multinomial_model <- function(formula, model, S = 100) {
   fit <- inla(formula, data = df, family = 'xPoisson',
               control.predictor = list(link = 1),
-              control.compute = list(config = TRUE))
+              control.compute = list(dic = TRUE, waic = TRUE,
+                                     cpo = TRUE, config = TRUE))
 
   df <- df %>%
     #' Add mean of linear predictor
@@ -146,7 +147,10 @@ multinomial_model <- function(formula, model, S = 100) {
       full_samples[[i]]$latent %>%
       data.frame() %>%
       tibble::rownames_to_column() %>%
-      rename(eta = paste0("sample.", i)) %>%
+      #' eta = 2 is the second column, which usually is called
+      #' paste0("sample.", i) but I have experienced some inconsistency
+      #' from this within INLA so avoiding
+      rename(eta = 2) %>%
       filter(substr(rowname, 1, 10) == "Predictor:") %>%
       mutate(obs_idx = df$obs_idx,
              cat_idx = df$cat_idx) %>%
@@ -171,7 +175,7 @@ multinomial_model <- function(formula, model, S = 100) {
       by = c("obs_idx", "cat_idx")
     )
 
-  return(df)
+  return(list(df = df, fit = fit))
 }
 
 tau_prior <- function(x) list(prec = list(initial = log(x), fixed = TRUE))
@@ -203,17 +207,18 @@ formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
 res <- purrr::pmap(
   list(
     formula = list(formula1, formula2, formula3),
-    model = list("Model 1", "Model 2", "Model 3")
+    model = list("Model 1: Constant", "Model 2: IID", "Model 3: BYM2")
   ),
   multinomial_model
 )
 
-res <- bind_rows(res)
+res_df <- lapply(res, "[[", 1) %>%
+  bind_rows()
 
-write_csv(res, "multinomial-smoothed-district-sexbehav.csv", na = "")
+write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
 
 #' Create plotting data
-res_plot <- res %>%
+res_plot <- res_df %>%
   rename(
     estimate_raw = estimate,
     estimate_smoothed = mean
@@ -256,3 +261,11 @@ lapply(res_plot, function(x)
     )
 )
 dev.off()
+
+#' Simple model comparison
+#' Something strange happening with WAIC here, unreasonable orders of magnitude
+res_fit <- lapply(res, "[[", 2)
+ic <- sapply(res_fit, function(fit) c("dic" = fit$dic$dic, "waic" = fit$waic$waic)) %>%
+  round() %>%
+  as.data.frame() %>%
+  rename("Model 1: Constant" = 1, "Model 2: IID" = 2, "Model 3: BYM2" = 3)
