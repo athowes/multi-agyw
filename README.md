@@ -16,11 +16,21 @@ After installing [`orderly`](https://github.com/vimc/orderly) (from either CRAN 
 `orderly::orderly_run(name = "src/example")`
 
 The results of this run will appear in the `draft/` folder.
-To commit the draft (with associated `id`) to the `archive/` folder use:
+To commit the draft (with associated `id`) to the `archive/` folder (which should be treated as "read only") use:
 
 `orderly::orderly_commit(id)`
 
 Any outputs of this report will then be available to use as dependencies within other reports.
+
+Reports can be pushed to the HIV inference group sharepoint (the remote) using:
+
+`orderly::orderly_push_archive("example")`
+
+Or can be pulled (alongside any dependencies) from the remote using:
+
+`orderly_pull_archive("example")`
+
+Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_dependencies("example")`.
 
 ## To-do
 
