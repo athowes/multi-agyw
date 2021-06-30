@@ -82,6 +82,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 
 * Biases and variation in methodology for key population data which vary by country. Survey estimates have more comparable methodology but depending on KP features (for example proportion in households included in survey sampling frame) may have varying bias. See working paper "Laga - Mapping the population size of female sex worker in countries across sub-Saharan Africa"
 * Survey question "did you have sex in exchange for money or goods" has been critisied 
+* The 13 AGYW Global Fund priority countries are Botswana, Cameroon, Kenya, Lesotho, Malawi, Mozambique, Namibia, South Africa, Swaziland, Tanzania, Uganda, Zambia and Zimbabwe, from ["The Global Fund measurement framework for adolescents girls and young women programs"](https://www.theglobalfund.org/media/8076/me_adolescentsgirlsandyoungwomenprograms_frameworkmeasurement_en.pdf)
 
 ## Timeline
 
