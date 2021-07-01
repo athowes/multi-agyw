@@ -21,11 +21,11 @@ packages:
   - naomi.utils
   - rdhs
 
+global_resources:
+  depends/cmr_areas.geojson: cmr_areas.geojson
 
-depends:
-  cmr_data_areas:
-    id: latest
-    use:
-      depends/cmr_areas.geojson: cmr_areas.geojson
-
-
+# depends:
+#   cmr_data_areas:
+#     id: latest
+#     use:
+#       depends/cmr_areas.geojson: cmr_areas.geojson

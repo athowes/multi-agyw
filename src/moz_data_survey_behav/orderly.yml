@@ -25,12 +25,11 @@ packages:
   - naomi.utils
   - rdhs
 
+global_resources:
+  depends/moz_areas.geojson: moz_areas.geojson
 
-
-depends:
-  moz_data_areas:
-    id: latest
-    use:
-      depends/moz_areas.geojson: moz_areas.geojson
-
-
+# depends:
+#   moz_data_areas:
+#     id: latest
+#     use:
+#       depends/moz_areas.geojson: moz_areas.geojson

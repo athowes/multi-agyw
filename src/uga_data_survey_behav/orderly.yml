@@ -23,11 +23,11 @@ packages:
   - rdhs
   - naomi.utils
 
+global_resources:
+  depends/uga_areas.geojson: uga_areas.geojson
 
-depends:
-  uga_data_areas:
-    id: latest
-    use:
-      depends/uga_areas.geojson: uga_areas.geojson
-
-
+# depends:
+#   uga_data_areas:
+#     id: latest
+#     use:
+#       depends/uga_areas.geojson: uga_areas.geojson

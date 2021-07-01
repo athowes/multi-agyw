@@ -26,3 +26,9 @@ packages:
 
 global_resources:
   depends/mwi_areas.geojson: mwi_areas.geojson
+
+# depends:
+#   mwi_data_areas:
+#     id: latest
+#     use:
+#       depends/mwi_areas.geojson: mwi_areas.geojson

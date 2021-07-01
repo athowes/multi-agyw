@@ -22,12 +22,11 @@ packages:
   - rdhs
   - naomi.utils
 
+global_resources:
+  depends/zmb_areas.geojson: zmb_areas.geojson
 
-
-depends:
-  zmb_data_areas:
-    id: latest
-    use:
-      depends/zmb_areas.geojson: zmb_areas.geojson
-
-
+# depends:
+#   zmb_data_areas:
+#     id: latest
+#     use:
+#       depends/zmb_areas.geojson: zmb_areas.geojson
