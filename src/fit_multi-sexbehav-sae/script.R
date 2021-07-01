@@ -270,6 +270,20 @@ ic <- sapply(res_fit, function(fit) c("dic" = fit$dic$dic, "waic" = fit$waic$wai
   as.data.frame() %>%
   rename("Model 1: Constant" = 1, "Model 2: IID" = 2, "Model 3: BYM2" = 3)
 
+#' Looking at the local WAIC to determine where things are going wrong
+#' Some of the local WAIC are negative, is this OK?
+abs(res_fit[[2]]$waic$local.waic) %>%
+  sort(decreasing = TRUE) %>%
+  log10() %>%
+  plot()
+
+#' Values that have huge local WAIC also have x_eff = 0
+#' Though not all rows that have x_eff = 0 have huge local WAIC
+#' All of them are sexpaid12m, but most with x_eff = 0 are sexpaid12m too
+huge_local_waic <- df[abs(res_fit[[2]]$waic$local.waic) %>% log10() > 10, ]
+nrow(huge_local_waic) / sum(df$x_eff == 0)
+nrow(huge_local_waic) / sum(filter(df, indicator == "sexpaid12m")$x_eff == 0)
+
 #' Comparing Model 2 to Model 3
 #' The largest absolute differences are only small
 res_df %>%
