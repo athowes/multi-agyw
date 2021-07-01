@@ -18,5 +18,5 @@ remote:
       site: HIVInferenceGroup-WP
       path: Shared Documents/orderly/mwi-hiv-orderly
 
-global_resources:
-  global
+# global_resources:
+#   global
