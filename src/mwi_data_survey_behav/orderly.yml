@@ -1,4 +1,4 @@
-script: script.R
+script: mwi_survey_behav.R
 
 artefacts:
   - data:
