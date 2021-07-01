@@ -20,11 +20,8 @@ packages:
   - rdhs
   - naomi.utils
 
-global_resources:
-  depends/ken_areas.geojson: ken_areas.geojson
-
-# depends:
-#   ken_data_areas:
-#     id: latest
-#     use:
-#       depends/ken_areas.geojson: ken_areas.geojson
+depends:
+  ken_data_areas:
+    id: latest
+    use:
+      depends/ken_areas.geojson: ken_areas.geojson

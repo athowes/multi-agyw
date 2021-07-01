@@ -24,11 +24,8 @@ packages:
   - tidyr
   - naomi.utils
 
-global_resources:
-  depends/nam_areas.geojson: nam_areas.geojson
-
-# depends:
-#   nam_data_areas:
-#     id: latest
-#     use:
-#       depends/nam_areas.geojson: nam_areas.geojson
+depends:
+  nam_data_areas:
+    id: latest
+    use:
+      depends/nam_areas.geojson: nam_areas.geojson

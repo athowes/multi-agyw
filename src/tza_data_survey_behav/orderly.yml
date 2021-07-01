@@ -21,11 +21,8 @@ packages:
   - naomi.utils
   - rdhs
 
-global_resources:
-  depends/tza_areas.geojson: tza_areas.geojson
-
-# depends:
-#   tza_data_areas:
-#     id: latest
-#     use:
-#       depends/tza_areas.geojson: tza_areas.geojson
+depends:
+  tza_data_areas:
+    id: latest
+    use:
+      depends/tza_areas.geojson: tza_areas.geojson

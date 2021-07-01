@@ -23,11 +23,8 @@ packages:
   - rdhs
   - naomi.utils
 
-global_resources:
-  depends/zaf_areas.geojson: zaf_areas.geojson
-
-# depends:
-#   data_areas:
-#     id: latest
-#     use:
-#       depends/zaf_areas.geojson: zaf_areas.geojson
+depends:
+  data_areas:
+    id: latest
+    use:
+      depends/zaf_areas.geojson: zaf_areas.geojson

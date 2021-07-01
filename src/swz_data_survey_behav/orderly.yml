@@ -22,11 +22,8 @@ packages:
   - naomi.utils
   - rdhs
 
-global_resources:
-  depends/swz_areas.geojson: swz_areas.geojson
-
-# depends:
-#   swz_data_areas:
-#     id: latest
-#     use:
-#       depends/swz_areas.geojson: swz_areas.geojson
+depends:
+  swz_data_areas:
+    id: latest
+    use:
+      depends/swz_areas.geojson: swz_areas.geojson

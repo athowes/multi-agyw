@@ -106,5 +106,3 @@ hiv_indicators <- dplyr::bind_rows(dplyr::filter(hiv_indicators, eversex=="all" 
 
 #' ## Save HIV inidcators dataset
 write_csv(hiv_indicators, "zwe_hiv_indicators_sexbehav.csv", na = "")
-
-

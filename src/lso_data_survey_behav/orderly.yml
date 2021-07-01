@@ -20,11 +20,8 @@ packages:
   - rdhs
   - naomi.utils
 
-global_resources:
-  depends/lso_areas.geojson: lso_areas.geojson
-
-# depends:
-#   lso_data_areas:
-#     id: latest
-#     use:
-#       depends/lso_areas.geojson: lso_areas.geojson
+depends:
+  lso_data_areas:
+    id: latest
+    use:
+      depends/lso_areas.geojson: lso_areas.geojson
