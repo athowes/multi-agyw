@@ -269,3 +269,16 @@ ic <- sapply(res_fit, function(fit) c("dic" = fit$dic$dic, "waic" = fit$waic$wai
   round() %>%
   as.data.frame() %>%
   rename("Model 1: Constant" = 1, "Model 2: IID" = 2, "Model 3: BYM2" = 3)
+
+#' Comparing Model 2 to Model 3
+#' The largest absolute differences are only small
+res_df %>%
+  filter(model %in% c("Model 2: IID", "Model 3: BYM2")) %>%
+  group_by(age_idx, area_idx, cat_idx) %>%
+  summarise(mae = abs(diff(mean))) %>%
+  arrange(desc(mae))
+
+#' Check the mixing parameters in the BYM2 model
+#' All are close to 1, which I believe corresponds to Besag
+#' This is somewhat confusing as the results are close to that of IID
+res_fit[[3]]$summary.hyperpar
