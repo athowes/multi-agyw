@@ -5,6 +5,12 @@ remote:
       url: https://imperiallondon.sharepoint.com
       site: HIVInferenceGroup-WP
       path: Shared Documents/orderly/multi-agyw
+  naomi:
+    driver: orderly.sharepoint::orderly_remote_sharepoint
+    args:
+      url: https://imperiallondon.sharepoint.com
+      site: HIVInferenceGroup-WP
+      path: Shared Documents/orderly/naomi-data-orderly
 
 global_resources:
   global
