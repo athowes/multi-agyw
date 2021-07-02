@@ -46,17 +46,16 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   - [ ] Either decide to use DIC, or fix problem with local WAIC very large for `x_eff` values of zero
 - [ ] Create modified datasets for the 13 priority countries
   - [ ] Create new branch `sexbehav-vars-adam` in `naomi.utils`, modify `create_sexbehav_dhs` or `extract_sexbehav_dhs` to include changes to coding, and create PR to merge into `sexbehav-vars` (avoiding making alterations to each of the `aaa_data_survey_behav` reports)
-- Extend model to more countries by generalising `fit_multi-sexbehav-sae` to `aaa_fit_multi-sexbehav-sae` by not including any Malawi specific analysis, taking `iso3` as parameter input
+- [ ] Extend model to more countries by generalising `fit_multi-sexbehav-sae` to `aaa_fit_multi-sexbehav-sae` by not including any Malawi specific analysis, taking `iso3` as parameter input
 
 ### Medium priority
 
 - [ ] Understand how the Poisson trick interplays with different structures for multinomial model (baseline category, nested, etc.)
-  - May involve 
 - [ ] Possibility to include covariates
 - Extend Malawi model by adding more surveys (will eventually require more model selection)
   - [ ] DHS, requires adding time and temporal smoothing, could use survey specific intercepts
   - [ ] Adding PHIA and MICS
-- Extend model to more counries (fitting jointly)
+- [ ] Extend model to more counries (fitting jointly)
 
 ### Low priority
 
