@@ -7,7 +7,7 @@ artefacts:
         - smoothed-district-sexbehav.csv
         - smoothed-district-sexbehav.pdf
 
-displayname: Malawi smoothed sexual behaviour indicator estimates
+displayname: Smoothed sexual behaviour indicator estimates
 
 description: |
    For each indicator, create a dataset containing
@@ -26,7 +26,7 @@ description: |
 
 parameters:
   iso3:
-    default: MWI
+    default: ~
 
 packages:
   - dplyr
@@ -41,10 +41,99 @@ packages:
   - tidyr
 
 depends:
+  cmr_data_areas:
+    id: latest
+    use:
+      depends/cmr_areas.geojson: cmr_areas.geojson
+  ken_data_areas:
+    id: latest
+    use:
+      depends/ken_areas.geojson: ken_areas.geojson
+  lso_data_areas:
+    id: latest
+    use:
+      depends/lso_areas.geojson: lso_areas.geojson
+  moz_data_areas:
+    id: latest
+    use:
+      depends/moz_areas.geojson: moz_areas.geojson
+  mwi_data_areas:
+    id: latest
+    use:
+      depends/mwi_areas.geojson: mwi_areas.geojson
+  nam_data_areas:
+    id: latest
+    use:
+      depends/nam_areas.geojson: nam_areas.geojson
+  swz_data_areas:
+    id: latest
+    use:
+      depends/swz_areas.geojson: swz_areas.geojson
+  tza_data_areas:
+    id: latest
+    use:
+      depends/tza_areas.geojson: tza_areas.geojson
+  uga_data_areas:
+    id: latest
+    use:
+      depends/uga_areas.geojson: uga_areas.geojson
+  zaf_data_areas:
+    id: latest
+    use:
+      depends/zaf_areas.geojson: zaf_areas.geojson
+  zmb_data_areas:
+    id: latest
+    use:
+      depends/zmb_areas.geojson: zmb_areas.geojson
+  zwe_data_areas:
+    id: latest
+    use:
+      depends/zwe_areas.geojson: zwe_areas.geojson
+  cmr_data_survey_behav:
+    id: latest
+    use:
+      depends/cmr_survey_indicators_sexbehav.csv: cmr_survey_indicators_sexbehav.csv
+  ken_data_survey_behav:
+    id: latest
+    use:
+      depends/ken_survey_indicators_sexbehav.csv: ken_survey_indicators_sexbehav.csv
+  lso_data_survey_behav:
+    id: latest
+    use:
+      depends/lso_survey_indicators_sexbehav.csv: lso_survey_indicators_sexbehav.csv
+  moz_data_survey_behav:
+    id: latest
+    use:
+      depends/moz_survey_indicators_sexbehav.csv: moz_survey_indicators_sexbehav.csv
   mwi_data_survey_behav:
     id: latest
     use:
       depends/mwi_survey_indicators_sexbehav.csv: mwi_survey_indicators_sexbehav.csv
-
-global_resources:
-  depends/mwi_areas.geojson: mwi_areas.geojson
+  # nam_data_survey_behav:
+  #   id: latest
+  #   use:
+  #     depends/nam_survey_indicators_sexbehav.csv: nam_survey_indicators_sexbehav.csv
+  swz_data_survey_behav:
+    id: latest
+    use:
+      depends/swz_survey_indicators_sexbehav.csv: swz_survey_indicators_sexbehav.csv
+  tza_data_survey_behav:
+    id: latest
+    use:
+      depends/tza_survey_indicators_sexbehav.csv: tza_survey_indicators_sexbehav.csv
+  uga_data_survey_behav:
+    id: latest
+    use:
+      depends/uga_survey_indicators_sexbehav.csv: uga_survey_indicators_sexbehav.csv
+  zaf_data_survey_behav:
+    id: latest
+    use:
+      depends/zaf_survey_indicators_sexbehav.csv: zaf_survey_indicators_sexbehav.csv
+  zmb_data_survey_behav:
+    id: latest
+    use:
+      depends/zmb_survey_indicators_sexbehav.csv: zmb_survey_indicators_sexbehav.csv
+  zwe_data_survey_behav:
+    id: latest
+    use:
+      depends/zwe_survey_indicators_sexbehav.csv: zwe_survey_indicators_sexbehav.csv
