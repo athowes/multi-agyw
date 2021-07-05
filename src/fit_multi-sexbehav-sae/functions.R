@@ -1,0 +1,90 @@
+#' Compute the softmax of a vector.
+#'
+#' @param x A vector.
+#' @return The softmax of `x`
+softmax <- function(x) {
+  exp(x) / sum(exp(x))
+}
+
+#' Categorical to indicators (dummy variables).
+#'
+#' @param x A categorical column.
+#' @return Indicator variables column.
+to_int <- function(x) {
+  as.integer(as.factor(x))
+}
+
+#' Precision prior for `R-INLA`.
+#'
+#' @param x Used to specify the `initial`.
+#' @return A prior that can be passed to `R-INLA`.
+tau_prior <- function(x) {
+  list(prec = list(initial = log(x), fixed = TRUE))
+}
+
+#' Fit multinomial model using Poisson trick.
+#'
+#' @param formula A formula object passed to `R-INLA`.
+#' @param model A string containing the name of the model.
+#' @return A dataframe adding columns to `df`.
+multinomial_model <- function(formula, model, S = 100) {
+  fit <- inla(formula, data = df, family = 'xPoisson',
+              control.predictor = list(link = 1),
+              control.compute = list(dic = TRUE, waic = TRUE,
+                                     cpo = TRUE, config = TRUE))
+
+  df <- df %>%
+    #' Add mean of linear predictor
+    mutate(eta = fit$summary.linear.predictor$mean) %>%
+    #' Split by observation indicator and lapply softmax
+    split(.$obs_idx) %>%
+    lapply(function(x)
+      x %>%
+        mutate(mean = softmax(eta))
+    ) %>%
+    bind_rows() %>%
+    #' Remove eta
+    select(-eta) %>%
+    #' Add model identifier
+    mutate(model = model)
+
+  #' Number of samples from the posterior, keep it low to begin with
+  full_samples <- inla.posterior.sample(n = S, result = fit)
+
+  #' Calculate the probabilities for each sample from the posterior
+  x <- lapply(
+    seq_along(full_samples),
+    function(i)
+      full_samples[[i]]$latent %>%
+      data.frame() %>%
+      tibble::rownames_to_column() %>%
+      #' eta = 2 is the second column, which usually is called
+      #' paste0("sample.", i) but I have experienced some inconsistency
+      #' from this within INLA so avoiding
+      rename(eta = 2) %>%
+      filter(substr(rowname, 1, 10) == "Predictor:") %>%
+      mutate(obs_idx = df$obs_idx,
+             cat_idx = df$cat_idx) %>%
+      split(.$obs_idx) %>%
+      lapply(function(x)
+        x %>%
+          mutate(prob = softmax(eta))
+      ) %>%
+      bind_rows() %>%
+      mutate(sample = i)
+  ) %>%
+    bind_rows()
+
+  #' Obtain the median, upper and lower quantiles from the Monte Carlo samples
+  df <- df %>%
+    left_join(
+      x %>%
+        group_by(obs_idx, cat_idx) %>%
+        summarise(median = quantile(prob, 0.5),
+                  lower = quantile(prob, 0.025),
+                  upper = quantile(prob, 0.975)),
+      by = c("obs_idx", "cat_idx")
+    )
+
+  return(list(df = df, fit = fit))
+}
