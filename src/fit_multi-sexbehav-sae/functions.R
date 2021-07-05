@@ -28,6 +28,9 @@ tau_prior <- function(x) {
 #' @param model A string containing the name of the model.
 #' @return A dataframe adding columns to `df`.
 multinomial_model <- function(formula, model, S = 100) {
+
+  message(paste0("Begin fitting ", model, "."))
+
   fit <- inla(formula, data = df, family = 'xPoisson',
               control.predictor = list(link = 1),
               control.compute = list(dic = TRUE, waic = TRUE,
@@ -85,6 +88,8 @@ multinomial_model <- function(formula, model, S = 100) {
                   upper = quantile(prob, 0.975)),
       by = c("obs_idx", "cat_idx")
     )
+
+  message(paste0("Completed fitting ", model, "."))
 
   return(list(df = df, fit = fit))
 }
