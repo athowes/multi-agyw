@@ -11,6 +11,12 @@ remote:
       url: https://imperiallondon.sharepoint.com
       site: HIVInferenceGroup-WP
       path: Shared Documents/orderly/naomi-data-orderly
+  naomi2:
+    driver: orderly.sharepoint::orderly_remote_sharepoint
+    args:
+      url: https://imperiallondon.sharepoint.com
+      site: HIVInferenceGroup-WP
+      path: Shared Documents/orderly/naomi-orderly-naomi2
   malawi:
     driver: orderly.sharepoint::orderly_remote_sharepoint
     args:

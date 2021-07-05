@@ -1,7 +1,12 @@
-#' The 13 GF AGYW countries minus BWA and minus MWI
-iso3 <- c("CMR", "KEN", "LSO", "MOZ", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+#' The 13 GF AGYW countries
+#' Excluding
+#' * BWA (no DHSs)
+#' * MWI (has separate remote)
+#' * NAM (is in naomi2 remote)
+#' TODO: Check with Rachel about naomi and naomi2
+iso3 <- c("CMR", "KEN", "LSO", "MOZ", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 
-#' Check that it is indeed 13 - 1 - 1 = 11
+#' Check that it is indeed 13 - 3 = 10
 length(iso3)
 
 #' The names of the reports to pull
@@ -17,5 +22,8 @@ sapply(
   }
 )
 
-#' Malawi has a different remote
+#' Malawi has a different remote (Shared Documents/orderly/mwi-hiv-orderly)
 orderly::orderly_pull_archive("mwi_data_areas", remote = "malawi")
+
+#' Namibia has a different remote (Shared Documents/orderly/naomi-orderly-naomi2)
+orderly::orderly_pull_archive("nam_data_areas", remote = "naomi2")
