@@ -2,10 +2,7 @@
 iso3 <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 
 #' The names of the reports to run
-# reports <- paste0(tolower(iso3), "_data_survey_behav")
-
-#' Just try doing the one for now
-reports <- "cmr_data_survey_behav"
+reports <- paste0(tolower(iso3), "_data_survey_behav")
 
 #' Try to run them
 sapply(
@@ -28,3 +25,9 @@ sapply(
     )
   }
 )
+
+#' Running an individual report
+# report <- "name_here"
+# id <- orderly::orderly_run(report)
+# orderly::orderly_commit(id)
+# orderly::orderly_push_archive(report)
