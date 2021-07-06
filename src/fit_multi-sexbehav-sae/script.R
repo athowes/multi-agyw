@@ -216,10 +216,13 @@ dev.off()
 #' Simple model comparison
 #' Something strange happening with WAIC here, unreasonable orders of magnitude
 res_fit <- lapply(res, "[[", 2)
-ic <- sapply(res_fit, function(fit) c("dic" = fit$dic$dic, "waic" = fit$waic$waic)) %>%
+ic_df <- sapply(res_fit, function(fit) c("dic" = fit$dic$dic, "waic" = fit$waic$waic)) %>%
+  t() %>%
   round() %>%
   as.data.frame() %>%
-  rename("Model 1: Constant" = 1, "Model 2: IID" = 2, "Model 3: BYM2" = 3)
+  mutate(model = c("Model 1: Constant", "Model 2: IID", "Model 3: BYM2"), .before = dic)
+
+write_csv(ic_df, "information-criteria.csv", na = "")
 
 #' Looking at the local WAIC to determine where things are going wrong
 #' Some of the local WAIC are negative, is this OK?

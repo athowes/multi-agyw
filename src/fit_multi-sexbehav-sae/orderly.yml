@@ -9,6 +9,10 @@ artefacts:
       filenames:
         - multinomial-smoothed-district-sexbehav.csv
         - multinomial-smoothed-district-sexbehav.pdf
+  - data:
+      description: Model selection information criteria for multinomial models
+      filenames:
+        - information-criteria.csv
 
 parameters:
   iso3:

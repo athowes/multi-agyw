@@ -44,7 +44,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   - [ ] Model 4: ...
 - [x] Model comparison (DIC or WAIC) among the above models
   - [ ] Either decide to use DIC, or fix problem with local WAIC very large for `x_eff` values of zero
-  - [ ] Make model comparison an `artefact` of model fitting
+  - [x] Make model comparison an `artefact` of model fitting
 - [ ] Create modified datasets for the 13 priority countries
   - [ ] Create new branch `sexbehav-vars-adam` in `naomi.utils`, modify `create_sexbehav_dhs` or `extract_sexbehav_dhs` to include changes to coding, and create PR to merge into `sexbehav-vars` (avoiding making alterations to each of the `aaa_data_survey_behav` reports)
 - [ ] Extend model to more countries by generalising `fit_multi-sexbehav-sae` to `aaa_fit_multi-sexbehav-sae` by not including any Malawi specific analysis, taking `iso3` as parameter input
