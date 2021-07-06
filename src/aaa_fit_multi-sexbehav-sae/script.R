@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(iso3 = "MWI"))
-# setwd("src/fit_multi-sexbehav-sae")
+# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "MWI"))
+# setwd("src/aaa_fit_multi-sexbehav-sae")
 
 analysis_level <- c("CMR" = 2,
                     "KEN" = 2,
