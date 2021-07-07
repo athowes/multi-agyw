@@ -9,6 +9,12 @@ This repository is an [`orderly`](https://github.com/vimc/orderly) project, with
 * `data`: copies of data used in the reports
 * `tutorials`: miscellaneous code used to study models etc.
 
+## R packages
+
+Note that this repository requires a particular branch of the `naomi.utils` package, which can be installed from Github via:
+
+`devtools::install_github("athowes/naomi.utils", ref = "sexbehav-vars-adam")`
+
 ## How to run and commit reports
 
 After installing [`orderly`](https://github.com/vimc/orderly) (from either CRAN or Github) a report, let's say called `example`, may be run by:
