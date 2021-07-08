@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "MWI"))
+# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "KEN"))
 # setwd("src/aaa_fit_multi-sexbehav-sae")
 
 analysis_level <- c("CMR" = 2,
@@ -90,8 +90,14 @@ df <- crossing(
            area_sort_order, center_x, center_y)
 )
 
-#' Verify that there are no estimates > 1
-stopifnot(filter(ind, estimate > 1) %>% nrow() == 0)
+#' #' Verify that there are no estimates > 1
+#' stopifnot(filter(ind, estimate > 1) %>% nrow() == 0)
+
+#' Relax the above to just set ind > 1 to 1, as well as ind < 0 to 0
+#' TODO: Investigate more
+ind <- ind %>%
+  mutate(estimate = pmin(1, estimate),
+         estimate = pmax(0, estimate))
 
 #' Add district observations
 #' Note that df here has 528 rows: 33 areas, 4 categories, 4 age groups
@@ -168,51 +174,6 @@ res_df <- lapply(res, "[[", 1) %>%
 
 write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
 
-#' Create plotting data
-res_plot <- res_df %>%
-  rename(
-    estimate_raw = estimate,
-    estimate_smoothed = mean
-  ) %>%
-  pivot_longer(
-    cols = c(starts_with("estimate")),
-    names_to = c(".value", "source"),
-    names_pattern = "(.*)\\_(.*)"
-  ) %>%
-  left_join(
-    select(areas, area_id),
-    by = "area_id"
-  ) %>%
-  st_as_sf() %>%
-  split(~indicator + model)
-
-pdf("multinomial-smoothed-district-sexbehav.pdf", h = 11, w = 8.5)
-lapply(res_plot, function(x)
-  x %>%
-    mutate(
-      age_group = fct_relevel(age_group, "Y015_024") %>%
-        fct_recode("15-24" = "Y015_024", "15-19" = "Y015_019", "20-24" = "Y020_024", "25-29" = "Y025_029"),
-      source = fct_relevel(source, "raw", "smoothed", "aggregate") %>%
-        fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed", "Admin 1 aggregate" = "aggr")
-    ) %>%
-    ggplot(aes(fill = estimate)) +
-    geom_sf(size = 0.1) +
-    scale_fill_viridis_c(option = "C", label = label_percent()) +
-    facet_grid(age_group ~ source) +
-    theme_minimal() +
-    labs(title = paste0(iso3, ": ", x$indicator[1], " (", x$model[1], ")")) +
-    theme(
-      axis.text = element_blank(),
-      axis.ticks = element_blank(),
-      panel.grid = element_blank(),
-      strip.text = element_text(face = "bold"),
-      plot.title = element_text(face = "bold"),
-      legend.position = "bottom",
-      legend.key.width = unit(4, "lines")
-    )
-)
-dev.off()
-
 #' Simple model comparison
 #' Something strange happening with WAIC here, unreasonable orders of magnitude
 res_fit <- lapply(res, "[[", 2)
@@ -250,3 +211,50 @@ res_df %>%
 #' All are close to 1, which I believe corresponds to Besag
 #' This is somewhat confusing as the results are close to that of IID
 res_fit[[3]]$summary.hyperpar
+
+#' Create plotting data
+res_plot <- res_df %>%
+  rename(
+    estimate_raw = estimate,
+    estimate_smoothed = mean
+  ) %>%
+  pivot_longer(
+    cols = c(starts_with("estimate")),
+    names_to = c(".value", "source"),
+    names_pattern = "(.*)\\_(.*)"
+  ) %>%
+  left_join(
+    select(areas, area_id),
+    by = "area_id"
+  ) %>%
+  st_as_sf() %>%
+  split(~indicator + model)
+
+pdf("multinomial-smoothed-district-sexbehav.pdf", h = 11, w = 8.5)
+
+lapply(res_plot, function(x)
+  x %>%
+    mutate(
+      age_group = fct_relevel(age_group, "Y015_024") %>%
+        fct_recode("15-24" = "Y015_024", "15-19" = "Y015_019", "20-24" = "Y020_024", "25-29" = "Y025_029"),
+      source = fct_relevel(source, "raw", "smoothed", "aggregate") %>%
+        fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed", "Admin 1 aggregate" = "aggr")
+    ) %>%
+    ggplot(aes(fill = estimate)) +
+    geom_sf(size = 0.1) +
+    scale_fill_viridis_c(option = "C", label = label_percent()) +
+    facet_grid(age_group ~ source) +
+    theme_minimal() +
+    labs(title = paste0(iso3, ": ", x$indicator[1], " (", x$model[1], ")")) +
+    theme(
+      axis.text = element_blank(),
+      axis.ticks = element_blank(),
+      panel.grid = element_blank(),
+      strip.text = element_text(face = "bold"),
+      plot.title = element_text(face = "bold"),
+      legend.position = "bottom",
+      legend.key.width = unit(4, "lines")
+    )
+)
+
+dev.off()
