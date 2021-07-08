@@ -50,9 +50,11 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   - [ ] Model 4: ...
 - [x] Model comparison (DIC or WAIC) among the above models
   - [ ] Either decide to use DIC, or fix problem with local WAIC very large for `x_eff` values of zero
-  - [x] Make model comparison an `artefact` of model fitting
-- [ ] Create modified datasets for the 13 priority countries
-  - [ ] Create new branch `sexbehav-vars-adam` in `naomi.utils`, modify `create_sexbehav_dhs` or `extract_sexbehav_dhs` to include changes to coding, and create PR to merge into `sexbehav-vars` (avoiding making alterations to each of the `aaa_data_survey_behav` reports)
+    - There are also problems with DIC (see output of `process_information-criteria`) -- need to be sorted out whatever is used
+    - Use same model for all countries or select to best model in each country?
+  - [x] Make model comparison an `artefact` of model fitting, then combine them together in another report
+- [x] Create modified datasets for the 13 priority countries
+  - [x] Create new branch `sexbehav-vars-adam` in `naomi.utils`, modify `create_sexbehav_dhs` or `extract_sexbehav_dhs` to include changes to coding, and create PR to merge into `sexbehav-vars` (avoiding making alterations to each of the `aaa_data_survey_behav` reports)
 - [x] Extend model to more countries by generalising `fit_multi-sexbehav-sae` to `aaa_fit_multi-sexbehav-sae` by not including any Malawi specific analysis, taking `iso3` as parameter input
 - [ ] Extend Malawi model by adding more DHS surveys (will eventually require more model selection)
   - Temporal smoothing (random walk, what about interactions?)
@@ -60,15 +62,18 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 
 ### Medium priority
 
+- [ ] Add .pdf plot to `process_information-criteria`
 - [ ] Split the `aaa_data_survey_behav` tasks up: a lot going on (unclear what exactly to split into)
   - [ ] Modularise linking cluster identifiers to area (talk to Oli about this)
 - [ ] Understand how the Poisson trick interplays with different structures for multinomial model (baseline category, nested, etc.)
 - [ ] Possibility to include covariates
 - [ ] Extend Malawi model by adding more surveys (PHIA and MICS). Could use survey specific intercepts
 - [ ] Fitting model jointly to multiple countries
+- [] Should the `utils` scripts be reports? Report to run reports? Report to run report which runs reports?
 
 ### Low priority
 
+- [ ] Reorder columns of output to a more friendly format, removing things which don't need to be there like identifiers for `R-INLA`
 - [ ] Add other different types of simulated data e.g. spatial structure to `sim_sexbehav` and try to recover
 - [ ] Create individual data that links the `cluster_id` to area by modifying `mwi_data_survey_behav` (currently it's only the aggregate data that is output)
 - [ ] Fit model to Malawi using individual format data. Individual weighted log-likelihood in `R-INLA` might not be possible, see Google group [discussion](https://groups.google.com/g/r-inla-discussion-group/c/Q-STkrFXR0g/m/6PWxRV4tBQ). Could try `TMB`
