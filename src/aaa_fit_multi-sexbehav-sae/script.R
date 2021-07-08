@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "KEN"))
+# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "CMR"))
 # setwd("src/aaa_fit_multi-sexbehav-sae")
 
 analysis_level <- c("CMR" = 2,
@@ -181,7 +181,11 @@ ic_df <- sapply(res_fit, function(fit) c("dic" = fit$dic$dic, "waic" = fit$waic$
   t() %>%
   round() %>%
   as.data.frame() %>%
-  mutate(model = c("Model 1: Constant", "Model 2: IID", "Model 3: BYM2"), .before = dic)
+  mutate(
+    iso3 = iso3,
+    model = c("Model 1: Constant", "Model 2: IID", "Model 3: BYM2"),
+    .before = dic
+  )
 
 write_csv(ic_df, "information-criteria.csv", na = "")
 
