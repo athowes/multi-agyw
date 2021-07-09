@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "CMR"))
+# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "MWI"))
 # setwd("src/aaa_fit_multi-sexbehav-sae")
 
 analysis_level <- c("CMR" = 2,
@@ -36,6 +36,11 @@ admin1_level <- admin1_level[iso3]
 
 areas <- read_sf(paste0("depends/", tolower(iso3), "_areas.geojson"))
 ind <- read_csv(paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.csv"))
+
+#' In this report, we only use the most recent DHS survey from each country
+#' max(ind$survey_id) is plausibly dodgy: survey_id is a string
+ind <- ind %>%
+  filter(survey_id == max(ind$survey_id))
 
 #' Append an indicator for 1 - sex12m
 #' TODO: Move this earlier in the pipeline with a mutate call

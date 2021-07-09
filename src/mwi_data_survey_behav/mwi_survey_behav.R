@@ -11,8 +11,7 @@ areas_wide <- spread_areas(areas)
 
 #' Filter all of the DHS with the corresponding iso3 code to the most recent survey
 #' and obtain the meta data
-surveys <- create_surveys_dhs(iso3) %>%
-  filter(SurveyYear == max(SurveyYear))
+surveys <- create_surveys_dhs(iso3)
 survey_meta <- create_survey_meta_dhs(surveys)
 
 #' "Create survey region boundaries dataset from DHS spatial data repository"

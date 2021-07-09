@@ -6,7 +6,6 @@ areas <- read_sf("depends/zwe_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
 surveys <- create_surveys_dhs(iso3)
-surveys <- surveys %>% dplyr::filter(SurveyYear==max(SurveyYear))
 survey_meta <- create_survey_meta_dhs(surveys)
 
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
