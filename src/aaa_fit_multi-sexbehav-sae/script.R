@@ -154,10 +154,16 @@ formula2 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.4, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
+#' Model 2a: using the group option
+#' TODO: Better understand this from
+#' https://raw.githubusercontent.com/hrue/r-inla/devel/internal-doc/group/group-models.pdf
+#' "There are much more applications, e.g. invariant smoothing of multinomial data"
+formula2a <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx, model = "iid", group = cat_idx,
+    control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
+
 #' Model 3: space x category random effects (BYM2)
-#' TODO: Perhaps this can be done without so many idx
-#' Certainly Model 2 can be. Could do things like creating a
-#' graph with four connected components?
 formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
@@ -165,11 +171,17 @@ formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.4, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001))
 
+#' Model 3a: using the group option
+formula3a <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx, model = "bym2", graph = adjM, group = cat_idx,
+    control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
+
 #' Fit the models
 res <- purrr::pmap(
   list(
-    formula = list(formula1, formula2, formula3),
-    model = list("Model 1: Constant", "Model 2: IID", "Model 3: BYM2")
+    formula = list(formula1, formula2, formula2a, formula3, formula3a),
+    model = list("Model 1: Constant", "Model 2: IID", "Model 2a: IID (grouped)", "Model 3: BYM2", "Model 3a: BYM2 (grouped)")
   ),
   multinomial_model
 )
