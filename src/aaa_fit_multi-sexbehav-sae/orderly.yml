@@ -17,6 +17,12 @@ artefacts:
 parameters:
   iso3:
     default: ~
+  #' Specify the models to be fit
+  #' Default value NA corresponds to all models
+  #' Otherwise provide indicies
+  #' TODO: Find way to have vector input here?
+  max_model_id:
+    default: NA
 
 packages:
   - dplyr

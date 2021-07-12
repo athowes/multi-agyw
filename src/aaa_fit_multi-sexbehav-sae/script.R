@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "MWI"))
+# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "MWI", max_model_id = 4))
 # setwd("src/aaa_fit_multi-sexbehav-sae")
 
 analysis_level <- c("CMR" = 2,
@@ -154,35 +154,45 @@ formula2 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.4, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 2a: using the group option
+#' Model 3: using the group option
 #' TODO: Better understand this from
 #' https://raw.githubusercontent.com/hrue/r-inla/devel/internal-doc/group/group-models.pdf
 #' "There are much more applications, e.g. invariant smoothing of multinomial data"
-formula2a <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx, model = "iid", group = cat_idx,
     control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 3: space x category random effects (BYM2)
-formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+#' Model 4: space x category random effects (BYM2)
+formula4 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.4, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 3a: using the group option
-formula3a <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+#' Model 5: using the group option
+formula5 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx, model = "bym2", graph = adjM, group = cat_idx,
     control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
 
+#' All of the possible models
+all_formulas <- list(formula1, formula2, formula3, formula4, formula5)
+all_models <- list("Model 1: Constant", "Model 2: IID", "Model 3: IID (grouped)", "Model 4: BYM2", "Model 5: BYM2 (grouped)")
+
+#' The subset of all possible fit in this script, as specified by model_ids
+if(!is.na(max_model_id)) {
+  formulas <- all_formulas[1:max_model_id]
+  models <- all_models[1:max_model_id]
+} else {
+  formulas <- all_formulas
+  models <- all_models
+}
+
 #' Fit the models
 res <- purrr::pmap(
-  list(
-    formula = list(formula1, formula2, formula2a, formula3, formula3a),
-    model = list("Model 1: Constant", "Model 2: IID", "Model 2a: IID (grouped)", "Model 3: BYM2", "Model 3a: BYM2 (grouped)")
-  ),
+  list(formula = formulas, model = models),
   multinomial_model
 )
 
@@ -200,7 +210,7 @@ ic_df <- sapply(res_fit, function(fit) c("dic" = fit$dic$dic, "waic" = fit$waic$
   as.data.frame() %>%
   mutate(
     iso3 = iso3,
-    model = c("Model 1: Constant", "Model 2: IID", "Model 3: BYM2"),
+    model = unlist(models),
     .before = dic
   )
 
@@ -231,7 +241,7 @@ res_df %>%
 #' Check the mixing parameters in the BYM2 model
 #' All are close to 1, which I believe corresponds to Besag
 #' This is somewhat confusing as the results are close to that of IID
-res_fit[[3]]$summary.hyperpar
+res_fit[[4]]$summary.hyperpar
 
 #' Create plotting data
 res_plot <- res_df %>%
@@ -266,7 +276,7 @@ lapply(res_plot, function(x)
     scale_fill_viridis_c(option = "C", label = label_percent()) +
     facet_grid(age_group ~ source) +
     theme_minimal() +
-    labs(title = paste0(iso3, ": ", x$indicator[1], " (", x$model[1], ")")) +
+    labs(title = paste0(x$survey_id[1], ": ", x$indicator[1], " (", x$model[1], ")")) +
     theme(
       axis.text = element_blank(),
       axis.ticks = element_blank(),
