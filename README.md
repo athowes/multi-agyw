@@ -40,6 +40,13 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 
 ## To-do
 
+### Clean-up operations
+
+- [ ] ~5% of rows produced using `softmax` [based on samples](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/functions.R#L55) using `inla.posterior.sample` from (some subset of) the models result in `NaN`. Find the cause of this issue and solve
+- [ ] [Local WAIC very large](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/script.R#L205) for `x_eff` values of zero (this more often occurs for `sexpaid12m`). DIC output also has problems resulting in either `NA` or implausible values. Use the local values to find rows causing the problem, then try to resolve somehow. Could it be related to survey weights?
+- [ ] [`ind` values outside [0, 1]](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/script.R#L102) (possibly traced back to `survey::` functions). Try to fix
+- [ ] It's not OK to fit overlapping age categories at the same time as e.g. use some data twice to inform precision parameter estimate of age random effects. Find a way to generate 15-24 age category estimates from 15-19 and 20-24. Population size weighting?
+
 ### High priority
 
 - [x] Create upper and lower credible estimates of probabilities using `inla.posterior.sample`. See the `multinomial_model` function
@@ -47,11 +54,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   - [x] Model 1: Age-category interaction
   - [x] Model 2: Age-category interaction, space-category intercation (IID)
   - [x] Model 3: Age-category interaction, space-category interaction (BYM2)
-  - [ ] Model 4: ...
 - [x] Model comparison (DIC or WAIC) among the above models
-  - [ ] Either decide to use DIC, or fix problem with local WAIC very large for `x_eff` values of zero
-    - There are also problems with DIC (see output of `process_information-criteria`) -- need to be sorted out whatever is used
-    - Use same model for all countries or select to best model in each country?
   - [x] Make model comparison an `artefact` of model fitting, then combine them together in another report
 - [x] Create modified datasets for the 13 priority countries
   - [x] Create new branch `sexbehav-vars-adam` in `naomi.utils`, modify `create_sexbehav_dhs` or `extract_sexbehav_dhs` to include changes to coding, and create PR to merge into `sexbehav-vars` (avoiding making alterations to each of the `aaa_data_survey_behav` reports)
@@ -102,7 +105,8 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 * Survey question "did you have sex in exchange for money or goods" has been critisied 
 * The 13 AGYW Global Fund priority countries are Botswana, Cameroon, Kenya, Lesotho, Malawi, Mozambique, Namibia, South Africa, Swaziland, Tanzania, Uganda, Zambia and Zimbabwe, from ["The Global Fund measurement framework for adolescents girls and young women programs"](https://www.theglobalfund.org/media/8076/me_adolescentsgirlsandyoungwomenprograms_frameworkmeasurement_en.pdf)
   * Note that Botswana doesn't have DHS: instead they do their own surveys "Botswana AIDS Impact Survey (BAIS)" (this explains the lack of `src/bwa_data_survey_behav`
+* Use same model for all countries or select to best model in each country?
 
 ## Timeline
 
-* Delivery of workbook to UNAIDS Global Fund on 17th July.
+* Delivery of workbook to UNAIDS Global Fund on 17th July
