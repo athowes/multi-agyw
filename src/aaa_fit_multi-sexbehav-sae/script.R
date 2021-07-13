@@ -178,7 +178,7 @@ formula5 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
     control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
 
 #' All of the possible models
-all_formulas <- list(formula1, formula2, formula3, formula4, formula5)
+all_formulas <- parse(text = paste0("list(", paste0("formula", 1:5, collapse = ", "), ")")) %>% eval()
 all_models <- list("Model 1: Constant", "Model 2: IID", "Model 3: IID (grouped)", "Model 4: BYM2", "Model 5: BYM2 (grouped)")
 
 #' The subset of all possible fit in this script, as specified by model_ids
@@ -204,7 +204,15 @@ write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
 #' Simple model comparison
 #' Something strange happening with WAIC here, unreasonable orders of magnitude
 res_fit <- lapply(res, "[[", 2)
-ic_df <- sapply(res_fit, function(fit) c("dic" = fit$dic$dic, "waic" = fit$waic$waic)) %>%
+ic_df <- sapply(res_fit, function(fit) {
+  local_dic <- fit$dic$local.dic
+  local_waic <- fit$waic$local.waic
+
+  c("dic" = sum(local_dic),
+    "dic_se" = stats::sd(local_dic) * sqrt(length(local_dic)),
+    "waic" = sum(local_waic),
+    "waic_se" = stats::sd(local_waic) * sqrt(length(local_waic)))
+  }) %>%
   t() %>%
   round() %>%
   as.data.frame() %>%

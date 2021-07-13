@@ -9,8 +9,10 @@ df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
 write_csv(df, "all-model-comparison.csv", na = "")
 
-#' This is a relic of when all-model-comparison didn't have an iso3 column
+#' Relic from when all-model-comparison didn't have an iso3 or standard error columns
 if(!("iso3" %in% names(df))) df$iso3 <- rep(iso3, each = 3)
+if(!("dic_se" %in% names(df))) df$dic_se <- NA
+if(!("waic_se" %in% names(df))) df$waic_se <- NA
 
 df <- df %>%
   # #' Could cleaning the DIC for infeasible values here

@@ -63,7 +63,8 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 ### Medium priority
 
 - [x] Add .pdf plot to `process_information-criteria`
-- [ ] Add standard errors to DIC results
+- [x] Add standard errors to DIC results
+  - [ ] To add to plot once first run with this information is processed
 - [ ] Split the `aaa_data_survey_behav` tasks up: a lot going on (unclear what exactly to split into)
   - [ ] Modularise linking cluster identifiers to area (talk to Oli about this)
 - [ ] Understand how the Poisson trick interplays with different structures for multinomial model (baseline category, nested, etc.)

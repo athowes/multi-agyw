@@ -250,7 +250,16 @@ write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
 #' Simple model comparison
 #' Something strange happening with WAIC here, unreasonable orders of magnitude
 res_fit <- lapply(res, "[[", 2)
-ic_df <- sapply(res_fit, function(fit) c("dic" = fit$dic$dic, "waic" = fit$waic$waic)) %>%
+
+ic_df <- sapply(res_fit, function(fit) {
+  local_dic <- fit$dic$local.dic
+  local_waic <- fit$waic$local.waic
+
+  c("dic" = sum(local_dic),
+    "dic_se" = stats::sd(local_dic) * sqrt(length(local_dic)),
+    "waic" = sum(local_waic),
+    "waic_se" = stats::sd(local_waic) * sqrt(length(local_waic)))
+  }) %>%
   t() %>%
   round() %>%
   as.data.frame() %>%
