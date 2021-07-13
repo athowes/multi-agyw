@@ -5,6 +5,7 @@ artefacts:
       description: Model comparison results
       filenames:
         - all-model-comparison.csv
+        - all-model-comparison.pdf
 
 packages:
   - dplyr

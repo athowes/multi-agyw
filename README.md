@@ -56,20 +56,21 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 - [x] Create modified datasets for the 13 priority countries
   - [x] Create new branch `sexbehav-vars-adam` in `naomi.utils`, modify `create_sexbehav_dhs` or `extract_sexbehav_dhs` to include changes to coding, and create PR to merge into `sexbehav-vars` (avoiding making alterations to each of the `aaa_data_survey_behav` reports)
 - [x] Extend model to more countries by generalising `fit_multi-sexbehav-sae` to `aaa_fit_multi-sexbehav-sae` by not including any Malawi specific analysis, taking `iso3` as parameter input
-- [ ] Extend Malawi model by adding more DHS surveys (will eventually require more model selection)
+- [x] Extend Malawi model by adding more DHS surveys (will eventually require more model selection)
   - Temporal smoothing (random walk, what about interactions?)
   - Loss: current time or over all time?
 
 ### Medium priority
 
-- [ ] Add .pdf plot to `process_information-criteria`
+- [x] Add .pdf plot to `process_information-criteria`
+- [ ] Add standard errors to DIC results
 - [ ] Split the `aaa_data_survey_behav` tasks up: a lot going on (unclear what exactly to split into)
   - [ ] Modularise linking cluster identifiers to area (talk to Oli about this)
 - [ ] Understand how the Poisson trick interplays with different structures for multinomial model (baseline category, nested, etc.)
 - [ ] Possibility to include covariates
 - [ ] Extend Malawi model by adding more surveys (PHIA and MICS). Could use survey specific intercepts
 - [ ] Fitting model jointly to multiple countries
-- [] Should the `utils` scripts be reports? Report to run reports? Report to run report which runs reports?
+- [ ] Should the `utils` scripts be reports? Report to run reports? Report to run report which runs reports?
 
 ### Low priority
 
