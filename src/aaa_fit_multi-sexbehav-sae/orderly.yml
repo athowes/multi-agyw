@@ -13,6 +13,10 @@ artefacts:
       description: Model selection information criteria for multinomial models
       filenames:
         - information-criteria.csv
+  - data:
+      description: BYM2 proportion parameter posteriors
+      filenames:
+        - bym2-proportions.pdf
 
 parameters:
   iso3:

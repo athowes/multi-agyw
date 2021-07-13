@@ -246,11 +246,6 @@ res_df %>%
   summarise(mae = abs(diff(mean))) %>%
   arrange(desc(mae))
 
-#' Check the mixing parameters in the BYM2 model
-#' All are close to 1, which I believe corresponds to Besag
-#' This is somewhat confusing as the results are close to that of IID
-res_fit[[4]]$summary.hyperpar
-
 #' Create plotting data
 res_plot <- res_df %>%
   rename(
@@ -294,6 +289,25 @@ lapply(res_plot, function(x)
       legend.position = "bottom",
       legend.key.width = unit(4, "lines")
     )
+)
+
+dev.off()
+
+pdf("bym2-proportions.pdf", h = 11, w = 8.5)
+
+#' Check the mixing parameters in the BYM2 model
+lapply(1:4, function(i) {
+  mean <- res_fit[[4]]$summary.hyperpar[i, 1] %>% round(digits = 3)
+  sd <- res_fit[[4]]$summary.hyperpar[i, 2] %>% round(digits = 3)
+  res_fit[[4]]$marginals.hyperpar[[i]] %>%
+    as.data.frame() %>%
+    ggplot(aes(x = x, y = y)) +
+    geom_line() +
+    labs(title = paste0("Posterior of the BYM2 proportion parameter in category ", i),
+         subtitle = paste0("Mean: ", mean, ", SD: ", sd),
+         x = "Proportion", y = "p(Proportion)") +
+    theme_minimal()
+}
 )
 
 dev.off()
