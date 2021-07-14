@@ -98,6 +98,8 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 * [`orderly`](https://www.vaccineimpact.org/orderly/index.html) documentation
 * [Example using survey weight in multinomial model](https://core.ac.uk/download/pdf/95690175.pdf), where they put the weights in the log-likelihood
 * [How to use `rdhs`](https://cran.r-project.org/web/packages/rdhs/vignettes/introduction.html)
+* [Separable models using the `group` option](https://becarioprecario.bitbucket.io/inla-gitbook/ch-temporal.html#separable-models-with-the-group-option)
+* [Gaussian Kronecker product Markov random fields](https://raw.githubusercontent.com/hrue/r-inla/devel/internal-doc/group/group-models.pdf) presentation by Andrea Riebler
 
 ## Notes
 
