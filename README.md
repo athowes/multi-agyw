@@ -43,8 +43,10 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 ### Clean-up operations
 
 - [ ] ~5% of rows produced using `softmax` [based on samples](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/functions.R#L55) using `inla.posterior.sample` from (some subset of) the models result in `NaN`. Find the cause of this issue and solve
-- [ ] [Local WAIC very large](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/script.R#L205) for `x_eff` values of zero (this more often occurs for `sexpaid12m`). DIC output also has problems resulting in either `NA` or implausible values. Use the local values to find rows causing the problem, then try to resolve somehow. Could it be related to survey weights?
+- [x] [Local WAIC very large](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/script.R#L205) for `x_eff` values of zero (this more often occurs for `sexpaid12m`). DIC output also has problems resulting in either `NA` or implausible values. Use the local values to find rows causing the problem, then try to resolve somehow. Could it be related to survey weights?
+  - [ ] Have added the diagnostic output but remains to say how to solve it
 - [ ] [`ind` values outside [0, 1]](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/script.R#L102) (possibly traced back to `survey::` functions). Try to fix
+  - [ ] Start by adding a diagnostic warning, if that's possible in `orderly`
 - [ ] It's not OK to fit overlapping age categories at the same time as e.g. use some data twice to inform precision parameter estimate of age random effects. Find a way to generate 15-24 age category estimates from 15-19 and 20-24. Population size weighting?
 
 ### High priority
@@ -70,6 +72,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   - [ ] To add to plot once first run with this information is processed
 - [ ] Split the `aaa_data_survey_behav` tasks up: a lot going on (unclear what exactly to split into)
   - [ ] Modularise linking cluster identifiers to area (talk to Oli about this)
+- [ ] Analysis of the extent of the differences between the different models e.g. compute maximum difference between (mean) estimates then arrange in decreasing order
 - [ ] Understand how the Poisson trick interplays with different structures for multinomial model (baseline category, nested, etc.)
 - [ ] Possibility to include covariates
 - [ ] Extend Malawi model by adding more surveys (PHIA and MICS). Could use survey specific intercepts

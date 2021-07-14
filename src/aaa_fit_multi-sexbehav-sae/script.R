@@ -221,6 +221,52 @@ res_df <- res_df %>%
 
 write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
 
+#' Diagnostics for the local information criteria causing issues
+res_df <- res_df %>%
+  mutate(large_local_dic = ifelse(log10(abs(local_dic)) > 5, TRUE, FALSE),
+         large_local_waic = ifelse(log10(abs(local_waic)) > 5, TRUE, FALSE))
+
+mean_x_eff_for_large_local_dic <- res_df %>%
+  filter(large_local_dic == TRUE) %>%
+  summarise(mean = mean(x_eff)) %>%
+  as.numeric()
+
+mean_x_eff_for_large_local_waic <- res_df %>%
+  filter(large_local_waic == TRUE) %>%
+  summarise(mean = mean(x_eff)) %>%
+  as.numeric()
+
+pdf("local-ic-diagnostics.pdf", h = 11, w = 8.5)
+
+#' Highlighting the problem with having x_eff = 0, particularly in sexpaid12m
+ggplot(res_df, aes(x = 1:nrow(res_df), y = log10(abs(local_dic)), col = large_local_dic)) +
+    geom_point(alpha = 0.4) +
+    facet_grid(indicator ~ model) +
+    labs(x = "Index", y = "log10|DIC|", col = "Large local DIC",
+         title = "Are any of the observations causing problems for DIC?",
+         subtitle = ifelse(
+           is.nan(mean_x_eff_for_large_local_dic),
+           "There are no observations with large local DIC",
+           paste0("The average value of x_eff for observations with large local DIC is ", mean_x_eff_for_large_local_dic)
+         )) +
+    scale_color_manual(values = c("black", "#802D5B")) +
+    theme_minimal()
+
+ggplot(res_df, aes(x = 1:nrow(res_df), y = log10(abs(local_waic)), col = large_local_waic)) +
+  geom_point(alpha = 0.4) +
+  facet_grid(indicator ~ model) +
+  labs(x = "Index", y = "log10|WAIC|", col = "Large local WAIC",
+       title = "Are any of the observations causing problems for WAIC?",
+       subtitle = ifelse(
+         is.nan(mean_x_eff_for_large_local_waic),
+         "There are no observations with large local WAIC",
+         paste0("The average value of x_eff for observations with large local WAIC is ", mean_x_eff_for_large_local_waic)
+       )) +
+  scale_color_manual(values = c("black", "#802D5B")) +
+  theme_minimal()
+
+dev.off()
+
 #' Simple model comparison data for output
 #' Something strange happening with WAIC here, unreasonable orders of magnitude
 ic_df <- sapply(res_fit, function(fit) {

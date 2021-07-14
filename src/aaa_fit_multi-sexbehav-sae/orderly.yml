@@ -17,6 +17,10 @@ artefacts:
       description: BYM2 proportion parameter posteriors
       filenames:
         - bym2-proportions.pdf
+  - data:
+      description: Local DIC and WAIC diagnostics
+      filenames:
+        - local-ic-diagnostics.pdf
 
 parameters:
   iso3:
