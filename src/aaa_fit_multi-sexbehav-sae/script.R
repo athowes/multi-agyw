@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "MWI", max_model_id = 4))
+# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "MWI", max_model_id = 3))
 # setwd("src/aaa_fit_multi-sexbehav-sae")
 
 analysis_level <- c("CMR" = 2,
@@ -154,24 +154,25 @@ formula2 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.4, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 3: using the group option
-#' TODO: Better understand this from
-#' https://raw.githubusercontent.com/hrue/r-inla/devel/internal-doc/group/group-models.pdf
-#' "There are much more applications, e.g. invariant smoothing of multinomial data"
-formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx, model = "iid", group = cat_idx,
-    control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 4: space x category random effects (BYM2)
-formula4 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+#' Model 3: space x category random effects (BYM2)
+formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.4, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 5: using the group option
+#' Model 4: As Model 2, but using the group option
+#' TODO: Better understand this from
+#' https://raw.githubusercontent.com/hrue/r-inla/devel/internal-doc/group/group-models.pdf
+#' "There are much more applications, e.g. invariant smoothing of multinomial data"
+formula4 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx, model = "iid", group = cat_idx,
+    control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
+
+#' Model 5: As Model 3, but using the group option
 formula5 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx, model = "bym2", graph = adjM, group = cat_idx,
@@ -179,7 +180,7 @@ formula5 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
 
 #' All of the possible models
 all_formulas <- parse(text = paste0("list(", paste0("formula", 1:5, collapse = ", "), ")")) %>% eval()
-all_models <- list("Model 1: Constant", "Model 2: IID", "Model 3: IID (grouped)", "Model 4: BYM2", "Model 5: BYM2 (grouped)")
+all_models <- list("Model 1: Constant", "Model 2: IID", "Model 3: BYM2", "Model 4: IID (grouped)", "Model 5: BYM2 (grouped)")
 
 #' The subset of all possible fit in this script, as specified by model_ids
 if(!is.na(max_model_id)) {
@@ -196,14 +197,32 @@ res <- purrr::pmap(
   multinomial_model
 )
 
-res_df <- lapply(res, "[[", 1) %>%
-  bind_rows()
+#' Extract the df and the full fitted models
+res_df <- lapply(res, "[[", 1) %>% bind_rows()
+res_fit <- lapply(res, "[[", 2)
+
+#' Add columns for local DIC and WAIC
+res_df <- bind_cols(
+  res_df,
+  lapply(res_fit,
+         function(fit) {
+           return(data.frame(
+             local_dic = fit$dic$local.dic,
+             local_waic = fit$waic$local.waic
+           ))
+         }
+  ) %>% bind_rows()
+)
+
+#' Remove superfluous INLA indicator columns
+#' TODO: Can this be improved? Rename any of the columns? Reorder?
+res_df <- res_df %>%
+  select(-age_cat_idx, area_idx, -area_idx.1, -area_idx.2, -area_idx.3, -area_idx.4)
 
 write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
 
-#' Simple model comparison
+#' Simple model comparison data for output
 #' Something strange happening with WAIC here, unreasonable orders of magnitude
-res_fit <- lapply(res, "[[", 2)
 ic_df <- sapply(res_fit, function(fit) {
   local_dic <- fit$dic$local.dic
   local_waic <- fit$waic$local.waic
@@ -223,28 +242,6 @@ ic_df <- sapply(res_fit, function(fit) {
   )
 
 write_csv(ic_df, "information-criteria.csv", na = "")
-
-#' Looking at the local WAIC to determine where things are going wrong
-#' Some of the local WAIC are negative, is this OK?
-abs(res_fit[[2]]$waic$local.waic) %>%
-  sort(decreasing = TRUE) %>%
-  log10() %>%
-  plot()
-
-#' Values that have huge local WAIC also have x_eff = 0
-#' Though not all rows that have x_eff = 0 have huge local WAIC
-#' All of them are sexpaid12m, but most with x_eff = 0 are sexpaid12m too
-huge_local_waic <- df[abs(res_fit[[2]]$waic$local.waic) %>% log10() > 10, ]
-nrow(huge_local_waic) / sum(df$x_eff == 0)
-nrow(huge_local_waic) / sum(filter(df, indicator == "sexpaid12m")$x_eff == 0)
-
-#' Comparing Model 2 to Model 3
-#' The largest absolute differences are only small
-res_df %>%
-  filter(model %in% c("Model 2: IID", "Model 3: BYM2")) %>%
-  group_by(age_idx, area_idx, cat_idx) %>%
-  summarise(mae = abs(diff(mean))) %>%
-  arrange(desc(mae))
 
 #' Create plotting data
 res_plot <- res_df %>%

@@ -26,7 +26,7 @@ parameters:
   #' Otherwise provide indicies
   #' TODO: Find way to have vector input here?
   max_model_id:
-    default: NA
+    default: 3
 
 packages:
   - dplyr
