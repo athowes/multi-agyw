@@ -48,6 +48,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 - [ ] [`ind` values outside [0, 1]](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/script.R#L102) (possibly traced back to `survey::` functions). Try to fix
   - [ ] Start by adding a diagnostic warning, if that's possible in `orderly`
 - [ ] It's not OK to fit overlapping age categories at the same time as e.g. use some data twice to inform precision parameter estimate of age random effects. Find a way to generate 15-24 age category estimates from 15-19 and 20-24. Population size weighting?
+  - Population size data can be obtained from Naomi model [outputs](https://imperiallondon.sharepoint.com/sites/HIVInferenceGroup-WP/Shared%20Documents/Forms/AllItems.aspx?csf=1&web=1&e=g7J9el&cid=1beffd0f%2D9df9%2D4a8b%2Db79c%2Df4bed7428f73&RootFolder=%2Fsites%2FHIVInferenceGroup%2DWP%2FShared%20Documents%2FData%2FSpectrum%20files%2F2021%20naomi&FolderCTID=0x0120000FA834E7B0DC9A4A865FA1C3F87255B3)
 
 ### High priority
 
@@ -78,6 +79,8 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 - [ ] Extend Malawi model by adding more surveys (PHIA and MICS). Could use survey specific intercepts
 - [ ] Fitting model jointly to multiple countries
 - [ ] Should the `utils` scripts be reports? Report to run reports? Report to run report which runs reports?
+- [ ] Katie [has processed](https://github.com/mrc-ide/naomi-orderly/commit/f162d2d227a30150fa078187a8c83ddb84164be0) the BWA data now. Could import this into `multi-agyw` and test, though could also wait until scripts are moved to e.g. `naomi-orderly`. Not high priority but good to check that it's OK for the different data
+- [ ] Previous estimates from workbook are based upon national estimates of FSW population size. Think about how to integrate these
 
 ### Low priority
 
@@ -111,6 +114,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 * The 13 AGYW Global Fund priority countries are Botswana, Cameroon, Kenya, Lesotho, Malawi, Mozambique, Namibia, South Africa, Swaziland, Tanzania, Uganda, Zambia and Zimbabwe, from ["The Global Fund measurement framework for adolescents girls and young women programs"](https://www.theglobalfund.org/media/8076/me_adolescentsgirlsandyoungwomenprograms_frameworkmeasurement_en.pdf)
   * Note that Botswana doesn't have DHS: instead they do their own surveys "Botswana AIDS Impact Survey (BAIS)" (this explains the lack of `src/bwa_data_survey_behav`
 * Use same model for all countries or select to best model in each country?
+  * Same model for all is a good default, unless something really stands out
 
 ## Timeline
 
