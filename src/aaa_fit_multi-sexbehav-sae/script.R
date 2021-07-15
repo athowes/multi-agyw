@@ -335,9 +335,9 @@ lapply(res_plot, function(x)
 
 dev.off()
 
-if(max_model_id >= 3) {
-
 pdf("bym2-proportions.pdf", h = 11, w = 8.5)
+
+if(max_model_id >= 3) {
 
 #' Check the mixing parameters in the BYM2 model
 lapply(1:4, function(i) {
@@ -352,9 +352,8 @@ lapply(1:4, function(i) {
          subtitle = paste0("Mean: ", mean, ", SD: ", sd),
          x = "Proportion", y = "p(Proportion)") +
     theme_minimal()
+  })
+
 }
-)
 
 dev.off()
-
-}
