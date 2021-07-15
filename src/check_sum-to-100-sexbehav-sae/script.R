@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("check100_sexbehav-sae")
-# setwd("src/check100_sexbehav-sae/")
+# orderly::orderly_develop_start("check_sum-to-100-sexbehav-sae")
+# setwd("src/check_sum-to-100-sexbehav-sae/")
 
 #' Trying to determine if the estimates sum to 100%
 df_uni <- read_csv("depends/smoothed-district-sexbehav.csv") %>%
