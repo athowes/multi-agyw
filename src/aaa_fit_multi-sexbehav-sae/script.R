@@ -95,17 +95,23 @@ df <- crossing(
            area_sort_order, center_x, center_y)
 )
 
-#' #' Verify that there are no estimates > 1
-#' stopifnot(filter(ind, estimate > 1) %>% nrow() == 0)
 
-#' Relax the above to just set ind > 1 to 1, as well as ind < 0 to 0
-#' TODO: Investigate more
+#' Set ind > 1 to 1, as well as ind < 0 to 0
+#' TODO: Investigate the data issues leading to this
+message(
+  paste0(
+    "There are: ",
+    filter(ind, estimate < 0) %>% nrow(), " values of ind$estimate < 0 and ",
+    filter(ind, estimate > 1) %>% nrow(), " values of ind$estimate > 1.
+    If they exist, these values have been set to be inside [0, 1]!"
+  )
+)
+
 ind <- ind %>%
   mutate(estimate = pmin(1, estimate),
          estimate = pmax(0, estimate))
 
 #' Add district observations
-#' Note that df here has 528 rows: 33 areas, 4 categories, 4 age groups
 df <- df %>%
   left_join(
     ind %>%
