@@ -1,0 +1,25 @@
+script: script.R
+
+artefacts: ~
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - readxl
+
+global_resources:
+  depends/aykp_pse_july17.xlsx: aykp_pse_july17.xlsx
+
+depends:
+  process_multinomial-smoothed-district-sexbehav:
+    id: latest
+    use:
+      depends/all-multinomial-smoothed-district-sexbehav.csv: all-multinomial-smoothed-district-sexbehav.csv
