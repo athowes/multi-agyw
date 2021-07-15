@@ -154,7 +154,6 @@ formula2 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.4, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
-
 #' Model 3: space x category random effects (BYM2)
 formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
@@ -336,13 +335,16 @@ lapply(res_plot, function(x)
 
 dev.off()
 
+if(max_model_id >= 3) {
+
 pdf("bym2-proportions.pdf", h = 11, w = 8.5)
 
 #' Check the mixing parameters in the BYM2 model
 lapply(1:4, function(i) {
-  mean <- res_fit[[4]]$summary.hyperpar[i, 1] %>% round(digits = 3)
-  sd <- res_fit[[4]]$summary.hyperpar[i, 2] %>% round(digits = 3)
-  res_fit[[4]]$marginals.hyperpar[[i]] %>%
+  bym2_fit <- res_fit[[3]]
+  mean <- bym2_fit$summary.hyperpar[i, 1] %>% round(digits = 3)
+  sd <- bym2_fit$summary.hyperpar[i, 2] %>% round(digits = 3)
+  bym2_fit$marginals.hyperpar[[i]] %>%
     as.data.frame() %>%
     ggplot(aes(x = x, y = y)) +
     geom_line() +
@@ -354,3 +356,5 @@ lapply(1:4, function(i) {
 )
 
 dev.off()
+
+}
