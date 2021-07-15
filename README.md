@@ -48,15 +48,18 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 - [ ] [`ind` values outside [0, 1]](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/script.R#L102) (possibly traced back to `survey::` functions). Try to fix
   - [ ] Start by adding a diagnostic warning, if that's possible in `orderly`
 - [ ] It's not OK to fit overlapping age categories at the same time as e.g. use some data twice to inform precision parameter estimate of age random effects. Find a way to generate 15-24 age category estimates from 15-19 and 20-24. Population size weighting?
-  - Population size data can be obtained from Naomi model [outputs](https://imperiallondon.sharepoint.com/sites/HIVInferenceGroup-WP/Shared%20Documents/Forms/AllItems.aspx?csf=1&web=1&e=g7J9el&cid=1beffd0f%2D9df9%2D4a8b%2Db79c%2Df4bed7428f73&RootFolder=%2Fsites%2FHIVInferenceGroup%2DWP%2FShared%20Documents%2FData%2FSpectrum%20files%2F2021%20naomi&FolderCTID=0x0120000FA834E7B0DC9A4A865FA1C3F87255B3)
+  - Population size data can be obtained from Naomi model [outputs](https://imperiallondon.sharepoint.com/sites/HIVInferenceGroup-WP/Shared%20Documents/Forms/AllItems.aspx?csf=1&web=1&e=g7J9el&cid=1beffd0f%2D9df9%2D4a8b%2Db79c%2Df4bed7428f73&RootFolder=%2Fsites%2FHIVInferenceGroup%2DWP%2FShared%20Documents%2FData%2FSpectrum%20files%2F2021%20naomi&FolderCTID=0x0120000FA834E7B0DC9A4A865FA1C3F87255B3) and can be read in using [`spud::sharepoint`](https://github.com/mrc-ide/naomi-orderly/blob/f162d2d227a30150fa078187a8c83ddb84164be0/src/bwa_raw_survey_bwa2013bais_addsexbehav/script.R#L2)
 
 ### High priority
 
 - [x] Create upper and lower credible estimates of probabilities using `inla.posterior.sample`. See the `multinomial_model` function
 - Aggregate format using Kish weights and `xPoisson`, see `INLA::inla.doc("xPoisson")`
   - [x] Model 1: Age-category interaction
-  - [x] Model 2: Age-category interaction, space-category intercation (IID)
+  - [x] Model 2: Age-category interaction, space-category interaction (IID)
   - [x] Model 3: Age-category interaction, space-category interaction (BYM2)
+  - [x] Model 4: Age-category interaction, space-category interaction using INLA `group` argument (IID)
+  - [x] Model 5: Age-category interaction, space-category interaction using INLA `group` argument (BYM2)
+    - [ ] This model has crashed INLA for some occasions, try to debug
 - [x] Model comparison (DIC or WAIC) among the above models
   - [x] Make model comparison an `artefact` of model fitting, then combine them together in another report
 - [x] Create modified datasets for the 13 priority countries
@@ -65,6 +68,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 - [x] Extend Malawi model by adding more DHS surveys (will eventually require more model selection)
   - Temporal smoothing (random walk, what about interactions?)
   - Loss: current time or over all time?
+- [ ] Add report to calculate "fake" national-level FSW estimates from `sexpaid12m` in order to compare to Johnston et al., Laga et al.
 
 ### Medium priority
 
@@ -107,10 +111,25 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 * [Separable models using the `group` option](https://becarioprecario.bitbucket.io/inla-gitbook/ch-temporal.html#separable-models-with-the-group-option)
 * [Gaussian Kronecker product Markov random fields](https://raw.githubusercontent.com/hrue/r-inla/devel/internal-doc/group/group-models.pdf) presentation by Andrea Riebler
 
-## Notes
+## Improving the estimates for FSW
 
 * Biases and variation in methodology for key population data which vary by country. Survey estimates have more comparable methodology but depending on KP features (for example proportion in households included in survey sampling frame) may have varying bias. See working paper "Laga - Mapping the population size of female sex worker in countries across sub-Saharan Africa"
-* Survey question "did you have sex in exchange for money or goods" has been critisied 
+* Survey question "did you have sex in exchange for money or goods" has been critisied. Likely too broad with regard to key population of female sex workers
+  * Only the most recent round of DHS has this survey question (change was made in 2013 and started to be implemented in 2015, although this may vary by country with some countries still not using this question). Alternative question regards last three sexual partners
+* Other sources of data about key populations
+  * The [UNAIDS Key Population Atlas](https://kpatlas.unaids.org/dashboard)
+  * Johnston et al. (2021, preprint) Deriving and interpreting population size estimates for adolescent and young key populations at higher risk of HIV transmission: men who have sex with men, female sex workers and transgender persons 
+    * Disaggregates the UNAIDS published population size estimates by age using proportion of sexually active adults
+    * Kinh is a coauthor
+  * Laga et al. (2021, preprint) Mapping female sex worker prevalence (aged 15-49 years) in sub-Saharan Africa
+    * Has [code and data](https://github.com/ilaga/Mapping-FSW-SSA)
+    * Jeff is a coauthor
+* Possible approaches
+  * Move all `sexpaid12m` into `sexnonreg`, then get the FSW estimates from other data sources. Is there a way to integrate this data in a coherent way?
+  * Use the `sexpaid12m` data to learn the spatial pattern and the other data sources to learn the level
+
+## Notes
+
 * The 13 AGYW Global Fund priority countries are Botswana, Cameroon, Kenya, Lesotho, Malawi, Mozambique, Namibia, South Africa, Swaziland, Tanzania, Uganda, Zambia and Zimbabwe, from ["The Global Fund measurement framework for adolescents girls and young women programs"](https://www.theglobalfund.org/media/8076/me_adolescentsgirlsandyoungwomenprograms_frameworkmeasurement_en.pdf)
   * Note that Botswana doesn't have DHS: instead they do their own surveys "Botswana AIDS Impact Survey (BAIS)" (this explains the lack of `src/bwa_data_survey_behav`
 * Use same model for all countries or select to best model in each country?
