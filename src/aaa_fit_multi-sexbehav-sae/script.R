@@ -219,10 +219,21 @@ res_df <- bind_cols(
   ) %>% bind_rows()
 )
 
-#' Remove superfluous INLA indicator columns
-#' TODO: Can this be improved? Rename any of the columns? Reorder?
+#' Prepare data for writing to output
 res_df <- res_df %>%
-  select(-age_cat_idx, area_idx, -area_idx.1, -area_idx.2, -area_idx.3, -area_idx.4)
+  #' Remove superfluous INLA indicator columns
+  select(-area_idx, -cat_idx, -age_idx, -obs_idx, -age_cat_idx,
+         -area_idx.1, -area_idx.2, -area_idx.3, -area_idx.4) %>%
+  #' Make it clear which of the estimates are raw and which are from the model (smoothed)
+  rename(
+    estimate_raw = estimate,
+    ci_lower_raw = ci_lower,
+    ci_upper_raw = ci_upper,
+    estimate_smoothed = mean,
+    ci_lower_smoothed = lower,
+    ci_upper_smoothed = upper
+  ) %>%
+  mutate(iso3 = iso3, .before = indicator)
 
 write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
 
@@ -296,10 +307,6 @@ write_csv(ic_df, "information-criteria.csv", na = "")
 
 #' Create plotting data
 res_plot <- res_df %>%
-  rename(
-    estimate_raw = estimate,
-    estimate_smoothed = mean
-  ) %>%
   pivot_longer(
     cols = c(starts_with("estimate")),
     names_to = c(".value", "source"),
