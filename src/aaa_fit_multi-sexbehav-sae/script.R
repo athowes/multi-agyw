@@ -259,27 +259,29 @@ ggplot(res_df, aes(x = 1:nrow(res_df), y = log10(abs(local_dic)), col = large_lo
     geom_point(alpha = 0.4) +
     facet_grid(indicator ~ model) +
     labs(x = "Index", y = "log10|DIC|", col = "Large local DIC",
-         title = "Are any of the observations causing problems for DIC?",
+         title = paste0(res_df$survey_id[1], ": are any of the observations causing problems for DIC?"),
          subtitle = ifelse(
            is.nan(mean_x_eff_for_large_local_dic),
            "There are no observations with large local DIC",
            paste0("The average value of x_eff for observations with large local DIC is ", mean_x_eff_for_large_local_dic)
          )) +
     scale_color_manual(values = c("black", "#802D5B")) +
-    theme_minimal()
+  theme_minimal() +
+  theme(plot.title = element_text(face = "bold"))
 
 ggplot(res_df, aes(x = 1:nrow(res_df), y = log10(abs(local_waic)), col = large_local_waic)) +
   geom_point(alpha = 0.4) +
   facet_grid(indicator ~ model) +
   labs(x = "Index", y = "log10|WAIC|", col = "Large local WAIC",
-       title = "Are any of the observations causing problems for WAIC?",
+       title = paste0(res_df$survey_id[1], ": are any of the observations causing problems for WAIC?"),
        subtitle = ifelse(
          is.nan(mean_x_eff_for_large_local_waic),
          "There are no observations with large local WAIC",
          paste0("The average value of x_eff for observations with large local WAIC is ", mean_x_eff_for_large_local_waic)
        )) +
   scale_color_manual(values = c("black", "#802D5B")) +
-  theme_minimal()
+  theme_minimal() +
+  theme(plot.title = element_text(face = "bold"))
 
 dev.off()
 
@@ -361,10 +363,11 @@ lapply(1:4, function(i) {
     as.data.frame() %>%
     ggplot(aes(x = x, y = y)) +
     geom_line() +
-    labs(title = paste0("Posterior of the BYM2 proportion parameter in category ", i),
+    labs(title = paste0(res_df$survey_id[1], ": posterior of the BYM2 proportion parameter in category ", i),
          subtitle = paste0("Mean: ", mean, ", SD: ", sd),
          x = "Proportion", y = "p(Proportion)") +
-    theme_minimal()
+    theme_minimal() +
+    theme(plot.title = element_text(face = "bold"))
   })
 
 }
