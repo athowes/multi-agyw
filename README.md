@@ -68,7 +68,8 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 - [x] Extend Malawi model by adding more DHS surveys (will eventually require more model selection)
   - Temporal smoothing (random walk, what about interactions?)
   - Loss: current time or over all time?
-- [ ] Add report to calculate "fake" national-level FSW estimates from `sexpaid12m` in order to compare to Johnston et al., Laga et al.
+- [x] Add report to calculate "fake" national-level FSW estimates from `sexpaid12m` in order to compare to Johnston et al.
+  - [ ] Above is done for Johnston et al., add Laga et al. 
 
 ### Medium priority
 
@@ -120,13 +121,14 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   * The [UNAIDS Key Population Atlas](https://kpatlas.unaids.org/dashboard)
   * Johnston et al. (2021, preprint) Deriving and interpreting population size estimates for adolescent and young key populations at higher risk of HIV transmission: men who have sex with men, female sex workers and transgender persons 
     * Disaggregates the UNAIDS published population size estimates by age using proportion of sexually active adults
-    * Kinh is a coauthor
+    * Kinh is a coauthor. Warns that the estimates should be seen as expert opinion rather than based on data. Several countries had no data. Rounding up when the number is too small.
   * Laga et al. (2021, preprint) Mapping female sex worker prevalence (aged 15-49 years) in sub-Saharan Africa
     * Has [code and data](https://github.com/ilaga/Mapping-FSW-SSA)
     * Jeff is a coauthor
 * Possible approaches
   * Move all `sexpaid12m` into `sexnonreg`, then get the FSW estimates from other data sources. Is there a way to integrate this data in a coherent way?
   * Use the `sexpaid12m` data to learn the spatial pattern and the other data sources to learn the level
+* Is there a coherent way to use existing estimates? Penalise distance from existing estimates equivalent to placing a prior on estimate? Sounds similar to Bayesian melding. Can we get distributions or standard errors on the existing estimates? Not for Johnston.
 
 ## Notes
 
