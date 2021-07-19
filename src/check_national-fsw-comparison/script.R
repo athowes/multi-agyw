@@ -2,18 +2,108 @@
 orderly::orderly_develop_start("check_national-fsw-comparison")
 setwd("src/check_national-fsw-comparison/")
 
+analysis_level <- c("CMR" = 2,
+                    "KEN" = 2,
+                    "LSO" = 1,
+                    "MOZ" = 2,
+                    "MWI" = 5,
+                    "NAM" = 2,
+                    "SWZ" = 1,
+                    "TZA" = 3,
+                    "UGA" = 3,
+                    "ZAF" = 2,
+                    "ZMB" = 2,
+                    "ZWE" = 2)
+
+admin1_level <- c("CMR" = 1,
+                  "KEN" = 1,
+                  "LSO" = 1,
+                  "MOZ" = 1,
+                  "MWI" = 1,
+                  "NAM" = 1,
+                  "SWZ" = 1,
+                  "TZA" = 2,
+                  "UGA" = 1,
+                  "ZAF" = 1,
+                  "ZMB" = 1,
+                  "ZWE" = 1)
+
+priority_countries <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+
 #' Read in the population size estimates (PSEs) for AYKP
 sabin <- read_excel("depends/aykp_pse_july17.xlsx", sheet = "FSW", range = "A3:F187")
 names(sabin) <- c("region", "country", "size_15-19", "size_20-24", "size_15-24", "size_25-49")
 
-sabin %>%
-  pivot_longer(cols = contains("size"), names_prefix = "size_", names_to = "age") %>%
-  filter(region == "ESA")
+#' iso3 codes from https://gist.github.com/tadast/8827699
+country_codes <- read_csv("depends/countries_codes_and_coordinates.csv") %>%
+  select(Country, `Alpha-3 code`) %>%
+  rename(country = Country,
+         iso3 = `Alpha-3 code`)
 
-#' And these are the estimates from the sexpaid12m category of our model
-df <- read_csv("depends/all-multinomial-smoothed-district-sexbehav.csv")
+sabin <- sabin %>%
+  left_join(country_codes) %>%
+  pivot_longer(cols = contains("size"), names_prefix = "size_", names_to = "age_group", values_to = "est_total_sabin") %>%
+  filter(region %in% c("ESA", "WCA"),
+         iso3 %in% priority_countries,
+         age_group %in% c("15-19", "20-24", "25-29")) %>%
+  select(-region)
 
-df %>%
-  filter(indicator == "nosex12m")
+#' Sabin is missing estimates for SWZ
+priority_countries[!(priority_countries %in% sabin$iso3)]
 
-#' TODO: Compare these (does df have the higher level)
+#' And these are the proportion estimates from the sexpaid12m category of our model
+ind <- read_csv("depends/all-multinomial-smoothed-district-sexbehav.csv")
+
+ind <- ind %>%
+  filter(indicator == "sexpaid12m",
+         #' Using the smoothed estimates from Model 3
+         model == "Model 3: BYM2") %>%
+  #' Rename to match the population data, allowing join
+  mutate(age_group = fct_recode(age_group,
+    "15-24" = "Y015_024", "15-19" = "Y015_019", "20-24" = "Y020_024", "25-29" = "Y025_029")
+  ) %>%
+  filter(age_group %in% c("15-19", "20-24", "25-29"))
+
+#' Get age-stratified population total sizes from Naomi model outputs
+sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2021 naomi/Naomi datasets in R/naomi3.rds"
+path <- sharepoint$download(URLencode(url))
+naomi3 <- readRDS(path)
+
+naomi3 <- naomi3 %>%
+  filter(indicator_label == "Population",
+         #' The most recent estimates
+         calendar_quarter == max(calendar_quarter),
+         #' These are the age groups we are considering,
+         age_group_label %in% c("15-19", "20-24", "25-29"),
+         #' Only female
+         sex == "female") %>%
+  split(.$iso3) %>%
+  #' Filtering each country to the relevant analysis level
+  #' Maybe this can be done with map2
+  lapply(function(x)
+    x %>%
+      filter(area_level == analysis_level[x$iso3[1]])
+  ) %>%
+  bind_rows() %>%
+  #' For merging with model data
+  rename(population_mean = mean,
+         population_lower = lower,
+         population_upper = upper) %>%
+  select(-indicator_label)
+
+#' Calculate estimates of FSW populations by age and area using proportions from ind and PSE from naomi3
+df <- ind %>%
+  inner_join(naomi3, by = c("age_group" = "age_group_label", "area_name" = "area_name")) %>%
+  #' Note that the names of estimate and mean will change once data is rerun!
+  #' Making an iso3 variable will also not be required
+  mutate(est_raw = round(estimate * population_mean, digits = 3),
+         est_smoothed = round(mean * population_mean, digits = 3),
+         iso3 = substr(survey_id, 1, 3)) %>%
+  group_by(iso3, age_group) %>%
+  summarise(est_total_raw = sum(est_raw),
+            est_total_smoothed = sum(est_smoothed)) %>%
+  inner_join(sabin, by = c("iso3", "age_group")) %>%
+  relocate(country, .before = iso3)
+
+write_csv(df, "national-fsw-comparison.csv", na = "")

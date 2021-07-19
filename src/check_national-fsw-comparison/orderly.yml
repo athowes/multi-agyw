@@ -1,6 +1,10 @@
 script: script.R
 
-artefacts: ~
+artefacts:
+  - data:
+      description: Comparison of Sabin FSW total population estimates to estimates from model
+      filenames:
+        - national-fsw-comparison.csv
 
 packages:
   - dplyr
@@ -17,6 +21,7 @@ packages:
 
 global_resources:
   depends/aykp_pse_july17.xlsx: aykp_pse_july17.xlsx
+  depends/countries_codes_and_coordinates.csv: countries_codes_and_coordinates.csv
 
 depends:
   process_multinomial-smoothed-district-sexbehav:
