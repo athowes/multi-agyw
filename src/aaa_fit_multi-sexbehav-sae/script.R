@@ -230,10 +230,12 @@ res_df <- res_df %>%
     ci_lower_raw = ci_lower,
     ci_upper_raw = ci_upper,
     estimate_smoothed = mean,
+    median_smoothed = median,
     ci_lower_smoothed = lower,
     ci_upper_smoothed = upper
   ) %>%
-  mutate(iso3 = iso3, .before = indicator)
+  mutate(iso3 = iso3, .before = indicator) %>%
+  relocate(model, .before = estimate_smoothed)
 
 write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
 
