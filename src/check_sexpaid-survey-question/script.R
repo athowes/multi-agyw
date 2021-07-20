@@ -19,6 +19,9 @@ df <- survey_sexbehav %>%
   group_by(iso3, year) %>%
   summarise(giftsvar = mean(giftsvar))
 
+#' Save as useful for future models
+write_csv(df, "sexpaid-survey-question.csv", na = "")
+
 pdf("sexpaid-survey-question.pdf", h = 5, w = 7.5)
 
 ggplot(df, aes(x = year, y = iso3, col = factor(giftsvar))) +

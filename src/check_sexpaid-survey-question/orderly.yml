@@ -2,9 +2,10 @@ script: script.R
 
 artefacts:
   - data:
-      description: Plot of which survey question is asked in the DHS
+      description: Which survey question on being paid for sex is asked in the DHS?
       filenames:
         - sexpaid-survey-question.pdf
+        - sexpaid-survey-question.csv
 
 packages:
   - dplyr
