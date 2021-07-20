@@ -1,0 +1,21 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Plot of which survey question is asked in the DHS
+      filenames:
+        - sexpaid-survey-question.pdf
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - readxl
+  - naomi.utils
