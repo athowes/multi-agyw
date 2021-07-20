@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-orderly::orderly_develop_start("check_national-fsw-comparison")
-setwd("src/check_national-fsw-comparison/")
+# orderly::orderly_develop_start("check_national-fsw-comparison")
+# setwd("src/check_national-fsw-comparison/")
 
 analysis_level <- c("CMR" = 2,
                     "KEN" = 2,
@@ -31,8 +31,8 @@ admin1_level <- c("CMR" = 1,
 priority_countries <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 
 #' Read in the population size estimates (PSEs) for AYKP
-sabin <- read_excel("depends/aykp_pse_july17.xlsx", sheet = "FSW", range = "A3:F187")
-names(sabin) <- c("region", "country", "size_15-19", "size_20-24", "size_15-24", "size_25-49")
+johnston <- read_excel("depends/aykp_pse_july17.xlsx", sheet = "FSW", range = "A3:F187")
+names(johnston) <- c("region", "country", "size_15-19", "size_20-24", "size_15-24", "size_25-49")
 
 #' iso3 codes from https://gist.github.com/tadast/8827699
 country_codes <- read_csv("depends/countries_codes_and_coordinates.csv") %>%
@@ -40,16 +40,16 @@ country_codes <- read_csv("depends/countries_codes_and_coordinates.csv") %>%
   rename(country = Country,
          iso3 = `Alpha-3 code`)
 
-sabin <- sabin %>%
+johnston <- johnston %>%
   left_join(country_codes) %>%
-  pivot_longer(cols = contains("size"), names_prefix = "size_", names_to = "age_group", values_to = "est_total_sabin") %>%
+  pivot_longer(cols = contains("size"), names_prefix = "size_", names_to = "age_group", values_to = "est_total_johnston") %>%
   filter(region %in% c("ESA", "WCA"),
          iso3 %in% priority_countries,
          age_group %in% c("15-19", "20-24", "25-29")) %>%
   select(-region)
 
-#' Sabin is missing estimates for SWZ
-priority_countries[!(priority_countries %in% sabin$iso3)]
+#' Johnston is missing estimates for SWZ
+priority_countries[!(priority_countries %in% johnston$iso3)]
 
 #' And these are the proportion estimates from the sexpaid12m category of our model
 ind <- read_csv("depends/all-multinomial-smoothed-district-sexbehav.csv")
@@ -94,16 +94,15 @@ naomi3 <- naomi3 %>%
 
 #' Calculate estimates of FSW populations by age and area using proportions from ind and PSE from naomi3
 df <- ind %>%
-  inner_join(naomi3, by = c("age_group" = "age_group_label", "area_name" = "area_name")) %>%
+  inner_join(naomi3, by = c("age_group" = "age_group_label", "area_name" = "area_name", "iso3" = "iso3")) %>%
   #' Note that the names of estimate and mean will change once data is rerun!
   #' Making an iso3 variable will also not be required
-  mutate(est_raw = round(estimate * population_mean, digits = 3),
-         est_smoothed = round(mean * population_mean, digits = 3),
-         iso3 = substr(survey_id, 1, 3)) %>%
+  mutate(est_raw = round(estimate_raw * population_mean, digits = 3),
+         est_smoothed = round(estimate_smoothed * population_mean, digits = 3)) %>%
   group_by(iso3, age_group) %>%
   summarise(est_total_raw = sum(est_raw),
             est_total_smoothed = sum(est_smoothed)) %>%
-  inner_join(sabin, by = c("iso3", "age_group")) %>%
+  inner_join(johnston, by = c("iso3", "age_group")) %>%
   relocate(country, .before = iso3)
 
 write_csv(df, "national-fsw-comparison.csv", na = "")
