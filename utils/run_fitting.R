@@ -18,7 +18,7 @@ ids <- orderly::orderly_batch("aaa_fit_multi-sexbehav-sae", params)
 # id <- orderly::orderly_run("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "ZWE"))
 
 #' Get the most recent archived or drafted version of each of the reports
-#' Could also use ids from orderly_batch here
+#' Could also use ids from orderly_batch here, but if you've just run it then they should be the same
 recent_ids <- sapply(
   iso3_vec,
   function(iso3) {
@@ -31,3 +31,10 @@ sapply(na.omit(recent_ids), function(id) orderly::orderly_commit(id))
 
 #' Push to remote
 sapply(na.omit(recent_ids), function(id) orderly::orderly_push_archive(name = "aaa_fit_multi-sexbehav-sae", id = id))
+
+#' Run post-processing as well
+id <- orderly::orderly_run("src/process_information-criteria/")
+orderly::orderly_commit(id)
+
+id <- orderly::orderly_run("src/process_multinomial-smoothed-district-sexbehav/")
+orderly::orderly_commit(id)
