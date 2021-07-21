@@ -286,11 +286,11 @@ res_plot <- res_df %>%
     by = "area_id"
   ) %>%
   st_as_sf() %>%
-  split(~survey_id + indicator + model)
+  split(~indicator + model)
 
-pdf("multinomial-smoothed-district-sexbehav.pdf", h = 11, w = 14)
+pdf("multinomial-smoothed-district-sexbehav.pdf", h = 11, w = 8.5)
 
-plots <- lapply(res_plot, function(x)
+lapply(res_plot, function(x)
   x %>%
     mutate(
       age_group = fct_relevel(age_group, "Y015_024") %>%
@@ -301,7 +301,7 @@ plots <- lapply(res_plot, function(x)
     ggplot(aes(fill = estimate)) +
     geom_sf(size = 0.1) +
     scale_fill_viridis_c(option = "C", label = label_percent()) +
-    facet_grid(age_group ~ source) +
+    facet_grid(age_group ~ survey_id + source) +
     theme_minimal() +
     labs(title = paste0(x$survey_id[1], ": ", x$indicator[1], " (", x$model[1], ")")) +
     theme(
@@ -313,14 +313,6 @@ plots <- lapply(res_plot, function(x)
       legend.position = "bottom",
       legend.key.width = unit(4, "lines")
     )
-)
-
-#' Somewhat bad solution, better to split using the survey name, but I think it works
-n_unique_surveys <- length(unique(df$survey_id))
-split_plots <- split(plots, ceiling(seq_along(plots) / n_unique_surveys))
-
-lapply(split_plots, function(x)
-  cowplot::plot_grid(plotlist = x, ncol = n_unique_surveys)
 )
 
 dev.off()
