@@ -287,15 +287,15 @@ res_plot <- res_df %>%
     by = "area_id"
   ) %>%
   st_as_sf() %>%
-  split(~indicator + model + ~survey_id)
+  split(~survey_id + indicator + model)
 
-pdf("multinomial-smoothed-district-sexbehav.pdf", h = 11, w = 8.5)
+pdf("multinomial-smoothed-district-sexbehav.pdf", h = 11, w = 14)
 
-lapply(res_plot, function(x)
+plots <- lapply(res_plot, function(x)
   x %>%
     mutate(
       age_group = fct_relevel(age_group, "Y015_024") %>%
-        fct_recode("15-24" = "Y015_024", "15-19" = "Y015_019", "20-24" = "Y020_024", "25-29" = "Y025_029"),
+        fct_recode("15-24" = "Y015_024", "15-19" = "Y015_019", "20-24" = "Y020_024"),
       source = fct_relevel(source, "raw", "smoothed", "aggregate") %>%
         fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed", "Admin 1 aggregate" = "aggr")
     ) %>%
@@ -314,6 +314,14 @@ lapply(res_plot, function(x)
       legend.position = "bottom",
       legend.key.width = unit(4, "lines")
     )
+)
+
+#' Somewhat bad solution, better to split using the survey name, but I think it works
+n_unique_surveys <- length(unique(df$survey_id))
+split_plots <- split(plots, ceiling(seq_along(plots) / n_unique_surveys))
+
+lapply(split_plots, function(x)
+  cowplot::plot_grid(plotlist = x, ncol = n_unique_surveys)
 )
 
 dev.off()
