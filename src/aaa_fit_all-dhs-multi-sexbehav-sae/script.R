@@ -78,31 +78,37 @@ adjM <- spdep::poly2nb(areas_model)
 adjM <- spdep::nb2mat(adjM, style = "B", zero.policy = TRUE)
 colnames(adjM) <- rownames(adjM)
 
-#' Using nosex12m rather than e.g. nosex for now
-indicators <- c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")
+#' In this model we are using three risk categories
+indicators <- c("nosex12m", "sexcohab", "sexnonregplus")
 
 df <- crossing(
   indicator = indicators,
   #' Add in the survey_id to deal with multiple surveys
   survey_id = unique(ind$survey_id),
-  age_group = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"),
+  age_group = c("Y015_019", "Y020_024", "Y025_029"),
   areas_model %>%
     st_drop_geometry() %>%
     select(area_id, area_name, area_idx, area_id_aggr,
            area_sort_order, center_x, center_y)
 )
 
-#' #' Verify that there are no estimates > 1
-#' stopifnot(filter(ind, estimate > 1) %>% nrow() == 0)
 
-#' Relax the above to just set ind > 1 to 1, as well as ind < 0 to 0
-#' TODO: Investigate more
+#' Set ind > 1 to 1, as well as ind < 0 to 0
+#' TODO: Investigate the data issues leading to this
+message(
+  paste0(
+    "There are: ",
+    filter(ind, estimate < 0) %>% nrow(), " values of ind$estimate < 0 and ",
+    filter(ind, estimate > 1) %>% nrow(), " values of ind$estimate > 1.
+    If they exist, these values have been set to be inside [0, 1]!"
+  )
+)
+
 ind <- ind %>%
   mutate(estimate = pmin(1, estimate),
          estimate = pmax(0, estimate))
 
 #' Add district observations
-#' Note that df here has 528 rows: 33 areas, 4 categories, 4 age groups
 df <- df %>%
   left_join(
     ind %>%
@@ -136,8 +142,7 @@ df <- df %>%
          #' separate indices seems useful for Besag model
          area_idx.1 = ifelse(cat_idx == 1, area_idx, NA),
          area_idx.2 = ifelse(cat_idx == 2, area_idx, NA),
-         area_idx.3 = ifelse(cat_idx == 3, area_idx, NA),
-         area_idx.4 = ifelse(cat_idx == 4, area_idx, NA)) %>%
+         area_idx.3 = ifelse(cat_idx == 3, area_idx, NA)) %>%
   arrange(obs_idx)
 
 #' Equal to the number of age groups times the number of areas
@@ -156,16 +161,14 @@ formula2 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.4, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
+  f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
 #' Model 3: age x category random effects (IID), space x category random effects (BYM2)
 formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.4, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001))
+  f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001))
 
 #' Model 4: age x category random effects (IID), survey x category random effects (IID) (grouped)
 formula4 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
@@ -180,7 +183,6 @@ formula5 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(area_idx.1, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.4, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 
@@ -191,7 +193,6 @@ formula6 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.4, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 
@@ -208,7 +209,6 @@ formula8 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(area_idx.1, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.4, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 
@@ -219,7 +219,6 @@ formula9 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.4, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 
