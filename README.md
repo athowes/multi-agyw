@@ -49,6 +49,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   - [ ] Start by adding a diagnostic warning, if that's possible in `orderly`
 - [ ] It's not OK to fit overlapping age categories at the same time as e.g. use some data twice to inform precision parameter estimate of age random effects. Find a way to generate 15-24 age category estimates from 15-19 and 20-24. Population size weighting?
   - Population size data can be obtained from Naomi model [outputs](https://imperiallondon.sharepoint.com/sites/HIVInferenceGroup-WP/Shared%20Documents/Forms/AllItems.aspx?csf=1&web=1&e=g7J9el&cid=1beffd0f%2D9df9%2D4a8b%2Db79c%2Df4bed7428f73&RootFolder=%2Fsites%2FHIVInferenceGroup%2DWP%2FShared%20Documents%2FData%2FSpectrum%20files%2F2021%20naomi&FolderCTID=0x0120000FA834E7B0DC9A4A865FA1C3F87255B3) and can be read in using [`spud::sharepoint`](https://github.com/mrc-ide/naomi-orderly/blob/f162d2d227a30150fa078187a8c83ddb84164be0/src/bwa_raw_survey_bwa2013bais_addsexbehav/script.R#L2)
+  - In Naomi standard errors for different levels of aggregation are produced using [sparse matrix multiplication in TMB](https://github.com/mrc-ide/naomi/blob/master/src/tmb.cpp#L689). The input matrix `A_out` determining the aggregation is produced by [`naomi_output_frame`](https://github.com/mrc-ide/naomi/blob/master/R/model.R#L1-L74)
 
 ### High priority
 
@@ -76,16 +77,18 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 - [x] Add .pdf plot to `process_information-criteria`
 - [x] Add standard errors to DIC results
   - [ ] To add to plot once first run with this information is processed
-- [ ] Split the `aaa_data_survey_behav` tasks up: a lot going on (unclear what exactly to split into)
-  - [ ] Modularise linking cluster identifiers to area (talk to Oli about this)
+- Split the `aaa_data_survey_behav` tasks up: a lot going on (unclear what exactly to split into)
+  - [ ] Modularise linking cluster identifiers to area (talked to Oli about this and looks like something he has done / is doing -- task will be to update relevant scripts to use his tasks once they are available)
 - [ ] Analysis of the extent of the differences between the different models e.g. compute maximum difference between (mean) estimates then arrange in decreasing order
 - [ ] Understand how the Poisson trick interplays with different structures for multinomial model (baseline category, nested, etc.)
 - [ ] Possibility to include covariates
 - [ ] Extend Malawi model by adding more surveys (PHIA and MICS). Could use survey specific intercepts
 - [ ] Fitting model jointly to multiple countries
 - [ ] Should the `utils` scripts be reports? Report to run reports? Report to run report which runs reports?
+  - When running an `orderly` report is it possible to create data outside of the draft folder?
+  - `run_fitting` is probably best staying as external to `orderly` anyway
+  - `pull_naomi_areas` might be better using `orderly_pull_dependencies`
 - [ ] Katie [has processed](https://github.com/mrc-ide/naomi-orderly/commit/f162d2d227a30150fa078187a8c83ddb84164be0) the BWA data now. Could import this into `multi-agyw` and test, though could also wait until scripts are moved to e.g. `naomi-orderly`. Not high priority but good to check that it's OK for the different data
-- [ ] Previous estimates from workbook are based upon national estimates of FSW population size. Think about how to integrate these
 
 ### Low priority
 
@@ -114,6 +117,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 
 ## Improving the estimates for FSW
 
+- Previous estimates from workbook are based upon national estimates of FSW population size. Think about how to integrate these
 * Biases and variation in methodology for key population data which vary by country. Survey estimates have more comparable methodology but depending on KP features (for example proportion in households included in survey sampling frame) may have varying bias. See working paper "Laga - Mapping the population size of female sex worker in countries across sub-Saharan Africa"
 * Survey question "did you have sex in exchange for money or goods" has been critisied. Likely too broad with regard to key population of female sex workers
   * Only the most recent round of DHS has this survey question (change was made in 2013 and started to be implemented in 2015, although this may vary by country with some countries still not using this question). Alternative question regards last three sexual partners
@@ -121,14 +125,26 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   * The [UNAIDS Key Population Atlas](https://kpatlas.unaids.org/dashboard)
   * Johnston et al. (2021, preprint) Deriving and interpreting population size estimates for adolescent and young key populations at higher risk of HIV transmission: men who have sex with men, female sex workers and transgender persons 
     * Disaggregates the UNAIDS published population size estimates by age using proportion of sexually active adults
-    * Kinh is a coauthor. Warns that the estimates should be seen as expert opinion rather than based on data. Several countries had no data. Rounding up when the number is too small.
+    * Kinh is a coauthor
+      * Warns that the estimates should be seen as expert opinion rather than based on data
+      * Several countries had no data
+      * Rounding up when the number is too small
   * Laga et al. (2021, preprint) Mapping female sex worker prevalence (aged 15-49 years) in sub-Saharan Africa
     * Has [code and data](https://github.com/ilaga/Mapping-FSW-SSA)
     * Jeff is a coauthor
+      * Variation across countries may be implausibly large
+      * Uses study type random effects but implementation differences even within studies belonging to the same group likely to be large
 * Possible approaches
   * Move all `sexpaid12m` into `sexnonreg`, then get the FSW estimates from other data sources. Is there a way to integrate this data in a coherent way?
   * Use the `sexpaid12m` data to learn the spatial pattern and the other data sources to learn the level
-* Is there a coherent way to use existing estimates? Penalise distance from existing estimates equivalent to placing a prior on estimate? Sounds similar to Bayesian melding. Can we get distributions or standard errors on the existing estimates? Not for Johnston.
+* Is there a coherent way to use existing estimates? Penalise distance from existing estimates equivalent to placing a prior on estimate? 
+  * Sounds similar to Bayesian melding, but implementing Bayesian melding is intractable for all but the simplest models
+  * Can we get distributions or standard errors on the existing estimates? Not for Johnston
+  * Work of Jon Wakefield / Taylor Okonek on calibration of estimates?
+* Other possible data source on men who paid for sex
+  * See Hodgkins et al. (2021, preprint)
+* [Fully Bayesian benchmarking of small area estimation models](https://sciendo.com/article/10.2478/jos-2020-0010) (Zhang and Bryant, 2020)
+  * Zhang and Bryant have quite a few [papers](https://www.bayesiandemography.com/papers) which look interesting
 
 ## Notes
 
