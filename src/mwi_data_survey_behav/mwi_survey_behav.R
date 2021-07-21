@@ -115,7 +115,10 @@ individuals <- create_individual_hiv_dhs(surveys)
 
 survey_individuals <- create_survey_individuals_dhs(individuals)
 survey_biomarker <- create_survey_biomarker_dhs(individuals)
-survey_sexbehav <- create_sexbehav_dhs(surveys)
+
+survey_sexbehav <- create_sexbehav_dhs(surveys) %>%
+  #' giftsvar is a special case indicator used to determine the type of survey question
+  select(-giftsvar)
 
 #' Remaining NA are all in eversex and sti12m
 #' TODO: Add additional variables like age at first sex (in DHS, PHIA, MICS) to help resolve
@@ -156,7 +159,8 @@ hiv_indicators <- calc_survey_hiv_indicators(
   survey_clusters,
   survey_individuals,
   survey_biomarker,
-  survey_other,
+  #' Including sexnonregplus causes errors
+  survey_other = list(survey_sexbehav %>% select(-sexnonregplus)),
   st_drop_geometry(areas),
   sex = sex,
   age_group_include = age_group_include,
