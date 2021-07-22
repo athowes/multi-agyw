@@ -38,7 +38,6 @@ areas <- read_sf(paste0("depends/", tolower(iso3), "_areas.geojson"))
 ind <- read_csv(paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.csv"))
 
 #' Append an indicator for 1 - sex12m
-#' TODO: Move this earlier in the pipeline with a mutate call
 ind <- dplyr::bind_rows(
   ind,
   ind %>%

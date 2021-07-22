@@ -43,7 +43,9 @@ ind <- ind %>%
   filter(survey_id == max(ind$survey_id))
 
 #' Append an indicator for 1 - sex12m
-#' TODO: Move this earlier in the pipeline with a mutate call
+#' This earlier in the pipeline with a mutate call, e.g. modify naomi.utils
+#' Though it's probably not necessary and this works OK seeing as it's not so
+#' difficult to calculate the standard errors for 1 - existing_indicator
 ind <- dplyr::bind_rows(
   ind,
   ind %>%
