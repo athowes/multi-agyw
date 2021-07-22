@@ -340,21 +340,3 @@ lapply(res_plot, function(x)
 )
 
 dev.off()
-
-#' Checking the basic estimates
-out <- res_df %>%
-  #' Compute totals over the categories
-  group_by(iso3, model, area_name) %>%
-  mutate(
-    total_raw = mean(estimate_raw, na.rm = TRUE),
-    total_smoothed = mean(estimate_smoothed)
-  ) %>%
-  ungroup()
-
-  group_by(age_group, iso3, indicator, model) %>%
-  summarise(group_estimate_raw = mean(estimate_raw, na.rm = TRUE),
-            group_estimate_smoothed = mean(estimate_smoothed))
-
-#' Looking at NA entries
-res_df %>%
-  filter(is.na(estimate_raw))
