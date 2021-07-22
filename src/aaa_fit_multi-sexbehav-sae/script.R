@@ -88,7 +88,7 @@ indicators <- c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")
 
 df <- crossing(
   indicator = indicators,
-  age_group = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"),
+  age_group = c("Y015_019", "Y020_024", "Y025_029"),
   areas_model %>%
     st_drop_geometry() %>%
     select(area_id, area_name, area_idx, area_id_aggr,
@@ -329,7 +329,8 @@ lapply(res_plot, function(x)
   x %>%
     mutate(
       age_group = fct_relevel(age_group, "Y015_024") %>%
-        fct_recode("15-24" = "Y015_024", "15-19" = "Y015_019", "20-24" = "Y020_024", "25-29" = "Y025_029"),
+        fct_recode("15-19" = "Y015_019", "20-24" = "Y020_024", "25-29" = "Y025_029"),
+      #' Note: not currently using aggregate, right?
       source = fct_relevel(source, "raw", "smoothed", "aggregate") %>%
         fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed", "Admin 1 aggregate" = "aggr")
     ) %>%
