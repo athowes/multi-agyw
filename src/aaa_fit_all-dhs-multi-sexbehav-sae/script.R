@@ -236,7 +236,7 @@ if(!is.na(max_model_id)) {
 
 #' Fit the models
 res <- purrr::pmap(
-  list(formula = formulas, model = models),
+  list(formula = formulas, model_name = models),
   multinomial_model
 )
 

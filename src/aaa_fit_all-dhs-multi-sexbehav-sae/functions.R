@@ -27,9 +27,9 @@ tau_prior <- function(x) {
 #' @param formula A formula object passed to `R-INLA`.
 #' @param model A string containing the name of the model.
 #' @return A dataframe adding columns to `df`.
-multinomial_model <- function(formula, model, S = 100) {
+multinomial_model <- function(formula, model_name, S = 100) {
 
-  message(paste0("Begin fitting ", model, "."))
+  message(paste0("Begin fitting ", model_name, "."))
 
   fit <- inla(formula, data = df, family = 'xPoisson',
               control.predictor = list(link = 1),
@@ -49,7 +49,7 @@ multinomial_model <- function(formula, model, S = 100) {
     #' Remove eta
     select(-eta) %>%
     #' Add model identifier
-    mutate(model = model)
+    mutate(model = model_name)
 
   #' Number of samples from the posterior, keep it low to begin with
   full_samples <- inla.posterior.sample(n = S, result = fit)
@@ -100,7 +100,7 @@ multinomial_model <- function(formula, model, S = 100) {
     )
   }
 
-  message(paste0("Completed fitting ", model, "."))
+  message(paste0("Completed fitting ", model_name, "."))
 
   return(list(df = df, fit = fit))
 }
