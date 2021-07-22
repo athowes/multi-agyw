@@ -91,7 +91,6 @@ df <- crossing(
            area_sort_order, center_x, center_y)
 )
 
-
 #' Set ind > 1 to 1, as well as ind < 0 to 0
 #' TODO: Investigate the data issues leading to this
 message(
@@ -136,7 +135,7 @@ df <- df %>%
          age_cat_idx = interaction(age_idx, cat_idx),
          #' Not sure if this is the best way to do it for obs_idx
          #' Perhaps it can be added earlier in the pipeline
-         obs_idx = to_int(interaction(age_idx, area_idx)),
+         obs_idx = to_int(interaction(age_idx, area_idx, sur_idx)),
          #' Likewise probably a better way to do this, but having
          #' separate indices seems useful for Besag model
          area_idx.1 = ifelse(cat_idx == 1, area_idx, NA),
@@ -144,9 +143,9 @@ df <- df %>%
          area_idx.3 = ifelse(cat_idx == 3, area_idx, NA)) %>%
   arrange(obs_idx)
 
-#' Equal to the number of age groups times the number of areas
+#' Equal to the number of age groups times the number of areas times the number of surveys
 stopifnot(
-  df$obs_idx %>% max() == length(unique(df$age_group)) * length(unique(df$area_id))
+  df$obs_idx %>% max() == length(unique(df$age_group)) * length(unique(df$area_id)) * length(unique(df$survey_id))
 )
 
 #' Specify the models to be fit
@@ -301,10 +300,6 @@ write_csv(ic_df, "information-criteria.csv", na = "")
 
 #' Create plotting data
 res_plot <- res_df %>%
-  rename(
-    estimate_raw = estimate,
-    estimate_smoothed = mean
-  ) %>%
   pivot_longer(
     cols = c(starts_with("estimate")),
     names_to = c(".value", "source"),
@@ -345,3 +340,21 @@ lapply(res_plot, function(x)
 )
 
 dev.off()
+
+#' Checking the basic estimates
+out <- res_df %>%
+  #' Compute totals over the categories
+  group_by(iso3, model, area_name) %>%
+  mutate(
+    total_raw = mean(estimate_raw, na.rm = TRUE),
+    total_smoothed = mean(estimate_smoothed)
+  ) %>%
+  ungroup()
+
+  group_by(age_group, iso3, indicator, model) %>%
+  summarise(group_estimate_raw = mean(estimate_raw, na.rm = TRUE),
+            group_estimate_smoothed = mean(estimate_smoothed))
+
+#' Looking at NA entries
+res_df %>%
+  filter(is.na(estimate_raw))
