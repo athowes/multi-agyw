@@ -277,10 +277,11 @@ res_df <- res_df %>%
 write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
 
 #' Simple model comparison
-#' Something strange happening with WAIC here, unreasonable orders of magnitude
+#' Some of the local DIC or local WAIC entries might be NA where there is no raw data
+#' INLA calculates the DIC or WAIC ignoring these
 ic_df <- sapply(res_fit, function(fit) {
-  local_dic <- fit$dic$local.dic
-  local_waic <- fit$waic$local.waic
+  local_dic <- na.omit(fit$dic$local.dic)
+  local_waic <- na.omit(fit$waic$local.waic)
 
   c("dic" = sum(local_dic),
     "dic_se" = stats::sd(local_dic) * sqrt(length(local_dic)),
