@@ -51,6 +51,21 @@ ind <- dplyr::bind_rows(
            ci_lower = ci_lower_new)
 )
 
+#' Set ind > 1 to 1, as well as ind < 0 to 0
+#' TODO: Investigate the data issues leading to this
+message(
+  paste0(
+    "There are: ",
+    filter(ind, estimate < 0) %>% nrow(), " values of ind$estimate < 0 and ",
+    filter(ind, estimate > 1) %>% nrow(), " values of ind$estimate > 1.
+    If they exist, these values have been set to be inside [0, 1]!"
+  )
+)
+
+ind <- ind %>%
+  mutate(estimate = pmin(1, estimate),
+         estimate = pmax(0, estimate))
+
 areas <- select(areas, area_id, area_name, area_level, area_level_label,
                 parent_area_id, area_sort_order, center_x, center_y)
 
@@ -77,13 +92,13 @@ adjM <- spdep::poly2nb(areas_model)
 adjM <- spdep::nb2mat(adjM, style = "B", zero.policy = TRUE)
 colnames(adjM) <- rownames(adjM)
 
-#' In this model we are using three risk categories
-indicators <- c("nosex12m", "sexcohab", "sexnonregplus")
-
+#' Create the scaffolding for the estimates
 df <- crossing(
-  indicator = indicators,
+  #' In this model we are using three risk categories (rather than four)
+  indicator = c("nosex12m", "sexcohab", "sexnonregplus"),
   #' Add in the survey_id to deal with multiple surveys
   survey_id = unique(ind$survey_id),
+  #' Just these three age groups, aim to calculate aggregates at later point
   age_group = c("Y015_019", "Y020_024", "Y025_029"),
   areas_model %>%
     st_drop_geometry() %>%
@@ -91,22 +106,7 @@ df <- crossing(
            area_sort_order, center_x, center_y)
 )
 
-#' Set ind > 1 to 1, as well as ind < 0 to 0
-#' TODO: Investigate the data issues leading to this
-message(
-  paste0(
-    "There are: ",
-    filter(ind, estimate < 0) %>% nrow(), " values of ind$estimate < 0 and ",
-    filter(ind, estimate > 1) %>% nrow(), " values of ind$estimate > 1.
-    If they exist, these values have been set to be inside [0, 1]!"
-  )
-)
-
-ind <- ind %>%
-  mutate(estimate = pmin(1, estimate),
-         estimate = pmax(0, estimate))
-
-#' Add district observations
+#' Add district observations to the scaffolding by merging with ind
 df <- df %>%
   left_join(
     ind %>%
@@ -133,20 +133,13 @@ df <- df %>%
          cat_idx = to_int(indicator),
          sur_cat_idx = interaction(sur_idx, cat_idx),
          age_cat_idx = interaction(age_idx, cat_idx),
-         #' Not sure if this is the best way to do it for obs_idx
-         #' Perhaps it can be added earlier in the pipeline
+         #' Is the best way to do it for obs_idx? Perhaps can be added earlier in the pipeline
          obs_idx = to_int(interaction(age_idx, area_idx, sur_idx)),
-         #' Likewise probably a better way to do this, but having
-         #' separate indices seems useful for Besag model
+         #' Likewise probably a better way to do this (using the INLA group option)
          area_idx.1 = ifelse(cat_idx == 1, area_idx, NA),
          area_idx.2 = ifelse(cat_idx == 2, area_idx, NA),
          area_idx.3 = ifelse(cat_idx == 3, area_idx, NA)) %>%
   arrange(obs_idx)
-
-#' Equal to the number of age groups times the number of areas times the number of surveys
-stopifnot(
-  df$obs_idx %>% max() == length(unique(df$age_group)) * length(unique(df$area_id)) * length(unique(df$survey_id))
-)
 
 #' Specify the models to be fit
 
