@@ -242,13 +242,43 @@ res <- purrr::pmap(
 
 #' All results into a single dataframe
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
+res_fit <- lapply(res, "[[", 2)
+
+#' Add columns for local DIC and WAIC
+res_df <- bind_cols(
+  res_df,
+  lapply(res_fit,
+         function(fit) {
+           return(data.frame(
+             local_dic = fit$dic$local.dic,
+             local_waic = fit$waic$local.waic
+           ))
+         }
+  ) %>% bind_rows()
+)
+
+#' Prepare data for writing to output
+res_df <- res_df %>%
+  #' Remove superfluous INLA indicator columns
+  select(-area_idx, -cat_idx, -age_idx, -obs_idx, -age_cat_idx, -area_idx.1,
+         -area_idx.2, -area_idx.3, -sur_idx, -sur_cat_idx) %>%
+  #' Make it clear which of the estimates are raw and which are from the model (smoothed)
+  rename(
+    estimate_raw = estimate,
+    ci_lower_raw = ci_lower,
+    ci_upper_raw = ci_upper,
+    estimate_smoothed = mean,
+    median_smoothed = median,
+    ci_lower_smoothed = lower,
+    ci_upper_smoothed = upper
+  ) %>%
+  mutate(iso3 = iso3, .before = indicator) %>%
+  relocate(model, .before = estimate_smoothed)
 
 write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
 
 #' Simple model comparison
 #' Something strange happening with WAIC here, unreasonable orders of magnitude
-res_fit <- lapply(res, "[[", 2)
-
 ic_df <- sapply(res_fit, function(fit) {
   local_dic <- fit$dic$local.dic
   local_waic <- fit$waic$local.waic
