@@ -71,6 +71,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   - Loss: current time or over all time?
 - [x] Add report to calculate "fake" national-level FSW estimates from `sexpaid12m` in order to compare to Johnston et al.
   - [ ] Above is done for Johnston et al., add Laga et al. 
+- [ ] Fix UGA, TZA, LSO and KEN data creation
 
 ### Medium priority
 
