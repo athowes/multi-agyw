@@ -104,8 +104,8 @@ colnames(adjM) <- rownames(adjM)
 df <- crossing(
   #' Using nosex12m rather than e.g. nosex
   indicator = c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m"),
-  #' Just these three age groups, aim to calculate aggregates at later point
-  age_group = c("Y015_019", "Y020_024", "Y025_029"),
+  #' The three age groups plus intended aggregate
+  age_group = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"),
   areas_model %>%
     st_drop_geometry() %>%
     select(area_id, area_name, area_idx, area_id_aggr,
@@ -130,11 +130,13 @@ df <- df %>%
 #'  * category (cat_idx)
 #'  * observation (obs_idx)
 #'  * age x category (age_cat_idx)
-#'  * space x category (area_idx)
+#'  * space x category (area_cat_idx)
 df <- df %>%
   mutate(cat_idx = to_int(indicator),
-         age_idx = to_int(age_group),
+         #' Doing this because want Y015_024 to have ID 4 rather than 2 as it would be otherwise
+         age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
          age_cat_idx = interaction(age_idx, cat_idx),
+         area_cat_idx = interaction(area_idx, cat_idx),
          #' Is the best way to do it for obs_idx? Perhaps can be added earlier in the pipeline
          obs_idx = to_int(interaction(age_idx, area_idx)),
          #' Likewise probably a better way to do this (using the INLA group option)
@@ -144,8 +146,53 @@ df <- df %>%
          area_idx.4 = ifelse(cat_idx == 4, area_idx, NA)) %>%
   arrange(obs_idx)
 
-#' Add population data
+#' Get age-stratified population total sizes from Naomi model outputs
+#' This is required for aggregating the estimates e.g. using 15-19 and 20-24 to create 15-24
+sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2021 naomi/Naomi datasets in R/naomi3.rds"
+path <- sharepoint$download(URLencode(url))
+naomi3 <- readRDS(path)
 
+#' Merge this data into df
+df <- df %>%
+  left_join(
+    naomi3 %>%
+      filter(indicator_label == "Population",
+             #' Using the most recent estimates for now
+             #' More sophisticated approach would be to try to match
+             #' the year of the survey to the year of the estimates
+             #' This would be particularly relevant for the scripts using
+             #' all DHS data rather than just the most recent
+             calendar_quarter == max(calendar_quarter),
+             #' These are the age groups we are considering,
+             age_group_label %in% c("15-19", "20-24", "25-29", "15-24"),
+             #' Only female
+             sex == "female",
+             #' The country and analysis level of interest
+             iso3 == iso3,
+             area_level == analysis_level) %>%
+      #' More sophisticated approach is to use the distribution of population estimate
+      #' rather than just a point estimate (the mean) as we do here for now
+      rename(population_mean = mean,
+             population_lower = lower,
+             population_upper = upper,
+             age_group = age_group_label) %>%
+      select(age_group, area_name, population_mean) %>%
+      #' Rename to match df, allowing join
+      mutate(
+        age_group = fct_recode(age_group, "Y015_019" = "15-19", "Y020_024" = "20-24",
+          "Y025_029" = "25-29", "Y015-024" = "15-24")
+      ),
+    by = c("age_group", "area_name")
+  )
+
+#' Data for the model (df) doesn't include the aggregates (since this is using data twice)
+#' So we save them off separately
+df_agg <- df %>%
+  filter(age_group == "Y015_024")
+
+df <- df %>%
+  filter(age_group %in% c("Y015_019", "Y020_024", "Y025_029"))
 
 #' Specify the models to be fit
 
@@ -208,6 +255,7 @@ res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
 
 #' Add columns for local DIC and WAIC
+#' res_df has the 15-24 category too
 res_df <- bind_cols(
   res_df,
   lapply(res_fit,
@@ -217,7 +265,13 @@ res_df <- bind_cols(
              local_waic = fit$waic$local.waic
            ))
          }
-  ) %>% bind_rows()
+  ) %>%
+    bind_rows() %>%
+    #' Being safe here and explictly adding the NA entires for df_agg
+    bind_rows(data.frame(
+      local_dic = rep(NA, nrow(df_agg)),
+      local_waic = rep(NA, nrow(df_agg))
+    ))
 )
 
 #' Prepare data for writing to output
@@ -332,7 +386,7 @@ lapply(res_plot, function(x)
   x %>%
     mutate(
       age_group = fct_relevel(age_group, "Y015_024") %>%
-        fct_recode("15-19" = "Y015_019", "20-24" = "Y020_024", "25-29" = "Y025_029"),
+        fct_recode("15-19" = "Y015_019", "20-24" = "Y020_024", "25-29" = "Y025_029", "15-24" = "Y015_024"),
       #' Note: not currently using aggregate, right?
       source = fct_relevel(source, "raw", "smoothed", "aggregate") %>%
         fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed", "Admin 1 aggregate" = "aggr")

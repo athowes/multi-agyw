@@ -66,8 +66,11 @@ multinomial_model <- function(formula, model_name, S = 100) {
       #' from this within INLA so avoiding
       rename(eta = 2) %>%
       filter(substr(rowname, 1, 10) == "Predictor:") %>%
-      mutate(obs_idx = df$obs_idx,
-             cat_idx = df$cat_idx) %>%
+      bind_cols(
+        df %>%
+          select(age_idx, area_idx, area_cat_idx,
+                 obs_idx, cat_idx, population_mean)
+      ) %>%
       split(.$obs_idx) %>%
       lapply(function(x)
         x %>%
@@ -100,7 +103,33 @@ multinomial_model <- function(formula, model_name, S = 100) {
     )
   }
 
+  #' Calculation of 15-24 aggregate measures from Monte Carlo samples
+  #' TODO: Systematise this more if other aggregates required
+  df_agg <- df_agg %>%
+    mutate(model = model_name) %>%
+    left_join(
+      df %>%
+        filter(age_idx %in% c(1, 2)) %>%
+        group_by(area_cat_idx) %>%
+        summarise(mean = sum(mean * population_mean) / sum(population_mean)),
+      by = "area_cat_idx"
+    ) %>%
+    left_join(
+      x %>%
+        #' The 15-19 and 20-24 age groups
+        filter(age_idx %in% c(1, 2)) %>%
+        group_by(area_cat_idx, sample) %>%
+        #' prob = sum_i(prob_i * pop_i) / sum_i(pop_i)
+        summarise(prob = sum(prob * population_mean) / sum(population_mean)) %>%
+        group_by(area_cat_idx) %>%
+        summarise(median = quantile(prob, 0.5, na.rm = TRUE),
+                  lower = quantile(prob, 0.025, na.rm = TRUE),
+                  upper = quantile(prob, 0.975, na.rm = TRUE)),
+      by = "area_cat_idx"
+    )
+
   message(paste0("Completed fitting ", model_name, "."))
 
-  return(list(df = df, fit = fit))
+  #' df goes back to including the aggregate group here, perhaps it's confusing to do this!
+  return(list(df = bind_rows(df, df_agg), fit = fit))
 }
