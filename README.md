@@ -70,7 +70,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   - Temporal smoothing (random walk, what about interactions?)
   - Loss: current time or over all time?
 - [x] Add report to calculate "fake" national-level FSW estimates from `sexpaid12m` in order to compare to Johnston et al.
-  - [ ] Above is done for Johnston et al., add Laga et al. 
+  - [ ] Above is done for Johnston et al., add Laga et al. (Laga do not disaggregate by age though)
 - [ ] Fix UGA, TZA, LSO and KEN data creation
 
 ### Medium priority
@@ -93,7 +93,8 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 
 ### Low priority
 
-- [ ] Reorder columns of output to a more friendly format, removing things which don't need to be there like identifiers for `R-INLA`
+- [ ] In plots where the `facet_plot` is over both estimate type and survey, find a way to highlight the surveys together e.g. using boxes. [Here](https://stackoverflow.com/questions/9847559/conditionally-change-panel-background-with-facet-grid) is one possible solution
+- [x] Reorder columns of output to a more friendly format, removing things which don't need to be there like identifiers for `R-INLA`
 - [ ] Add other different types of simulated data e.g. spatial structure to `sim_sexbehav` and try to recover
 - [ ] Create individual data that links the `cluster_id` to area by modifying `mwi_data_survey_behav` (currently it's only the aggregate data that is output)
 - [ ] Fit model to Malawi using individual format data. Individual weighted log-likelihood in `R-INLA` might not be possible, see Google group [discussion](https://groups.google.com/g/r-inla-discussion-group/c/Q-STkrFXR0g/m/6PWxRV4tBQ). Could try `TMB`
@@ -153,7 +154,5 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   * Note that Botswana doesn't have DHS: instead they do their own surveys "Botswana AIDS Impact Survey (BAIS)" (this explains the lack of `src/bwa_data_survey_behav`
 * Use same model for all countries or select to best model in each country?
   * Same model for all is a good default, unless something really stands out
-
-## Timeline
-
-* Delivery of workbook to UNAIDS Global Fund on 17th July
+* ["Now there remains the question about the DIC infinite of my model that is still unresolved. Do you have any idea?"](https://groups.google.com/g/r-inla-discussion-group/c/KPjQBjpIlrI/m/w006pSqoDgAJ)
+  * "This is usually an overflow issue, mainly because of an weakly indentified model. Like DIC would require an integral like \int exp(x) dx and if the marginal variance of x is large, then exp(x) at the upper limit might evaluate to infinity, giving an infinite DIC."
