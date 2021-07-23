@@ -1,0 +1,16 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Recode of key variables from BAIS IV dataset
+      filenames: bwa2013bais-recode-sexbehav.csv
+
+displayname: BAIS IV dataset recode
+
+packages:
+  - dplyr
+  - haven
+  - readr
+  - sf
+  - spud
+  - tidyr

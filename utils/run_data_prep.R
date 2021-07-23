@@ -4,7 +4,7 @@ iso3 <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", 
 #' The names of the reports to run
 reports <- paste0(tolower(iso3), "_data_survey_behav")
 
-#' Try to run them
+#' Try to run them (with error catching)
 sapply(
   reports,
   function(report) {
@@ -26,8 +26,34 @@ sapply(
   }
 )
 
+iso3 <- c("ZAF", "ZMB", "ZWE")
+
+#' The names of the reports to run
+reports <- paste0(tolower(iso3), "_data_survey_behav")
+
+#' Running without error catching
+sapply(
+  reports,
+  function(report) {
+    id <- orderly::orderly_run(report)
+    orderly::orderly_commit(id)
+    orderly::orderly_push_archive(report)
+  }
+)
+
 #' Running an individual report
-# report <- "name_here"
-# id <- orderly::orderly_run(report)
-# orderly::orderly_commit(id)
-# orderly::orderly_push_archive(report)
+report <- "lso_data_survey_behav"
+id <- orderly::orderly_run(report)
+orderly::orderly_commit(id)
+orderly::orderly_push_archive(report)
+
+#' Running BWA
+
+#' This is requried to be run before bwa_data_survey_behav
+id <- orderly::orderly_run("bwa_raw_survey_bwa2013bais_addsexbehav")
+orderly::orderly_commit(id)
+orderly::orderly_push_archive("bwa_raw_survey_bwa2013bais_addsexbehav")
+
+id <- orderly::orderly_run("bwa_data_survey_behav")
+orderly::orderly_commit(id)
+orderly::orderly_push_archive("bwa_raw_survey_bwa2013bais_addsexbehav")

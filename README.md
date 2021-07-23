@@ -50,7 +50,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 - [x] It's not OK to fit overlapping age categories at the same time as e.g. use some data twice to inform precision parameter estimate of age random effects. Find a way to generate 15-24 age category estimates from 15-19 and 20-24. Population size weighting?
   - Population size data can be obtained from Naomi model [outputs](https://imperiallondon.sharepoint.com/sites/HIVInferenceGroup-WP/Shared%20Documents/Forms/AllItems.aspx?csf=1&web=1&e=g7J9el&cid=1beffd0f%2D9df9%2D4a8b%2Db79c%2Df4bed7428f73&RootFolder=%2Fsites%2FHIVInferenceGroup%2DWP%2FShared%20Documents%2FData%2FSpectrum%20files%2F2021%20naomi&FolderCTID=0x0120000FA834E7B0DC9A4A865FA1C3F87255B3) and can be read in using [`spud::sharepoint`](https://github.com/mrc-ide/naomi-orderly/blob/f162d2d227a30150fa078187a8c83ddb84164be0/src/bwa_raw_survey_bwa2013bais_addsexbehav/script.R#L2)
   - In Naomi standard errors for different levels of aggregation are produced using [sparse matrix multiplication in TMB](https://github.com/mrc-ide/naomi/blob/master/src/tmb.cpp#L689). The input matrix `A_out` determining the aggregation is produced by [`naomi_output_frame`](https://github.com/mrc-ide/naomi/blob/master/R/model.R#L1-L74)
-  - [ ] This is done for the `aaa_fit_multi-sexbehav-sae` but needs to be transfered to `aaa_fit_all-dhs-multi-sexbehav-sae`
+  - [ ] This is done for the `aaa_fit_multi-sexbehav-sae` but needs to be transferred to `aaa_fit_all-dhs-multi-sexbehav-sae`
   
 ### High priority
 
@@ -90,7 +90,8 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   - When running an `orderly` report is it possible to create data outside of the draft folder?
   - `run_fitting` is probably best staying as external to `orderly` anyway
   - `pull_naomi_areas` might be better using `orderly_pull_dependencies`
-- [ ] Katie [has processed](https://github.com/mrc-ide/naomi-orderly/commit/f162d2d227a30150fa078187a8c83ddb84164be0) the BWA data now. Could import this into `multi-agyw` and test, though could also wait until scripts are moved to e.g. `naomi-orderly`. Not high priority but good to check that it's OK for the different data
+- [x] Katie [has processed](https://github.com/mrc-ide/naomi-orderly/commit/f162d2d227a30150fa078187a8c83ddb84164be0) the BWA data now. Could import this into `multi-agyw` and test, though could also wait until scripts are moved to e.g. `naomi-orderly`. Not high priority but good to check that it's OK for the different data
+  - [ ] Added, but still need to test
 
 ### Low priority
 

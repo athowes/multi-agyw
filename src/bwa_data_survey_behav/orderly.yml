@@ -1,0 +1,41 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: BAIS IV formatted datasets
+      filenames:
+        - bwa2013bais_survey_meta.csv
+        - bwa2013bais_survey_regions.csv
+        - bwa2013bais_survey_clusters.csv
+        - bwa2013bais_survey_individuals.csv
+        - bwa2013bais_survey_biomarker.csv
+        - bwa2013bais_survey_sexbehav.csv
+  - data:
+      description: survey indicator dataset
+      filenames:
+        - bwa_survey_indicators_sexbehav.csv
+  - data:
+      description: survey HIV indicator dataset
+      filenames:
+        - bwa_hiv_indicators_sexbehav.csv
+
+displayname: BAIS IV survey datasets
+
+packages:
+  - dplyr
+  - ggplot2
+  - naomi
+  - naomi.utils
+  - readr
+  - sf
+  - tidyr
+
+depends:
+  bwa_data_areas:
+    id: latest
+    use:
+      depends/bwa_areas.geojson: bwa_areas.geojson
+  bwa_raw_survey_bwa2013bais_addsexbehav:
+    id: latest
+    use:
+      depends/bwa2013bais-recode-sexbehav.csv: bwa2013bais-recode-sexbehav.csv
