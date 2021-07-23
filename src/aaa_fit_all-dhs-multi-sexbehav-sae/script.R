@@ -143,6 +143,24 @@ df <- df %>%
 
 #' Specify the models to be fit
 
+#' INLA's group argument allows specifying Gaussian Kronecker product random fields with
+#' covariance given as the Kronecker product of between group and within group covariance matrices.
+#' See https://becarioprecario.bitbucket.io/inla-gitbook/ch-temporal.html#sec:spacetime.
+#' Within-group is controlled by f(), and between group is controlled by the control.group
+#' argument. Often the group argument is used to define spatiotemporal covariance structures.
+#' A spatiotemporal model is called separable when space-time covariance structure can be
+#' written as a Kronecker product of a spatial and temporal covariance. Rather than using the
+#' group option to define the spatiotemporal covariance, we use it here to define temporal random
+#' effects (indexed by the survey identifier, survey_idx) for each of the multinomial categories.
+#' In this case, setting f(sur_idx) and group = cat_idx gives grouped random effects as follows:
+#'
+#' [e(cat 1, time 1), e(cat 1, time 2), e(cat 1, time 3)]
+#' [e(cat 2, time 1), e(cat 2, time 2), e(cat 2, time 3)]
+#' [e(cat 3, time 1), e(cat 3, time 2), e(cat 3, time 3)]
+#'
+#' TODO: Might it be the case that we want space x time x category random effects? Can this
+#' be handled with the group option?
+
 #' Model 1: age x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
@@ -232,7 +250,7 @@ res <- purrr::pmap(
   multinomial_model
 )
 
-#' All results into a single dataframe
+#' Extract the df and the full fitted models
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
 
@@ -269,7 +287,7 @@ res_df <- res_df %>%
 
 write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
 
-#' Simple model comparison
+#' Simple model comparison for output
 #' Some of the local DIC or local WAIC entries might be NA where there is no raw data
 #' INLA calculates the DIC or WAIC ignoring these
 ic_df <- sapply(res_fit, function(fit) {
