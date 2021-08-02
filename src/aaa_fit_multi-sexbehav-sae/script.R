@@ -236,13 +236,8 @@ all_formulas <- parse(text = paste0("list(", paste0("formula", 1:5, collapse = "
 all_models <- list("Model 1: Constant", "Model 2: IID", "Model 3: BYM2", "Model 4: IID (grouped)", "Model 5: BYM2 (grouped)")
 
 #' The subset of all possible fit in this script, as specified by model_ids
-if(!is.na(max_model_id)) {
-  formulas <- all_formulas[1:max_model_id]
-  models <- all_models[1:max_model_id]
-} else {
-  formulas <- all_formulas
-  models <- all_models
-}
+formulas <- all_formulas[1:max_model_id]
+models <- all_models[1:max_model_id]
 
 #' Fit the models
 res <- purrr::pmap(
