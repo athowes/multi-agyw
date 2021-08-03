@@ -88,7 +88,8 @@ multinomial_model <- function(formula, model_name, S = 100) {
         group_by(obs_idx, cat_idx) %>%
         summarise(median = quantile(prob, 0.5, na.rm = TRUE),
                   lower = quantile(prob, 0.025, na.rm = TRUE),
-                  upper = quantile(prob, 0.975, na.rm = TRUE)),
+                  upper = quantile(prob, 0.975, na.rm = TRUE),
+                  .groups = "drop"),
       by = c("obs_idx", "cat_idx")
     )
 
@@ -111,7 +112,8 @@ multinomial_model <- function(formula, model_name, S = 100) {
       df %>%
         filter(age_idx %in% c(1, 2)) %>%
         group_by(area_cat_idx) %>%
-        summarise(mean = sum(mean * population_mean) / sum(population_mean)),
+        summarise(mean = sum(mean * population_mean) / sum(population_mean),
+                  .groups = "drop"),
       by = "area_cat_idx"
     ) %>%
     left_join(
@@ -120,11 +122,13 @@ multinomial_model <- function(formula, model_name, S = 100) {
         filter(age_idx %in% c(1, 2)) %>%
         group_by(area_cat_idx, sample) %>%
         #' prob = sum_i(prob_i * pop_i) / sum_i(pop_i)
-        summarise(prob = sum(prob * population_mean) / sum(population_mean)) %>%
+        summarise(prob = sum(prob * population_mean) / sum(population_mean),
+                  .groups = "drop") %>%
         group_by(area_cat_idx) %>%
         summarise(median = quantile(prob, 0.5, na.rm = TRUE),
                   lower = quantile(prob, 0.025, na.rm = TRUE),
-                  upper = quantile(prob, 0.975, na.rm = TRUE)),
+                  upper = quantile(prob, 0.975, na.rm = TRUE),
+                  .groups = "drop"),
       by = "area_cat_idx"
     )
 

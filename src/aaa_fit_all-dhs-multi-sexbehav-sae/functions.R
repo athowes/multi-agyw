@@ -85,7 +85,8 @@ multinomial_model <- function(formula, model_name, S = 100) {
         group_by(obs_idx, cat_idx) %>%
         summarise(median = quantile(prob, 0.5, na.rm = TRUE),
                   lower = quantile(prob, 0.025, na.rm = TRUE),
-                  upper = quantile(prob, 0.975, na.rm = TRUE)),
+                  upper = quantile(prob, 0.975, na.rm = TRUE),
+                  .groups = "drop"),
       by = c("obs_idx", "cat_idx")
     )
 
