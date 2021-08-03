@@ -149,17 +149,26 @@ df <- df %>%
 #' Within-group is controlled by f(), and between group is controlled by the control.group
 #' argument. Often the group argument is used to define spatiotemporal covariance structures.
 #' A spatiotemporal model is called separable when space-time covariance structure can be
-#' written as a Kronecker product of a spatial and temporal covariance. Rather than using the
-#' group option to define the spatiotemporal covariance, we use it here to define temporal random
-#' effects (indexed by the survey identifier, survey_idx) for each of the multinomial categories.
-#' In this case, setting f(sur_idx) and group = cat_idx gives grouped random effects as follows:
+#' written as a Kronecker product of a spatial and temporal covariance.
+#'
+#' Following e.g. Blangiardo and Cameletti (2015), let delta_it be spatio-temporal interaction
+#' random effects. Knorr-Held (2000) present four ways to specify the structure matrix R_delta,
+#' where in the following R_space and R_time refer to spatially or temporally structured random
+#' effects and I_space and I_time unstructured random effects:
+#' * Type I: I_space (x) I_time e.g. `f(spacetime, model = "iid")` or seems possible to use group option either way
+#' * Type II: I_space (x) R_time e.g. `f(space, model = "iid", group = time, control.group = list(model = "rw1"))`
+#' * Type III: R_space (x) I_time e.g. `f(time, model = "iid", group = space, control.group = list(model = "besag"))`
+#' * Type IV: R_space (x) R_time e.g. `f(space, model = "besag", group = time, control.group = list(model = "rw1"))`
+#'
+#' Rather than using the group option to define the spatiotemporal covariance, we use it here to define
+#' temporal random effects (indexed by the survey identifier, survey_idx) for each of the multinomial
+#' categories. In this case, setting `f(sur_idx)` with `group = cat_idx` gives the grouped random effects:
 #'
 #' [e(cat 1, time 1), e(cat 1, time 2), e(cat 1, time 3)]
 #' [e(cat 2, time 1), e(cat 2, time 2), e(cat 2, time 3)]
 #' [e(cat 3, time 1), e(cat 3, time 2), e(cat 3, time 3)]
 #'
-#' TODO: Might it be the case that we want space x time x category random effects? Can this
-#' be handled with the group option?
+#' TODO: Might it be the case that we want space x time x category random effects? Can this be handled?
 
 #' Model 1: age x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +

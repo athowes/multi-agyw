@@ -216,16 +216,28 @@ formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.4, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 4: As Model 2, but using the group option
-#' TODO: Better understand this from
-#' https://raw.githubusercontent.com/hrue/r-inla/devel/internal-doc/group/group-models.pdf
-#' "There are much more applications, e.g. invariant smoothing of multinomial data"
+
+#' Kronecker products:
+#' If A (m x n) and B (p x q) are matrices then their Kronecker product C (pm x qn) is the block matrix
+#'
+#' C = [a_11 B ... a_1n B]
+#'     [...    ...    ...]
+#'     [a_m1 B ... a_mn B]
+#'
+#' Model 4: As with Model 2, but using the group option (which implemented Kronecker product structured
+#' random effects)
+#'
+#' `formula4` below specifies the space x category random effects to have structure matrix given as
+#' the Kronecker product R_{space x category} = I_{space} (x) I_{cat} = I. This is similar to specifying
+#' four separate structure matrices, as in `formula2`, but differs in that `formula4` only involves a
+#' single precision parameter. In other words, the variance of the spatial random effects for each
+#' category are pooled together in `formula4` but not `formula2`.
 formula4 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx, model = "iid", group = cat_idx,
     control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 5: As Model 3, but using the group option
+#' Model 5: As Model 3, but using the group option to give R_{space x category} = R_{space} (x) I_{cat}
 formula5 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx, model = "bym2", graph = adjM, group = cat_idx,

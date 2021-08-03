@@ -45,8 +45,9 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 - [ ] ~5% of rows produced using `softmax` [based on samples](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/functions.R#L55) using `inla.posterior.sample` from (some subset of) the models result in `NaN`. Find the cause of this issue and solve
 - [x] [Local WAIC very large](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/script.R#L205) for `x_eff` values of zero (this more often occurs for `sexpaid12m`). DIC output also has problems resulting in either `NA` or implausible values. Use the local values to find rows causing the problem, then try to resolve somehow. Could it be related to survey weights?
   - [ ] Have added the diagnostic output but remains to say how to solve it
-- [ ] [`ind` values outside [0, 1]](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/script.R#L102) (possibly traced back to `survey::` functions). Try to fix
-  - [ ] Start by adding a diagnostic warning, if that's possible in `orderly`
+- [x] [`ind` values outside [0, 1]](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/script.R#L102) (possibly traced back to `survey::` functions). Try to fix
+  - [x] Start by adding a diagnostic warning, if that's possible in `orderly`
+  - Values seem to be a tiny amount below zero or above one (and it's occuring when all the responses are either no or yes). could trace this back to the function being used but doesn't seem that much of a priority
 - [x] It's not OK to fit overlapping age categories at the same time as e.g. use some data twice to inform precision parameter estimate of age random effects. Find a way to generate 15-24 age category estimates from 15-19 and 20-24. Population size weighting?
   - Population size data can be obtained from Naomi model [outputs](https://imperiallondon.sharepoint.com/sites/HIVInferenceGroup-WP/Shared%20Documents/Forms/AllItems.aspx?csf=1&web=1&e=g7J9el&cid=1beffd0f%2D9df9%2D4a8b%2Db79c%2Df4bed7428f73&RootFolder=%2Fsites%2FHIVInferenceGroup%2DWP%2FShared%20Documents%2FData%2FSpectrum%20files%2F2021%20naomi&FolderCTID=0x0120000FA834E7B0DC9A4A865FA1C3F87255B3) and can be read in using [`spud::sharepoint`](https://github.com/mrc-ide/naomi-orderly/blob/f162d2d227a30150fa078187a8c83ddb84164be0/src/bwa_raw_survey_bwa2013bais_addsexbehav/script.R#L2)
   - In Naomi standard errors for different levels of aggregation are produced using [sparse matrix multiplication in TMB](https://github.com/mrc-ide/naomi/blob/master/src/tmb.cpp#L689). The input matrix `A_out` determining the aggregation is produced by [`naomi_output_frame`](https://github.com/mrc-ide/naomi/blob/master/R/model.R#L1-L74)
@@ -116,8 +117,9 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 * [`orderly`](https://www.vaccineimpact.org/orderly/index.html) documentation
 * [Example using survey weight in multinomial model](https://core.ac.uk/download/pdf/95690175.pdf), where they put the weights in the log-likelihood
 * [How to use `rdhs`](https://cran.r-project.org/web/packages/rdhs/vignettes/introduction.html)
-* [Separable models using the `group` option](https://becarioprecario.bitbucket.io/inla-gitbook/ch-temporal.html#separable-models-with-the-group-option)
+* [Separable models using the `group` option](https://becarioprecario.bitbucket.io/inla-gitbook/ch-temporal.html#separable-models-with-the-group-option) from Bayesian inference with INLA by Virgilio Gómez-Rubio
 * [Gaussian Kronecker product Markov random fields](https://raw.githubusercontent.com/hrue/r-inla/devel/internal-doc/group/group-models.pdf) presentation by Andrea Riebler
+* [Grouped models](https://faculty.washington.edu/jonno/SISMIDmaterial/8-Groupedmodels.pdf) presentation by Daniel Simpson
 
 ## Improving the estimates for FSW
 
@@ -158,3 +160,4 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   * Same model for all is a good default, unless something really stands out
 * ["Now there remains the question about the DIC infinite of my model that is still unresolved. Do you have any idea?"](https://groups.google.com/g/r-inla-discussion-group/c/KPjQBjpIlrI/m/w006pSqoDgAJ)
   * "This is usually an overflow issue, mainly because of an weakly indentified model. Like DIC would require an integral like \int exp(x) dx and if the marginal variance of x is large, then exp(x) at the upper limit might evaluate to infinity, giving an infinite DIC."
+* "with so many hyperparameters we have to increase the number of maximum function evaluations in the derivation of the posterior marginals for the hyperparameters ... `control.inla=list(numint.maxfeval=80000000))`" from [here](https://raw.githubusercontent.com/hrue/r-inla/devel/internal-doc/group/group-models.pdf) 
