@@ -276,8 +276,8 @@ res_df <- bind_cols(
     bind_rows() %>%
     #' Being safe here and explictly adding the NA entires for df_agg
     bind_rows(data.frame(
-      local_dic = rep(NA, nrow(df_agg)),
-      local_waic = rep(NA, nrow(df_agg))
+      local_dic = rep(NA, max_model_id * nrow(df_agg)),
+      local_waic = rep(NA, max_model_id * nrow(df_agg))
     ))
 )
 
