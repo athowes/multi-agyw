@@ -197,11 +197,11 @@ df <- df %>%
 #' Specify the models to be fit
 
 #' Model 1: age x category random effects (IID)
-formula1 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
 #' Model 2: space x category random effects (IID)
-formula2 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+formula2 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
@@ -209,7 +209,7 @@ formula2 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
   f(area_idx.4, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
 #' Model 3: space x category random effects (BYM2)
-formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
@@ -232,13 +232,13 @@ formula3 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
 #' four separate structure matrices, as in `formula2`, but differs in that `formula4` only involves a
 #' single precision parameter. In other words, the variance of the spatial random effects for each
 #' category are pooled together in `formula4` but not `formula2`.
-formula4 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+formula4 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx, model = "iid", group = cat_idx,
     control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
 
 #' Model 5: As Model 3, but using the group option to give R_{space x category} = R_{space} (x) I_{cat}
-formula5 <- x_eff ~ -1 + f(obs_idx, hyper = tau_prior(0.000001)) +
+formula5 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx, model = "bym2", graph = adjM, group = cat_idx,
     control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
