@@ -319,6 +319,8 @@ mean_x_eff_for_large_local_waic <- res_df %>%
 pdf("local-ic-diagnostics.pdf", h = 11, w = 8.5)
 
 #' Highlighting the problem with having x_eff = 0, particularly in sexpaid12m
+#' Note that warnings here about removing rows with missing values are due to the aggregate age entries
+#' not having local DIC or WAIC values
 ggplot(res_df, aes(x = 1:nrow(res_df), y = log10(abs(local_dic)), col = large_local_dic)) +
     geom_point(alpha = 0.4) +
     facet_grid(indicator ~ model) +
@@ -387,6 +389,8 @@ res_plot <- res_df %>%
   st_as_sf() %>%
   split(~indicator + model)
 
+#' Cloropleths
+
 pdf("multinomial-smoothed-district-sexbehav.pdf", h = 11, w = 8.5)
 
 lapply(res_plot, function(x)
@@ -394,7 +398,6 @@ lapply(res_plot, function(x)
     mutate(
       age_group = fct_relevel(age_group, "Y015_024") %>%
         fct_recode("15-19" = "Y015_019", "20-24" = "Y020_024", "25-29" = "Y025_029", "15-24" = "Y015_024"),
-      #' Note: not currently using aggregate, right?
       source = fct_relevel(source, "raw", "smoothed", "aggregate") %>%
         fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed", "Admin 1 aggregate" = "aggr")
     ) %>%
@@ -414,6 +417,59 @@ lapply(res_plot, function(x)
       legend.key.width = unit(4, "lines")
     )
 )
+
+dev.off()
+
+#' Stacked proportion plots
+
+pdf("stacked-proportions.pdf", h = 10, w = 12)
+
+cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
+
+#' In this plot, it'd be great if there was some way to label that 1, 2, 3, ... refer to models,
+#' though I think it could reasonably be done in the description for the figure.
+#'
+#' It might also be nice to include uncertainty, with some options discussed in this thread:
+#' https://twitter.com/solomonkurz/status/1372632774285348864
+#' However, I do not see that any of the options are good for this plot, and there is already a
+#' lot of information being displayed without adding the uncertainty.
+res_df %>%
+  mutate(
+    age_group = fct_relevel(age_group, "Y015_024", after = 3) %>%
+      fct_recode(
+        "15-19" = "Y015_019",
+        "20-24" = "Y020_024",
+        "25-29" = "Y025_029",
+        "15-24" = "Y015_024"
+      ),
+    model = fct_recode(model,
+      "1" = "Model 1: Constant",
+      "2" = "Model 2: IID",
+      "3" = "Model 3: BYM2",
+      "4" = "Model 4: IID (grouped)",
+      "5" = "Model 5: BYM2 (grouped)"
+    ),
+    indicator = fct_recode(indicator,
+      "No sex (past 12 months)" = "nosex12m",
+      "Cohabiting partner" = "sexcohab",
+      "Nonregular partner(s)" = "sexnonreg",
+      "Paid for sex (past 12 months)" = "sexpaid12m"
+    )
+  ) %>%
+  ggplot(aes(x = model, y = estimate_smoothed, group = model, fill = indicator)) +
+  geom_bar(position = "fill", stat = "identity", alpha = 0.8) +
+  facet_grid(age_group ~ area_name, space = "free_x", scales = "free_x", switch = "x") +
+  labs(x = "District", y = "Proportion", fill = "Category") +
+  theme_minimal() +
+  scale_color_manual(values = cbpalette) +
+  labs(title = paste0(res_df$survey_id[1], ": posterior category mean proportions by model")) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom",
+    legend.key.width = unit(4, "lines"),
+    strip.placement = "outside",
+    strip.text.x = element_text(angle = 90, hjust = 0)
+  )
 
 dev.off()
 

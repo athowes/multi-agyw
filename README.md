@@ -47,7 +47,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   - [ ] Have added the diagnostic output but remains to say how to solve it
 - [x] [`ind` values outside [0, 1]](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/script.R#L102) (possibly traced back to `survey::` functions). Try to fix
   - [x] Start by adding a diagnostic warning, if that's possible in `orderly`
-  - Values seem to be a tiny amount below zero or above one (and it's occuring when all the responses are either no or yes). could trace this back to the function being used but doesn't seem that much of a priority
+  - Values seem to be a tiny amount below zero or above one (and it's occurring when all the responses are either no or yes). could trace this back to the function being used but doesn't seem that much of a priority
 - [x] It's not OK to fit overlapping age categories at the same time as e.g. use some data twice to inform precision parameter estimate of age random effects. Find a way to generate 15-24 age category estimates from 15-19 and 20-24. Population size weighting?
   - Population size data can be obtained from Naomi model [outputs](https://imperiallondon.sharepoint.com/sites/HIVInferenceGroup-WP/Shared%20Documents/Forms/AllItems.aspx?csf=1&web=1&e=g7J9el&cid=1beffd0f%2D9df9%2D4a8b%2Db79c%2Df4bed7428f73&RootFolder=%2Fsites%2FHIVInferenceGroup%2DWP%2FShared%20Documents%2FData%2FSpectrum%20files%2F2021%20naomi&FolderCTID=0x0120000FA834E7B0DC9A4A865FA1C3F87255B3) and can be read in using [`spud::sharepoint`](https://github.com/mrc-ide/naomi-orderly/blob/f162d2d227a30150fa078187a8c83ddb84164be0/src/bwa_raw_survey_bwa2013bais_addsexbehav/script.R#L2)
   - In Naomi standard errors for different levels of aggregation are produced using [sparse matrix multiplication in TMB](https://github.com/mrc-ide/naomi/blob/master/src/tmb.cpp#L689). The input matrix `A_out` determining the aggregation is produced by [`naomi_output_frame`](https://github.com/mrc-ide/naomi/blob/master/R/model.R#L1-L74)
@@ -93,6 +93,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   - `pull_naomi_areas` might be better using `orderly_pull_dependencies`
 - [x] Katie [has processed](https://github.com/mrc-ide/naomi-orderly/commit/f162d2d227a30150fa078187a8c83ddb84164be0) the BWA data now. Could import this into `multi-agyw` and test, though could also wait until scripts are moved to e.g. `naomi-orderly`. Not high priority but good to check that it's OK for the different data
   - [ ] Added, but still need to test
+- [ ] Move the stacked proportion plots to the spatio-temporal models. Little more challenging in that there are now 9 models and and additional variable (survey) to facet over. Starting to be a very large plot, which is OK for internal purposes but hard to share perhaps
 
 ### Low priority
 
@@ -120,6 +121,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 * [Separable models using the `group` option](https://becarioprecario.bitbucket.io/inla-gitbook/ch-temporal.html#separable-models-with-the-group-option) from Bayesian inference with INLA by Virgilio Gómez-Rubio
 * [Gaussian Kronecker product Markov random fields](https://raw.githubusercontent.com/hrue/r-inla/devel/internal-doc/group/group-models.pdf) presentation by Andrea Riebler
 * [Grouped models](https://faculty.washington.edu/jonno/SISMIDmaterial/8-Groupedmodels.pdf) presentation by Daniel Simpson
+* [Primer on crashing INLA models](https://avianecologist.com/2018/05/25/a-primer-on-crashing-inla-models/)
 
 ## Improving the estimates for FSW
 
