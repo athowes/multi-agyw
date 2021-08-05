@@ -151,6 +151,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   * Work of Jon Wakefield / Taylor Okonek on calibration of estimates?
 * Other possible data source on men who paid for sex
   * See Hodgkins et al. (2021, preprint)
+  * The proportion of men who pay for sex (CFSW) can be estimated from the data, and then this can be linked to the proportion of FSW by some model like `p_{CFSW} = B * p_{FSW}` where a strongly informative prior is placed on `B` (around 10 say)
 * [Fully Bayesian benchmarking of small area estimation models](https://sciendo.com/article/10.2478/jos-2020-0010) (Zhang and Bryant, 2020)
   * Zhang and Bryant have quite a few [papers](https://www.bayesiandemography.com/papers) which look interesting
 
