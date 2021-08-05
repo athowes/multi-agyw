@@ -328,6 +328,8 @@ res_plot <- res_df %>%
   st_as_sf() %>%
   split(~indicator + model)
 
+#' Cloropleths
+
 pdf("multinomial-smoothed-district-sexbehav.pdf", h = 11, w = 8.5)
 
 lapply(res_plot, function(x)
@@ -353,6 +355,58 @@ lapply(res_plot, function(x)
       legend.position = "bottom",
       legend.key.width = unit(4, "lines")
     )
+)
+
+dev.off()
+
+#' Stacked proportion plots
+
+pdf("stacked-proportions.pdf", h = 10, w = 12)
+
+cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
+
+res_df %>% split(.$survey_id) %>% lapply(function(x)
+  x %>% mutate(
+    age_group = fct_relevel(age_group, "Y015_024", after = 3) %>%
+      fct_recode(
+        "15-19" = "Y015_019",
+        "20-24" = "Y020_024",
+        "25-29" = "Y025_029",
+        "15-24" = "Y015_024"
+      ),
+    model = fct_recode(model,
+                       "1" = "Model 1",
+                       "2" = "Model 2",
+                       "3" = "Model 3",
+                       "4" = "Model 4",
+                       "5" = "Model 5",
+                       "6" = "Model 6",
+                       "7" = "Model 7",
+                       "8" = "Model 8",
+                       "9" = "Model 9"
+    ),
+    indicator = fct_recode(indicator,
+                           "No sex (past 12 months)" = "nosex12m",
+                           "Cohabiting partner" = "sexcohab",
+                           "Nonregular partner(s)" = "sexnonreg",
+                           "Paid for sex (past 12 months)" = "sexpaid12m"
+    )
+  ) %>%
+  ggplot(aes(x = model, y = estimate_smoothed, group = model, fill = indicator)) +
+  geom_bar(position = "fill", stat = "identity", alpha = 0.8) +
+  facet_grid(age_group ~ area_name, space = "free_x", scales = "free_x", switch = "x") +
+  labs(x = "District", y = "Proportion", fill = "Category") +
+  scale_color_manual(values = cbpalette) +
+  theme_minimal() +
+  labs(title = paste0(x$survey_id[1], ": posterior category mean proportions by model")) +
+  theme(
+    axis.text.x = element_blank(),
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom",
+    legend.key.width = unit(4, "lines"),
+    strip.placement = "outside",
+    strip.text.x = element_text(angle = 90, hjust = 0)
+  )
 )
 
 dev.off()
