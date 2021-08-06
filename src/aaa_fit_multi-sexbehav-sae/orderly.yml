@@ -50,6 +50,9 @@ packages:
   - spdep
   - tidyr
 
+global_resources:
+  depends/naomi3.rds: naomi3.rds
+
 depends:
   cmr_data_areas:
     id: latest

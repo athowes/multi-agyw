@@ -148,10 +148,8 @@ df <- df %>%
 
 #' Get age-stratified population total sizes from Naomi model outputs
 #' This is required for aggregating the estimates e.g. using 15-19 and 20-24 to create 15-24
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
-url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2021 naomi/Naomi datasets in R/naomi3.rds"
-path <- sharepoint$download(URLencode(url))
-naomi3 <- readRDS(path)
+#' The data has been pre-filtered to only be for the age-groups and sex we are considering
+naomi3 <- readRDS("depends/naomi3.rds")
 
 #' Merge this data into df
 df <- df %>%
@@ -164,10 +162,6 @@ df <- df %>%
              #' This would be particularly relevant for the scripts using
              #' all DHS data rather than just the most recent
              calendar_quarter == max(calendar_quarter),
-             #' These are the age groups we are considering,
-             age_group_label %in% c("15-19", "20-24", "25-29", "15-24"),
-             #' Only female
-             sex == "female",
              #' The country and analysis level of interest
              iso3 == iso3,
              area_level == analysis_level) %>%
