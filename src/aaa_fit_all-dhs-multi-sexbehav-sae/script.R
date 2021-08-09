@@ -52,7 +52,6 @@ ind <- dplyr::bind_rows(
 )
 
 #' Set ind > 1 to 1, as well as ind < 0 to 0
-#' TODO: Investigate the data issues leading to this
 message(
   paste0(
     "There are: ",
@@ -170,33 +169,41 @@ df <- df %>%
 #'
 #' TODO: Might it be the case that we want space x time x category random effects? Can this be handled?
 
-#' Model 1: age x category random effects (IID)
+#' Model 1: category random effects (IID), age x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 2: age x category random effects (IID), space x category random effects (IID)
+#' Model 2: category random effects (IID), age x category random effects (IID),
+#' space x category random effects (IID)
 formula2 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 3: age x category random effects (IID), space x category random effects (BYM2)
+#' Model 3: category random effects (IID), age x category random effects (IID),
+#' space x category random effects (BYM2)
 formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 4: age x category random effects (IID), survey x category random effects (IID) (grouped)
+#' Model 4:  category random effects (IID), age x category random effects (IID),
+#' survey x category random effects (IID) (grouped)
 formula4 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 5: age x category random effects (IID), space x category random effects (IID),
-#' survey x category random effects (IID) (grouped)
+#' Model 5:  category random effects (IID), age x category random effects (IID),
+#' space x category random effects (IID), survey x category random effects (IID) (grouped)
 formula5 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
@@ -204,9 +211,10 @@ formula5 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
   f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 6: age x category random effects (IID), space x category random effects (BYM2),
-#' survey x category random effects (IID) (grouped)
+#' Model 6: category random effects (IID), age x category random effects (IID),
+#' space x category random effects (BYM2), survey x category random effects (IID) (grouped)
 formula6 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
@@ -214,15 +222,18 @@ formula6 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
   f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 7: age x category random effects (IID), survey x category random effects (AR1)
+#' Model 7:  category random effects (IID), age x category random effects (IID),
+#' survey x category random effects (AR1)
 formula7 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001))+
   f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 8: age x category random effects (IID), space x category random effects (IID),
-#' survey x category random effects (AR1)
+#' Model 8:  category random effects (IID), age x category random effects (IID),
+#' space x category random effects (IID), survey x category random effects (AR1)
 formula8 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
@@ -230,9 +241,10 @@ formula8 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
   f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 9: age x category random effects (IID), space x category random effects (BYM2),
-#' survey x category random effects (AR1)
+#' Model 9: category random effects (IID), age x category random effects (IID),
+#' space x category random effects (BYM2), survey x category random effects (AR1)
 formula9 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +

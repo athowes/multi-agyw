@@ -190,26 +190,30 @@ df <- df %>%
 
 #' Specify the models to be fit
 
-#' Model 1: age x category random effects (IID)
+#' Model 1: category random effects (IID), age x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 2: space x category random effects (IID)
+#' Model 2: category random effects (IID), age x category random effects (IID),
+#' space x category random effects (IID)
 formula2 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.4, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 3: space x category random effects (BYM2)
+#' Model 3: category random effects (IID), age x category random effects (IID),
+#' space x category random effects (BYM2)
 formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.2, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx.4, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001))
-
 
 #' Kronecker products:
 #' If A (m x n) and B (p x q) are matrices then their Kronecker product C (pm x qn) is the block matrix
@@ -227,19 +231,21 @@ formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
 #' single precision parameter. In other words, the variance of the spatial random effects for each
 #' category are pooled together in `formula4` but not `formula2`.
 formula4 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx, model = "iid", group = cat_idx,
     control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
 
 #' Model 5: As Model 3, but using the group option to give R_{space x category} = R_{space} (x) I_{cat}
 formula5 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(area_idx, model = "bym2", graph = adjM, group = cat_idx,
     control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
 
 #' All of the possible models
-all_formulas <- parse(text = paste0("list(", paste0("formula", 1:5, collapse = ", "), ")")) %>% eval()
-all_models <- list("Model 1: Constant", "Model 2: IID", "Model 3: BYM2", "Model 4: IID (grouped)", "Model 5: BYM2 (grouped)")
+all_formulas <- parse(text = paste0("list(", paste0("formula", 0:5, collapse = ", "), ")")) %>% eval()
+all_models <- list("Model 0", "Model 1: Constant", "Model 2: IID", "Model 3: BYM2", "Model 4: IID (grouped)", "Model 5: BYM2 (grouped)")
 
 #' The subset of all possible fit in this script, as specified by model_ids
 formulas <- all_formulas[1:max_model_id]
