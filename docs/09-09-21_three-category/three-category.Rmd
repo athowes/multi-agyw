@@ -1,5 +1,5 @@
 ---
-title: A multinomial spatio-temporal model for sexual risk behaviour in adolescent girls and young women
+title: A multinomial spatio-temporal model for sexual risk behaviour in AGYW
 subtitle: HIV Inference Lab Group Meeting
 author: Adam Howes
 institute: Imperial College London
@@ -18,28 +18,52 @@ output:
 ## Background
 
 * Want to estimate the proportion $p_k$ of AGYW in $K = 4$ risk categories
-  * $k = 1$: Not sexually active
-  * $k = 2$: Cohabiting, single partner
-  * $k = 3$: Non-regular partner(s)
-  * $k = 4$: Key population, female sex worker
+  * $k = 1$: Not sexually active `nosex12m`
+  * $k = 2$: Cohabiting, single partner `sexcohab`
+  * $k = 3$: Non-regular partner(s) `sexnonreg`
+  * $k = 4$: Key population, female sex worker `sexpaid12m`
 * Used as a step towards estimating total incidence by group
   * By district, age, sex, time
 * Different policy responses depending on where new infections are
-
-## Extent
-
-* 13 AGYW Global Fund priority countries (but fitting individually)
-  * Botswana, Cameroon, Kenya, Lesotho, Malawi, Mozambique, Namibia, South Africa, Swaziland, Tanzania, Uganda, Zambia and Zimbabwe
-* The available DHSs
 
 ## Goal
 
 * Estimate proportions indexed by
   * District $i = 1, \ldots, n$
+    * 13 AGYW Global Fund priority countries (but fitting individually): Botswana, Cameroon, Kenya, Lesotho, Malawi, Mozambique, Namibia, South Africa, Swaziland, Tanzania, Uganda, Zambia and Zimbabwe
   * Survey $t = 1, \ldots, T$
+    * The available DHSs
   * Age $a \in \{\text{15--19}, \text{20--24}, \text{25--29}\}$
   * Category $k$
 * e.g. in Lilongwe, in 2015, how many AGYW aged 20-24 are cohabiting with a single partner?
+
+## Why not just use the raw data
+
+1. Usual high variance from low counts problem, improved by spatio-temporal smoothing
+2. The raw proportions don't add up to one
+  * This is illustrated in the next slide
+  
+##
+
+:::: columns
+
+::: column
+
+```{r echo=FALSE}
+knitr::include_graphics("page1-check100.pdf")
+```
+
+:::
+
+::: column
+
+```{r echo=FALSE}
+knitr::include_graphics("page2-check100.pdf")
+```
+
+:::
+
+::::
 
 ## Multinomial likelihood
 
@@ -55,8 +79,9 @@ $$
   * Really $K - 1$ numbers, since they are constrained to sum to one
 * Usually this is done by modelling the "contrasts" between categories
   * How much more likely to be in this category (or group of categories) than that category (or group of categories)
+  * Different ways to do this
 * These types of models are popular in economics to model choice
-  * Treat the latent field like utilities of choices
+  * Treat the latent field like utility
 * Some keywords: discrete choice model, multinomial logit model
 
 ## Baseline category
@@ -75,7 +100,7 @@ $$
 * Choosing 1. whether or not to have sex, 2. conditional on having sex, whether to have one cohabiting partner or irregular partners seems reasonable
 * Choosing 3. whether or not to be a FSW based upon choosing to have irregular partners is less reasonable
   * i.e. not like you first choose to have many partners then choose to be FSW, more like choose to be FSW based on economic factors say
-
+  
 ## Workaround requried
 
 * Want to fit this model quickly and easily using `R-INLA`
@@ -83,6 +108,14 @@ $$
 * There is a workaround, called the Poisson trick
   * A multinomial likelihood can be rewritten as a Poisson likelihood (with some additional nuisance parameters)
   * So this respecifies the model in terms of a Poisson likelihood for each category of the observation
+
+## Sidenote: ordinal
+
+* $\pi_{k} = \sum_{l \leq k} p_{l}$ be the cumulative probability of category $k$ where $\pi_{1} \leq \pi_{2} \leq \cdots \leq \pi_{K}$.
+* Ordinal logistic regression is based upon $K - 1$ cumulative logits $\text{logit} (\pi_{k}) = \eta_{k}$ where the linear predictors are ordered
+* One way to do this is to assume $\eta_k$ only differ in their intercept (also called cut-point)
+* I wonder if you can fit this with a single linear predictor and a category random effect?
+  * Possibly wouldn't need Poisson trick
 
 ## Poisson trick
 
@@ -110,12 +143,19 @@ P(\mathbf{y}) = \prod_k \left( \frac{\exp(-\delta \lambda_k) \left( \delta \lamb
 $$
 * $\implies y_k \sim \text{Poisson}(\delta \lambda_k)$ independently
 
+## Poisson trick
+
+* "The Poisson surrogate model eliminates $m$ from the denominator of the multinomial probabilities. This makes sense intuitively, as we do not expect the multinomial sums to provide any useful information in estimating the fixed effects." [@lee2017poisson]
+* Example of a broader class of Poisson transformations where the theme is to consider the normalisation constant as another parameter [@barthelme2015poisson]
+* I guess that this must mean the normalisation constant is "estimated" exactly always
+
 ## Poisson log-linear model
 
 * $y_{itak} \sim \text{Poisson}(\lambda_{itak})$
 * $\log(\lambda_{itak}) = \eta_{itak}$ the linear predictor for district $i$, survey $t$, age-group $a$ and category $k$
 * Including observation-specific random effects $\theta_{ita} \sim \mathcal{N}(0, \tau_\theta^{-1})$ in the model $\eta_{itak} = \theta_{ita} + \cdots$ assures exact reproduction of the multinomial denominators
   * By "observation" I mean observation of the multinomial e.g. a vector `c(2, 5, 3, 0)`
+  * These variables correspond to $\log(\delta)$ from before. So we're just having a free parameter which can 
 * Then you put whatever mixed model things you'd like in
 
 ## No intercept
@@ -201,5 +241,108 @@ $$
 $$
 * Important difference: just have one set of hyperparameters $\{\tau_\gamma, \rho\}$
   * i.e. there is pooling across categories doing it this way
+
+## Survey weights
+
+* Use survey weights to calculate effective observation `x_eff`
+* May not be integers i.e. `c(1.87, 5.32, 2.20, 0.15)`
+* Deal with this by using `xPoisson` (generalisation of the Poisson to non-integer data) rather than `Poisson`
+* Might be equivalent to weighted log-likelihood approach
+
+##
+
+:::: columns
+
+::: column
+
+```{r echo=FALSE}
+knitr::include_graphics("page-multinomial-smoothed-district-sexbehav.pdf")
+```
+
+:::
+
+::: column
+
+* A (difficult to see) example of what this looks like
+* Model 9 has BYM2 and AR1
+* Other notes
+  * Quantiles produced by manipulating `inla.posterior.sample`s
+  * Same samples used in combination with Naomi population data to produce aggregates (i.e. 15-24 age category)
+
+:::
+
+::::
+
+
+## Data issues for `sexpaid12m` category
+
+* Two different questions asked in the DHS, and answered very differently
+* Before 2015, asked about most recent three partners. One of the categories for these is paid
+  * Very rare to list one of these as paid, using this question often think there are essentially no FSW
+* After 2015, asked if have given or received gifts or money in exchange for sex
+  * Better answered but still has issues
+    * Missing some FSW from survey sampling frame
+    * Not all "gifts of money in exchange for sex" is sex work
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("../../archive/check_sexpaid-survey-question/20210720-120340-77026581/sexpaid-survey-question.pdf")
+```
+
+## Current approach
+
+* Can't fit a (meaningful) spatio-temporal model when the question asked / response is so different
+* Have been fitting single-survey spatial models to the most recent DHS
+* Otherwise have created a three-category model, moving all `sexpaid12m` into `sexnonreg` to create a new `sexnonregplus` category
+  * Haven't checked that some of the `sexpaid12m` shouldn't go into `sexcohab` rather than `sexnonreg` yet (sorry Katie!)
+* Challenge is what to do about the `sexpaid12m` category
+
+## What to do about the `sexpaid12m` category
+
+1. Ignore it
+2. Try to use other data sources to help
+  * Previous estimates from workbook are based upon national estimates of FSW population size (perhaps the UNAIDS Key Population Atlas)
+
+## Johnston et al. (2021, preprint) 
+
+**Deriving and interpreting population size estimates for adolescent and young key populations at higher risk of HIV transmission: men who have sex with men, female sex workers and transgender persons**
+
+* Disaggregates the UNAIDS published population size estimates by age (nice, but not by district, which we'd also want) using proportion of sexually active adults
+* Kinh is a coauthor and warns that
+  * The estimates should (often) be seen as expert opinion rather than based on data
+  * Several countries had no data
+  * Rounding up when the number is too small
+
+## Laga et al. (2021, preprint)
+
+**Mapping female sex worker prevalence (aged 15-49 years) in sub-Saharan Africa**
+
+* Collates available FSW population size estimates
+* Small-area model with covariates used to extrapolate to district level
+* Has code available
+* Probably the best single source to rely on, done a lot of the work already
+
+## Hodgkins et al. (2021, preprint)
+
+**HIV prevalence, population sizes, and HIV prevention among men who paid for sex in sub-Saharan Africa: a meta-analysis of 82 population-based surveys (2000-2020)**
+
+* Proportion of men who pay for sex (CFSW) estimated from survey data
+* Could be linked to proportion FSW by some model e.g.
+$$
+p_{\text{CFSW}} = B \times p_{\text{FSW}}
+$$
+with a strongly informative prior $B \sim p(B)$ (around 10 say)
+  * Don't know if this is a good model, anyone have any ideas?
+  * Extract estimates from Hodgkins and plot versus estimates of FSW to see if it looks linear
+  * Of course the ratio is going to vary, but perhaps it's quite stable?
+* Fit a model on the good DHS `sexpaid12m` question, then use it where there isn't the question
+
+##
+
+\begin{align}
+\log(p_{\text{CFSW}}) - \log(p_{\text{FSW}}) &= \log(B) \\
+\log \left( \frac{p_{\text{CFSW}}}{p_{\text{FSW}}} \right) &= \log(B)
+\end{align}
 
 ## References {.allowframebreaks}
