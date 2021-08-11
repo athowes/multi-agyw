@@ -138,12 +138,7 @@ df <- df %>%
          age_cat_idx = interaction(age_idx, cat_idx),
          area_cat_idx = interaction(area_idx, cat_idx),
          #' Is the best way to do it for obs_idx? Perhaps can be added earlier in the pipeline
-         obs_idx = to_int(interaction(age_idx, area_idx)),
-         #' Likewise probably a better way to do this (using the INLA group option)
-         area_idx.1 = ifelse(cat_idx == 1, area_idx, NA),
-         area_idx.2 = ifelse(cat_idx == 2, area_idx, NA),
-         area_idx.3 = ifelse(cat_idx == 3, area_idx, NA),
-         area_idx.4 = ifelse(cat_idx == 4, area_idx, NA)) %>%
+         obs_idx = to_int(interaction(age_idx, area_idx)) %>%
   arrange(obs_idx)
 
 #' Get age-stratified population total sizes from Naomi model outputs
@@ -195,26 +190,6 @@ formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
 
-#' Model 2: category random effects (IID), age x category random effects (IID),
-#' space x category random effects (IID)
-formula2 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.1, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.2, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.4, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
-
-#' Model 3: category random effects (IID), age x category random effects (IID),
-#' space x category random effects (BYM2)
-formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.2, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.4, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001))
-
 #' Kronecker products:
 #' If A (m x n) and B (p x q) are matrices then their Kronecker product C (pm x qn) is the block matrix
 #'
@@ -222,25 +197,25 @@ formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
 #'     [...    ...    ...]
 #'     [a_m1 B ... a_mn B]
 #'
-#' Model 4: As with Model 2, but using the group option (which implemented Kronecker product structured
-#' random effects)
-#'
-#' `formula4` below specifies the space x category random effects to have structure matrix given as
-#' the Kronecker product R_{space x category} = I_{space} (x) I_{cat} = I. This is similar to specifying
-#' four separate structure matrices, as in `formula2`, but differs in that `formula4` only involves a
-#' single precision parameter. In other words, the variance of the spatial random effects for each
-#' category are pooled together in `formula4` but not `formula2`.
-formula4 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx, model = "iid", group = cat_idx,
-    control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
+#' `formula2` below specifies the space x category random effects to have structure matrix given as
+#' the Kronecker product R_{space x category} = I_{space} (x) I_{cat} = I. An alternative is to define
+#' four separate structure matrices. A difference between these approaches is that the former only
+#' involves a single precision parameter whereas the later includes many.
 
-#' Model 5: As Model 3, but using the group option to give R_{space x category} = R_{space} (x) I_{cat}
-formula5 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+#' Model 2: category random effects (IID), age x category random effects (IID),
+#' space x category random effects (IID)
+formula2 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx, model = "bym2", graph = adjM, group = cat_idx, scale.model = TRUE,
+  f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+    constr = TRUE, hyper = tau_prior(0.001))
+
+#' Model 3: category random effects (IID), age x category random effects (IID),
+#' space x category random effects (BYM2)
+formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx, model = "besag", graph = adjM, group = cat_idx, scale.model = TRUE,
     control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
 
 #' All of the possible models
@@ -284,8 +259,7 @@ res_df <- bind_cols(
 #' Prepare data for writing to output
 res_df <- res_df %>%
   #' Remove superfluous INLA indicator columns
-  select(-area_idx, -cat_idx, -age_idx, -obs_idx, -age_cat_idx,
-         -area_idx.1, -area_idx.2, -area_idx.3, -area_idx.4) %>%
+  select(-area_idx, -cat_idx, -age_idx, -obs_idx, -age_cat_idx, -area_cat_idx) %>%
   #' Make it clear which of the estimates are raw and which are from the model (smoothed)
   rename(
     estimate_raw = estimate,
@@ -473,26 +447,26 @@ res_df %>%
 
 dev.off()
 
-pdf("bym2-proportions.pdf", h = 11, w = 8.5)
-
-if(max_model_id >= 3) {
-
-#' Check the mixing parameters in the BYM2 model
-lapply(1:4, function(i) {
-  bym2_fit <- res_fit[[3]]
-  mean <- bym2_fit$summary.hyperpar[i, 1] %>% round(digits = 3)
-  sd <- bym2_fit$summary.hyperpar[i, 2] %>% round(digits = 3)
-  bym2_fit$marginals.hyperpar[[i]] %>%
-    as.data.frame() %>%
-    ggplot(aes(x = x, y = y)) +
-    geom_line() +
-    labs(title = paste0(res_df$survey_id[1], ": posterior of the BYM2 proportion parameter in category ", i),
-         subtitle = paste0("Mean: ", mean, ", SD: ", sd),
-         x = "Proportion", y = "p(Proportion)") +
-    theme_minimal() +
-    theme(plot.title = element_text(face = "bold"))
-  })
-
-}
-
-dev.off()
+#' pdf("bym2-proportions.pdf", h = 11, w = 8.5)
+#'
+#' if(max_model_id >= 3) {
+#'
+#' #' Check the mixing parameters in the BYM2 model
+#' lapply(1:4, function(i) {
+#'   bym2_fit <- res_fit[[3]]
+#'   mean <- bym2_fit$summary.hyperpar[i, 1] %>% round(digits = 3)
+#'   sd <- bym2_fit$summary.hyperpar[i, 2] %>% round(digits = 3)
+#'   bym2_fit$marginals.hyperpar[[i]] %>%
+#'     as.data.frame() %>%
+#'     ggplot(aes(x = x, y = y)) +
+#'     geom_line() +
+#'     labs(title = paste0(res_df$survey_id[1], ": posterior of the BYM2 proportion parameter in category ", i),
+#'          subtitle = paste0("Mean: ", mean, ", SD: ", sd),
+#'          x = "Proportion", y = "p(Proportion)") +
+#'     theme_minimal() +
+#'     theme(plot.title = element_text(face = "bold"))
+#'   })
+#'
+#' }
+#'
+#' dev.off()

@@ -132,12 +132,9 @@ df <- df %>%
          cat_idx = to_int(indicator),
          sur_cat_idx = interaction(sur_idx, cat_idx),
          age_cat_idx = interaction(age_idx, cat_idx),
-         #' Is the best way to do it for obs_idx? Perhaps can be added earlier in the pipeline
-         obs_idx = to_int(interaction(age_idx, area_idx, sur_idx)),
-         #' Likewise probably a better way to do this (using the INLA group option)
-         area_idx.1 = ifelse(cat_idx == 1, area_idx, NA),
-         area_idx.2 = ifelse(cat_idx == 2, area_idx, NA),
-         area_idx.3 = ifelse(cat_idx == 3, area_idx, NA)) %>%
+         area_cat_idx = interaction(area_idx, cat_idx),
+         #' Is the best way to add obs_idx? Perhaps can be added earlier in the pipeline
+         obs_idx = to_int(interaction(age_idx, area_idx, sur_idx))) %>%
   arrange(obs_idx)
 
 #' Specify the models to be fit
@@ -179,18 +176,16 @@ formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
 formula2 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.1, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.2, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
+  f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+    constr = TRUE, hyper = tau_prior(0.001))
 
 #' Model 3: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (BYM2)
 formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.1, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.2, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.3, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001))
+  f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
+    control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
 
 #' Model 4:  category random effects (IID), age x category random effects (IID),
 #' survey x category random effects (IID) (grouped)
@@ -205,9 +200,8 @@ formula4 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
 formula5 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.1, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.2, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+    constr = TRUE, hyper = tau_prior(0.001)) +
   f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 
@@ -216,9 +210,8 @@ formula5 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
 formula6 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.1, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.2, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.3, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
+    control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001)) +
   f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 
@@ -235,9 +228,8 @@ formula7 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
 formula8 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.1, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.2, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.3, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+    constr = TRUE, hyper = tau_prior(0.001)) +
   f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 
@@ -246,9 +238,8 @@ formula8 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
 formula9 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.1, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.2, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.3, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
+    control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001)) +
   f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 
@@ -286,8 +277,8 @@ res_df <- bind_cols(
 #' Prepare data for writing to output
 res_df <- res_df %>%
   #' Remove superfluous INLA indicator columns
-  select(-area_idx, -cat_idx, -age_idx, -obs_idx, -age_cat_idx, -area_idx.1,
-         -area_idx.2, -area_idx.3, -sur_idx, -sur_cat_idx) %>%
+  select(-area_idx, -cat_idx, -age_idx, -obs_idx, -age_cat_idx,
+         -area_cat_idx, -sur_idx, -sur_cat_idx) %>%
   #' Make it clear which of the estimates are raw and which are from the model (smoothed)
   rename(
     estimate_raw = estimate,
