@@ -59,9 +59,9 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 - Aggregate format using Kish weights and `xPoisson`, see `INLA::inla.doc("xPoisson")`
   - [x] Model 1: Age-category interaction
   - [x] Model 2: Age-category interaction, space-category interaction (IID)
-  - [x] Model 3: Age-category interaction, space-category interaction (BYM2)
+  - [x] Model 3: Age-category interaction, space-category interaction (Besag)
   - [x] Model 4: Age-category interaction, space-category interaction using INLA `group` argument (IID)
-  - [x] Model 5: Age-category interaction, space-category interaction using INLA `group` argument (BYM2)
+  - [x] Model 5: Age-category interaction, space-category interaction using INLA `group` argument (Besag)
     - [ ] This model has crashed INLA for some occasions, try to debug
 - [x] Model comparison (DIC or WAIC) among the above models
   - [x] Make model comparison an `artefact` of model fitting, then combine them together in another report
@@ -122,6 +122,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 * [Gaussian Kronecker product Markov random fields](https://raw.githubusercontent.com/hrue/r-inla/devel/internal-doc/group/group-models.pdf) presentation by Andrea Riebler
 * [Grouped models](https://faculty.washington.edu/jonno/SISMIDmaterial/8-Groupedmodels.pdf) presentation by Daniel Simpson
 * [Primer on crashing INLA models](https://avianecologist.com/2018/05/25/a-primer-on-crashing-inla-models/)
+* [Thread on multinomial logit models in Stan](https://github.com/stan-dev/rstanarm/issues/20)
 
 ## Improving the estimates for FSW
 
