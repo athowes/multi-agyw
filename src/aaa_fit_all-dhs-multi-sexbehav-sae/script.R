@@ -188,9 +188,9 @@ formula2 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
 formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.2, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001))
+  f(area_idx.1, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx.2, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx.3, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001))
 
 #' Model 4:  category random effects (IID), age x category random effects (IID),
 #' survey x category random effects (IID) (grouped)
@@ -216,9 +216,9 @@ formula5 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
 formula6 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.2, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx.1, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx.2, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx.3, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
   f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 
@@ -246,9 +246,9 @@ formula8 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
 formula9 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.1, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.2, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx.3, model = "bym2", graph = adjM, constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx.1, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx.2, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
+  f(area_idx.3, model = "bym2", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_prior(0.001)) +
   f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_prior(0.001))
 

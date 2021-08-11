@@ -240,7 +240,7 @@ formula4 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
 formula5 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(area_idx, model = "bym2", graph = adjM, group = cat_idx,
+  f(area_idx, model = "bym2", graph = adjM, group = cat_idx, scale.model = TRUE,
     control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
 
 #' All of the possible models
