@@ -22,7 +22,6 @@ parameters:
   iso3:
     default: ~
   #' Specify the models to be fit
-  #' TODO: Find way to have vector input here?
   max_model_id:
     default: 9
 
@@ -37,6 +36,9 @@ packages:
   - sf
   - spdep
   - tidyr
+
+global_resources:
+  depends/naomi3.rds: naomi3.rds
 
 depends:
   cmr_data_areas:

@@ -152,10 +152,6 @@ df <- df %>%
     naomi3 %>%
       filter(indicator_label == "Population",
              #' Using the most recent estimates for now
-             #' More sophisticated approach would be to try to match
-             #' the year of the survey to the year of the estimates
-             #' This would be particularly relevant for the scripts using
-             #' all DHS data rather than just the most recent
              calendar_quarter == max(calendar_quarter),
              #' The country and analysis level of interest
              iso3 == iso3,

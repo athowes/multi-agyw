@@ -98,7 +98,7 @@ df <- crossing(
   #' Add in the survey_id to deal with multiple surveys
   survey_id = unique(ind$survey_id),
   #' Just these three age groups, aim to calculate aggregates at later point
-  age_group = c("Y015_019", "Y020_024", "Y025_029"),
+  age_group = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"),
   areas_model %>%
     st_drop_geometry() %>%
     select(area_id, area_name, area_idx, area_id_aggr,
@@ -128,7 +128,8 @@ df <- df %>%
 #'  * space x category (area_idx)
 df <- df %>%
   mutate(sur_idx = to_int(survey_id),
-         age_idx = to_int(age_group),
+         #' Doing this because want Y015_024 to have ID 4 rather than 2 as it would be otherwise
+         age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
          cat_idx = to_int(indicator),
          sur_cat_idx = interaction(sur_idx, cat_idx),
          age_cat_idx = interaction(age_idx, cat_idx),
@@ -136,6 +137,48 @@ df <- df %>%
          #' Is the best way to add obs_idx? Perhaps can be added earlier in the pipeline
          obs_idx = to_int(interaction(age_idx, area_idx, sur_idx))) %>%
   arrange(obs_idx)
+
+#' Get age-stratified population total sizes from Naomi model outputs
+#' This is required for aggregating the estimates e.g. using 15-19 and 20-24 to create 15-24
+#' The data has been pre-filtered to only be for the age-groups and sex we are considering
+naomi3 <- readRDS("depends/naomi3.rds")
+
+#' Merge this data into df
+df <- df %>%
+  left_join(
+    naomi3 %>%
+      filter(indicator_label == "Population",
+             #' Using the most recent estimates for now
+             #' More sophisticated approach would be to try to match
+             #' the year of the survey to the year of the estimates
+             #' This is particularly relevant here as we are using
+             #' all DHS data rather than just the most recent
+             calendar_quarter == max(calendar_quarter),
+             #' The country and analysis level of interest
+             iso3 == iso3,
+             area_level == analysis_level) %>%
+      #' More sophisticated approach is to use the distribution of population estimate
+      #' rather than just a point estimate (the mean) as we do here for now
+      rename(population_mean = mean,
+             population_lower = lower,
+             population_upper = upper,
+             age_group = age_group_label) %>%
+      select(age_group, area_name, population_mean) %>%
+      #' Rename to match df, allowing join
+      mutate(
+        age_group = fct_recode(age_group, "Y015_019" = "15-19", "Y020_024" = "20-24",
+                               "Y025_029" = "25-29", "Y015-024" = "15-24")
+      ),
+    by = c("age_group", "area_name")
+  )
+
+#' Data for the model (df) doesn't include the aggregates (since this is using data twice)
+#' So we save them off separately
+df_agg <- df %>%
+  filter(age_group == "Y015_024")
+
+df <- df %>%
+  filter(age_group %in% c("Y015_019", "Y020_024", "Y025_029"))
 
 #' Specify the models to be fit
 
