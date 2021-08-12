@@ -348,7 +348,9 @@ lapply(res_plot, function(x)
     scale_fill_viridis_c(option = "C", label = label_percent()) +
     facet_grid(age_group ~ survey_id + source) +
     theme_minimal() +
-    labs(title = paste0(x$survey_id[1], ": ", x$indicator[1], " (", x$model[1], ")")) +
+    labs(
+      title = paste0(paste(unique(x$survey_id), collapse = ", "), ": ", x$indicator[1], " (", x$model[1], ")")
+    ) +
     theme(
       axis.text = element_blank(),
       axis.ticks = element_blank(),
