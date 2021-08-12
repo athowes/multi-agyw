@@ -305,6 +305,7 @@ res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
 
 #' Add columns for local DIC and WAIC
+#' res_df has the 15-24 category too
 res_df <- bind_cols(
   res_df,
   lapply(res_fit,
@@ -314,7 +315,13 @@ res_df <- bind_cols(
              local_waic = fit$waic$local.waic
            ))
          }
-  ) %>% bind_rows()
+  ) %>%
+    bind_rows() %>%
+    #' Being safe here and explictly adding the NA entires for df_agg
+    bind_rows(data.frame(
+      local_dic = rep(NA, max_model_id * nrow(df_agg)),
+      local_waic = rep(NA, max_model_id * nrow(df_agg))
+    ))
 )
 
 #' Prepare data for writing to output
