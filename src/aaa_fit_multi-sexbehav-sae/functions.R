@@ -6,6 +6,15 @@ softmax <- function(x) {
   exp(x) / sum(exp(x))
 }
 
+#' Compute the numerically-stable softmax of a vector.
+#'
+#' @param x A vector.
+#' @return The softmax of `x`
+stable_softmax <- function(x) {
+  x <- x - max(x)
+  exp(x) / sum(exp(x))
+}
+
 #' Categorical to indicators (dummy variables).
 #'
 #' @param x A categorical column.
@@ -37,13 +46,17 @@ multinomial_model <- function(formula, model_name, S = 100) {
                                      cpo = TRUE, config = TRUE))
 
   df <- df %>%
-    #' Add mean of linear predictor
-    mutate(eta = fit$summary.linear.predictor$mean) %>%
+    mutate(
+      #' Add mean of linear predictor
+      eta = fit$summary.linear.predictor$mean,
+      #' Mean of fitted value
+      lambda = fit$summary.fitted.values$mean
+    ) %>%
     #' Split by observation indicator and lapply softmax
     split(.$obs_idx) %>%
     lapply(function(x)
       x %>%
-        mutate(mean = softmax(eta))
+        mutate(mean = stable_softmax(eta))
     ) %>%
     bind_rows() %>%
     #' Remove eta
@@ -74,7 +87,7 @@ multinomial_model <- function(formula, model_name, S = 100) {
       split(.$obs_idx) %>%
       lapply(function(x)
         x %>%
-          mutate(prob = softmax(eta))
+          mutate(prob = stable_softmax(eta))
       ) %>%
       bind_rows() %>%
       mutate(sample = i)
