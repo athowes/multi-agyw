@@ -33,8 +33,6 @@ parameters:
   #' parameter input has to be scalars
   #' For vector, usual solution is to make a lookup table
   #' Could do this, but starting to get quite complicated
-  #' The main settings I want are c(1, 2, 3) and c(1, 2, 3, 4, 5)
-  #' So max_model_id is OK for now
   max_model_id:
     default: 3
 
