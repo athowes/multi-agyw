@@ -38,50 +38,8 @@ Or can be pulled (alongside any dependencies) from the remote using:
 
 Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_dependencies("example")`.
 
-## To-do
+## Misc to-do
 
-### Clean-up operations
-
-- [ ] ~5% of rows produced using `softmax` [based on samples](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/functions.R#L55) using `inla.posterior.sample` from (some subset of) the models result in `NaN`. Find the cause of this issue and solve
-- [x] [Local WAIC very large](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/script.R#L205) for `x_eff` values of zero (this more often occurs for `sexpaid12m`). DIC output also has problems resulting in either `NA` or implausible values. Use the local values to find rows causing the problem, then try to resolve somehow. Could it be related to survey weights?
-  - [ ] Have added the diagnostic output but remains to say how to solve it
-- [x] [`ind` values outside [0, 1]](https://github.com/athowes/multi-agyw/blob/1581d6f6bb27fdcaf725cd0956c84b44859019c4/src/aaa_fit_multi-sexbehav-sae/script.R#L102) (possibly traced back to `survey::` functions). Try to fix
-  - [x] Start by adding a diagnostic warning, if that's possible in `orderly`
-  - Values seem to be a tiny amount below zero or above one (and it's occurring when all the responses are either no or yes). could trace this back to the function being used but doesn't seem that much of a priority
-- [x] It's not OK to fit overlapping age categories at the same time as e.g. use some data twice to inform precision parameter estimate of age random effects. Find a way to generate 15-24 age category estimates from 15-19 and 20-24. Population size weighting?
-  - Population size data can be obtained from Naomi model [outputs](https://imperiallondon.sharepoint.com/sites/HIVInferenceGroup-WP/Shared%20Documents/Forms/AllItems.aspx?csf=1&web=1&e=g7J9el&cid=1beffd0f%2D9df9%2D4a8b%2Db79c%2Df4bed7428f73&RootFolder=%2Fsites%2FHIVInferenceGroup%2DWP%2FShared%20Documents%2FData%2FSpectrum%20files%2F2021%20naomi&FolderCTID=0x0120000FA834E7B0DC9A4A865FA1C3F87255B3) and can be read in using [`spud::sharepoint`](https://github.com/mrc-ide/naomi-orderly/blob/f162d2d227a30150fa078187a8c83ddb84164be0/src/bwa_raw_survey_bwa2013bais_addsexbehav/script.R#L2)
-  - In Naomi standard errors for different levels of aggregation are produced using [sparse matrix multiplication in TMB](https://github.com/mrc-ide/naomi/blob/master/src/tmb.cpp#L689). The input matrix `A_out` determining the aggregation is produced by [`naomi_output_frame`](https://github.com/mrc-ide/naomi/blob/master/R/model.R#L1-L74)
-  - [ ] This is done for the `aaa_fit_multi-sexbehav-sae` but needs to be transferred to `aaa_fit_all-dhs-multi-sexbehav-sae`
-  
-### High priority
-
-- [x] Create upper and lower credible estimates of probabilities using `inla.posterior.sample`. See the `multinomial_model` function
-- Aggregate format using Kish weights and `xPoisson`, see `INLA::inla.doc("xPoisson")`
-  - [x] Model 1: Age-category interaction
-  - [x] Model 2: Age-category interaction, space-category interaction (IID)
-  - [x] Model 3: Age-category interaction, space-category interaction (Besag)
-  - [x] Model 4: Age-category interaction, space-category interaction using INLA `group` argument (IID)
-  - [x] Model 5: Age-category interaction, space-category interaction using INLA `group` argument (Besag)
-    - [ ] This model has crashed INLA for some occasions, try to debug
-- [x] Model comparison (DIC or WAIC) among the above models
-  - [x] Make model comparison an `artefact` of model fitting, then combine them together in another report
-- [x] Create modified datasets for the 13 priority countries
-  - [x] Create new branch `sexbehav-vars-adam` in `naomi.utils`, modify `create_sexbehav_dhs` or `extract_sexbehav_dhs` to include changes to coding, and create PR to merge into `sexbehav-vars` (avoiding making alterations to each of the `aaa_data_survey_behav` reports)
-- [x] Extend model to more countries by generalising `fit_multi-sexbehav-sae` to `aaa_fit_multi-sexbehav-sae` by not including any Malawi specific analysis, taking `iso3` as parameter input
-- [x] Extend Malawi model by adding more DHS surveys (will eventually require more model selection)
-  - Temporal smoothing (random walk, what about interactions?)
-  - Loss: current time or over all time?
-- [x] Add report to calculate "fake" national-level FSW estimates from `sexpaid12m` in order to compare to Johnston et al.
-  - [ ] Above is done for Johnston et al., add Laga et al. (Laga do not disaggregate by age though)
-- [ ] Fix UGA, TZA, LSO and KEN data creation
-
-### Medium priority
-
-- [x] Add .pdf plot to `process_information-criteria`
-- [x] Add standard errors to DIC results
-  - [ ] To add to plot once first run with this information is processed
-- Split the `aaa_data_survey_behav` tasks up: a lot going on (unclear what exactly to split into)
-  - [ ] Modularise linking cluster identifiers to area (talked to Oli about this and looks like something he has done / is doing -- task will be to update relevant scripts to use his tasks once they are available)
 - [ ] Analysis of the extent of the differences between the different models e.g. compute maximum difference between (mean) estimates then arrange in decreasing order
 - [ ] Understand how the Poisson trick interplays with different structures for multinomial model (baseline category, nested, etc.)
 - [ ] Possibility to include covariates
@@ -91,19 +49,9 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
   - When running an `orderly` report is it possible to create data outside of the draft folder?
   - `run_fitting` is probably best staying as external to `orderly` anyway
   - `pull_naomi_areas` might be better using `orderly_pull_dependencies`
-- [x] Katie [has processed](https://github.com/mrc-ide/naomi-orderly/commit/f162d2d227a30150fa078187a8c83ddb84164be0) the BWA data now. Could import this into `multi-agyw` and test, though could also wait until scripts are moved to e.g. `naomi-orderly`. Not high priority but good to check that it's OK for the different data
-  - [ ] Added, but still need to test
-- [ ] Move the stacked proportion plots to the spatio-temporal models. Little more challenging in that there are now 9 models and and additional variable (survey) to facet over. Starting to be a very large plot, which is OK for internal purposes but hard to share perhaps
-
-### Low priority
-
-- [ ] In plots where the `facet_plot` is over both estimate type and survey, find a way to highlight the surveys together e.g. using boxes. [Here](https://stackoverflow.com/questions/9847559/conditionally-change-panel-background-with-facet-grid) is one possible solution
-- [x] Reorder columns of output to a more friendly format, removing things which don't need to be there like identifiers for `R-INLA`
 - [ ] Add other different types of simulated data e.g. spatial structure to `sim_sexbehav` and try to recover
 - [ ] Create individual data that links the `cluster_id` to area by modifying `mwi_data_survey_behav` (currently it's only the aggregate data that is output)
 - [ ] Fit model to Malawi using individual format data. Individual weighted log-likelihood in `R-INLA` might not be possible, see Google group [discussion](https://groups.google.com/g/r-inla-discussion-group/c/Q-STkrFXR0g/m/6PWxRV4tBQ). Could try `TMB`
-- [ ] More detailed comparison of differences in the outcomes using `sex12m` versus `eversex` to derive `nosex`
-- [ ] Add age at first sex question to help deal with `NA` entries in `eversex`
 
 ## Resources
 
