@@ -129,13 +129,15 @@ df <- df %>%
 #'  * age x category (age_cat_idx)
 #'  * space x category (area_cat_idx)
 df <- df %>%
-  mutate(cat_idx = to_int(indicator),
-         #' Doing this because want Y015_024 to have ID 4 rather than 2 as it would be otherwise
-         age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
-         age_cat_idx = interaction(age_idx, cat_idx),
-         area_cat_idx = interaction(area_idx, cat_idx),
-         #' Is the best way to do it for obs_idx? Perhaps can be added earlier in the pipeline
-         obs_idx = to_int(interaction(age_idx, area_idx)) %>%
+  mutate(
+    cat_idx = to_int(indicator),
+    #' Doing this because want Y015_024 to have ID 4 rather than 2 as it would be otherwise
+    age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
+    age_cat_idx = interaction(age_idx, cat_idx),
+    area_cat_idx = interaction(area_idx, cat_idx),
+    #' Is the best way to do it for obs_idx? Perhaps can be added earlier in the pipeline
+    obs_idx = to_int(interaction(age_idx, area_idx))
+  ) %>%
   arrange(obs_idx)
 
 #' Get age-stratified population total sizes from Naomi model outputs

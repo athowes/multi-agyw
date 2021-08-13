@@ -124,15 +124,17 @@ df <- df %>%
 #'  * age x category (age_cat_idx)
 #'  * space x category (area_idx)
 df <- df %>%
-  mutate(sur_idx = to_int(survey_id),
-         #' Doing this because want Y015_024 to have ID 4 rather than 2 as it would be otherwise
-         age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
-         cat_idx = to_int(indicator),
-         sur_cat_idx = interaction(sur_idx, cat_idx),
-         age_cat_idx = interaction(age_idx, cat_idx),
-         area_cat_idx = interaction(area_idx, cat_idx),
-         #' Is the best way to add obs_idx? Perhaps can be added earlier in the pipeline
-         obs_idx = to_int(interaction(age_idx, area_idx, sur_idx))) %>%
+  mutate(
+    sur_idx = to_int(survey_id),
+    #' Doing this because want Y015_024 to have ID 4 rather than 2 as it would be otherwise
+    age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
+    cat_idx = to_int(indicator),
+    sur_cat_idx = interaction(sur_idx, cat_idx),
+    age_cat_idx = interaction(age_idx, cat_idx),
+    area_cat_idx = interaction(area_idx, cat_idx),
+    #' Is the best way to add obs_idx? Perhaps can be added earlier in the pipeline
+    obs_idx = to_int(interaction(age_idx, area_idx, sur_idx))
+  ) %>%
   arrange(obs_idx)
 
 #' Get age-stratified population total sizes from Naomi model outputs
