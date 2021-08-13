@@ -77,10 +77,9 @@ ind <- ind %>%
 areas <- select(areas, area_id, area_name, area_level, area_level_label,
                 parent_area_id, area_sort_order, center_x, center_y)
 
-areas_model <- filter(areas, area_level == analysis_level)
-
-#' Add area_id for admin1 observation
-areas_model <- areas_model %>%
+areas_model <- areas %>%
+  filter(area_level == analysis_level) %>%
+  #' Add area_id for admin1 observation
   left_join(
     areas %>%
       st_drop_geometry() %>%
@@ -88,10 +87,8 @@ areas_model <- areas_model %>%
       spread_areas() %>%
       select(area_id, area_id_aggr = paste0("area_id", admin1_level)),
     by = "area_id"
-  )
-
-#' Add an integer index for INLA
-areas_model <- areas_model %>%
+  ) %>%
+  #' Add an integer index for INLA
   arrange(area_sort_order) %>%
   mutate(area_idx = row_number())
 
