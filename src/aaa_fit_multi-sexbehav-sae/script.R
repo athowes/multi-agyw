@@ -212,8 +212,8 @@ formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
     control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
 
 #' All of the possible models
-all_formulas <- parse(text = paste0("list(", paste0("formula", 0:5, collapse = ", "), ")")) %>% eval()
-all_models <- list("Model 0", "Model 1: Constant", "Model 2: IID", "Model 3: BYM2", "Model 4: IID (grouped)", "Model 5: BYM2 (grouped)")
+all_formulas <- parse(text = paste0("list(", paste0("formula", 1:3, collapse = ", "), ")")) %>% eval()
+all_models <- list("Model 1: Constant", "Model 2: IID", "Model 3: BYM2")
 
 #' The subset of all possible fit in this script, as specified by model_ids
 formulas <- all_formulas[1:max_model_id]
