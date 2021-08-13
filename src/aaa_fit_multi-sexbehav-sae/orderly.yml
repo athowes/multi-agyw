@@ -25,6 +25,10 @@ artefacts:
       description: Local DIC and WAIC diagnostics
       filenames:
         - local-ic-diagnostics.pdf
+  - data:
+      description: Sample size recovery diagnostic
+      filenames:
+        - sample-size-recovery.pdf
 
 parameters:
   iso3:
