@@ -447,8 +447,7 @@ res_df %>% split(.$survey_id) %>% lapply(function(x)
     indicator = fct_recode(indicator,
                            "No sex (past 12 months)" = "nosex12m",
                            "Cohabiting partner" = "sexcohab",
-                           "Nonregular partner(s)" = "sexnonreg",
-                           "Paid for sex (past 12 months)" = "sexpaid12m"
+                           "Nonregular partner(s) or paid for sex (past 12 months)" = "sexnonregplus"
     )
   ) %>%
   ggplot(aes(x = model, y = estimate_smoothed, group = model, fill = indicator)) +
