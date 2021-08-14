@@ -181,9 +181,9 @@ df <- df %>%
 #' Specify the models to be fit
 
 #' Model 1: category random effects (IID), age x category random effects (IID)
-formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
+formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Kronecker products:
 #' If A (m x n) and B (p x q) are matrices then their Kronecker product C (pm x qn) is the block matrix
@@ -199,19 +199,19 @@ formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) 
 
 #' Model 2: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (IID)
-formula2 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+formula2 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_prior(0.001))
+    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 3: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (BYM2)
-formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(area_idx, model = "besag", graph = adjM, group = cat_idx, scale.model = TRUE,
-    control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
+    control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' All of the possible models
 all_formulas <- parse(text = paste0("list(", paste0("formula", 1:3, collapse = ", "), ")")) %>% eval()

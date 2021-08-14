@@ -209,81 +209,81 @@ df <- df %>%
 #' TODO: Might it be the case that we want space x time x category random effects? Can this be handled?
 
 #' Model 1: category random effects (IID), age x category random effects (IID)
-formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001))
+formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 2: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (IID)
-formula2 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+formula2 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_prior(0.001))
+    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 3: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (BYM2)
-formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
-    control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001))
+    control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 4:  category random effects (IID), age x category random effects (IID),
 #' survey x category random effects (IID) (grouped)
-formula4 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+formula4 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_prior(0.001))
+    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 5:  category random effects (IID), age x category random effects (IID),
 #' space x category random effects (IID), survey x category random effects (IID) (grouped)
-formula5 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+formula5 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_prior(0.001)) +
+    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_prior(0.001))
+    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 6: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (BYM2), survey x category random effects (IID) (grouped)
-formula6 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+formula6 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
-    control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001)) +
+    control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_prior(0.001))
+    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 7:  category random effects (IID), age x category random effects (IID),
 #' survey x category random effects (AR1)
-formula7 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001))+
+formula7 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))+
   f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_prior(0.001))
+    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 8:  category random effects (IID), age x category random effects (IID),
 #' space x category random effects (IID), survey x category random effects (AR1)
-formula8 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+formula8 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_prior(0.001)) +
+    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_prior(0.001))
+    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 9: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (BYM2), survey x category random effects (AR1)
-formula9 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_prior(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_prior(0.001)) +
+formula9 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
-    control.group = list(model = "iid"), constr = TRUE, hyper = tau_prior(0.001)) +
+    control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_prior(0.001))
+    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' All of the possible models
 all_formulas <- parse(text = paste0("list(", paste0("formula", 1:9, collapse = ", "), ")")) %>% eval()
