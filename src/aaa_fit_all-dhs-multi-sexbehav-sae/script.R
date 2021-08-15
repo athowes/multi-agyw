@@ -257,13 +257,20 @@ formula6 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) 
   f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
+#' Prior for the correlation parameter of the AR1 model together with the grouped precision parameter
+#' For the correlation parameter, we choose a base model of correlation one with P(rho > 0 = 0.75)
+ar1_group_prior <- list(
+  rho = list(rho = "pc.cor1", param = c(0, 0.75)),
+  prec = list(prec = "pc.prec", param = c(2.5, 0.01), initial = log(0.001))
+)
+
 #' Model 7:  category random effects (IID), age x category random effects (IID),
 #' survey x category random effects (AR1)
 formula7 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))+
   f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+    constr = TRUE, hyper = ar1_group_prior)
 
 #' Model 8:  category random effects (IID), age x category random effects (IID),
 #' space x category random effects (IID), survey x category random effects (AR1)
@@ -273,7 +280,7 @@ formula8 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) 
   f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+    constr = TRUE, hyper = ar1_group_prior)
 
 #' Model 9: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (BYM2), survey x category random effects (AR1)
