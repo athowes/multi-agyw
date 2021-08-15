@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("check_national-fsw-comparison")
-# setwd("src/check_national-fsw-comparison/")
+orderly::orderly_develop_start("check_national-fsw-comparison")
+setwd("src/check_national-fsw-comparison/")
 
 analysis_level <- c("CMR" = 2,
                     "KEN" = 2,
@@ -106,3 +106,7 @@ df <- ind %>%
   relocate(country, .before = iso3)
 
 write_csv(df, "national-fsw-comparison.csv", na = "")
+
+#' Look at the Laga estimates
+laga <- read_csv("depends/final_country_est_laga.csv")
+head(laga)

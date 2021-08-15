@@ -21,6 +21,7 @@ packages:
 
 global_resources:
   depends/aykp_pse_july17.xlsx: aykp_pse_july17.xlsx
+  depends/final_country_est_laga.csv: final_country_est_laga.csv
   depends/countries_codes_and_coordinates.csv: countries_codes_and_coordinates.csv
 
 depends:
