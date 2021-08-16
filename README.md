@@ -41,7 +41,6 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 ## Misc to-do
 
 - [ ] Analysis of the extent of the differences between the different models e.g. compute maximum difference between (mean) estimates then arrange in decreasing order
-- [ ] Understand how the Poisson trick interplays with different structures for multinomial model (baseline category, nested, etc.)
 - [ ] Possibility to include covariates
 - [ ] Extend Malawi model by adding more surveys (PHIA and MICS). Could use survey specific intercepts
 - [ ] Fitting model jointly to multiple countries
@@ -75,7 +74,7 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 ## Improving the estimates for FSW
 
 - Previous estimates from workbook are based upon national estimates of FSW population size. Think about how to integrate these
-* Biases and variation in methodology for key population data which vary by country. Survey estimates have more comparable methodology but depending on KP features (for example proportion in households included in survey sampling frame) may have varying bias. See working paper "Laga - Mapping the population size of female sex worker in countries across sub-Saharan Africa"
+* Biases and variation in methodology for key population data which vary by country. Survey estimates have more comparable methodology but depending on KP features (for example proportion in households included in survey sampling frame) may have varying bias. See working paper "Laga - Mapping the population size of female sex worker in countries across sub-Saharan Africa"Math Kernel Library
 * Survey question "did you have sex in exchange for money or goods" has been critisied. Likely too broad with regard to key population of female sex workers
   * Only the most recent round of DHS has this survey question (change was made in 2013 and started to be implemented in 2015, although this may vary by country with some countries still not using this question). Alternative question regards last three sexual partners
 * Other sources of data about key populations
@@ -107,9 +106,6 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 ## Notes
 
 * The 13 AGYW Global Fund priority countries are Botswana, Cameroon, Kenya, Lesotho, Malawi, Mozambique, Namibia, South Africa, Swaziland, Tanzania, Uganda, Zambia and Zimbabwe, from ["The Global Fund measurement framework for adolescents girls and young women programs"](https://www.theglobalfund.org/media/8076/me_adolescentsgirlsandyoungwomenprograms_frameworkmeasurement_en.pdf)
-  * Note that Botswana doesn't have DHS: instead they do their own surveys "Botswana AIDS Impact Survey (BAIS)" (this explains the lack of `src/bwa_data_survey_behav`
 * Use same model for all countries or select to best model in each country?
   * Same model for all is a good default, unless something really stands out
-* ["Now there remains the question about the DIC infinite of my model that is still unresolved. Do you have any idea?"](https://groups.google.com/g/r-inla-discussion-group/c/KPjQBjpIlrI/m/w006pSqoDgAJ)
-  * "This is usually an overflow issue, mainly because of an weakly indentified model. Like DIC would require an integral like \int exp(x) dx and if the marginal variance of x is large, then exp(x) at the upper limit might evaluate to infinity, giving an infinite DIC."
-* "with so many hyperparameters we have to increase the number of maximum function evaluations in the derivation of the posterior marginals for the hyperparameters ... `control.inla=list(numint.maxfeval=80000000))`" from [here](https://raw.githubusercontent.com/hrue/r-inla/devel/internal-doc/group/group-models.pdf) 
+* In which countries, ages or categories are there the greatest changes?
