@@ -21,6 +21,10 @@ packages:
 
 depends:
   - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "BWA")
+      use:
+        depends/bwa_information-criteria.csv: information-criteria.csv
+  - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "CMR")
       use:
         depends/cmr_information-criteria.csv: information-criteria.csv

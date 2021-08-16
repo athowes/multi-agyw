@@ -2,7 +2,8 @@
 # orderly::orderly_develop_start("aaa_fit_all-dhs-multi-sexbehav-sae", parameters = list(iso3 = "MWI", max_model_id = 9))
 # setwd("src/aaa_fit_all-dhs-multi-sexbehav-sae")
 
-analysis_level <- c("CMR" = 2,
+analysis_level <- c("BWA" = 2,
+                    "CMR" = 2,
                     "KEN" = 2,
                     "LSO" = 1,
                     "MOZ" = 2,
@@ -15,7 +16,8 @@ analysis_level <- c("CMR" = 2,
                     "ZMB" = 2,
                     "ZWE" = 2)
 
-admin1_level <- c("CMR" = 1,
+admin1_level <- c("BWA" = 1,
+                  "CMR" = 1,
                   "KEN" = 1,
                   "LSO" = 1,
                   "MOZ" = 1,

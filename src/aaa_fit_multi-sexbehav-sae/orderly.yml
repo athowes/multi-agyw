@@ -56,6 +56,10 @@ global_resources:
   depends/naomi3.rds: naomi3.rds
 
 depends:
+  bwa_data_areas:
+    id: latest
+    use:
+      depends/bwa_areas.geojson: bwa_areas.geojson
   cmr_data_areas:
     id: latest
     use:
@@ -104,6 +108,10 @@ depends:
     id: latest
     use:
       depends/zwe_areas.geojson: zwe_areas.geojson
+  bwa_data_survey_behav:
+    id: latest
+    use:
+      depends/bwa_survey_indicators_sexbehav.csv: bwa_survey_indicators_sexbehav.csv
   cmr_data_survey_behav:
     id: latest
     use:

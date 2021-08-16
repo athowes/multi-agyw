@@ -24,6 +24,10 @@ packages:
 
 depends:
   - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "BWA")
+      use:
+        depends/bwa_multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+  - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "CMR")
       use:
         depends/cmr_multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
@@ -71,6 +75,10 @@ depends:
       id: latest(parameter:iso3 == "ZWE")
       use:
         depends/zwe_multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+  - aaa_fit_all-dhs-multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "BWA")
+      use:
+        depends/bwa_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "CMR")
       use:
