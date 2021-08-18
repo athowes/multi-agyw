@@ -75,22 +75,22 @@ depends:
       id: latest(parameter:iso3 == "ZWE")
       use:
         depends/zwe_multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "BWA")
-      use:
-        depends/bwa_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+  # - aaa_fit_all-dhs-multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "BWA")
+  #     use:
+  #       depends/bwa_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "CMR")
       use:
         depends/cmr_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "KEN")
-      use:
-        depends/ken_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "LSO")
-      use:
-        depends/lso_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+  # - aaa_fit_all-dhs-multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "KEN")
+  #     use:
+  #       depends/ken_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+  # - aaa_fit_all-dhs-multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "LSO")
+  #     use:
+  #       depends/lso_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MOZ")
       use:
@@ -99,26 +99,26 @@ depends:
       id: latest(parameter:iso3 == "MWI")
       use:
         depends/mwi_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "NAM")
-      use:
-        depends/nam_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "SWZ")
-      use:
-        depends/swz_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "TZA")
-      use:
-        depends/tza_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "UGA")
-      use:
-        depends/uga_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "ZAF")
-      use:
-        depends/zaf_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+  # - aaa_fit_all-dhs-multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "NAM")
+  #     use:
+  #       depends/nam_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+  # - aaa_fit_all-dhs-multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "SWZ")
+  #     use:
+  #       depends/swz_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+  # - aaa_fit_all-dhs-multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "TZA")
+  #     use:
+  #       depends/tza_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+  # - aaa_fit_all-dhs-multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "UGA")
+  #     use:
+  #       depends/uga_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+  # - aaa_fit_all-dhs-multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "ZAF")
+  #     use:
+  #       depends/zaf_all-dhs-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZMB")
       use:
