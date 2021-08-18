@@ -17,6 +17,10 @@ artefacts:
       description: Model selection information criteria for multinomial models, using all DHS survey data
       filenames:
         - information-criteria.csv
+  - data:
+      description: Random effect variance parameter posterior means
+      filenames:
+        - variance-proportions.csv
 
 parameters:
   iso3:

@@ -312,6 +312,32 @@ res <- purrr::pmap(
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
 
+#' Output random effect variance parameter posterior mean estimates
+variance_df <- map(res_fit, function(fit)
+  fit$marginals.hyperpar %>%
+    #' Calculate the expectation of the variance
+    map_df(function(x) inla.emarginal(fun = function(y) 1/y, x)) %>%
+    #' Rename Precision to variance
+    rename_all(funs(str_replace(., "Precision for ", "variance_")))
+) %>%
+  bind_rows() %>%
+  #' Some of the models have other hyperparameters (e.g. rho)
+  select(starts_with("Variance")) %>%
+  #' Sum of variance means
+  mutate(total_variance = rowSums(., na.rm = TRUE)) %>%
+  #' Create new columns with the percentage variance
+  mutate(
+    across(
+      .cols = starts_with("Variance"),
+      .fns = list(percentage = ~ . / total_variance),
+      .names = "{fn}_{col}"
+    )
+  ) %>%
+  #' Add model identifier column
+  mutate(model = paste("Model", row_number()), .before = everything())
+
+write_csv(variance_df, "variance-proportions.csv", na = "")
+
 #' Add columns for local DIC and WAIC
 #' res_df has the 15-24 category too
 res_df <- bind_cols(
