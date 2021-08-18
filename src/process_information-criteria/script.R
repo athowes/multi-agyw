@@ -37,7 +37,7 @@ dic_plot <- function(df) {
     scale_color_manual(values = c("black", "#E69F00")) +
     labs(x = "", y = "DIC",
          title = paste0("DIC results for the models in ", length(iso3), " countries"),
-         subtitle = "Gold star indicates the best model(s) with the lowest DIC.\nMissing entries indicate that the DIC value returned was NA.",
+         subtitle = "Missing entries indicate that the DIC value returned was NA.",
          col = "Amongst best model(s)") +
     theme_minimal() +
     theme(
