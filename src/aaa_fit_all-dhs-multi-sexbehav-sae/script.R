@@ -318,7 +318,7 @@ variance_df <- map(res_fit, function(fit)
     #' Calculate the expectation of the variance
     map_df(function(x) inla.emarginal(fun = function(y) 1/y, x)) %>%
     #' Rename Precision to variance
-    rename_all(funs(str_replace(., "Precision for ", "variance_")))
+    rename_all(list(~ str_replace(., "Precision for ", "variance_")))
 ) %>%
   bind_rows() %>%
   #' Some of the models have other hyperparameters (e.g. rho)
