@@ -57,8 +57,10 @@ multinomial_model <- function(formula, model_name, S = 100) {
                                      cpo = TRUE, config = TRUE))
 
   df <- df %>%
-    #' Add mean of linear predictor
-    mutate(eta = fit$summary.linear.predictor$mean) %>%
+    mutate(
+      #' Add mean of linear predictor
+      eta = fit$summary.linear.predictor$mean
+    ) %>%
     #' Split by observation indicator and lapply softmax
     split(.$obs_idx) %>%
     lapply(function(x)
@@ -97,7 +99,12 @@ multinomial_model <- function(formula, model_name, S = 100) {
           mutate(prob = stable_softmax(eta))
       ) %>%
       bind_rows() %>%
-      mutate(sample = i)
+      mutate(
+        #' Sample of the intensity
+        lambda = exp(eta),
+        #' Sample number / identifier
+        sample = i
+      )
   ) %>%
     bind_rows()
 
@@ -109,6 +116,9 @@ multinomial_model <- function(formula, model_name, S = 100) {
         summarise(median = quantile(prob, 0.5, na.rm = TRUE),
                   lower = quantile(prob, 0.025, na.rm = TRUE),
                   upper = quantile(prob, 0.975, na.rm = TRUE),
+                  lambda_median = quantile(lambda, 0.5, na.rm = TRUE),
+                  lambda_lower = quantile(lambda, 0.025, na.rm = TRUE),
+                  lambda_upper = quantile(lambda, 0.975, na.rm = TRUE),
                   .groups = "drop"),
       by = c("obs_idx", "cat_idx")
     )

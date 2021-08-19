@@ -21,6 +21,10 @@ artefacts:
       description: Random effect variance parameter posterior means
       filenames:
         - variance-proportions.csv
+  - data:
+      description: Sample size recovery diagnostic
+      filenames:
+        - sample-size-recovery.pdf
 
 parameters:
   iso3:

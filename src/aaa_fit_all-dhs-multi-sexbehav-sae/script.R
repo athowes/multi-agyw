@@ -358,6 +358,37 @@ res_df <- bind_cols(
     ))
 )
 
+#' Checking sample size recovery
+
+pdf("sample-size-recovery.pdf", h = 10, w = 8.5)
+
+res_df %>%
+  filter(age_group %in% c("Y015_019", "Y020_024", "Y025_029")) %>%
+  group_by(obs_idx, model, survey_id) %>%
+  summarise(
+    n_eff_kish = mean(n_eff_kish),
+    n_modelled_median = sum(lambda_median),
+    n_modelled_lower = sum(lambda_lower),
+    n_modelled_upper = sum(lambda_upper)
+  ) %>%
+  #' TODO: Add warning for this? Why are a few so high?
+  filter(n_modelled_median < 1000) %>%
+  mutate(n_modelled_upper_capped = pmin(n_modelled_upper, n_modelled_median + 100)) %>%
+  ggplot(aes(
+    x = n_eff_kish,
+    y = n_modelled_median,
+    ymin = n_modelled_lower,
+    ymax = n_modelled_upper_capped,
+  )) +
+  geom_pointrange(alpha = 0.3) +
+  facet_grid(survey_id ~ model) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", col = "#802D5B") +
+  labs(x = "Kish ESS", y = "Sum of Poisson intensities",
+       title = paste0(res_df$survey_id[1], ": are the sample sizes accurately recovered?"),
+       subtitle = "Dashed line is x = y. Upper limit is cut off at 100 greater than median")
+
+dev.off()
+
 #' Prepare data for writing to output
 res_df <- res_df %>%
   #' Remove superfluous INLA indicator columns
