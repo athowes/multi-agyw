@@ -338,7 +338,7 @@ variance_df <- map(res_fit, function(fit)
 
 write_csv(variance_df, "variance-proportions.csv", na = "")
 
-#' Add columns for local DIC and WAIC
+#' Add columns for local DIC, WAIC, CPO and PIT
 #' res_df has the 15-24 category too
 res_df <- bind_cols(
   res_df,
@@ -346,7 +346,9 @@ res_df <- bind_cols(
          function(fit) {
            return(data.frame(
              local_dic = fit$dic$local.dic,
-             local_waic = fit$waic$local.waic
+             local_waic = fit$waic$local.waic,
+             local_cpo = fit$cpo$cpo,
+             local_pit = fit$cpo$pit
            ))
          }
   ) %>%
@@ -354,7 +356,9 @@ res_df <- bind_cols(
     #' Being safe here and explictly adding the NA entires for df_agg
     bind_rows(data.frame(
       local_dic = rep(NA, max_model_id * nrow(df_agg)),
-      local_waic = rep(NA, max_model_id * nrow(df_agg))
+      local_waic = rep(NA, max_model_id * nrow(df_agg)),
+      local_cpo = rep(NA, max_model_id * nrow(df_agg)),
+      local_pit = rep(NA, max_model_id * nrow(df_agg))
     ))
 )
 
@@ -410,16 +414,22 @@ res_df <- res_df %>%
 write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
 
 #' Simple model comparison for output
-#' Some of the local DIC or local WAIC entries might be NA where there is no raw data
+#' Some of the entries might be NA where there is no raw data
 #' INLA calculates the DIC or WAIC ignoring these
 ic_df <- sapply(res_fit, function(fit) {
   local_dic <- na.omit(fit$dic$local.dic)
   local_waic <- na.omit(fit$waic$local.waic)
+  local_cpo <- na.omit(fit$cpo$cpo)
+  local_pit <- na.omit(fit$cpo$pit)
 
   c("dic" = sum(local_dic),
     "dic_se" = stats::sd(local_dic) * sqrt(length(local_dic)),
     "waic" = sum(local_waic),
-    "waic_se" = stats::sd(local_waic) * sqrt(length(local_waic)))
+    "waic_se" = stats::sd(local_waic) * sqrt(length(local_waic)),
+    "cpo" = sum(local_cpo),
+    "cpo_se" = stats::sd(local_cpo) * sqrt(length(local_cpo)),
+    "pit" = sum(local_pit),
+    "pit_se" = stats::sd(local_pit) * sqrt(length(local_pit)))
   }) %>%
   t() %>%
   round() %>%
