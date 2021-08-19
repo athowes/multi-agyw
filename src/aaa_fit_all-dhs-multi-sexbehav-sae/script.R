@@ -207,8 +207,6 @@ df <- df %>%
 #' [e(cat 1, time 1), e(cat 1, time 2), e(cat 1, time 3)]
 #' [e(cat 2, time 1), e(cat 2, time 2), e(cat 2, time 3)]
 #' [e(cat 3, time 1), e(cat 3, time 2), e(cat 3, time 3)]
-#'
-#' TODO: Might it be the case that we want space x time x category random effects? Can this be handled?
 
 #' Model 1: category random effects (IID), age x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
