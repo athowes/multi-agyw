@@ -471,27 +471,3 @@ res_df %>%
   )
 
 dev.off()
-
-#' pdf("bym2-proportions.pdf", h = 11, w = 8.5)
-#'
-#' if(max_model_id >= 3) {
-#'
-#' #' Check the mixing parameters in the BYM2 model
-#' lapply(1:4, function(i) {
-#'   bym2_fit <- res_fit[[3]]
-#'   mean <- bym2_fit$summary.hyperpar[i, 1] %>% round(digits = 3)
-#'   sd <- bym2_fit$summary.hyperpar[i, 2] %>% round(digits = 3)
-#'   bym2_fit$marginals.hyperpar[[i]] %>%
-#'     as.data.frame() %>%
-#'     ggplot(aes(x = x, y = y)) +
-#'     geom_line() +
-#'     labs(title = paste0(res_df$survey_id[1], ": posterior of the BYM2 proportion parameter in category ", i),
-#'          subtitle = paste0("Mean: ", mean, ", SD: ", sd),
-#'          x = "Proportion", y = "p(Proportion)") +
-#'     theme_minimal() +
-#'     theme(plot.title = element_text(face = "bold"))
-#'   })
-#'
-#' }
-#'
-#' dev.off()
