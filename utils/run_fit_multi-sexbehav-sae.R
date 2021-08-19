@@ -1,11 +1,12 @@
 #' Run fit_multi-sexbehav-sae in bulk
 
-iso3_vec <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+iso3_vec <- c("CMR", "BWA", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 params <- data.frame(iso3 = iso3_vec)
 ids <- orderly::orderly_batch("aaa_fit_multi-sexbehav-sae", params)
 
 #' Running individually
 # id <- orderly::orderly_run("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "CMR"))
+# id <- orderly::orderly_run("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "BWA"))
 # id <- orderly::orderly_run("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "KEN"))
 # id <- orderly::orderly_run("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "LSO"))
 # id <- orderly::orderly_run("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "MOZ"))

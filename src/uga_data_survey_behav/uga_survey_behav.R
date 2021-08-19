@@ -5,10 +5,17 @@ iso3 <- "UGA"
 areas <- read_sf("depends/uga_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
-surveys <- create_surveys_dhs(iso3, survey_characteristics=24)
+surveys <- create_surveys_dhs(iso3, survey_characteristics = 24)
+
 survey_meta <- create_survey_meta_dhs(surveys)
 
+surveys <- surveys %>%
+  #' Having issues downloading the region boundaries for these surveys,
+  #' so excluding:
+  filter(!(SurveyId %in% c("UG2004AIS")))
+
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
+
 surveys <- surveys_add_dhs_regvar(surveys, survey_region_boundaries)
 
 #' Allocate each area to survey region

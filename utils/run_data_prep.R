@@ -26,8 +26,6 @@ sapply(
   }
 )
 
-iso3 <- c("ZAF", "ZMB", "ZWE")
-
 #' The names of the reports to run
 reports <- paste0(tolower(iso3), "_data_survey_behav")
 
@@ -42,7 +40,13 @@ sapply(
 )
 
 #' Running an individual report
-report <- "lso_data_survey_behav"
+#' * UGA
+#' * TZA
+#' * LSO
+#' * KEN
+
+iso3 <- "KEN"
+report <- paste0(tolower(iso3), "_data_survey_behav")
 id <- orderly::orderly_run(report)
 orderly::orderly_commit(id)
 orderly::orderly_push_archive(report)
