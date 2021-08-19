@@ -40,6 +40,8 @@ packages:
   - sf
   - spdep
   - tidyr
+  - purrr
+  - stringr
 
 global_resources:
   depends/naomi3.rds: naomi3.rds
