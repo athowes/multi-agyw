@@ -1,0 +1,25 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Aiming to show the extent of temporal variability in the estimates
+      filenames:
+        - temporal-variation.pdf
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+
+depends:
+  - process_multinomial-smoothed-district-sexbehav:
+      id: latest
+      use:
+        depends/every-all-dhs-multinomial-smoothed-district-sexbehav.csv: every-all-dhs-multinomial-smoothed-district-sexbehav.csv
