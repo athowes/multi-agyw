@@ -124,7 +124,8 @@ df <- df %>%
 #'  * observation (obs_idx)
 #'  * survey x category (sur_cat_idx)
 #'  * age x category (age_cat_idx)
-#'  * space x category (area_idx)
+#'  * space x category (area_cat_idx)
+#'  * space x survey (area_sur_idx)
 df <- df %>%
   mutate(
     sur_idx = to_int(survey_id),
@@ -134,6 +135,7 @@ df <- df %>%
     sur_cat_idx = interaction(sur_idx, cat_idx),
     age_cat_idx = interaction(age_idx, cat_idx),
     area_cat_idx = interaction(area_idx, cat_idx),
+    area_sur_idx = interaction(area_idx, sur_idx),
     #' Is the best way to add obs_idx? Perhaps can be added earlier in the pipeline
     obs_idx = to_int(interaction(age_idx, area_idx, sur_idx))
   ) %>%
@@ -222,7 +224,7 @@ formula2 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) 
     constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 3: category random effects (IID), age x category random effects (IID),
-#' space x category random effects (BYM2)
+#' space x category random effects (Besag)
 formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
@@ -230,7 +232,7 @@ formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) 
     control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 4:  category random effects (IID), age x category random effects (IID),
-#' survey x category random effects (IID) (grouped)
+#' survey x category random effects (IID)
 formula4 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
@@ -238,7 +240,7 @@ formula4 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) 
     constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 5:  category random effects (IID), age x category random effects (IID),
-#' space x category random effects (IID), survey x category random effects (IID) (grouped)
+#' space x category random effects (IID), survey x category random effects (IID)
 formula5 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
@@ -247,8 +249,17 @@ formula5 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) 
   f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
+#' Model 5x:  category random effects (IID), age x category random effects (IID),
+#' space x category random effects (IID), survey x category random effects (IID),
+#' space x survey x category random effects (IID)
+formula5x <- update(
+  formula5,
+  . ~ . + f(area_sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+            constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
+
 #' Model 6: category random effects (IID), age x category random effects (IID),
-#' space x category random effects (BYM2), survey x category random effects (IID) (grouped)
+#' space x category random effects (Besag), survey x category random effects (IID)
 formula6 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
@@ -256,6 +267,15 @@ formula6 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) 
     control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+
+#' Model 6x: category random effects (IID), age x category random effects (IID),
+#' space x category random effects (Besag), survey x category random effects (IID)
+#' space x survey x category random effects (Besag x IID)
+formula6x <- update(
+  formula6,
+  . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = sur_cat_idx,
+            control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
 
 #' Prior for the correlation parameter of the AR1 model together with the grouped precision parameter
 #' For the correlation parameter, we choose a base model of correlation one with P(rho > 0 = 0.75)
@@ -282,8 +302,17 @@ formula8 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) 
   f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = ar1_group_prior)
 
+#' Model 8x:  category random effects (IID), age x category random effects (IID),
+#' space x category random effects (IID), survey x category random effects (AR1),
+#' space x survey x category random effects (IID x AR1)
+formula8x <- update(
+  formula8,
+  . ~ . + f(sur_idx, model = "ar1", group = area_cat_idx, control.group = list(model = "iid"),
+            constr = TRUE, hyper = ar1_group_prior)
+)
+
 #' Model 9: category random effects (IID), age x category random effects (IID),
-#' space x category random effects (BYM2), survey x category random effects (AR1)
+#' space x category random effects (Besag), survey x category random effects (AR1)
 formula9 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
@@ -291,6 +320,14 @@ formula9 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) 
     control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+
+#' Model 9x: category random effects (IID), age x category random effects (IID),
+#' space x category random effects (Besag), survey x category random effects (AR1)
+#' space x survey x category random effects (Besag x AR1)
+# formula9x <- update(
+#   formula9,
+#   . ~ . + "insert rgeneric model here"
+# )
 
 #' All of the possible models
 all_formulas <- parse(text = paste0("list(", paste0("formula", 1:9, collapse = ", "), ")")) %>% eval()
