@@ -24,5 +24,11 @@ remote:
       site: HIVInferenceGroup-WP
       path: Shared Documents/orderly/mwi-hiv-orderly
 
+fields:
+  requester:
+    required: false
+  author:
+    required: false
+
 global_resources:
   global
