@@ -210,6 +210,9 @@ df <- df %>%
 #' [e(cat 2, time 1), e(cat 2, time 2), e(cat 2, time 3)]
 #' [e(cat 3, time 1), e(cat 3, time 2), e(cat 3, time 3)]
 
+#' If the interaction models currently under development should be fit too
+include_interactions <- FALSE
+
 #' Model 1: category random effects (IID), age x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
@@ -305,7 +308,7 @@ formula8x <- update(formula8,
 
 #' Model 9: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (Besag), survey x category random effects (AR1)
-formula8 <- update(formula1,
+formula9 <- update(formula1,
   . ~ . + f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
           f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
             control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
