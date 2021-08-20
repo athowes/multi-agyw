@@ -7,7 +7,9 @@ artefacts:
         - model-comparison.csv
         - model-comparison.pdf
         - all-dhs-model-comparison.csv
-        - all-dhs-model-comparison.pdf
+        - all-dhs-dic-model-comparison.pdf
+        - all-dhs-cpo-model-comparison.pdf
+        - all-dhs-pit-model-comparison.pdf
 
 packages:
   - dplyr
