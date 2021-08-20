@@ -562,7 +562,7 @@ res_df %>% split(.$survey_id) %>% lapply(function(x)
   labs(x = "District", y = "Proportion", fill = "Category") +
   scale_color_manual(values = cbpalette) +
   theme_minimal() +
-  labs(title = paste0(x$survey_id[1], ": posterior category mean proportions by model")) +
+  labs(title = paste0(paste(unique(x$survey_id), collapse = ", "), ": posterior category mean proportions by model")) +
   theme(
     axis.text.x = element_blank(),
     plot.title = element_text(face = "bold"),
