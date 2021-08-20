@@ -2,7 +2,6 @@
 #' Excluding
 #' * MWI (has separate remote)
 #' * NAM, BWA (is in naomi2 remote, which Oli says I should be using for everything)
-#' TODO: Check with Rachel about naomi and naomi2
 iso3 <- c("CMR", "BWA", "KEN", "LSO", "MOZ", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 
 #' Check that it is indeed 13 - 3 = 10

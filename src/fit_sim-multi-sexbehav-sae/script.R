@@ -187,6 +187,3 @@ tall_df %>%
   viridis::scale_fill_viridis(discrete = TRUE, direction = -1) +
   scale_y_continuous(labels = scales::percent) +
   labs(x = "Age", y = "Proportion", fill = "Risk group")
-
-#' TODO: Add more ways to represent the uncertainty
-#' https://twitter.com/SolomonKurz/status/1372916628715868162

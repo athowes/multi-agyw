@@ -121,7 +121,6 @@ survey_sexbehav <- create_sexbehav_dhs(surveys) %>%
   select(-giftsvar)
 
 #' Remaining NA are all in eversex and sti12m
-#' TODO: Add additional variables like age at first sex (in DHS, PHIA, MICS) to help resolve
 survey_sexbehav %>% is.na() %>% colSums()
 
 #' Verify no overlap

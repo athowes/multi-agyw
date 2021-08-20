@@ -62,7 +62,6 @@ ind <- dplyr::bind_rows(
 )
 
 #' Set ind > 1 to 1, as well as ind < 0 to 0
-#' TODO: Investigate the data issues leading to this by clicking through this script, changing the iso3
 message(
   paste0(
     "There are: ",
