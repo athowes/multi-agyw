@@ -111,7 +111,10 @@ individuals <- create_individual_hiv_dhs(surveys)
 survey_individuals <- create_survey_individuals_dhs(individuals)
 survey_biomarker <- create_survey_biomarker_dhs(individuals)
 
-survey_sexbehav <- create_sexbehav_dhs(surveys)
+survey_sexbehav <- create_sexbehav_dhs(surveys) %>%
+  #' giftsvar is a special case indicator used to determine the type of survey question
+  select(-giftsvar)
+
 survey_other <- list(survey_sexbehav)
 
 age_group_include <- c("Y015_019","Y020_024", "Y025_029","Y015_024")
