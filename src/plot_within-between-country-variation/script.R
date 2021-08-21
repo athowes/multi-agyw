@@ -25,7 +25,7 @@ df <- df %>%
 
 pdf("within-between-country-variation.pdf", h = 10, w = 12)
 
-ggplot(aes(x = survey_id, y = estimate_smoothed, col = iso3)) +
+ggplot(df, aes(x = survey_id, y = estimate_smoothed, col = iso3)) +
   geom_jitter(width = 0.1, alpha = 0.2) +
   facet_grid(age_group ~  indicator) +
   coord_flip() +
