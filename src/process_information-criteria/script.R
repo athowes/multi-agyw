@@ -11,10 +11,7 @@ df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
 write_csv(df, "model-comparison.csv", na = "")
 
-ic_plot <- function(df, ic = "dic", minimum = TRUE) {
-
-  ic <- sym(ic)
-  ic_se <- sym(paste0(ic, "_se"))
+ic_plot <- function(df, ic = "dic") {
 
   df %>%
     # #' Could clean the DIC for infeasible values here
@@ -39,14 +36,14 @@ ic_plot <- function(df, ic = "dic", minimum = TRUE) {
     group_by(iso3) %>%
     #' Add best performing model indicator (minimum and maximum)
     mutate(
-      min_idx = (min(!!ic, na.rm = TRUE) == !!ic),
-      max_idx = (max(!!ic, na.rm = TRUE) == !!ic),
-      best_idx = ifelse(minimum, min_idx, max_idx)
+      min_idx = (min(!!sym(ic), na.rm = TRUE) == !!sym(ic)),
+      max_idx = (max(!!sym(ic), na.rm = TRUE) == !!sym(ic)),
+      best_idx = if(ic %in% c("waic", "dic")) {min_idx} else {max_idx}
     ) %>%
     ggplot(aes(x = model,
-               y = !!ic,
-               ymin = !!ic - 1.96 * !!ic_se,
-               ymax = !!ic + 1.96 * !!ic_se,
+               y = !!sym(ic),
+               ymin = !!sym(ic) - 1.96 * !!sym(paste0(ic, "_se")),
+               ymax = !!sym(ic) + 1.96 * !!sym(paste0(ic, "_se")),
                col = best_idx)) +
       geom_pointrange(alpha = 0.7) +
       facet_wrap(~iso3, scales = "free") +
@@ -81,13 +78,13 @@ write_csv(df, "all-dhs-model-comparison.csv", na = "")
 
 pdf("all-dhs-dic-model-comparison.pdf", h = 5, w = 8.5)
 
-ic_plot(df, ic = "dic", min = TRUE)
+ic_plot(df, ic = "dic")
 
 dev.off()
 
 pdf("all-dhs-cpo-model-comparison.pdf", h = 5, w = 8.5)
 
-ic_plot(df, ic = "cpo", min = FALSE)
+ic_plot(df, ic = "cpo")
 
 dev.off()
 
