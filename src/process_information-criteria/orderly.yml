@@ -81,6 +81,14 @@ depends:
       use:
         depends/cmr_all-dhs-information-criteria.csv: information-criteria.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "KEN")
+      use:
+        depends/ken_all-dhs-information-criteria.csv: information-criteria.csv
+  - aaa_fit_all-dhs-multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "LSO")
+      use:
+        depends/lso_all-dhs-information-criteria.csv: information-criteria.csv
+  - aaa_fit_all-dhs-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MOZ")
       use:
         depends/moz_all-dhs-information-criteria.csv: information-criteria.csv
@@ -88,6 +96,10 @@ depends:
       id: latest(parameter:iso3 == "MWI")
       use:
         depends/mwi_all-dhs-information-criteria.csv: information-criteria.csv
+  - aaa_fit_all-dhs-multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "UGA")
+      use:
+        depends/uga_all-dhs-information-criteria.csv: information-criteria.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZMB")
       use:

@@ -10,7 +10,7 @@ df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
 write_csv(df, "every-multinomial-smoothed-district-sexbehav.csv", na = "")
 
-iso3 <- c("CMR", "MOZ", "MWI", "ZMB", "ZWE")
+iso3 <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "UGA", "ZMB", "ZWE")
 
 #' The multiple survey estimates
 files <- paste0("depends/", tolower(iso3), "_all-dhs-multinomial-smoothed-district-sexbehav.csv")

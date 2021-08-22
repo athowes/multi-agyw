@@ -69,7 +69,7 @@ dev.off()
 
 #' aaa_fit_all-dhs-multi-sexbehav-sae
 
-iso3 <- c("CMR", "MOZ", "MWI", "ZMB", "ZWE")
+iso3 <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "UGA", "ZMB", "ZWE")
 files <- paste0("depends/", tolower(iso3), "_all-dhs-information-criteria.csv")
 
 df <- bind_rows(lapply(files, function(file) read_csv(file)))

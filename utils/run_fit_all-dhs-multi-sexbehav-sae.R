@@ -1,7 +1,7 @@
 #' Run fit_all-dhs-multi-sexbehav-sae in bulk
 
 iso3_vec <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
-iso3_vec <- c("CMR", "MOZ", "MWI", "ZMB", "ZWE")
+iso3_vec <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "UGA", "ZMB", "ZWE")
 
 params <- data.frame(iso3 = iso3_vec)
 ids <- orderly::orderly_batch("aaa_fit_all-dhs-multi-sexbehav-sae", params)
@@ -13,15 +13,9 @@ ids <- orderly::orderly_batch("aaa_fit_all-dhs-multi-sexbehav-sae", params)
 ## id <- orderly::orderly_run("aaa_fit_all-dhs-multi-sexbehav-sae", parameters = list(iso3 = "CMR"))
 #' Issue with not having population data for CMR? The aggregate is not working here for some reason
 
-# id <- orderly::orderly_run("aaa_fit_all-dhs-multi-sexbehav-sae", parameters = list(iso3 = "KEN"))
-#' Data creation issue #009
-#' Begin fitting Model 7.
-#' inla.mkl: src/inla.c:23905: inla_parse_ffield: Assertion `def->n > 1' failed.
+## id <- orderly::orderly_run("aaa_fit_all-dhs-multi-sexbehav-sae", parameters = list(iso3 = "KEN"))
 
-# id <- orderly::orderly_run("aaa_fit_all-dhs-multi-sexbehav-sae", parameters = list(iso3 = "LSO"))
-#' Data creation issue #009
-#' Begin fitting Model 7.
-#' inla.mkl: src/inla.c:23905: inla_parse_ffield: Assertion `def->n > 1' failed.
+## id <- orderly::orderly_run("aaa_fit_all-dhs-multi-sexbehav-sae", parameters = list(iso3 = "LSO"))
 
 ## id <- orderly::orderly_run("aaa_fit_all-dhs-multi-sexbehav-sae", parameters = list(iso3 = "MOZ"))
 
@@ -42,10 +36,7 @@ ids <- orderly::orderly_batch("aaa_fit_all-dhs-multi-sexbehav-sae", params)
 #' Begin fitting Model 7.
 #' inla.mkl: src/inla.c:23905: inla_parse_ffield: Assertion `def->n > 1' failed.
 
-# id <- orderly::orderly_run("aaa_fit_all-dhs-multi-sexbehav-sae", parameters = list(iso3 = "UGA"))
-#' Data creation issue #009
-#' Begin fitting Model 7.
-#' inla.mkl: src/inla.c:23905: inla_parse_ffield: Assertion `def->n > 1' failed.
+## id <- orderly::orderly_run("aaa_fit_all-dhs-multi-sexbehav-sae", parameters = list(iso3 = "UGA"))
 
 # id <- orderly::orderly_run("aaa_fit_all-dhs-multi-sexbehav-sae", parameters = list(iso3 = "ZAF"))
 #' Begin fitting Model 7.
@@ -74,3 +65,7 @@ archived_recent_ids <- sapply(
     orderly::orderly_search(query = paste0("latest(parameter:iso3 == '", iso3, "')"), "aaa_fit_all-dhs-multi-sexbehav-sae")
   }
 )
+
+#' Run processing
+id <- orderly::orderly_run("process_multinomial-smoothed-district-sexbehav")
+orderly::orderly_commit(id)

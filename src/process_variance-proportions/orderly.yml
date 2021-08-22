@@ -28,14 +28,14 @@ depends:
       id: latest(parameter:iso3 == "CMR")
       use:
         depends/cmr_variance-proportions.csv: variance-proportions.csv
-  # - aaa_fit_all-dhs-multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "KEN")
-  #     use:
-  #       depends/ken_variance-proportions.csv: variance-proportions.csv
-  # - aaa_fit_all-dhs-multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "LSO")
-  #     use:
-  #       depends/lso_variance-proportions.csv: variance-proportions.csv
+  - aaa_fit_all-dhs-multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "KEN")
+      use:
+        depends/ken_variance-proportions.csv: variance-proportions.csv
+  - aaa_fit_all-dhs-multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "LSO")
+      use:
+        depends/lso_variance-proportions.csv: variance-proportions.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MOZ")
       use:
@@ -56,10 +56,10 @@ depends:
   #     id: latest(parameter:iso3 == "TZA")
   #     use:
   #       depends/tza_variance-proportions.csv: variance-proportions.csv
-  # - aaa_fit_all-dhs-multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "UGA")
-  #     use:
-  #       depends/uga_variance-proportions.csv: variance-proportions.csv
+  - aaa_fit_all-dhs-multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "UGA")
+      use:
+        depends/uga_variance-proportions.csv: variance-proportions.csv
   # - aaa_fit_all-dhs-multi-sexbehav-sae:
   #     id: latest(parameter:iso3 == "ZAF")
   #     use:

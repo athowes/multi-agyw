@@ -2,7 +2,7 @@
 # orderly::orderly_develop_start("process_variance-proportions")
 # setwd("src/process_variance-proportions")
 
-iso3 <- c("CMR", "MOZ", "MWI", "ZMB", "ZWE")
+iso3 <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "UGA", "ZMB", "ZWE")
 
 #' The single survey estimates
 files <- paste0("depends/", tolower(iso3), "_variance-proportions.csv")
