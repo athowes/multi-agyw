@@ -16,6 +16,7 @@ analysis_level <- c("BWA" = 2,
                     "ZMB" = 2,
                     "ZWE" = 2)
 
+#' Not really using this currently (!)
 admin1_level <- c("BWA" = 1,
                   "CMR" = 1,
                   "KEN" = 1,
@@ -70,6 +71,7 @@ ind <- ind %>%
 areas <- select(areas, area_id, area_name, area_level, area_level_label,
                 parent_area_id, area_sort_order, center_x, center_y)
 
+#' Areas at the level of analysis
 areas_model <- areas %>%
   filter(area_level == analysis_level) %>%
   #' Add area_id for admin1 observation
@@ -85,6 +87,14 @@ areas_model <- areas %>%
   arrange(area_sort_order) %>%
   mutate(area_idx = row_number())
 
+#' Country level area (not to be included in model)
+country <- areas %>%
+  filter(area_level == 0) %>%
+  mutate(
+    area_idx = NA,
+    area_id_aggr = NA
+  )
+
 #' Create adjacency matrix for INLA
 adjM <- spdep::poly2nb(areas_model)
 adjM <- spdep::nb2mat(adjM, style = "B", zero.policy = TRUE)
@@ -96,9 +106,10 @@ df <- crossing(
   indicator = c("nosex12m", "sexcohab", "sexnonregplus"),
   #' Add in the survey_id to deal with multiple surveys
   survey_id = unique(ind$survey_id),
-  #' Just these three age groups, aim to calculate aggregates at later point
+  #' Three age groups, plus aggregate category
   age_group = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"),
-  areas_model %>%
+  #' Both the areas in the model and the aggregate country
+  bind_rows(areas_model, country) %>%
     st_drop_geometry() %>%
     select(area_id, area_name, area_idx, area_id_aggr,
            area_sort_order, center_x, center_y)
@@ -178,10 +189,10 @@ df <- df %>%
 #' Data for the model (df) doesn't include the aggregates (since this is using data twice)
 #' So we save them off separately
 df_agg <- df %>%
-  filter(age_group == "Y015_024")
+  filter(age_group == "Y015_024" | area_id == toupper(iso3))
 
-df <- df %>%
-  filter(age_group %in% c("Y015_019", "Y020_024", "Y025_029"))
+#' The rows of df to be included in the model
+df_model <- setdiff(df, df_agg)
 
 #' Specify the models to be fit
 

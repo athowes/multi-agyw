@@ -46,17 +46,17 @@ tau_pc <- function(x, u, alpha) {
 #'
 #' @param formula A formula object passed to `R-INLA`.
 #' @param model A string containing the name of the model.
-#' @return A dataframe adding columns to `df`.
+#' @return A dataframe adding columns to `df_model`.
 multinomial_model <- function(formula, model_name, S = 100) {
 
   message(paste0("Begin fitting ", model_name, "."))
 
-  fit <- inla(formula, data = df, family = 'xPoisson',
+  fit <- inla(formula, data = df_model, family = 'xPoisson',
               control.predictor = list(link = 1),
               control.compute = list(dic = TRUE, waic = TRUE,
                                      cpo = TRUE, config = TRUE))
 
-  df <- df %>%
+  df_model <- df_model %>%
     mutate(
       #' Add mean of linear predictor
       eta = fit$summary.linear.predictor$mean
@@ -89,7 +89,7 @@ multinomial_model <- function(formula, model_name, S = 100) {
       rename(eta = 2) %>%
       filter(substr(rowname, 1, 10) == "Predictor:") %>%
       bind_cols(
-        df %>%
+        df_model %>%
           select(age_idx, area_idx, sur_idx,
                  obs_idx, cat_idx, population_mean)
       ) %>%
@@ -109,7 +109,7 @@ multinomial_model <- function(formula, model_name, S = 100) {
     bind_rows()
 
   #' Obtain the median, upper and lower quantiles from the Monte Carlo samples
-  df <- df %>%
+  df_model <- df_model %>%
     left_join(
       x %>%
         group_by(obs_idx, cat_idx) %>%
@@ -134,18 +134,31 @@ multinomial_model <- function(formula, model_name, S = 100) {
     )
   }
 
-  #' Calculation of 15-24 aggregate measures from Monte Carlo samples
-  #' TODO: Systematise this more if other aggregates required
   df_agg <- df_agg %>%
     mutate(model = model_name) %>%
+    #' 1. Calculate the mean of 15-24 age group aggregate measures
     left_join(
-      df %>%
+      df_model %>%
+        #' The 15-19 and 20-24 age groups
         filter(age_idx %in% c(1, 2)) %>%
         group_by(area_idx, sur_idx, cat_idx) %>%
         summarise(mean = sum(mean * population_mean) / sum(population_mean),
                   .groups = "drop"),
       by = c("area_idx", "sur_idx", "cat_idx")
     ) %>%
+    #' 2. Calculate the mean of the national aggregate measures
+    left_join(
+      df_model %>%
+        group_by(age_idx, sur_idx, cat_idx) %>%
+        summarise(mean = sum(mean * population_mean) / sum(population_mean),
+                  .groups = "drop"),
+      by = c("age_idx", "sur_idx", "cat_idx")
+    ) %>%
+    #' Overwriting NAs left_join
+    within(., mean.x <- ifelse(!is.na(mean.y), mean.y, mean.x)) %>%
+    select(-mean.y) %>%
+    rename(mean = mean.x) %>%
+    #' 3. Calculate the quantiles of 15-24 age group aggregate measures
     left_join(
       x %>%
         #' The 15-19 and 20-24 age groups
@@ -160,10 +173,33 @@ multinomial_model <- function(formula, model_name, S = 100) {
                   upper = quantile(prob, 0.975, na.rm = TRUE),
                   .groups = "drop"),
       by = c("area_idx", "sur_idx", "cat_idx")
-    )
+    ) %>%
+    #' 4. Calculate the quantiles of the national aggregate measures
+    left_join(
+      x %>%
+        group_by(age_idx, sur_idx, cat_idx, sample) %>%
+        #' prob = sum_i(prob_i * pop_i) / sum_i(pop_i)
+        summarise(prob = sum(prob * population_mean) / sum(population_mean),
+                  .groups = "drop") %>%
+        group_by(age_idx, sur_idx, cat_idx) %>%
+        summarise(median = quantile(prob, 0.5, na.rm = TRUE),
+                  lower = quantile(prob, 0.025, na.rm = TRUE),
+                  upper = quantile(prob, 0.975, na.rm = TRUE),
+                  .groups = "drop"),
+      by = c("age_idx", "sur_idx", "cat_idx")
+    ) %>%
+    #' Overwriting NAs left_join
+    within(., {
+      median.x <- ifelse(!is.na(median.y), median.y, median.x)
+      lower.x <- ifelse(!is.na(lower.y), lower.y, lower.x)
+      upper.x <- ifelse(!is.na(upper.y), upper.y, upper.x)
+    }) %>%
+    select(-median.y, -lower.y, -upper.y) %>%
+    rename(median = median.x, lower = lower.x, upper = upper.x)
+  #' TODO: There are still NA in the intersection of 15-24 and country
 
   message(paste0("Completed fitting ", model_name, "."))
 
   #' df goes back to including the aggregate group here, perhaps it's confusing to do this!
-  return(list(df = bind_rows(df, df_agg), fit = fit))
+  return(list(df = bind_rows(df_model, df_agg), fit = fit))
 }
