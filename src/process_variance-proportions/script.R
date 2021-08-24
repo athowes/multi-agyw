@@ -46,3 +46,35 @@ df %>%
     )
 
 dev.off()
+
+df %>%
+  filter(
+    model == "Model 9",
+    iso3 %in% iso3
+  ) %>%
+  select(iso3, starts_with("percentage_variance")) %>%
+  mutate(
+    iso3 = fct_recode(iso3,
+      "Cameroon" = "CMR",
+      "Kenya" = "KEN",
+      "Lesotho" = "LSO",
+      "Mozambique" = "MOZ",
+      "Malawi" = "MWI",
+      "Uganda" = "UGA",
+      "Zambia" = "ZMB",
+      "Zimbabwe" = "ZWE",
+    )
+  ) %>%
+  rename(
+    "Country" = "iso3",
+    #' Can't write LaTeX math in gt yet
+    "sigma-beta" = "percentage_variance_cat_idx",
+    "sigma-alpha" = "percentage_variance_age_cat_idx",
+    "sigma-phi" = "percentage_variance_area_idx",
+    "sigma-gamma" = "percentage_variance_sur_idx",
+  ) %>%
+  gt() %>%
+  fmt_number(columns = -matches("Country"), rows = everything(), decimals = 3) %>%
+  as_latex() %>%
+  as.character() %>%
+  cat(file = "variance-proportions.txt")

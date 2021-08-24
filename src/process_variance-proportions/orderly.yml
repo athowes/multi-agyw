@@ -6,6 +6,7 @@ artefacts:
       filenames:
         - variance-proportions.csv
         - variance-proportions.pdf
+        - variance-proportions.txt
 
 packages:
   - dplyr
@@ -18,6 +19,7 @@ packages:
   - sf
   - spdep
   - tidyr
+  - gt
 
 depends:
   # - aaa_fit_all-dhs-multi-sexbehav-sae:
