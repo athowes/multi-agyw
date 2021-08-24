@@ -25,6 +25,10 @@ artefacts:
       description: Sample size recovery diagnostic
       filenames:
         - sample-size-recovery.pdf
+  - data:
+      description: Coverage histogram posterior predictive check
+      filenames:
+        - coverage-histograms.pdf
 
 parameters:
   iso3:

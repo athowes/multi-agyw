@@ -493,14 +493,15 @@ res_plot <- res_df %>%
     select(areas, area_id),
     by = "area_id"
   ) %>%
-  st_as_sf() %>%
-  split(~indicator + model)
+  st_as_sf()
 
-#' Cloropleths
+#' Artefact: Cloropleths
 
 pdf("multinomial-smoothed-district-sexbehav.pdf", h = 11, w = 8.5)
 
-lapply(res_plot, function(x)
+res_plot %>%
+  split(~indicator + model) %>%
+  lapply(function(x)
   x %>%
     mutate(
       age_group = fct_relevel(age_group, "Y015_024") %>%
@@ -534,7 +535,7 @@ lapply(res_plot, function(x)
 
 dev.off()
 
-#' Stacked proportion plots
+#' Artefact: Stacked proportion barplots
 
 pdf("stacked-proportions.pdf", h = 10, w = 12)
 
@@ -552,20 +553,14 @@ res_df %>%
         "15-24" = "Y015_024"
       ),
     model = fct_recode(model,
-                       "1" = "Model 1",
-                       "2" = "Model 2",
-                       "3" = "Model 3",
-                       "4" = "Model 4",
-                       "5" = "Model 5",
-                       "6" = "Model 6",
-                       "7" = "Model 7",
-                       "8" = "Model 8",
-                       "9" = "Model 9"
+      "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
+      "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
+      "7" = "Model 7", "8" = "Model 8", "9" = "Model 9"
     ),
     indicator = fct_recode(indicator,
-                           "No sex (past 12 months)" = "nosex12m",
-                           "Cohabiting partner" = "sexcohab",
-                           "Nonregular partner(s) or paid for sex (past 12 months)" = "sexnonregplus"
+      "No sex (past 12 months)" = "nosex12m",
+      "Cohabiting partner" = "sexcohab",
+      "Nonregular partner(s) or paid for sex (past 12 months)" = "sexnonregplus"
     )
   ) %>%
   ggplot(aes(x = model, y = estimate_smoothed, group = model, fill = indicator)) +
@@ -584,5 +579,38 @@ res_df %>%
     strip.text.x = element_text(angle = 90, hjust = 0)
   )
 )
+
+dev.off()
+
+#' Artefact: Posterior predictive check of coverage
+
+pdf("coverage-histograms.pdf", h = 10, w = 12)
+
+res_df %>%
+  filter(
+    area_id != iso3,
+    age_group != "Y015_024"
+  ) %>%
+  mutate(
+    age_group = fct_recode(age_group,
+      "15-19" = "Y015_019",
+      "20-24" = "Y020_024",
+      "25-29" = "Y025_029",
+    ),
+    indicator = fct_recode(indicator,
+      "No sex" = "nosex12m",
+      "Cohabiting partner" = "sexcohab",
+      "Nonregular partner" = "sexnonregplus"
+    )
+  ) %>%
+  split(.$model) %>% lapply(function(x)
+  ggplot(x, aes(x = quantile)) +
+    facet_grid(age_group ~ survey_id + indicator, drop = TRUE, scales = "free") +
+    geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
+                  bins = 10, fill = "#D3D3D3", col = "#FFFFFF", alpha = 0.9) +
+    geom_hline(linetype = "dashed", yintercept = 0.1, col = "#000000") +
+    labs(title = paste0(x$model[1]), x = "Quantile", y = "Proportion of raw estimates in corresponding quantile") +
+    scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1))
+  )
 
 dev.off()

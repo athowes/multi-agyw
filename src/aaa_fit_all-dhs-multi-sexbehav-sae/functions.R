@@ -108,18 +108,26 @@ multinomial_model <- function(formula, model_name, S = 100) {
   ) %>%
     bind_rows()
 
-  #' Obtain the median, upper and lower quantiles from the Monte Carlo samples
+  #' Obtain quantiles from the inla.posterior.sample and join them into df_model
   df_model <- df_model %>%
     left_join(
-      x %>%
+      left_join(x, df_model, by = c("obs_idx", "cat_idx")) %>%
         group_by(obs_idx, cat_idx) %>%
-        summarise(median = quantile(prob, 0.5, na.rm = TRUE),
-                  lower = quantile(prob, 0.025, na.rm = TRUE),
-                  upper = quantile(prob, 0.975, na.rm = TRUE),
-                  lambda_median = quantile(lambda, 0.5, na.rm = TRUE),
-                  lambda_lower = quantile(lambda, 0.025, na.rm = TRUE),
-                  lambda_upper = quantile(lambda, 0.975, na.rm = TRUE),
-                  .groups = "drop"),
+        summarise(
+          #' The quantile of the raw estimate
+          estimate = mean(estimate), #' These should all be identical anyway
+          quantile = ecdf(prob)(estimate),
+          #' Quantiles of the proportion
+          median = quantile(prob, 0.5, na.rm = TRUE),
+          lower = quantile(prob, 0.025, na.rm = TRUE),
+          upper = quantile(prob, 0.975, na.rm = TRUE),
+          #' Quantiles of the intensity, used to calculate sample size recovery later
+          lambda_median = quantile(lambda, 0.5, na.rm = TRUE),
+          lambda_lower = quantile(lambda, 0.025, na.rm = TRUE),
+          lambda_upper = quantile(lambda, 0.975, na.rm = TRUE),
+          .groups = "drop"
+        ) %>%
+        select(-estimate),
       by = c("obs_idx", "cat_idx")
     )
 
