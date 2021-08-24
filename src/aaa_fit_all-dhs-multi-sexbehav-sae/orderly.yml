@@ -5,7 +5,7 @@ sources:
 
 artefacts:
   - data:
-      description: Smoothed district indicator estimates for multinomial models, using all DHS survey data
+      description: Smoothed district indicator estimates for multinomial models
       filenames:
         - multinomial-smoothed-district-sexbehav.csv
         - multinomial-smoothed-district-sexbehav.pdf
@@ -14,7 +14,7 @@ artefacts:
       filenames:
         - stacked-proportions.pdf
   - data:
-      description: Model selection information criteria for multinomial models, using all DHS survey data
+      description: Model selection information criteria for multinomial models
       filenames:
         - information-criteria.csv
   - data:

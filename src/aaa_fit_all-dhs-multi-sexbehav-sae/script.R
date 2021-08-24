@@ -353,7 +353,59 @@ res <- purrr::pmap(
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
 
-#' Output random effect variance parameter posterior mean estimates
+#' Add columns for local DIC, WAIC, CPO and PIT
+#' res_df has the 15-24 category too
+res_df <- bind_cols(
+  res_df,
+  lapply(res_fit,
+         function(fit) {
+           return(data.frame(
+             local_dic = fit$dic$local.dic,
+             local_waic = fit$waic$local.waic,
+             local_cpo = fit$cpo$cpo,
+             local_pit = fit$cpo$pit
+           ))
+         }
+  ) %>%
+    bind_rows() %>%
+    #' Being safe here and explictly adding the NA entires for df_agg
+    bind_rows(data.frame(
+      local_dic = rep(NA, max_model_id * nrow(df_agg)),
+      local_waic = rep(NA, max_model_id * nrow(df_agg)),
+      local_cpo = rep(NA, max_model_id * nrow(df_agg)),
+      local_pit = rep(NA, max_model_id * nrow(df_agg))
+    ))
+)
+
+#' Artefact: Model selection information criteria for multinomial models
+#' Some of the entries might be NA where there is missing data (INLA ignores these in its calculations)
+ic_df <- sapply(res_fit, function(fit) {
+  local_dic <- na.omit(fit$dic$local.dic)
+  local_waic <- na.omit(fit$waic$local.waic)
+  local_cpo <- na.omit(fit$cpo$cpo)
+  local_pit <- na.omit(fit$cpo$pit)
+
+  c("dic" = sum(local_dic),
+    "dic_se" = stats::sd(local_dic) * sqrt(length(local_dic)),
+    "waic" = sum(local_waic),
+    "waic_se" = stats::sd(local_waic) * sqrt(length(local_waic)),
+    "cpo" = sum(local_cpo),
+    "cpo_se" = stats::sd(local_cpo) * sqrt(length(local_cpo)),
+    "pit" = sum(local_pit),
+    "pit_se" = stats::sd(local_pit) * sqrt(length(local_pit)))
+}) %>%
+  t() %>%
+  round() %>%
+  as.data.frame() %>%
+  mutate(
+    iso3 = iso3,
+    model = unlist(models),
+    .before = dic
+  )
+
+write_csv(ic_df, "information-criteria.csv", na = "")
+
+#' Artefact: Random effect variance parameter posterior means
 variance_df <- map(res_fit, function(fit)
   fit$marginals.hyperpar %>%
     #' Calculate the expectation of the variance
@@ -379,32 +431,7 @@ variance_df <- map(res_fit, function(fit)
 
 write_csv(variance_df, "variance-proportions.csv", na = "")
 
-#' Add columns for local DIC, WAIC, CPO and PIT
-#' res_df has the 15-24 category too
-res_df <- bind_cols(
-  res_df,
-  lapply(res_fit,
-         function(fit) {
-           return(data.frame(
-             local_dic = fit$dic$local.dic,
-             local_waic = fit$waic$local.waic,
-             local_cpo = fit$cpo$cpo,
-             local_pit = fit$cpo$pit
-           ))
-         }
-  ) %>%
-    bind_rows() %>%
-    #' Being safe here and explictly adding the NA entires for df_agg
-    bind_rows(data.frame(
-      local_dic = rep(NA, max_model_id * nrow(df_agg)),
-      local_waic = rep(NA, max_model_id * nrow(df_agg)),
-      local_cpo = rep(NA, max_model_id * nrow(df_agg)),
-      local_pit = rep(NA, max_model_id * nrow(df_agg))
-    ))
-)
-
-#' Checking sample size recovery
-
+#' Artefact: Sample size recovery diagnostic
 pdf("sample-size-recovery.pdf", h = 10, w = 8.5)
 
 res_df %>%
@@ -434,7 +461,7 @@ res_df %>%
 
 dev.off()
 
-#' Prepare data for writing to output
+#' Artefact: Smoothed district indicator estimates for multinomial models
 res_df <- res_df %>%
   #' Remove superfluous INLA indicator columns
   select(-area_idx, -cat_idx, -age_idx, -obs_idx, -age_cat_idx,
@@ -454,37 +481,9 @@ res_df <- res_df %>%
 
 write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
 
-#' Simple model comparison for output
-#' Some of the entries might be NA where there is no raw data
-#' INLA calculates the DIC or WAIC ignoring these
-ic_df <- sapply(res_fit, function(fit) {
-  local_dic <- na.omit(fit$dic$local.dic)
-  local_waic <- na.omit(fit$waic$local.waic)
-  local_cpo <- na.omit(fit$cpo$cpo)
-  local_pit <- na.omit(fit$cpo$pit)
-
-  c("dic" = sum(local_dic),
-    "dic_se" = stats::sd(local_dic) * sqrt(length(local_dic)),
-    "waic" = sum(local_waic),
-    "waic_se" = stats::sd(local_waic) * sqrt(length(local_waic)),
-    "cpo" = sum(local_cpo),
-    "cpo_se" = stats::sd(local_cpo) * sqrt(length(local_cpo)),
-    "pit" = sum(local_pit),
-    "pit_se" = stats::sd(local_pit) * sqrt(length(local_pit)))
-  }) %>%
-  t() %>%
-  round() %>%
-  as.data.frame() %>%
-  mutate(
-    iso3 = iso3,
-    model = unlist(models),
-    .before = dic
-  )
-
-write_csv(ic_df, "information-criteria.csv", na = "")
-
 #' Create plotting data
 res_plot <- res_df %>%
+  filter(area_id != iso3) %>%
   pivot_longer(
     cols = c(starts_with("estimate")),
     names_to = c(".value", "source"),
@@ -541,7 +540,9 @@ pdf("stacked-proportions.pdf", h = 10, w = 12)
 
 cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
 
-res_df %>% split(.$survey_id) %>% lapply(function(x)
+res_df %>%
+  filter(area_id != iso3) %>%
+  split(.$survey_id) %>% lapply(function(x)
   x %>% mutate(
     age_group = fct_relevel(age_group, "Y015_024", after = 3) %>%
       fct_recode(
