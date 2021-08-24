@@ -134,60 +134,57 @@ multinomial_model <- function(formula, model_name, S = 100) {
     )
   }
 
+  #' Adding in aggregates
+
+  mean_aggregate_Y015_024 <- df_model %>%
+    #' The 15-19 and 20-24 age groups
+    filter(age_idx %in% c(1, 2)) %>%
+    group_by(area_idx, sur_idx, cat_idx) %>%
+    summarise(mean = sum(mean * population_mean) / sum(population_mean), .groups = "drop")
+
+  quantiles_aggregate_Y015_024 <- x %>%
+    #' The 15-19 and 20-24 age groups
+    filter(age_idx %in% c(1, 2)) %>%
+    group_by(area_idx, sur_idx, cat_idx, sample) %>%
+    #' prob = sum_i(prob_i * pop_i) / sum_i(pop_i)
+    summarise(prob = sum(prob * population_mean) / sum(population_mean),
+              .groups = "drop") %>%
+    group_by(area_idx, sur_idx, cat_idx) %>%
+    summarise(median = quantile(prob, 0.5, na.rm = TRUE),
+              lower = quantile(prob, 0.025, na.rm = TRUE),
+              upper = quantile(prob, 0.975, na.rm = TRUE),
+              .groups = "drop")
+
+  mean_aggregate_national <- df_model %>%
+    group_by(age_idx, sur_idx, cat_idx) %>%
+    summarise(mean = sum(mean * population_mean) / sum(population_mean), .groups = "drop")
+
+  quantiles_aggregate_national <- x %>%
+    group_by(age_idx, sur_idx, cat_idx, sample) %>%
+    #' prob = sum_i(prob_i * pop_i) / sum_i(pop_i)
+    summarise(prob = sum(prob * population_mean) / sum(population_mean),
+              .groups = "drop") %>%
+    group_by(age_idx, sur_idx, cat_idx) %>%
+    summarise(median = quantile(prob, 0.5, na.rm = TRUE),
+              lower = quantile(prob, 0.025, na.rm = TRUE),
+              upper = quantile(prob, 0.975, na.rm = TRUE),
+              .groups = "drop")
+
+  #' TODO: There are still NA in the intersection of 15-24 and country
   df_agg <- df_agg %>%
     mutate(model = model_name) %>%
-    #' 1. Calculate the mean of 15-24 age group aggregate measures
-    left_join(
-      df_model %>%
-        #' The 15-19 and 20-24 age groups
-        filter(age_idx %in% c(1, 2)) %>%
-        group_by(area_idx, sur_idx, cat_idx) %>%
-        summarise(mean = sum(mean * population_mean) / sum(population_mean),
-                  .groups = "drop"),
-      by = c("area_idx", "sur_idx", "cat_idx")
-    ) %>%
-    #' 2. Calculate the mean of the national aggregate measures
-    left_join(
-      df_model %>%
-        group_by(age_idx, sur_idx, cat_idx) %>%
-        summarise(mean = sum(mean * population_mean) / sum(population_mean),
-                  .groups = "drop"),
-      by = c("age_idx", "sur_idx", "cat_idx")
-    ) %>%
+    #' The mean of 15-24 age group aggregate measures
+    left_join(mean_aggregate_Y015_024, by = c("area_idx", "sur_idx", "cat_idx")) %>%
+    #' The mean of the national aggregate measures
+    left_join(mean_aggregate_national, by = c("age_idx", "sur_idx", "cat_idx")) %>%
     #' Overwriting NAs left_join
     within(., mean.x <- ifelse(!is.na(mean.y), mean.y, mean.x)) %>%
     select(-mean.y) %>%
     rename(mean = mean.x) %>%
-    #' 3. Calculate the quantiles of 15-24 age group aggregate measures
-    left_join(
-      x %>%
-        #' The 15-19 and 20-24 age groups
-        filter(age_idx %in% c(1, 2)) %>%
-        group_by(area_idx, sur_idx, cat_idx, sample) %>%
-        #' prob = sum_i(prob_i * pop_i) / sum_i(pop_i)
-        summarise(prob = sum(prob * population_mean) / sum(population_mean),
-                  .groups = "drop") %>%
-        group_by(area_idx, sur_idx, cat_idx) %>%
-        summarise(median = quantile(prob, 0.5, na.rm = TRUE),
-                  lower = quantile(prob, 0.025, na.rm = TRUE),
-                  upper = quantile(prob, 0.975, na.rm = TRUE),
-                  .groups = "drop"),
-      by = c("area_idx", "sur_idx", "cat_idx")
-    ) %>%
-    #' 4. Calculate the quantiles of the national aggregate measures
-    left_join(
-      x %>%
-        group_by(age_idx, sur_idx, cat_idx, sample) %>%
-        #' prob = sum_i(prob_i * pop_i) / sum_i(pop_i)
-        summarise(prob = sum(prob * population_mean) / sum(population_mean),
-                  .groups = "drop") %>%
-        group_by(age_idx, sur_idx, cat_idx) %>%
-        summarise(median = quantile(prob, 0.5, na.rm = TRUE),
-                  lower = quantile(prob, 0.025, na.rm = TRUE),
-                  upper = quantile(prob, 0.975, na.rm = TRUE),
-                  .groups = "drop"),
-      by = c("age_idx", "sur_idx", "cat_idx")
-    ) %>%
+    #' The quantiles of 15-24 age group aggregate measures
+    left_join(quantiles_aggregate_Y015_024, by = c("area_idx", "sur_idx", "cat_idx")) %>%
+    #' The quantiles of the national aggregate measures
+    left_join(quantiles_aggregate_national, by = c("age_idx", "sur_idx", "cat_idx")) %>%
     #' Overwriting NAs left_join
     within(., {
       median.x <- ifelse(!is.na(median.y), median.y, median.x)
@@ -196,7 +193,6 @@ multinomial_model <- function(formula, model_name, S = 100) {
     }) %>%
     select(-median.y, -lower.y, -upper.y) %>%
     rename(median = median.x, lower = lower.x, upper = upper.x)
-  #' TODO: There are still NA in the intersection of 15-24 and country
 
   message(paste0("Completed fitting ", model_name, "."))
 
