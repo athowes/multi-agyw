@@ -17,21 +17,11 @@ ic_plot <- function(df, ic = "dic") {
     # #' Could clean the DIC for infeasible values here
     # mutate(dic = ifelse(abs(dic) > 10^5, NA, dic)) %>%
     #' Set names for plotting
-    mutate(model =
-             fct_recode(model,
-                        "1" = "Model 1: Constant",
-                        "2" = "Model 2: IID",
-                        "3" = "Model 3: BYM2",
-                        "1" = "Model 1",
-                        "2" = "Model 2",
-                        "3" = "Model 3",
-                        "4" = "Model 4",
-                        "5" = "Model 5",
-                        "6" = "Model 6",
-                        "7" = "Model 7",
-                        "8" = "Model 8",
-                        "9" = "Model 9"
-             )
+    mutate(model = fct_recode(model,
+      "1" = "Model 1: Constant", "2" = "Model 2: IID", "3" = "Model 3: BYM2",
+      "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
+      "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
+      "7" = "Model 7", "8" = "Model 8", "9" = "Model 9")
     ) %>%
     group_by(iso3) %>%
     #' Add best performing model indicator (minimum and maximum)
@@ -93,3 +83,34 @@ pdf("all-dhs-pit-model-comparison.pdf", h = 5, w = 8.5)
 ic_plot(df, ic = "pit")
 
 dev.off()
+
+df %>%
+  mutate(
+    dic = paste0(dic, " (", dic_se, ")"),
+    waic = paste0(waic, " (", waic_se, ")"),
+    cpo = paste0(cpo, " (", dic_se, ")"),
+    pit = paste0(pit, " (", pit_se, ")")
+  ) %>%
+  select(-contains("se")) %>%
+  rename_with(~toupper(.), 3:6) %>%
+  mutate(
+    model = fct_recode(model,
+      "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
+      "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
+      "7" = "Model 7", "8" = "Model 8", "9" = "Model 9"),
+    iso3 = fct_recode(iso3,
+      "Cameroon" = "CMR",
+      "Kenya" = "KEN",
+      "Lesotho" = "LSO",
+      "Mozambique" = "MOZ",
+      "Malawi" = "MWI",
+      "Uganda" = "UGA",
+      "Zambia" = "ZMB",
+      "Zimbabwe" = "ZWE",
+    )
+  ) %>%
+  rename(Model = model) %>%
+  gt(groupname_col = "iso3") %>%
+  as_latex() %>%
+  as.character() %>%
+  cat(file = "all-dhs-model-comparison.txt")

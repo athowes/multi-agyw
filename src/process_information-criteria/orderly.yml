@@ -7,6 +7,7 @@ artefacts:
         - model-comparison.csv
         - dic-model-comparison.pdf
         - all-dhs-model-comparison.csv
+        - all-dhs-modelcomparison.txt
         - all-dhs-dic-model-comparison.pdf
         - all-dhs-cpo-model-comparison.pdf
         - all-dhs-pit-model-comparison.pdf
@@ -22,6 +23,7 @@ packages:
   - sf
   - spdep
   - tidyr
+  - gt
 
 depends:
   - aaa_fit_multi-sexbehav-sae:
