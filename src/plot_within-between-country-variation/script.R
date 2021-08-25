@@ -21,12 +21,22 @@ df <- df %>%
                  "Nonregular partner(s) or paid\n for sex (past 12 months)" = "sexnonregplus"
       )
   ) %>%
-  filter(model == "Model 9", age_group != "15-24")
+  filter(
+    model == "Model 9",
+    age_group != "15-24",
+  )
+
+df_subnational <- df %>%
+  filter(!(area_id %in% c("CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")))
+
+df_national <- setdiff(df, df_subnational)
 
 pdf("within-between-country-variation.pdf", h = 10, w = 12)
 
-ggplot(df, aes(x = survey_id, y = estimate_smoothed, col = iso3)) +
-  geom_jitter(width = 0.1, alpha = 0.2) +
+ggplot(df_subnational, aes(x = survey_id, y = estimate_smoothed, col = iso3)) +
+  geom_jitter(width = 0.1, alpha = 0.3, shape = 20) +
+  geom_point(data = df_national, aes(x = survey_id, y = estimate_smoothed),
+             shape = 21, fill = "white", col = "black", alpha = 0.7) +
   facet_grid(age_group ~  indicator) +
   coord_flip() +
   labs(x = "Country", y = "Posterior mean proportion by region") +
