@@ -5,6 +5,7 @@ artefacts:
       description: Aiming to show the extent of temporal variability in the estimates
       filenames:
         - temporal-variation.pdf
+        - temporal-variation-alt.pdf
 
 packages:
   - dplyr
