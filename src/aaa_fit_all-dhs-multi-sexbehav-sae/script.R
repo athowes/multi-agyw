@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("aaa_fit_all-dhs-multi-sexbehav-sae", parameters = list(iso3 = "MWI", max_model_id = 9))
+# orderly::orderly_develop_start("aaa_fit_all-dhs-multi-sexbehav-sae", parameters = list(iso3 = "MWI"))
 # setwd("src/aaa_fit_all-dhs-multi-sexbehav-sae")
 
 analysis_level <- c("BWA" = 2,
@@ -145,7 +145,7 @@ df <- df %>%
     cat_idx = to_int(indicator),
     sur_cat_idx = interaction(sur_idx, cat_idx),
     age_cat_idx = interaction(age_idx, cat_idx),
-    area_cat_idx = interaction(area_idx, cat_idx),
+    area_cat_idx = to_int(interaction(area_idx, cat_idx)),
     area_sur_idx = interaction(area_idx, sur_idx),
     #' Is the best way to add obs_idx? Perhaps can be added earlier in the pipeline
     obs_idx = to_int(interaction(age_idx, area_idx, sur_idx))
@@ -221,9 +221,6 @@ df_model <- setdiff(df, df_agg)
 #' [e(cat 2, time 1), e(cat 2, time 2), e(cat 2, time 3)]
 #' [e(cat 3, time 1), e(cat 3, time 2), e(cat 3, time 3)]
 
-#' If the interaction models currently under development should be fit too
-include_interactions <- FALSE
-
 #' Model 1: category random effects (IID), age x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
@@ -259,14 +256,6 @@ formula5 <- update(formula1,
             constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
-#' Model 5x:  category random effects (IID), age x category random effects (IID),
-#' space x category random effects (IID), survey x category random effects (IID),
-#' space x survey x category random effects (IID)
-formula5x <- update(formula5,
-  . ~ . + f(area_sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-            constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
-)
-
 #' Model 6: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (Besag), survey x category random effects (IID)
 formula6 <- update(formula1,
@@ -274,14 +263,6 @@ formula6 <- update(formula1,
             control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
           f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
             constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
-)
-
-#' Model 6x: category random effects (IID), age x category random effects (IID),
-#' space x category random effects (Besag), survey x category random effects (IID)
-#' space x survey x category random effects (Besag x IID)
-formula6x <- update(formula6,
-  . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = sur_cat_idx,
-            control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
 #' Prior for the correlation parameter of the AR1 model together with the grouped precision parameter
@@ -309,14 +290,6 @@ formula8 <- update(formula1,
             constr = TRUE, hyper = ar1_group_prior)
 )
 
-#' Model 8x:  category random effects (IID), age x category random effects (IID),
-#' space x category random effects (IID), survey x category random effects (AR1),
-#' space x survey x category random effects (IID x AR1)
-formula8x <- update(formula8,
-  . ~ . + f(sur_idx, model = "ar1", group = area_cat_idx, control.group = list(model = "iid"),
-            constr = TRUE, hyper = ar1_group_prior)
-)
-
 #' Model 9: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (Besag), survey x category random effects (AR1)
 formula9 <- update(formula1,
@@ -327,21 +300,57 @@ formula9 <- update(formula1,
             constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
-#' Model 9x: category random effects (IID), age x category random effects (IID),
-#' space x category random effects (Besag), survey x category random effects (AR1)
-#' space x survey x category random effects (Besag x AR1)
-# formula9x <- update(
-#   formula9,
-#   . ~ . + "insert rgeneric model here"
-# )
-
 #' All of the possible models
-all_formulas <- parse(text = paste0("list(", paste0("formula", 1:9, collapse = ", "), ")")) %>% eval()
-all_models <- paste0("Model ", 1:9) %>% as.list()
+formulas <- parse(text = paste0("list(", paste0("formula", 1:9, collapse = ", "), ")")) %>% eval()
+models <- paste0("Model ", 1:9) %>% as.list()
 
-#' The subset of all possible fit in this script, as specified by model_ids
-formulas <- all_formulas[1:max_model_id]
-models <- all_models[1:max_model_id]
+#' Should the interaction models currently under development should be fit too?
+if(include_interactions) {
+
+  #' Model 5x:  category random effects (IID), age x category random effects (IID),
+  #' space x category random effects (IID), survey x category random effects (IID),
+  #' space x survey x category random effects (IID)
+  formula5x <- update(formula5,
+                      . ~ . + f(area_sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+                                constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+  )
+
+  #' Model 6x: category random effects (IID), age x category random effects (IID),
+  #' space x category random effects (Besag), survey x category random effects (IID)
+  #' space x survey x category random effects (Besag x IID)
+  formula6x <- update(formula6,
+                      . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = sur_cat_idx,
+                                control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+  )
+
+  #' Model 8x:  category random effects (IID), age x category random effects (IID),
+  #' space x category random effects (IID), survey x category random effects (AR1),
+  #' space x survey x category random effects (IID x AR1)
+  formula8x <- update(formula8,
+                      . ~ . + f(sur_idx, model = "ar1", group = area_cat_idx, control.group = list(model = "iid"),
+                                constr = TRUE, hyper = ar1_group_prior)
+  )
+
+  #' Create Besag x IID interaction adjacency matrix
+  #' Check the resulting matrix with image(interaction_adjM)
+  #' Three copies of adjM below because K = 3 (could be done better)
+  interaction_adjM <- Matrix::bdiag(adjM, adjM, adjM)
+  rownames(interaction_adjM) <- 1:nrow(interaction_adjM)
+  colnames(interaction_adjM) <- 1:ncol(interaction_adjM)
+
+  #' Model 9x: category random effects (IID), age x category random effects (IID),
+  #' space x category random effects (Besag), survey x category random effects (AR1)
+  #' space x survey x category random effects (Besag x AR1)
+  formula9x <- update(
+    formula9,
+    . ~ . + f(area_cat_idx, model = "besag", graph = interaction_adjM, scale.model = TRUE, group = sur_idx,
+              control.group = list(model = "ar1", hyper = list(rho = list(prior = "pc.cor1", param = c(0, 0.75)))),
+              constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+  )
+
+  formulas <- append(formulas, list(formula5x, formula6x, formula8x, formula9x))
+  models <- append(models, list("Model 5x", "Model 6x", "Model 8x", "Model 9x"))
+}
 
 #' Fit the models
 res <- purrr::pmap(
@@ -489,7 +498,7 @@ res_plot <- res_df %>%
     names_to = c(".value", "source"),
     names_pattern = "(.*)\\_(.*)"
   ) %>%
-  left_join(
+  left_join( #' Use this to make it an sf again
     select(areas, area_id),
     by = "area_id"
   ) %>%

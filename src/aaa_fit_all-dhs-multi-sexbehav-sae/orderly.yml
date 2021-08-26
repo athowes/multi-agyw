@@ -33,9 +33,9 @@ artefacts:
 parameters:
   iso3:
     default: ~
-  #' Specify the models to be fit
-  max_model_id:
-    default: 9
+  #' If the interaction models currently under development should be fit too
+  include_interactions:
+    default: FALSE
 
 packages:
   - dplyr
@@ -50,6 +50,7 @@ packages:
   - tidyr
   - purrr
   - stringr
+  - Matrix
 
 global_resources:
   depends/naomi3.rds: naomi3.rds
