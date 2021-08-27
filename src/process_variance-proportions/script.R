@@ -86,3 +86,13 @@ df %>%
   as_latex() %>%
   as.character() %>%
   cat(file = "variance-proportions.txt")
+
+df %>%
+  group_by(model) %>%
+  summarise(
+    cat_idx = mean(percentage_variance_cat_idx),
+    age_cat_idx = mean(percentage_variance_age_cat_idx),
+    area_idx = mean(percentage_variance_area_idx),
+    sur_idx = mean(percentage_variance_sur_idx)
+  ) %>%
+  write_csv("average-variance-proportions.csv", na = "")
