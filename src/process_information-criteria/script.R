@@ -84,7 +84,7 @@ ic_plot(df, ic = "pit")
 
 dev.off()
 
-table <- df %>%
+df <- df %>%
   mutate(
     dic = paste0(dic, " (", dic_se, ")"),
     waic = paste0(waic, " (", waic_se, ")"),
@@ -119,7 +119,40 @@ table <- df %>%
     values_from = "value"
   )
 
-gt(table, groupname_col = "iso3") %>%
+#' The column(s) which have the minimum value of the criteria
+min_idx <- df %>%
+  select(-iso3, -Criteria) %>%
+  as.matrix() %>%
+  #' Adding 2 because of the iso3 and Criteria columns
+  apply(1, FUN = function(x) {
+    cr <- sapply(x, stringr::word) %>%
+      as.numeric()
+    return(which(cr == min(cr)) + 2)
+  })
+
+#' The column(s) which have the maximum value of the criteria
+max_idx <- df %>%
+  select(-iso3, -Criteria) %>%
+  as.matrix() %>%
+  #' Adding 2 because of the iso3 and Criteria columns
+  apply(1, FUN = function(x) {
+    cr <- sapply(x, stringr::word) %>%
+      as.numeric()
+    return(which(cr == max(cr)) + 2)
+  })
+
+
+#' The column(s) which have the best value of the criteria
+#' * DIC, WAIC this is min_idx
+#' * CPO, PIT this is max_idx
+best_idx <- min_idx
+
+for(i in seq_along(df$Criteria)) {
+  if(df$Criteria[[i]] %in% c("CPO", "PIT"))
+  best_idx[[i]] <- max_idx[[i]]
+}
+
+tab <- gt(df, groupname_col = "iso3") %>%
   tab_spanner(
     label = "Model",
     columns = "1":"9"
@@ -129,7 +162,21 @@ gt(table, groupname_col = "iso3") %>%
   cols_label(
     Criteria = "",
   ) %>%
-  tab_stubhead(label = "") %>%
+  tab_stubhead(label = "")
+
+#' Adding bold for best value to the table
+for(i in seq_along(min_idx)) {
+  tab <- tab %>%
+    tab_style(
+      style = cell_text(weight = "bold"),
+      locations = cells_body(columns = best_idx[[i]], rows = i)
+    )
+}
+
+#' Printing the LaTeX to a text file
+#' At present this function is focused on the application of styles for HTML output only
+#' (as such, other output formats will ignore all tab_style() calls) :(
+tab %>%
   as_latex() %>%
   as.character() %>%
   cat(file = "all-dhs-model-comparison.txt")
