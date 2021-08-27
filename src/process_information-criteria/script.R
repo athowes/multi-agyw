@@ -84,7 +84,7 @@ ic_plot(df, ic = "pit")
 
 dev.off()
 
-df %>%
+table <- df %>%
   mutate(
     dic = paste0(dic, " (", dic_se, ")"),
     waic = paste0(waic, " (", waic_se, ")"),
@@ -110,7 +110,26 @@ df %>%
     )
   ) %>%
   rename(Model = model) %>%
-  gt(groupname_col = "iso3") %>%
+  pivot_longer(
+    cols = c("DIC", "WAIC", "CPO", "PIT"),
+    names_to = "Criteria"
+  ) %>%
+  pivot_wider(
+    names_from = "Model",
+    values_from = "value"
+  )
+
+gt(table, groupname_col = "iso3") %>%
+  tab_spanner(
+    label = "Model",
+    columns = "1":"9"
+  ) %>%
+  #' It's clear from context that these are the criteria
+  #' (such that the label is not required)
+  cols_label(
+    Criteria = "",
+  ) %>%
+  tab_stubhead(label = "") %>%
   as_latex() %>%
   as.character() %>%
   cat(file = "all-dhs-model-comparison.txt")
