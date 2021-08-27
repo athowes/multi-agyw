@@ -79,6 +79,10 @@ df %>%
   ) %>%
   gt() %>%
   fmt_number(columns = -matches("Country"), rows = everything(), decimals = 3) %>%
+  cols_align(
+    align = c("left"),
+    columns = matches("Country")
+  ) %>%
   as_latex() %>%
   as.character() %>%
   cat(file = "variance-proportions.txt")
