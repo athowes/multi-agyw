@@ -10,7 +10,8 @@ df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
 write_csv(df, "variance-proportions.csv", na = "")
 
-#' Forgot to include this, will add and delete
+#' This has been included upstream
+#' Waiting for first run through of results to delete
 if(!("iso3" %in% colnames(df))) {
   df$iso3 <- rep(iso3, each = 9)
 }

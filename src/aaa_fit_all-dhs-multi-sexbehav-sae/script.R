@@ -421,7 +421,7 @@ variance_df <- map(res_fit, function(fit)
     map_df(function(x) inla.emarginal(fun = function(y) 1/y, x)) %>%
     #' Rename Precision to variance
     rename_all(list(~ str_replace(., "Precision for ", "variance_")))
-) %>%
+  ) %>%
   bind_rows() %>%
   #' Some of the models have other hyperparameters (e.g. rho)
   select(starts_with("Variance")) %>%
@@ -435,8 +435,12 @@ variance_df <- map(res_fit, function(fit)
       .names = "{fn}_{col}"
     )
   ) %>%
-  #' Add model identifier column
-  mutate(model = paste("Model", row_number()), .before = everything())
+  #' Add model identifier and country columns
+  mutate(
+    iso3 = iso3,
+    model = paste("Model", row_number()),
+    .before = everything()
+  )
 
 write_csv(variance_df, "variance-proportions.csv", na = "")
 
