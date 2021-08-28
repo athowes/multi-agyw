@@ -54,7 +54,7 @@ df %>%
   ) %>%
   ggplot(aes(x = fct_rev(iso3), y = value, group = random_effect, fill = random_effect)) +
     geom_bar(position = "fill", stat = "identity", alpha = 0.8) +
-    scale_color_manual(values = cbpalette) +
+    scale_fill_manual(values = cbpalette) +
     theme_minimal() +
     scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
     labs(x = "", y = "Posterior variance", fill = "") +
