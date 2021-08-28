@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-orderly::orderly_develop_start("plot_age-variation")
-setwd("src/plot_age-variation")
+# orderly::orderly_develop_start("plot_age-variation")
+# setwd("src/plot_age-variation")
 
 df <- read_csv("depends/every-all-dhs-multinomial-smoothed-district-sexbehav.csv")
 
