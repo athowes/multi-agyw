@@ -2,7 +2,7 @@
 
 Code for the manuscript Howes *et al.* "A multinomial spatio-temporal model for sexual risk behaviour in adolescent girls and young women" (in preparation).
 
-New HIV infections are disproportionately common in adolescence girls and young women.
+New HIV infections are disproportionately common in adolescent girls and young women.
 Accelerating provision of HIV prevention programming in this key population is a top priority, but funding is insufficient to reach everyone ([HIV Prevention Coalition, 2020](https://hivpreventioncoalition.unaids.org/wp-content/uploads/2020/06/Decision-making-aide-AGYW-investment-Version-March-2020-Final.pdf)).
 Small-area estimation of risk group population sizes enables prioritisation of services to those at greatest risk.
 
