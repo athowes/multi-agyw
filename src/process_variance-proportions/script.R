@@ -30,6 +30,10 @@ df <- df %>%
     )
   )
 
+fct_reorg <- function(fac, ...) {
+  fct_recode(fct_relevel(fac, ...), ...)
+}
+
 #' A4 paper is 8-1/4 x 11-3/4
 #' 8-1/4 take away 1 inch margins gives 6-1/4
 pdf("variance-proportions.pdf", h = 3.5, w = 6.25)
@@ -41,24 +45,24 @@ df %>%
   select(model, iso3, starts_with("percentage_variance")) %>%
   pivot_longer(starts_with("percentage_variance"), names_to = "random_effect", names_prefix = "percentage_variance_") %>%
   mutate(
-    random_effect = fct_recode(random_effect,
+    random_effect = fct_reorg(random_effect,
       "Category" = "cat_idx",
       "Age x Category" = "age_cat_idx",
       "Area x Category" = "area_idx",
       "Survey x Category" = "sur_idx"
     )
   ) %>%
-  ggplot(aes(x = iso3, y = value, group = random_effect, fill = random_effect)) +
+  ggplot(aes(x = fct_rev(iso3), y = value, group = random_effect, fill = random_effect)) +
     geom_bar(position = "fill", stat = "identity", alpha = 0.8) +
     scale_color_manual(values = cbpalette) +
     theme_minimal() +
     scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
     labs(x = "", y = "Posterior variance", fill = "") +
+    coord_flip() +
     theme(
       plot.title = element_text(face = "bold"),
       legend.key.width = unit(2, "lines"),
-      strip.placement = "outside",
-      axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
+      strip.placement = "outside"
     )
 
 dev.off()
