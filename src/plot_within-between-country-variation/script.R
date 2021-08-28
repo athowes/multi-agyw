@@ -6,6 +6,8 @@ df <- read_csv("depends/every-all-dhs-multinomial-smoothed-district-sexbehav.csv
 
 df <- df %>%
   mutate(
+    #' Assuming the survey_id is structured as ISO2000DHS
+    year = substr(survey_id, 4, 7),
     #' Labels for plot
     age_group = fct_relevel(age_group, "Y015_024", after = 3) %>%
       fct_recode(
@@ -16,34 +18,52 @@ df <- df %>%
       ),
     indicator =
       fct_recode(indicator,
-                 "No sex (past 12 months)" = "nosex12m",
-                 "Cohabiting partner" = "sexcohab",
-                 "Nonregular partner(s) or paid\n for sex (past 12 months)" = "sexnonregplus"
-      )
+        "No sex (past 12 months)" = "nosex12m",
+        "Cohabiting partner" = "sexcohab",
+        "Nonregular partner(s)" = "sexnonregplus"
+      ),
+    iso3 = fct_recode(iso3,
+      "Cameroon" = "CMR",
+      "Kenya" = "KEN",
+      "Lesotho" = "LSO",
+      "Mozambique" = "MOZ",
+      "Malawi" = "MWI",
+      "Uganda" = "UGA",
+      "Zambia" = "ZMB",
+      "Zimbabwe" = "ZWE",
+    )
   ) %>%
   filter(
     model == "Model 9",
     age_group != "15-24",
-  )
+  ) %>%
+  #' Only the most recent survey in each year
+  group_by(iso3) %>%
+  filter(year == max(year)) %>%
+  ungroup()
 
 df_subnational <- df %>%
-  filter(!(area_id %in% c("CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")))
+  filter(!(area_id %in% c("CMR", "KEN", "LSO",
+                          "MOZ", "MWI", "NAM",
+                          "SWZ", "TZA", "UGA",
+                          "ZAF", "ZMB", "ZWE")))
 
 df_national <- setdiff(df, df_subnational)
 
-pdf("within-between-country-variation.pdf", h = 10, w = 12)
+pdf("within-between-country-variation.pdf", h = 7, w = 6.25)
 
-ggplot(df_subnational, aes(x = survey_id, y = estimate_smoothed, col = iso3)) +
-  geom_jitter(width = 0.1, alpha = 0.3, shape = 20) +
-  geom_point(data = df_national, aes(x = survey_id, y = estimate_smoothed),
-             shape = 21, fill = "white", col = "black", alpha = 0.7) +
+cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
+
+ggplot(df_subnational, aes(x = iso3, y = estimate_smoothed, col = iso3)) +
+  geom_jitter(width = 0.1, alpha = 0.6, shape = 20) +
+  geom_point(data = df_national, aes(x = iso3, y = estimate_smoothed),
+             shape = 21, size = 2, fill = "white", col = "black", alpha = 0.9) +
   facet_grid(age_group ~  indicator) +
+  scale_color_manual(values = cbpalette) +
+  scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
   coord_flip() +
-  labs(x = "Country", y = "Posterior mean proportion by region") +
-  theme(
-    plot.title = element_text(face = "bold"),
-    legend.position = "bottom",
-    legend.key.width = unit(4, "lines"),
-  )
+  labs(x = "", y = "Proportion") +
+  theme_minimal() +
+  theme(legend.position = "none")
 
 dev.off()
