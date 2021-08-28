@@ -38,9 +38,6 @@ ggplot(df_age_country, aes(x = age_group, y = estimate_smoothed, group = indicat
   scale_color_manual(values = cbpalette) +
   theme_minimal() +
   scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
-  labs(x = "Age group", y = "Proportion", col = "Category") +
-  theme(
-    legend.position = "bottom"
-  )
+  labs(x = "Age group", y = "Proportion", col = "Category")
 
 dev.off()
