@@ -64,6 +64,9 @@ ggplot(df_subnational, aes(x = iso3, y = estimate_smoothed, col = iso3)) +
   coord_flip() +
   labs(x = "", y = "Proportion") +
   theme_minimal() +
-  theme(legend.position = "none")
+  theme(
+    panel.spacing = unit(1.5, "lines"),
+    legend.position = "none"
+  )
 
 dev.off()
