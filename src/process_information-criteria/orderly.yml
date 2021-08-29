@@ -9,6 +9,7 @@ artefacts:
         - all-dhs-model-comparison.csv
         - all-dhs-modelcomparison.txt
         - all-dhs-dic-model-comparison.pdf
+        - all-dhs-waic-model-comparison.pdf
         - all-dhs-cpo-model-comparison.pdf
         - all-dhs-pit-model-comparison.pdf
 

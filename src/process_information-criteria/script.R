@@ -17,11 +17,22 @@ ic_plot <- function(df, ic = "dic") {
     # #' Could clean the DIC for infeasible values here
     # mutate(dic = ifelse(abs(dic) > 10^5, NA, dic)) %>%
     #' Set names for plotting
-    mutate(model = fct_recode(model,
-      "1" = "Model 1: Constant", "2" = "Model 2: IID", "3" = "Model 3: BYM2",
-      "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
-      "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
-      "7" = "Model 7", "8" = "Model 8", "9" = "Model 9")
+    mutate(
+      model = fct_recode(model,
+        "1" = "Model 1: Constant", "2" = "Model 2: IID", "3" = "Model 3: BYM2",
+        "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
+        "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
+        "7" = "Model 7", "8" = "Model 8", "9" = "Model 9"),
+      iso3 = fct_recode(iso3,
+        "Cameroon" = "CMR",
+        "Kenya" = "KEN",
+        "Lesotho" = "LSO",
+        "Mozambique" = "MOZ",
+        "Malawi" = "MWI",
+        "Uganda" = "UGA",
+        "Zambia" = "ZMB",
+        "Zimbabwe" = "ZWE",
+      )
     ) %>%
     group_by(iso3) %>%
     #' Add best performing model indicator (minimum and maximum)
@@ -34,18 +45,19 @@ ic_plot <- function(df, ic = "dic") {
                y = !!sym(ic),
                ymin = !!sym(ic) - 1.96 * !!sym(paste0(ic, "_se")),
                ymax = !!sym(ic) + 1.96 * !!sym(paste0(ic, "_se")),
-               col = best_idx)) +
+               col = best_idx,
+               shape = best_idx)) +
       geom_pointrange(alpha = 0.7) +
       facet_wrap(~iso3, scales = "free") +
       scale_color_manual(values = c("black", "#E69F00")) +
+      scale_shape_manual(values = c(16, 15)) +
       labs(x = "", y = paste0(toupper(ic)),
            title = paste0(toupper(ic), " results for the models in ", length(iso3), " countries"),
            subtitle = "Missing entries indicate that the value returned was NA.",
-           col = "Amongst best model(s)") +
+           col = "Best model(s)") +
       theme_minimal() +
       theme(
         strip.text = element_text(face = "bold"),
-        plot.title = element_text(face = "bold"),
         legend.position = "bottom",
         legend.key.width = unit(4, "lines")
       )
@@ -66,24 +78,35 @@ df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
 write_csv(df, "all-dhs-model-comparison.csv", na = "")
 
+#' DIC plot
 pdf("all-dhs-dic-model-comparison.pdf", h = 5, w = 8.5)
 
 ic_plot(df, ic = "dic")
 
 dev.off()
 
+#' WAIC plot
+pdf("all-dhs-waic-model-comparison.pdf", h = 5, w = 8.5)
+
+ic_plot(df, ic = "waic")
+
+dev.off()
+
+#' CPO plot
 pdf("all-dhs-cpo-model-comparison.pdf", h = 5, w = 8.5)
 
 ic_plot(df, ic = "cpo")
 
 dev.off()
 
+#' PIT plot
 pdf("all-dhs-pit-model-comparison.pdf", h = 5, w = 8.5)
 
 ic_plot(df, ic = "pit")
 
 dev.off()
 
+#' Create tables to output to LaTeX
 df <- df %>%
   mutate(
     dic = paste0(dic, " (", dic_se, ")"),
@@ -173,7 +196,7 @@ for(i in seq_along(min_idx)) {
     )
 }
 
-#' Printing the LaTeX to a text file
+#' Printing to a text file
 #' At present this function is focused on the application of styles for HTML output only
 #' (as such, other output formats will ignore all tab_style() calls) :(
 tab %>%
