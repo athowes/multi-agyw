@@ -12,6 +12,7 @@ artefacts:
         - all-dhs-waic-model-comparison.pdf
         - all-dhs-cpo-model-comparison.pdf
         - all-dhs-pit-model-comparison.pdf
+        - all-dhs-rank-comparison.pdf
 
 packages:
   - dplyr

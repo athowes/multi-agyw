@@ -53,13 +53,11 @@ ic_plot <- function(df, ic = "dic") {
       scale_shape_manual(values = c(16, 15)) +
       labs(x = "", y = paste0(toupper(ic)),
            title = paste0(toupper(ic), " results for the models in ", length(iso3), " countries"),
-           subtitle = "Missing entries indicate that the value returned was NA.",
-           col = "Best model(s)") +
+           subtitle = "Missing entries indicate that the value returned was NA.") +
       theme_minimal() +
       theme(
-        strip.text = element_text(face = "bold"),
-        legend.position = "bottom",
-        legend.key.width = unit(4, "lines")
+        panel.spacing = unit(1.5, "lines"),
+        legend.position = "none"
       )
 }
 
@@ -79,28 +77,28 @@ df <- bind_rows(lapply(files, function(file) read_csv(file)))
 write_csv(df, "all-dhs-model-comparison.csv", na = "")
 
 #' DIC plot
-pdf("all-dhs-dic-model-comparison.pdf", h = 5, w = 8.5)
+pdf("all-dhs-dic-model-comparison.pdf", h = 3.5, w = 6.25)
 
 ic_plot(df, ic = "dic")
 
 dev.off()
 
 #' WAIC plot
-pdf("all-dhs-waic-model-comparison.pdf", h = 5, w = 8.5)
+pdf("all-dhs-waic-model-comparison.pdf", h = 3.5, w = 6.25)
 
 ic_plot(df, ic = "waic")
 
 dev.off()
 
 #' CPO plot
-pdf("all-dhs-cpo-model-comparison.pdf", h = 5, w = 8.5)
+pdf("all-dhs-cpo-model-comparison.pdf", h = 3.5, w = 6.25)
 
 ic_plot(df, ic = "cpo")
 
 dev.off()
 
 #' PIT plot
-pdf("all-dhs-pit-model-comparison.pdf", h = 5, w = 8.5)
+pdf("all-dhs-pit-model-comparison.pdf", h = 3.5, w = 6.25)
 
 ic_plot(df, ic = "pit")
 
@@ -203,3 +201,55 @@ tab %>%
   as_latex() %>%
   as.character() %>%
   cat(file = "all-dhs-model-comparison.txt")
+
+#' Looking at the ranks
+pdf("all-dhs-rank-comparison.pdf", h = 3.5, w = 6.25)
+
+df %>%
+  group_by(iso3) %>%
+  mutate(
+    dic_rank = rank(dic),
+    waic_rank = rank(waic),
+    #' Negative because we want desc = TRUE
+    cpo_rank = rank(-cpo),
+    pit_rank = rank(-pit)
+  ) %>%
+  ungroup() %>%
+  group_by(model) %>%
+  summarise(
+    mean_dic_rank = mean(dic_rank),
+    mean_waic_rank = mean(waic_rank),
+    mean_cpo_rank = mean(cpo_rank),
+    mean_pit_rank = mean(pit_rank)
+  ) %>%
+  ungroup() %>%
+  pivot_longer(!model, names_to = "metric", values_to = "rank") %>%
+  group_by(metric) %>%
+  mutate(
+    best_idx = (min(rank, na.rm = TRUE) == rank)
+  ) %>%
+  mutate(
+    model = fct_recode(model,
+      "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
+      "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
+      "7" = "Model 7", "8" = "Model 8", "9" = "Model 9"),
+    metric = fct_recode(metric,
+      "DIC" = "mean_dic_rank",
+      "WAIC" = "mean_waic_rank",
+      "CPO" = "mean_cpo_rank",
+      "PIT" = "mean_pit_rank"
+    )
+  ) %>%
+  ggplot(aes(x = model, y = rank, col = best_idx, shape = best_idx)) +
+    facet_wrap(~metric) +
+    geom_point() +
+    scale_color_manual(values = c("black", "#E69F00")) +
+    scale_shape_manual(values = c(16, 15)) +
+    labs(x = "Model", y = "Average rank") +
+    theme_minimal() +
+    theme(
+      panel.spacing = unit(1.5, "lines"),
+      legend.position = "none"
+    )
+
+dev.off()
