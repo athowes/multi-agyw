@@ -104,6 +104,58 @@ ic_plot(df, ic = "pit")
 
 dev.off()
 
+#' Looking at the ranks
+pdf("all-dhs-rank-comparison.pdf", h = 3.5, w = 6.25)
+
+df %>%
+  group_by(iso3) %>%
+  mutate(
+    dic_rank = rank(dic),
+    waic_rank = rank(waic),
+    #' Negative because we want desc = TRUE
+    cpo_rank = rank(-cpo),
+    pit_rank = rank(-pit)
+  ) %>%
+  ungroup() %>%
+  group_by(model) %>%
+  summarise(
+    mean_dic_rank = mean(dic_rank),
+    mean_waic_rank = mean(waic_rank),
+    mean_cpo_rank = mean(cpo_rank),
+    mean_pit_rank = mean(pit_rank)
+  ) %>%
+  ungroup() %>%
+  pivot_longer(!model, names_to = "metric", values_to = "rank") %>%
+  group_by(metric) %>%
+  mutate(
+    best_idx = (min(rank, na.rm = TRUE) == rank)
+  ) %>%
+  mutate(
+    model = fct_recode(model,
+                       "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
+                       "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
+                       "7" = "Model 7", "8" = "Model 8", "9" = "Model 9"),
+    metric = fct_recode(metric,
+                        "DIC" = "mean_dic_rank",
+                        "WAIC" = "mean_waic_rank",
+                        "CPO" = "mean_cpo_rank",
+                        "PIT" = "mean_pit_rank"
+    )
+  ) %>%
+  ggplot(aes(x = model, y = rank, col = best_idx, shape = best_idx)) +
+  facet_wrap(~metric) +
+  geom_point() +
+  scale_color_manual(values = c("black", "#E69F00")) +
+  scale_shape_manual(values = c(16, 15)) +
+  labs(x = "Model", y = "Average rank") +
+  theme_minimal() +
+  theme(
+    panel.spacing = unit(1.5, "lines"),
+    legend.position = "none"
+  )
+
+dev.off()
+
 #' Create tables to output to LaTeX
 df <- df %>%
   mutate(
@@ -201,55 +253,3 @@ tab %>%
   as_latex() %>%
   as.character() %>%
   cat(file = "all-dhs-model-comparison.txt")
-
-#' Looking at the ranks
-pdf("all-dhs-rank-comparison.pdf", h = 3.5, w = 6.25)
-
-df %>%
-  group_by(iso3) %>%
-  mutate(
-    dic_rank = rank(dic),
-    waic_rank = rank(waic),
-    #' Negative because we want desc = TRUE
-    cpo_rank = rank(-cpo),
-    pit_rank = rank(-pit)
-  ) %>%
-  ungroup() %>%
-  group_by(model) %>%
-  summarise(
-    mean_dic_rank = mean(dic_rank),
-    mean_waic_rank = mean(waic_rank),
-    mean_cpo_rank = mean(cpo_rank),
-    mean_pit_rank = mean(pit_rank)
-  ) %>%
-  ungroup() %>%
-  pivot_longer(!model, names_to = "metric", values_to = "rank") %>%
-  group_by(metric) %>%
-  mutate(
-    best_idx = (min(rank, na.rm = TRUE) == rank)
-  ) %>%
-  mutate(
-    model = fct_recode(model,
-      "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
-      "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
-      "7" = "Model 7", "8" = "Model 8", "9" = "Model 9"),
-    metric = fct_recode(metric,
-      "DIC" = "mean_dic_rank",
-      "WAIC" = "mean_waic_rank",
-      "CPO" = "mean_cpo_rank",
-      "PIT" = "mean_pit_rank"
-    )
-  ) %>%
-  ggplot(aes(x = model, y = rank, col = best_idx, shape = best_idx)) +
-    facet_wrap(~metric) +
-    geom_point() +
-    scale_color_manual(values = c("black", "#E69F00")) +
-    scale_shape_manual(values = c(16, 15)) +
-    labs(x = "Model", y = "Average rank") +
-    theme_minimal() +
-    theme(
-      panel.spacing = unit(1.5, "lines"),
-      legend.position = "none"
-    )
-
-dev.off()
