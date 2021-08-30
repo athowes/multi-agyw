@@ -22,20 +22,37 @@ df <- survey_sexbehav %>%
 #' Save as useful for future models
 write_csv(df, "sexpaid-survey-question.csv", na = "")
 
-pdf("sexpaid-survey-question.pdf", h = 5, w = 7.5)
+#' V791A indicates whether the woman had received (or given) money or gifts in exchange
+#' for sexual intercourse in the past year. For surveys without V791A, V767A-C, describing
+#' the most recent three partners are used instead.
+pdf("sexpaid-survey-question.pdf", h = 3, w = 6.25)
 
-ggplot(df, aes(x = year, y = iso3, col = factor(giftsvar))) +
-  geom_point(size = 2) +
-  labs(x = "Year of survey", y = "Country", col = "Includes V7191A?",
-       subtitle = "V791A indicates whether the woman had received (or given)\nmoney or gifts in exchange for sexual intercourse in the past year.\nFor surveys without V791A, V767A-C, describing the most recent\nthree partners are used instead.",
-       title = "The survey question V791A is rarely asked!") +
-  scale_color_manual(values = c("#D3D3D3", "#00855A")) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
-    plot.title = element_text(face = "bold"),
-    legend.position = "bottom",
-    legend.key.width = unit(4, "lines")
-  )
+df %>%
+  mutate(
+    iso3 = fct_recode(iso3,
+      "Cameroon" = "CMR",
+      "Kenya" = "KEN",
+      "Lesotho" = "LSO",
+      "Mozambique" = "MOZ",
+      "Malawi" = "MWI",
+      "Namibia" = "NAM",
+      "Swaziland" = "SWZ",
+      "Tanzania" = "TZA",
+      "South Africa" = "ZAF",
+      "Uganda" = "UGA",
+      "Zambia" = "ZMB",
+      "Zimbabwe" = "ZWE",
+    )
+  ) %>%
+  ggplot(aes(x = year, y = fct_rev(iso3), col = ifelse(giftsvar, "Yes", "No"))) +
+    geom_point(size = 2) +
+    labs(x = "", y = "", col = "Includes V7191A?") +
+    scale_color_manual(values = c("#D3D3D3", "#00855A")) +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+      plot.title = element_text(face = "bold"),
+      legend.key.width = unit(4, "lines")
+    )
 
 dev.off()
