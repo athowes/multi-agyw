@@ -7,7 +7,7 @@ Accelerating provision of HIV prevention programming in this key population is a
 Small-area estimation of risk group population sizes enables prioritisation of services to those at greatest risk.
 
 We fit multinomial logistic regressions to priority countries using the package [`R-INLA`](https://www.r-inla.org/).
-To enable inference the INLA latent Gaussian framework, each model is reformulated as an equivalent Poisson log linear model using the Poisson-Multinomial transformation [(Baker, 1994)](https://www.jstor.org/stable/2348134?seq=1#metadata_info_tab_contents).
+To enable inference with the `R-INLA` package, each model is reformulated as an equivalent Poisson log linear model using the multinomial-Poisson transformation [(Baker, 1994)](https://www.jstor.org/stable/2348134?seq=1#metadata_info_tab_contents).
 
 ## `orderly`
 
