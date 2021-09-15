@@ -12,3 +12,6 @@ orderly::orderly_commit(id)
 
 id <- orderly::orderly_run("plot_within-between-country-variation")
 orderly::orderly_commit(id)
+
+id <- orderly::orderly_run("plot_age-variation")
+orderly::orderly_commit(id)
