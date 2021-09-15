@@ -10,7 +10,7 @@ df <- df %>%
   filter(
     survey_id == "MWI2015DHS",
     age_group == "Y020_024",
-    model == "Model 9",
+    model == "Model 6",
     area_name != "Malawi",
   ) %>%
   mutate(

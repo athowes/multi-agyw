@@ -41,7 +41,7 @@ pdf("variance-proportions.pdf", h = 3.5, w = 6.25)
 cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
 
 df %>%
-  filter(model == "Model 9") %>%
+  filter(model == "Model 6") %>%
   select(model, iso3, starts_with("percentage_variance")) %>%
   pivot_longer(starts_with("percentage_variance"), names_to = "random_effect", names_prefix = "percentage_variance_") %>%
   mutate(
@@ -69,7 +69,7 @@ dev.off()
 
 df %>%
   filter(
-    model == "Model 9",
+    model == "Model 6",
     iso3 %in% iso3
   ) %>%
   select(iso3, starts_with("percentage_variance")) %>%

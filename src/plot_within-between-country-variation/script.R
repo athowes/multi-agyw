@@ -34,7 +34,7 @@ df <- df %>%
     )
   ) %>%
   filter(
-    model == "Model 9",
+    model == "Model 6",
     age_group != "15-24",
   ) %>%
   #' Only the most recent survey in each year
