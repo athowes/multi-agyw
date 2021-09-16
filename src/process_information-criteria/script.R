@@ -107,6 +107,8 @@ dev.off()
 #' Looking at the ranks
 pdf("all-dhs-rank-comparison.pdf", h = 3.5, w = 6.25)
 
+cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
+
 df %>%
   group_by(iso3) %>%
   mutate(
@@ -142,16 +144,17 @@ df %>%
                         "PIT" = "mean_pit_rank"
     )
   ) %>%
-  ggplot(aes(x = model, y = rank, col = best_idx, shape = best_idx)) +
-  facet_wrap(~metric) +
-  geom_point() +
-  scale_color_manual(values = c("black", "#E69F00")) +
-  scale_shape_manual(values = c(16, 15)) +
-  labs(x = "Model", y = "Average rank") +
+  ggplot(aes(x = model, y = rank, fill = metric, group = metric, col = best_idx)) +
+  # facet_wrap(~metric) +
+  geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
+  scale_fill_manual(values = cbpalette) +
+  scale_color_manual(values = c(NA, "black")) +
+  labs(x = "Model", y = "Average rank", fill = "Metric") +
+  coord_cartesian(ylim = c(1, 9)) +
+  guides(color = FALSE) +
   theme_minimal() +
   theme(
-    panel.spacing = unit(1.5, "lines"),
-    legend.position = "none"
+    panel.spacing = unit(1.5, "lines")
   )
 
 dev.off()
