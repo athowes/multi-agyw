@@ -7,6 +7,9 @@ orderly::orderly_commit(id)
 id <- orderly::orderly_run("process_variance-proportions")
 orderly::orderly_commit(id)
 
+id <- orderly::orderly_run("process_coverage")
+orderly::orderly_commit(id)
+
 id <- orderly::orderly_run("plot_temporal-variation")
 orderly::orderly_commit(id)
 
