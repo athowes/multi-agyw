@@ -2,9 +2,9 @@ script: script.R
 
 artefacts:
   - data:
-      description: Coverage
+      description: Coverage summary plots
       filenames:
-        - coverage-histograms.pdf
+        - coverage.pdf
 
 packages:
   - dplyr
