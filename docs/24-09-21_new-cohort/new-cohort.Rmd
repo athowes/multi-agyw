@@ -1,0 +1,75 @@
+---
+title: "Spatio-temporal statistics for HIV surveillance"
+author: "Adam Howes"
+date: "August 2021"
+output:
+  beamer_presentation:
+    latex_engine: pdflatex
+    highlight: haddock
+    fig_width: 7
+    fig_height: 3
+    includes:
+      in_header: preamble.tex
+  slidy_presentation:
+    highlight: haddock
+subtitle: StatML Kick-off Camp
+bibliography: citations.bib
+institute: Imperial College London
+---
+
+## Welcome!
+
+* Welcome to the CDT!
+* Congratulations for many of you on completing your previous studies under some non-ideal circumstances
+
+## About me / my project
+
+* Surveillance of HIV in sub-Saharan Africa in collaboration with UNAIDS
+* Main interest is in methods and applications of Bayesian statistics towards policy-relevant questions
+
+## Spatio-temporal
+
+* Observations are indexed by space $s$ and time $t$
+* For example, often we have a sequence of national surveys
+* In social science it's natural that we observe people in space and time
+* Key property of spatio-temporal data is correlation structure
+
+## Bayesian statistics
+
+* Bayesian statistics makes sense to me
+* Perhaps more importantly, there isn't a lot to remember
+  1. Write down a model for your process
+  2. Some kind of algorithm to obtain the posterior
+  3. Use the posterior for all decision theory
+
+## Data and theory
+
+* The data we work with is incomplete, biased, noisy
+* Mainly concerned with getting roughly the right answer
+* Happy to use informative priors or scientific knowledge of domain experts to help
+
+## 1. Size of the sample
+
+* Running a (household) survey is expensive
+* We only get small-sample sizes, and a low coverage of space-time
+* The field of "small-area" estimation should really be called "small-data" estimation
+* We use the fact that spatio-temporal data is correlated to improve things with smoothing
+
+## 2. Who is in the sample?
+
+* The sample probably often isn't representative 
+* Some people aren't on the sampling frame at all
+* Example: for HIV, there are some key population groups (men who have sex with men, transgender people, injecting drug users, sex workers) who are hard to reach with surveys
+
+## 3. Are the answers they give accurate?
+
+* Survey questions can be ambiguous
+* People may not be able to or want to answer questions
+* Example: age at first sex is an important epidemiological parameter, but men and women (and old and young) give answers which are difficult to make line up
+
+## Sexual risk categories model
+
+* Some work in progress of mine, hopefully will make the above more concrete
+* Young women are an important population for HIV prevention
+
+## References {.allowframebreaks}
