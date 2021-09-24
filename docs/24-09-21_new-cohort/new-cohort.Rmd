@@ -1,5 +1,5 @@
 ---
-title: "Spatio-temporal statistics for HIV surveillance"
+title: "Statistics for HIV surveillance"
 author: "Adam Howes"
 date: "August 2021"
 output:
@@ -21,6 +21,9 @@ institute: Imperial College London
 
 * Welcome to the CDT!
 * Congratulations for many of you on completing your previous studies under some non-ideal circumstances
+* PhDs can be challenging, learning process
+    * I hope I'm a better researcher than I was two years ago
+* Important to find the right work environment, draw on each other
 
 ## About me / my project
 
@@ -69,7 +72,73 @@ institute: Imperial College London
 
 ## Sexual risk categories model
 
-* Some work in progress of mine, hopefully will make the above more concrete
+* Some work in progress of mine, to hopefully make the above concrete!
 * Young women are an important population for HIV prevention
+    * 10% of the population and 25% of all new infections [@unaids2021update]
+* Not enough resources to provide programs for all young women in high prevalence settings $\implies$ standardised method for accessing population at risk required
+
+##
+
+\begin{table}
+\centering
+\begin{tabularx}{\textwidth}{lll}
+\toprule
+Category & HIV related risk & HIV risk ratio \\ 
+ \midrule
+None & Not sexually active & 0 \\
+Low & Sexually active, one cohabiting partner & 1 \\
+High & Non-regular sexual partner(s) & 1.72 \\
+Very high & Young women from key populations & 13 \\
+\bottomrule
+\end{tabularx}
+\caption{HIV risk categories and risk ratios.}
+\end{table}
+
+## Goal
+
+* Estimate proportion of young women in each risk category
+  * Districts $i = 1, \ldots, n$ in 13 AGYW Global Fund priority countries
+  * Survey $t = 1, \ldots, T$
+  * Age $a \in \{\text{15--19}, \text{20--24}, \text{25--29}\}$
+* e.g. in Lilongwe (Malawi), in 2015, how many AGYW aged 20-24 are cohabiting with a single partner?
+
+## Spatial random effects
+
+* Tried none, IID and the Besag model (most common structured spatial random effect model)
+
+$$
+b_i \, | \, \mathbf{b}_{-i} \sim \mathcal{N} \left(\frac{\sum_{j: j \sim i} b_j}{n_{\delta i}}, \frac{1}{n_{\delta i}}\right),
+$$
+
+## Temporal random effects
+
+* Tried none, IID and an AR1 model (most common structured spatial random effect model)
+
+\begin{align*}
+a_1 &\sim \left( 0, \frac{1}{1 - \rho^2} \right), \\
+a_t &= \rho a_{t - 1} + \epsilon_t, \quad t = 2, \ldots, T, 
+\end{align*}
+
+##
+
+\begin{table}[htb]
+\centering
+\begin{tabularx}{\textwidth}{llllllllll}
+Model ID & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\ 
+\midrule
+Spatial structure & S1 & S2 & S3 & S1 & S2 & S3 & S1 & S2 & S3 \\
+\midrule
+Temporal structure & T1 & T1 & T1 & T2 & T2 & T2 & T3 & T3 & T3 \\
+\end{tabularx}
+\caption{All of the models considered}
+\label{tab:models}
+\end{table}
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("../../archive/process_information-criteria/20210916-133107-9c7e6acd/all-dhs-rank-comparison.pdf")
+```
+
 
 ## References {.allowframebreaks}
