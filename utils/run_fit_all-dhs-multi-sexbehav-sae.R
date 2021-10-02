@@ -1,8 +1,8 @@
 #' Run fit_all-dhs-multi-sexbehav-sae in bulk
 
-iso3_vec <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+iso3_vec <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 
-params <- data.frame(iso3 = iso3_vec)
+params <- data.frame(iso3 = iso3_vec, include_interactions = TRUE)
 ids <- orderly::orderly_batch("aaa_fit_all-dhs-multi-sexbehav-sae", params)
 
 recent_ids <- sapply(
@@ -24,7 +24,3 @@ archived_recent_ids <- sapply(
     orderly::orderly_search(query = paste0("latest(parameter:iso3 == '", iso3, "')"), "aaa_fit_all-dhs-multi-sexbehav-sae")
   }
 )
-
-#' Run processing
-id <- orderly::orderly_run("process_multinomial-smoothed-district-sexbehav")
-orderly::orderly_commit(id)
