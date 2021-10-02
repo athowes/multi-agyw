@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("aaa_fit_all-dhs-multi-sexbehav-sae", parameters = list(iso3 = "MWI"))
+# orderly::orderly_develop_start("aaa_fit_all-dhs-multi-sexbehav-sae", parameters = list(iso3 = "MWI", include_interactions = TRUE))
 # setwd("src/aaa_fit_all-dhs-multi-sexbehav-sae")
 
 analysis_level <- c("BWA" = 2,
@@ -143,12 +143,14 @@ df <- df %>%
     #' Doing this because want Y015_024 to have ID 4 rather than 2 as it would be otherwise
     age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
     cat_idx = to_int(indicator),
-    sur_cat_idx = interaction(sur_idx, cat_idx),
-    age_cat_idx = interaction(age_idx, cat_idx),
+    sur_cat_idx = to_int(interaction(sur_idx, cat_idx)),
+    age_cat_idx = to_int(interaction(age_idx, cat_idx)),
     area_cat_idx = to_int(interaction(area_idx, cat_idx)),
     area_sur_idx = interaction(area_idx, sur_idx),
     #' Is the best way to add obs_idx? Perhaps can be added earlier in the pipeline
-    obs_idx = to_int(interaction(age_idx, area_idx, sur_idx))
+    obs_idx = to_int(interaction(age_idx, area_idx, sur_idx)),
+    area_idx_copy = area_idx,
+    sur_idx_copy = sur_idx
   ) %>%
   arrange(obs_idx)
 
@@ -327,7 +329,7 @@ if(include_interactions & include_temporal) {
   #' space x category random effects (Besag), survey x category random effects (IID)
   #' space x survey x category random effects (Besag x IID)
   formula6x <- update(formula6,
-                      . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = sur_cat_idx,
+                      . ~ . + f(area_idx_copy, model = "besag", graph = adjM, scale.model = TRUE, group = sur_cat_idx,
                                 control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
@@ -335,7 +337,7 @@ if(include_interactions & include_temporal) {
   #' space x category random effects (IID), survey x category random effects (AR1),
   #' space x survey x category random effects (IID x AR1)
   formula8x <- update(formula8,
-                      . ~ . + f(sur_idx, model = "ar1", group = area_cat_idx, control.group = list(model = "iid"),
+                      . ~ . + f(sur_idx_copy, model = "ar1", group = area_cat_idx, control.group = list(model = "iid"),
                                 constr = TRUE, hyper = ar1_group_prior)
   )
 
