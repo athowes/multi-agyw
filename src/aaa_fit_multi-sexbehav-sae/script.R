@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "MWI", max_model_id = 3))
+# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "MWI"))
 # setwd("src/aaa_fit_multi-sexbehav-sae")
 
 analysis_level <- c("BWA" = 2,
@@ -45,7 +45,7 @@ ind <- ind %>%
   filter(survey_id == max(ind$survey_id))
 
 #' Append an indicator for 1 - sex12m
-#' This earlier in the pipeline with a mutate call, e.g. modify naomi.utils
+#' This could be earlier in the pipeline with a mutate call, e.g. modify naomi.utils
 #' Though it's probably not necessary and this works OK seeing as it's not so
 #' difficult to calculate the standard errors for 1 - existing_indicator
 ind <- dplyr::bind_rows(
@@ -78,6 +78,7 @@ ind <- ind %>%
 areas <- select(areas, area_id, area_name, area_level, area_level_label,
                 parent_area_id, area_sort_order, center_x, center_y)
 
+#' Areas at the level of analysis
 areas_model <- areas %>%
   filter(area_level == analysis_level) %>%
   #' Add area_id for admin1 observation
@@ -93,6 +94,14 @@ areas_model <- areas %>%
   arrange(area_sort_order) %>%
   mutate(area_idx = row_number())
 
+#' Country level area (not to be included in model)
+country <- areas %>%
+  filter(area_level == 0) %>%
+  mutate(
+    area_idx = NA,
+    area_id_aggr = NA
+  )
+
 #' Create adjacency matrix for INLA
 adjM <- spdep::poly2nb(areas_model)
 adjM <- spdep::nb2mat(adjM, style = "B", zero.policy = TRUE)
@@ -100,11 +109,13 @@ colnames(adjM) <- rownames(adjM)
 
 #' Create the scaffolding for the estimates
 df <- crossing(
-  #' Using nosex12m rather than e.g. nosex
+  #' In this model we use all of the four risk categories
+  #' Use nosex12m rather than e.g. nosex
   indicator = c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m"),
-  #' The three age groups plus intended aggregate
+  #' Three age groups, plus aggregate category
   age_group = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"),
-  areas_model %>%
+  #' Both the areas in the model and the aggregate country
+  bind_rows(areas_model, country) %>%
     st_drop_geometry() %>%
     select(area_id, area_name, area_idx, area_id_aggr,
            area_sort_order, center_x, center_y)
@@ -134,8 +145,8 @@ df <- df %>%
     cat_idx = to_int(indicator),
     #' Doing this because want Y015_024 to have ID 4 rather than 2 as it would be otherwise
     age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
-    age_cat_idx = interaction(age_idx, cat_idx),
-    area_cat_idx = interaction(area_idx, cat_idx),
+    age_cat_idx = to_int(interaction(age_idx, cat_idx)),
+    area_cat_idx = to_int(interaction(area_idx, cat_idx)),
     #' Is the best way to do it for obs_idx? Perhaps can be added earlier in the pipeline
     obs_idx = to_int(interaction(age_idx, area_idx))
   ) %>%
@@ -166,7 +177,7 @@ df <- df %>%
       #' Rename to match df, allowing join
       mutate(
         age_group = fct_recode(age_group, "Y015_019" = "15-19", "Y020_024" = "20-24",
-          "Y025_029" = "25-29", "Y015-024" = "15-24")
+                               "Y025_029" = "25-29", "Y015-024" = "15-24")
       ),
     by = c("age_group", "area_name")
   )
@@ -174,10 +185,10 @@ df <- df %>%
 #' Data for the model (df) doesn't include the aggregates (since this is using data twice)
 #' So we save them off separately
 df_agg <- df %>%
-  filter(age_group == "Y015_024")
+  filter(age_group == "Y015_024" | area_id == toupper(iso3))
 
-df <- df %>%
-  filter(age_group %in% c("Y015_019", "Y020_024", "Y025_029"))
+#' The rows of df to be included in the model
+df_model <- setdiff(df, df_agg)
 
 #' Specify the models to be fit
 
@@ -200,27 +211,22 @@ formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) 
 
 #' Model 2: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (IID)
-formula2 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-  f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+formula2 <- update(formula1,
+                   . ~ . + f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+                             constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
 
 #' Model 3: category random effects (IID), age x category random effects (IID),
-#' space x category random effects (BYM2)
-formula3 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-  f(area_idx, model = "besag", graph = adjM, group = cat_idx, scale.model = TRUE,
-    control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+#' space x category random effects (Besag)
+formula3 <- update(formula1,
+                   . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
+                             control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
 
 #' All of the possible models
-all_formulas <- parse(text = paste0("list(", paste0("formula", 1:3, collapse = ", "), ")")) %>% eval()
-all_models <- list("Model 1: Constant", "Model 2: IID", "Model 3: BYM2")
-
-#' The subset of all possible fit in this script, as specified by model_ids
-formulas <- all_formulas[1:max_model_id]
-models <- all_models[1:max_model_id]
+#' parse(text = paste0("list(", paste0("formula", 1:3, collapse = ", "), ")")) %>% eval()
+formulas <- list(formula1, formula2, formula3)
+models <- list("Model 1", "Model 2", "Model 3")
 
 #' Fit the models
 res <- purrr::pmap(
@@ -249,42 +255,102 @@ res_df <- bind_cols(
     bind_rows() %>%
     #' Being safe here and explictly adding the NA entires for df_agg
     bind_rows(data.frame(
-      local_dic = rep(NA, max_model_id * nrow(df_agg)),
-      local_waic = rep(NA, max_model_id * nrow(df_agg)),
-      local_cpo = rep(NA, max_model_id * nrow(df_agg)),
-      local_pit = rep(NA, max_model_id * nrow(df_agg))
+      local_dic = rep(NA, length(models) * nrow(df_agg)),
+      local_waic = rep(NA, length(models) * nrow(df_agg)),
+      local_cpo = rep(NA, length(models) * nrow(df_agg)),
+      local_pit = rep(NA, length(models) * nrow(df_agg))
     ))
 )
 
-#' Checking sample size recovery
+#' Artefact: Model selection information criteria for multinomial models
+#' Some of the entries might be NA where there is missing data (INLA ignores these in its calculations)
+ic_df <- sapply(res_fit, function(fit) {
+  local_dic <- na.omit(fit$dic$local.dic)
+  local_waic <- na.omit(fit$waic$local.waic)
+  local_cpo <- na.omit(fit$cpo$cpo)
+  local_pit <- na.omit(fit$cpo$pit)
 
-pdf("sample-size-recovery.pdf", h = 5, w = 8.5)
+  c("dic" = sum(local_dic),
+    "dic_se" = stats::sd(local_dic) * sqrt(length(local_dic)),
+    "waic" = sum(local_waic),
+    "waic_se" = stats::sd(local_waic) * sqrt(length(local_waic)),
+    "cpo" = sum(local_cpo),
+    "cpo_se" = stats::sd(local_cpo) * sqrt(length(local_cpo)),
+    "pit" = sum(local_pit),
+    "pit_se" = stats::sd(local_pit) * sqrt(length(local_pit)))
+}) %>%
+  t() %>%
+  round() %>%
+  as.data.frame() %>%
+  mutate(
+    iso3 = iso3,
+    model = unlist(models),
+    .before = dic
+  )
+
+write_csv(ic_df, "information-criteria.csv", na = "")
+
+#' Artefact: Random effect variance parameter posterior means
+variance_df <- map(res_fit, function(fit)
+  fit$marginals.hyperpar %>%
+    #' Calculate the expectation of the variance
+    map_df(function(x) inla.emarginal(fun = function(y) 1/y, x)) %>%
+    #' Rename Precision to variance
+    rename_all(list(~ str_replace(., "Precision for ", "variance_")))
+) %>%
+  bind_rows() %>%
+  #' Some of the models have other hyperparameters (e.g. rho)
+  select(starts_with("Variance")) %>%
+  #' Sum of variance means
+  mutate(total_variance = rowSums(., na.rm = TRUE)) %>%
+  #' Create new columns with the percentage variance
+  mutate(
+    across(
+      .cols = starts_with("Variance"),
+      .fns = list(percentage = ~ . / total_variance),
+      .names = "{fn}_{col}"
+    )
+  ) %>%
+  #' Add model identifier and country columns
+  mutate(
+    iso3 = iso3,
+    model = paste("Model", row_number()),
+    .before = everything()
+  )
+
+write_csv(variance_df, "variance-proportions.csv", na = "")
+
+#' Artefact: Sample size recovery diagnostic
+pdf("sample-size-recovery.pdf", h = 10, w = 8.5)
 
 res_df %>%
   filter(age_group %in% c("Y015_019", "Y020_024", "Y025_029")) %>%
-  group_by(obs_idx, model) %>%
+  group_by(obs_idx, model, survey_id) %>%
   summarise(
     n_eff_kish = mean(n_eff_kish),
     n_modelled_median = sum(lambda_median),
     n_modelled_lower = sum(lambda_lower),
     n_modelled_upper = sum(lambda_upper)
   ) %>%
+  #' TODO: Add warning for this? Why are a few so high?
+  filter(n_modelled_median < 1000) %>%
+  mutate(n_modelled_upper_capped = pmin(n_modelled_upper, n_modelled_median + 100)) %>%
   ggplot(aes(
-      x = n_eff_kish,
-      y = n_modelled_median,
-      ymin = n_modelled_lower,
-      ymax = pmin(n_modelled_upper, n_modelled_median + 100)
-    )) +
-    geom_pointrange(alpha = 0.3) +
-    facet_grid(~model) +
-    geom_abline(intercept = 0, slope = 1, linetype = "dashed", col = "#802D5B") +
-    labs(x = "Kish ESS", y = "Sum of Poisson intensities",
-         title = paste0(res_df$survey_id[1], ": are the sample sizes accurately recovered?"),
-         subtitle = "Dashed line is x = y. Upper limit is cut off at 100 greater than median")
+    x = n_eff_kish,
+    y = n_modelled_median,
+    ymin = n_modelled_lower,
+    ymax = n_modelled_upper_capped,
+  )) +
+  geom_pointrange(alpha = 0.3) +
+  facet_grid(survey_id ~ model) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", col = "#802D5B") +
+  labs(x = "Kish ESS", y = "Sum of Poisson intensities",
+       title = paste0(res_df$survey_id[1], ": are the sample sizes accurately recovered?"),
+       subtitle = "Dashed line is x = y. Upper limit is cut off at 100 greater than median")
 
 dev.off()
 
-#' Prepare data for writing to output
+#' Artefact: Smoothed district indicator estimates for multinomial models
 res_df <- res_df %>%
   #' Remove superfluous INLA indicator columns
   select(-area_idx, -cat_idx, -age_idx, -obs_idx, -age_cat_idx, -area_cat_idx) %>%
@@ -302,6 +368,112 @@ res_df <- res_df %>%
   relocate(model, .before = estimate_smoothed)
 
 write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
+
+#' Create plotting data
+res_plot <- res_df %>%
+  filter(area_id != iso3) %>%
+  pivot_longer(
+    cols = c(starts_with("estimate")),
+    names_to = c(".value", "source"),
+    names_pattern = "(.*)\\_(.*)"
+  ) %>%
+  left_join( #' Use this to make it an sf again
+    select(areas, area_id),
+    by = "area_id"
+  ) %>%
+  st_as_sf()
+
+#' Artefact: Cloropleths
+
+pdf("multinomial-smoothed-district-sexbehav.pdf", h = 11, w = 8.5)
+
+res_plot %>%
+  split(~indicator + model) %>%
+  lapply(function(x)
+    x %>%
+      mutate(
+        age_group = fct_relevel(age_group, "Y015_024") %>%
+          fct_recode(
+            "15-19" = "Y015_019",
+            "20-24" = "Y020_024",
+            "25-29" = "Y025_029",
+            "15-24" = "Y015_024"
+          ),
+        source = fct_relevel(source, "raw", "smoothed", "aggregate") %>%
+          fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed", "Admin 1 aggregate" = "aggr")
+      ) %>%
+      ggplot(aes(fill = estimate)) +
+      geom_sf(size = 0.1) +
+      scale_fill_viridis_c(option = "C", label = label_percent()) +
+      facet_grid(age_group ~ source) +
+      theme_minimal() +
+      labs(
+        title = paste0(paste(unique(x$survey_id), collapse = ", "), ": ", x$indicator[1], " (", x$model[1], ")")
+      ) +
+      theme(
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        strip.text = element_text(face = "bold"),
+        plot.title = element_text(face = "bold"),
+        legend.position = "bottom",
+        legend.key.width = unit(4, "lines")
+      )
+  )
+
+dev.off()
+
+#' Artefact: Stacked proportion barplots
+
+pdf("stacked-proportions.pdf", h = 10, w = 12)
+
+cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
+
+#' In this plot, it'd be great if there was some way to label that 1, 2, 3, ... refer to models,
+#' though I think it could reasonably be done in the description for the figure.
+#'
+#' It might also be nice to include uncertainty, with some options discussed in this thread:
+#' https://twitter.com/solomonkurz/status/1372632774285348864
+#' However, I do not see that any of the options are good for this plot, and there is already a
+#' lot of information being displayed without adding the uncertainty.
+
+res_df %>%
+  filter(area_id != iso3) %>%
+  split(.$survey_id) %>% lapply(function(x)
+    x %>% mutate(
+      age_group = fct_relevel(age_group, "Y015_024", after = 3) %>%
+        fct_recode(
+          "15-19" = "Y015_019",
+          "20-24" = "Y020_024",
+          "25-29" = "Y025_029",
+          "15-24" = "Y015_024"
+        ),
+      model = fct_recode(model, "1" = "Model 1", "2" = "Model 2", "3" = "Model 3"),
+      indicator = fct_recode(indicator,
+                             "No sex (past 12 months)" = "nosex12m",
+                             "Cohabiting partner" = "sexcohab",
+                             "Nonregular partner(s) or paid for sex (past 12 months)" = "sexnonreg",
+                             "Female sex woker" = "sexpaid12m"
+      )
+    ) %>%
+      ggplot(aes(x = model, y = estimate_smoothed, group = model, fill = indicator)) +
+      geom_bar(position = "fill", stat = "identity", alpha = 0.8) +
+      facet_grid(age_group ~ area_name, space = "free_x", scales = "free_x", switch = "x") +
+      labs(x = "District", y = "Proportion", fill = "Category") +
+      scale_color_manual(values = cbpalette) +
+      theme_minimal() +
+      labs(title = paste0(paste(unique(x$survey_id), collapse = ", "), ": posterior category mean proportions by model")) +
+      theme(
+        axis.text.x = element_blank(),
+        plot.title = element_text(face = "bold"),
+        legend.position = "bottom",
+        legend.key.width = unit(4, "lines"),
+        strip.placement = "outside",
+        strip.text.x = element_text(angle = 90, hjust = 0)
+      )
+  )
+
+dev.off()
 
 #' Diagnostics for the local information criteria causing issues
 res_df <- res_df %>%
@@ -350,132 +522,5 @@ ggplot(res_df, aes(x = 1:nrow(res_df), y = log10(abs(local_waic)), col = large_l
   scale_color_manual(values = c("black", "#802D5B")) +
   theme_minimal() +
   theme(plot.title = element_text(face = "bold"))
-
-dev.off()
-
-#' Simple model comparison for output
-#' Some of the entries might be NA where there is no raw data
-#' INLA calculates the DIC or WAIC ignoring these
-ic_df <- sapply(res_fit, function(fit) {
-  local_dic <- na.omit(fit$dic$local.dic)
-  local_waic <- na.omit(fit$waic$local.waic)
-  local_cpo <- na.omit(fit$cpo$cpo)
-  local_pit <- na.omit(fit$cpo$pit)
-
-  c("dic" = sum(local_dic),
-    "dic_se" = stats::sd(local_dic) * sqrt(length(local_dic)),
-    "waic" = sum(local_waic),
-    "waic_se" = stats::sd(local_waic) * sqrt(length(local_waic)),
-    "cpo" = sum(local_cpo),
-    "cpo_se" = stats::sd(local_cpo) * sqrt(length(local_cpo)),
-    "pit" = sum(local_pit),
-    "pit_se" = stats::sd(local_pit) * sqrt(length(local_pit)))
-  }) %>%
-  t() %>%
-  round() %>%
-  as.data.frame() %>%
-  mutate(
-    iso3 = iso3,
-    model = unlist(models),
-    .before = dic
-  )
-
-write_csv(ic_df, "information-criteria.csv", na = "")
-
-#' Create plotting data
-res_plot <- res_df %>%
-  pivot_longer(
-    cols = c(starts_with("estimate")),
-    names_to = c(".value", "source"),
-    names_pattern = "(.*)\\_(.*)"
-  ) %>%
-  left_join(
-    select(areas, area_id),
-    by = "area_id"
-  ) %>%
-  st_as_sf() %>%
-  split(~indicator + model)
-
-#' Cloropleths
-
-pdf("multinomial-smoothed-district-sexbehav.pdf", h = 11, w = 8.5)
-
-lapply(res_plot, function(x)
-  x %>%
-    mutate(
-      age_group = fct_relevel(age_group, "Y015_024") %>%
-        fct_recode("15-19" = "Y015_019", "20-24" = "Y020_024", "25-29" = "Y025_029", "15-24" = "Y015_024"),
-      source = fct_relevel(source, "raw", "smoothed", "aggregate") %>%
-        fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed", "Admin 1 aggregate" = "aggr")
-    ) %>%
-    ggplot(aes(fill = estimate)) +
-    geom_sf(size = 0.1) +
-    scale_fill_viridis_c(option = "C", label = label_percent()) +
-    facet_grid(age_group ~ source) +
-    theme_minimal() +
-    labs(title = paste0(x$survey_id[1], ": ", x$indicator[1], " (", x$model[1], ")")) +
-    theme(
-      axis.text = element_blank(),
-      axis.ticks = element_blank(),
-      panel.grid = element_blank(),
-      strip.text = element_text(face = "bold"),
-      plot.title = element_text(face = "bold"),
-      legend.position = "bottom",
-      legend.key.width = unit(4, "lines")
-    )
-)
-
-dev.off()
-
-#' Stacked proportion plots
-
-pdf("stacked-proportions.pdf", h = 10, w = 12)
-
-cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
-
-#' In this plot, it'd be great if there was some way to label that 1, 2, 3, ... refer to models,
-#' though I think it could reasonably be done in the description for the figure.
-#'
-#' It might also be nice to include uncertainty, with some options discussed in this thread:
-#' https://twitter.com/solomonkurz/status/1372632774285348864
-#' However, I do not see that any of the options are good for this plot, and there is already a
-#' lot of information being displayed without adding the uncertainty.
-res_df %>%
-  mutate(
-    age_group = fct_relevel(age_group, "Y015_024", after = 3) %>%
-      fct_recode(
-        "15-19" = "Y015_019",
-        "20-24" = "Y020_024",
-        "25-29" = "Y025_029",
-        "15-24" = "Y015_024"
-      ),
-    model = fct_recode(model,
-      "1" = "Model 1: Constant",
-      "2" = "Model 2: IID",
-      "3" = "Model 3: BYM2",
-      "4" = "Model 4: IID (grouped)",
-      "5" = "Model 5: BYM2 (grouped)"
-    ),
-    indicator = fct_recode(indicator,
-      "No sex (past 12 months)" = "nosex12m",
-      "Cohabiting partner" = "sexcohab",
-      "Nonregular partner(s)" = "sexnonreg",
-      "Paid for sex (past 12 months)" = "sexpaid12m"
-    )
-  ) %>%
-  ggplot(aes(x = model, y = estimate_smoothed, group = model, fill = indicator)) +
-  geom_bar(position = "fill", stat = "identity", alpha = 0.8) +
-  facet_grid(age_group ~ area_name, space = "free_x", scales = "free_x", switch = "x") +
-  labs(x = "District", y = "Proportion", fill = "Category") +
-  theme_minimal() +
-  scale_color_manual(values = cbpalette) +
-  labs(title = paste0(res_df$survey_id[1], ": posterior category mean proportions by model")) +
-  theme(
-    plot.title = element_text(face = "bold"),
-    legend.position = "bottom",
-    legend.key.width = unit(4, "lines"),
-    strip.placement = "outside",
-    strip.text.x = element_text(angle = 90, hjust = 0)
-  )
 
 dev.off()

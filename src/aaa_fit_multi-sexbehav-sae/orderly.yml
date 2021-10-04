@@ -17,10 +17,6 @@ artefacts:
       description: Model selection information criteria for multinomial models
       filenames:
         - information-criteria.csv
-  # - data:
-  #     description: BYM2 proportion parameter posteriors
-  #     filenames:
-  #       - bym2-proportions.pdf
   - data:
       description: Local DIC and WAIC diagnostics
       filenames:
@@ -33,12 +29,6 @@ artefacts:
 parameters:
   iso3:
     default: ~
-  #' Specify the models to be fit
-  #' parameter input has to be scalars
-  #' For vector, usual solution is to make a lookup table
-  #' Could do this, but starting to get quite complicated
-  max_model_id:
-    default: 3
 
 packages:
   - dplyr
@@ -51,6 +41,8 @@ packages:
   - sf
   - spdep
   - tidyr
+  - purrr
+  - stringr
 
 global_resources:
   depends/naomi3.rds: naomi3.rds
