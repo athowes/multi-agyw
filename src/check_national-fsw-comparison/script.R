@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-orderly::orderly_develop_start("check_national-fsw-comparison")
-setwd("src/check_national-fsw-comparison/")
+# orderly::orderly_develop_start("check_national-fsw-comparison")
+# setwd("src/check_national-fsw-comparison/")
 
 analysis_level <- c("CMR" = 2,
                     "KEN" = 2,
@@ -51,8 +51,19 @@ johnston <- johnston %>%
 #' Johnston is missing estimates for SWZ
 priority_countries[!(priority_countries %in% johnston$iso3)]
 
-#' And these are the proportion estimates from the sexpaid12m category of our model
-ind <- read_csv("depends/all-multinomial-smoothed-district-sexbehav.csv")
+#' Look at the Laga estimates
+laga <- read_csv("depends/final_country_est_laga.csv")
+
+laga <- laga %>%
+  rename(
+    iso3 = ISO,
+    country = NAME_0,
+    est_total_laga = Fitted_FSW
+  ) %>%
+  select(-X, -ref_pop, -Uncertainty, -Upper, -Lower, -Prev, -Percent, -Predictor_only, -Predictor_only_rank)
+
+#' These are the proportion estimates from the sexpaid12m category of our model
+ind <- read_csv("depends/every-multinomial-smoothed-district-sexbehav.csv")
 
 ind <- ind %>%
   filter(indicator == "sexpaid12m",
@@ -94,19 +105,49 @@ naomi3 <- naomi3 %>%
 
 #' Calculate estimates of FSW populations by age and area using proportions from ind and PSE from naomi3
 df <- ind %>%
+  select(-population_mean) %>%
   inner_join(naomi3, by = c("age_group" = "age_group_label", "area_name" = "area_name", "iso3" = "iso3")) %>%
   #' Note that the names of estimate and mean will change once data is rerun!
   #' Making an iso3 variable will also not be required
-  mutate(est_raw = round(estimate_raw * population_mean, digits = 3),
-         est_smoothed = round(estimate_smoothed * population_mean, digits = 3)) %>%
+  mutate(
+    est_raw = round(estimate_raw * population_mean, digits = 3),
+    est_smoothed = round(estimate_smoothed * population_mean, digits = 3)
+  ) %>%
   group_by(iso3, age_group) %>%
-  summarise(est_total_raw = sum(est_raw),
-            est_total_smoothed = sum(est_smoothed)) %>%
+  summarise(
+    est_total_raw = sum(est_raw),
+    est_total_smoothed = sum(est_smoothed)
+  )
+
+#' Comparison to Johnston
+johnston_comparison <- df %>%
   inner_join(johnston, by = c("iso3", "age_group")) %>%
   relocate(country, .before = iso3)
 
-write_csv(df, "national-fsw-comparison.csv", na = "")
+#' Comparison to Laga
+laga_comparison <- df %>%
+  group_by(iso3) %>%
+  summarise(
+    est_total_raw = sum(est_total_raw),
+    est_total_smoothed = sum(est_total_smoothed)
+  ) %>%
+  inner_join(laga, by = c("iso3")) %>%
+  relocate(country, .before = iso3)
 
-#' Look at the Laga estimates
-laga <- read_csv("depends/final_country_est_laga.csv")
-head(laga)
+write_csv(johnston_comparison, "johnston-fsw-comparison.csv", na = "")
+write_csv(laga_comparison, "laga-fsw-comparison.csv", na = "")
+
+contains_giftsvar <- sexpaid_survey_question %>%
+  filter(giftsvar == 1) %>%
+  select(iso3)
+
+laga_comparison %>%
+  select(-est_total_raw) %>%
+  pivot_longer(
+    cols = c(est_total_smoothed, est_total_laga),
+    names_to = "method",
+    names_prefix = "est_total_",
+    values_to = "est_total"
+  ) %>%
+  ggplot(aes(x = iso3, y = est_total, col = method)) +
+    geom_point()

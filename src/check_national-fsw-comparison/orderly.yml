@@ -4,7 +4,8 @@ artefacts:
   - data:
       description: Comparison of Sabin FSW total population estimates to estimates from model
       filenames:
-        - national-fsw-comparison.csv
+        - johnston-fsw-comparison.csv
+        - laga-fsw-comparison.csv
 
 packages:
   - dplyr
@@ -28,4 +29,4 @@ depends:
   process_multinomial-smoothed-district-sexbehav:
     id: latest
     use:
-      depends/all-multinomial-smoothed-district-sexbehav.csv: all-multinomial-smoothed-district-sexbehav.csv
+      depends/every-multinomial-smoothed-district-sexbehav.csv: every-multinomial-smoothed-district-sexbehav.csv
