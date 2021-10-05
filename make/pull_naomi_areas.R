@@ -2,13 +2,12 @@
 iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 
 #' Check that there are indeed 13
-length(iso3)
+stopifnot(length(iso3) == 13)
 
-#' The names of the reports to pull
+#' Names of the reports to pull
 reports <- paste0(tolower(iso3), "_data_areas")
 
-sapply(
-  reports,
+sapply(reports,
   function(report) {
     tryCatch(
       orderly::orderly_pull_archive(report, remote = "naomi2"),

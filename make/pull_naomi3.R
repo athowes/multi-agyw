@@ -6,9 +6,11 @@ naomi3 <- readRDS(path)
 
 #' Save space by just saving the countries, ages and sex we are interested in
 naomi3 <- naomi3 %>%
-  filter(iso3 %in% c("CMR", "BWA", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE"),
-         age_group_label %in% c("15-19", "20-24", "25-29", "15-24"),
-         #' Only female
-         sex == "female")
+  filter(
+    iso3 %in% c("CMR", "BWA", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE"),
+    age_group_label %in% c("15-19", "20-24", "25-29", "15-24"),
+    #' Only female
+    sex == "female"
+  )
 
 saveRDS(naomi3, file = "global/naomi3.rds")
