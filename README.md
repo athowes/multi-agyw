@@ -14,18 +14,17 @@ To enable inference with the `R-INLA` package, each model is reformulated as an 
 We use the [`orderly`](https://github.com/vimc/orderly) package to simplify the process of doing reproducible research.
 The directories of this repository are:
 
+* `docs`: containing presentations and other documentation
+* `make`: containing scripts used to run the reports
 * `src`: containing all reports
-* `archive`: containing versioned results of running your report
-* `global`: containing global data
-* `data`: copies of data used in the reports
 * `tutorials`: miscellaneous code used to study models etc.
 
 After installing [`orderly`](https://github.com/vimc/orderly) (from either CRAN or Github) a report, let's say called `example`, may be run by:
 
 `orderly::orderly_run(name = "src/example")`
 
-The results of this run will appear in the `draft/` folder.
-To commit the draft (with associated `id`) to the `archive/` folder (which should be treated as "read only") use:
+The results of this run will appear in the `draft/` folder (ignored on Github).
+To commit the draft (with associated `id`) to the `archive/` folder (also ignored on Github, and which should be treated as "read only") use:
 
 `orderly::orderly_commit(id)`
 
