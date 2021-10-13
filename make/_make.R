@@ -8,10 +8,10 @@ src("_make/pull_naomi3.R")
 src("_make/run_data_prep.R")
 
 #' 4. Run the four category single survey models for applicable countries
-src("_make/run_fit_multi-sexbehav-sae.R")
+src("_make/run_aaa_fit_multi-sexbehav-sae.R")
 
 #' 5. Run the three category multi-survey models for all countries
-src("_make/run_fit_multi-sexbehav-sae.R")
+src("_make/run_aaa_fit_multi-sexbehav-sae.R")
 
 #' 6. Post processing of the modelling results
 src("_make/post_process.R")
