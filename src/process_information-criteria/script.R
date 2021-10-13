@@ -3,7 +3,6 @@
 # setwd("src/process_information-criteria")
 
 #' aaa_fit_multi-sexbehav-sae
-
 iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 files <- paste0("depends/", tolower(iso3), "_information-criteria.csv")
 
@@ -19,19 +18,23 @@ ic_plot <- function(df, ic = "dic") {
     #' Set names for plotting
     mutate(
       model = fct_recode(model,
-        "1" = "Model 1: Constant", "2" = "Model 2: IID", "3" = "Model 3: BYM2",
         "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
         "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
         "7" = "Model 7", "8" = "Model 8", "9" = "Model 9"),
       iso3 = fct_recode(iso3,
+        "Botswana" = "BWA",
         "Cameroon" = "CMR",
         "Kenya" = "KEN",
         "Lesotho" = "LSO",
         "Mozambique" = "MOZ",
         "Malawi" = "MWI",
+        "Namibia" = "NAM",
+        "Swaziland" = "SWZ",
+        "Tanzania" = "TZA",
         "Uganda" = "UGA",
+        "South Africa" = "ZAF",
         "Zambia" = "ZMB",
-        "Zimbabwe" = "ZWE",
+        "Zimbabwe" = "ZWE"
       )
     ) %>%
     group_by(iso3) %>%
@@ -69,7 +72,7 @@ dev.off()
 
 #' aaa_fit_all-dhs-multi-sexbehav-sae
 
-iso3 <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "UGA", "ZMB", "ZWE")
+iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 files <- paste0("depends/", tolower(iso3), "_all-dhs-information-criteria.csv")
 
 df <- bind_rows(lapply(files, function(file) read_csv(file)))
@@ -175,14 +178,19 @@ df <- df %>%
       "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
       "7" = "Model 7", "8" = "Model 8", "9" = "Model 9"),
     iso3 = fct_recode(iso3,
+      "Botswana" = "BWA",
       "Cameroon" = "CMR",
       "Kenya" = "KEN",
       "Lesotho" = "LSO",
       "Mozambique" = "MOZ",
       "Malawi" = "MWI",
+      "Namibia" = "NAM",
+      "Swaziland" = "SWZ",
+      "Tanzania" = "TZA",
       "Uganda" = "UGA",
+      "South Africa" = "ZAF",
       "Zambia" = "ZMB",
-      "Zimbabwe" = "ZWE",
+      "Zimbabwe" = "ZWE"
     )
   ) %>%
   rename(Model = model) %>%
@@ -256,3 +264,4 @@ tab %>%
   as_latex() %>%
   as.character() %>%
   cat(file = "all-dhs-model-comparison.txt")
+
