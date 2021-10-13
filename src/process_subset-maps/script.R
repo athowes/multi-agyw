@@ -4,8 +4,7 @@
 
 #' Want to create .pdf files containing only the results from particular models
 #' (Probably the final model chosen)
-
-iso3 <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "UGA", "ZMB", "ZWE")
+iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 pdfs <- paste0("depends/", tolower(iso3), "_all-dhs-multinomial-smoothed-district-sexbehav.pdf")
 
 if (!dir.exists("tmp")) dir.create("tmp")

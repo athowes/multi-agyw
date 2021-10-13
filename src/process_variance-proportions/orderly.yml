@@ -23,10 +23,10 @@ packages:
   - gt
 
 depends:
-  # - aaa_fit_all-dhs-multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "BWA")
-  #     use:
-  #       depends/bwa_variance-proportions.csv: variance-proportions.csv
+  - aaa_fit_all-dhs-multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "BWA")
+      use:
+        depends/bwa_variance-proportions.csv: variance-proportions.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "CMR")
       use:
@@ -47,26 +47,26 @@ depends:
       id: latest(parameter:iso3 == "MWI")
       use:
         depends/mwi_variance-proportions.csv: variance-proportions.csv
-  # - aaa_fit_all-dhs-multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "NAM")
-  #     use:
-  #       depends/nam_variance-proportions.csv: variance-proportions.csv
-  # - aaa_fit_all-dhs-multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "SWZ")
-  #     use:
-  #       depends/swz_variance-proportions.csv: variance-proportions.csv
-  # - aaa_fit_all-dhs-multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "TZA")
-  #     use:
-  #       depends/tza_variance-proportions.csv: variance-proportions.csv
+  - aaa_fit_all-dhs-multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "NAM")
+      use:
+        depends/nam_variance-proportions.csv: variance-proportions.csv
+  - aaa_fit_all-dhs-multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "SWZ")
+      use:
+        depends/swz_variance-proportions.csv: variance-proportions.csv
+  - aaa_fit_all-dhs-multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "TZA")
+      use:
+        depends/tza_variance-proportions.csv: variance-proportions.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "UGA")
       use:
         depends/uga_variance-proportions.csv: variance-proportions.csv
-  # - aaa_fit_all-dhs-multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "ZAF")
-  #     use:
-  #       depends/zaf_variance-proportions.csv: variance-proportions.csv
+  - aaa_fit_all-dhs-multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "ZAF")
+      use:
+        depends/zaf_variance-proportions.csv: variance-proportions.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZMB")
       use:

@@ -4,15 +4,15 @@
 
 iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 
-#' The single survey estimates
+#' The single survey four category estimates
 files <- paste0("depends/", tolower(iso3), "_multinomial-smoothed-district-sexbehav.csv")
 df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
 write_csv(df, "every-multinomial-smoothed-district-sexbehav.csv", na = "")
 
-iso3 <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "UGA", "ZMB", "ZWE")
+iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 
-#' The multiple survey estimates
+#' The multiple survey three category estimates
 files <- paste0("depends/", tolower(iso3), "_all-dhs-multinomial-smoothed-district-sexbehav.csv")
 df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
