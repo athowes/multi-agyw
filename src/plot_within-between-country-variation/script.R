@@ -4,7 +4,26 @@
 
 df <- read_csv("depends/every-all-dhs-multinomial-smoothed-district-sexbehav.csv")
 
+#' When there is only one survey, we want to select Model 3, and when there are multiple, we want to select Model 6
+single_survey <- df %>%
+  group_by(iso3) %>%
+  select(survey_id) %>%
+  unique() %>%
+  count() %>%
+  filter(n == 1)
+
+model_selector <- function(iso3, model) {
+  case_when(
+    iso3 %in% single_survey$iso3 ~ model == "Model 3",
+    T ~ model == "Model 6"
+  )
+}
+
 df <- df %>%
+  filter(
+    model_selector(iso3, model),
+    age_group != "Y015_024",
+  ) %>%
   mutate(
     #' Assuming the survey_id is structured as ISO2000DHS
     year = substr(survey_id, 4, 7),
@@ -22,20 +41,22 @@ df <- df %>%
         "Cohabiting partner" = "sexcohab",
         "Nonregular partner(s)" = "sexnonregplus"
       ),
-    iso3 = fct_recode(iso3,
-      "Cameroon" = "CMR",
-      "Kenya" = "KEN",
-      "Lesotho" = "LSO",
-      "Mozambique" = "MOZ",
-      "Malawi" = "MWI",
-      "Uganda" = "UGA",
-      "Zambia" = "ZMB",
-      "Zimbabwe" = "ZWE",
+    iso3 =
+      fct_recode(iso3,
+        "Botswana" = "BWA",
+        "Cameroon" = "CMR",
+        "Kenya" = "KEN",
+        "Lesotho" = "LSO",
+        "Mozambique" = "MOZ",
+        "Malawi" = "MWI",
+        "Namibia" = "NAM",
+        "Swaziland" = "SWZ",
+        "Tanzania" = "TZA",
+        "Uganda" = "UGA",
+        "South Africa" = "ZAF",
+        "Zambia" = "ZMB",
+        "Zimbabwe" = "ZWE"
     )
-  ) %>%
-  filter(
-    model == "Model 6",
-    age_group != "15-24",
   ) %>%
   #' Only the most recent survey in each year
   group_by(iso3) %>%
@@ -52,14 +73,15 @@ df_national <- setdiff(df, df_subnational)
 
 pdf("within-between-country-variation.pdf", h = 7, w = 6.25)
 
-cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
+#' Need more colours to use this, so just using ggplot2 default for now!
+# cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
 
 ggplot(df_subnational, aes(x = fct_rev(iso3), y = estimate_smoothed, col = iso3)) +
   geom_jitter(width = 0.1, alpha = 0.6, shape = 20) +
   geom_point(data = df_national, aes(x = fct_rev(iso3), y = estimate_smoothed),
              shape = 21, size = 2, fill = "white", col = "black", alpha = 0.9) +
   facet_grid(age_group ~  indicator) +
-  scale_color_manual(values = cbpalette) +
+  # scale_color_manual(values = cbpalette) +
   scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
   coord_flip() +
   labs(x = "", y = "Proportion") +
