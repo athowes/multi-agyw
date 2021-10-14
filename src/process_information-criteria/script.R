@@ -12,6 +12,13 @@ write_csv(df, "model-comparison.csv", na = "")
 
 ic_plot <- function(df, ic = "dic") {
 
+  if(include_interactions) {
+    df <- mutate(df, model = fct_recode(model,
+      "5x" = "Model 5x", "6x" = "Model 6x",
+      "8x" = "Model 8x", "9x" = "Model 9x")
+    )
+  }
+
   df %>%
     # #' Could clean the DIC for infeasible values here
     # mutate(dic = ifelse(abs(dic) > 10^5, NA, dic)) %>%
@@ -71,37 +78,41 @@ ic_plot(df)
 dev.off()
 
 #' aaa_fit_all-dhs-multi-sexbehav-sae
-
 iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 files <- paste0("depends/", tolower(iso3), "_all-dhs-information-criteria.csv")
 
 df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
+#' If we're not including interactions, remove all the models ending in "x" (the interaction models)
+if(!include_interactions) {
+  df <- filter(df, !stringr::str_ends(model, "x"))
+}
+
 write_csv(df, "all-dhs-model-comparison.csv", na = "")
 
 #' DIC plot
-pdf("all-dhs-dic-model-comparison.pdf", h = 3.5, w = 6.25)
+pdf("all-dhs-dic-model-comparison.pdf", h = 5, w = 6.25)
 
 ic_plot(df, ic = "dic")
 
 dev.off()
 
 #' WAIC plot
-pdf("all-dhs-waic-model-comparison.pdf", h = 3.5, w = 6.25)
+pdf("all-dhs-waic-model-comparison.pdf", h = 5, w = 6.25)
 
 ic_plot(df, ic = "waic")
 
 dev.off()
 
 #' CPO plot
-pdf("all-dhs-cpo-model-comparison.pdf", h = 3.5, w = 6.25)
+pdf("all-dhs-cpo-model-comparison.pdf", h = 5, w = 6.25)
 
 ic_plot(df, ic = "cpo")
 
 dev.off()
 
 #' PIT plot
-pdf("all-dhs-pit-model-comparison.pdf", h = 3.5, w = 6.25)
+pdf("all-dhs-pit-model-comparison.pdf", h = 5, w = 6.25)
 
 ic_plot(df, ic = "pit")
 
@@ -111,6 +122,13 @@ dev.off()
 pdf("all-dhs-rank-comparison.pdf", h = 3.5, w = 6.25)
 
 cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
+
+if(include_interactions) {
+  df <- mutate(df, model = fct_recode(model,
+    "5x" = "Model 5x", "6x" = "Model 6x",
+    "8x" = "Model 8x", "9x" = "Model 9x")
+  )
+}
 
 df %>%
   group_by(iso3) %>%
@@ -124,40 +142,60 @@ df %>%
   ungroup() %>%
   group_by(model) %>%
   summarise(
-    mean_dic_rank = mean(dic_rank),
-    mean_waic_rank = mean(waic_rank),
-    mean_cpo_rank = mean(cpo_rank),
-    mean_pit_rank = mean(pit_rank)
+    dic_rank_mean = mean(dic_rank),
+    dic_rank_se = sd(dic_rank) / sqrt(n()),
+    waic_rank_mean = mean(waic_rank),
+    waic_rank_se = sd(waic_rank) / sqrt(n()),
+    cpo_rank_mean = mean(cpo_rank),
+    cpo_rank_se = sd(cpo_rank) / sqrt(n()),
+    pit_rank_mean = mean(pit_rank),
+    pit_rank_se = sd(pit_rank) / sqrt(n()),
   ) %>%
   ungroup() %>%
-  pivot_longer(!model, names_to = "metric", values_to = "rank") %>%
+  pivot_longer(
+    cols = -model,
+    names_to = "metric",
+    values_to = "value"
+  ) %>%
+  separate(metric, into = c("metric", "type"), extra = "merge", fill = "left") %>%
+  pivot_wider(
+    names_from = type,
+    values_from = value
+  ) %>%
   group_by(metric) %>%
   mutate(
-    best_idx = (min(rank, na.rm = TRUE) == rank)
+    best_idx = (min(rank_mean, na.rm = TRUE) == rank_mean)
   ) %>%
+  ungroup() %>%
   mutate(
     model = fct_recode(model,
-                       "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
-                       "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
-                       "7" = "Model 7", "8" = "Model 8", "9" = "Model 9"),
+      "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
+      "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
+      "7" = "Model 7", "8" = "Model 8", "9" = "Model 9"),
     metric = fct_recode(metric,
-                        "DIC" = "mean_dic_rank",
-                        "WAIC" = "mean_waic_rank",
-                        "CPO" = "mean_cpo_rank",
-                        "PIT" = "mean_pit_rank"
+      "DIC" = "dic",
+      "WAIC" = "waic",
+      "CPO" = "cpo",
+      "PIT" = "pit"
     )
   ) %>%
-  ggplot(aes(x = model, y = rank, fill = metric, group = metric, col = best_idx)) +
-  # facet_wrap(~metric) +
-  geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
+  ggplot(aes(x = model, y = rank_mean, fill = metric, group = metric)) +
+  facet_wrap(~metric) +
+  geom_col(aes(alpha = best_idx), position = "dodge") +
+  scale_alpha_discrete(range = c(0.6, 0.9)) +
+  geom_errorbar(
+    aes(ymin = rank_mean - rank_se, ymax = rank_mean + rank_se),
+    stat = "identity", position = "dodge", alpha = 0.6, col = "black", width = 0.25
+  ) +
   scale_fill_manual(values = cbpalette) +
-  scale_color_manual(values = c(NA, "black")) +
   labs(x = "Model", y = "Average rank", fill = "Metric") +
   coord_cartesian(ylim = c(1, 9)) +
-  guides(color = FALSE) +
+  guides(color = FALSE, alpha = FALSE) +
   theme_minimal() +
   theme(
-    panel.spacing = unit(1.5, "lines")
+    panel.spacing = unit(1.5, "lines"),
+    strip.background = element_blank(),
+    strip.text.x = element_blank()
   )
 
 dev.off()
@@ -264,4 +302,3 @@ tab %>%
   as_latex() %>%
   as.character() %>%
   cat(file = "all-dhs-model-comparison.txt")
-
