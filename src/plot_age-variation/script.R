@@ -22,7 +22,7 @@ model_selector <- function(iso3, model) {
 df <- df %>%
   filter(
     model_selector(iso3, model),
-    age_group != "15-24"
+    age_group != "Y020_024"
   ) %>%
   mutate(
     age_group = fct_recode(age_group,
