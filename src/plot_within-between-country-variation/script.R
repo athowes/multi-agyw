@@ -71,24 +71,45 @@ df_subnational <- df %>%
 
 df_national <- setdiff(df, df_subnational)
 
+#' Add region column
+region_key <- c(
+  "Botswana" = "South",
+  "Cameroon" = "Central",
+  "Kenya" = "East",
+  "Lesotho" = "South",
+  "Mozambique" = "South",
+  "Malawi" = "South",
+  "Namibia" = "South",
+  "Swaziland" = "South",
+  "Tanzania" = "East",
+  "Uganda" = "East",
+  "South Africa" = "South",
+  "Zambia" = "South",
+  "Zimbabwe" = "South"
+) %>%
+  as.data.frame() %>%
+  rename("Region" = ".") %>%
+  tibble::rownames_to_column("iso3")
+
+df_subnational <- df_subnational %>%
+  left_join(region_key, by = "iso3")
+
 pdf("within-between-country-variation.pdf", h = 7, w = 6.25)
 
-#' Need more colours to use this, so just using ggplot2 default for now!
-# cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
-
-ggplot(df_subnational, aes(x = fct_rev(iso3), y = estimate_smoothed, col = iso3)) +
+ggplot(df_subnational, aes(x = fct_rev(iso3), y = estimate_smoothed, col = Region)) +
   geom_jitter(width = 0.1, alpha = 0.6, shape = 20) +
   geom_point(data = df_national, aes(x = fct_rev(iso3), y = estimate_smoothed),
              shape = 21, size = 2, fill = "white", col = "black", alpha = 0.9) +
   facet_grid(age_group ~  indicator) +
-  # scale_color_manual(values = cbpalette) +
+  scale_color_manual(values = cbpalette) +
   scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
   coord_flip() +
   labs(x = "", y = "Proportion") +
+  guides(colour = guide_legend(override.aes = list(alpha = 0.9))) +
   theme_minimal() +
   theme(
     panel.spacing = unit(1.5, "lines"),
-    legend.position = "none"
+    legend.position = "bottom",
   )
 
 dev.off()
