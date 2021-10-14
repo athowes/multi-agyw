@@ -103,21 +103,21 @@ depends:
   - aaa_fit_all-dhs-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MWI")
       use:
-        depends/nam_all-dhs-information-criteria.csv: information-criteria.csv
+        depends/mwi_all-dhs-information-criteria.csv: information-criteria.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "NAM")
       use:
-        depends/mwi_all-dhs-information-criteria.csv: information-criteria.csv
+        depends/nam_all-dhs-information-criteria.csv: information-criteria.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "SWZ")
       use:
         depends/swz_all-dhs-information-criteria.csv: information-criteria.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "NAM")
+      id: latest(parameter:iso3 == "TZA")
       use:
         depends/tza_all-dhs-information-criteria.csv: information-criteria.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "TZA")
+      id: latest(parameter:iso3 == "UGA")
       use:
         depends/uga_all-dhs-information-criteria.csv: information-criteria.csv
   - aaa_fit_all-dhs-multi-sexbehav-sae:
