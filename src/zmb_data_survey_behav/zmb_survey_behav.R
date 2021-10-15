@@ -5,7 +5,11 @@ iso3 <- "ZMB"
 areas <- read_sf("depends/zmb_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
-surveys <- create_surveys_dhs(iso3)
+#' Removing the 2002 DHS, as it doesn't release GPS dataset, not allowing clusters to be snapped to districts
+#' https://dhsprogram.com/data/available-datasets.cfm
+surveys <- create_surveys_dhs(iso3) %>%
+  filter(SurveyId != "ZM2002DHS")
+
 survey_meta <- create_survey_meta_dhs(surveys)
 
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
