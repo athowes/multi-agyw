@@ -41,6 +41,18 @@ df <- df %>%
   ) %>%
   st_as_sf()
 
+#' Which of the Zambian districts are missing the raw survey estimate?
+missing_districts <- df %>%
+  filter(
+    indicator == "No sex (past 12 months)",
+    source == "Raw",
+    is.na(n_clusters)
+  ) %>%
+  select(area_name)
+
+missing_districts$area_name %>% sort()
+plot(missing_districts)
+
 pdf("model-direct-benefits.pdf", h = 8, w = 6.25)
 
 ggplot(df, aes(fill = estimate)) +
