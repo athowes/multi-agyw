@@ -164,6 +164,7 @@ df <- df %>%
   ) %>%
   left_join(
     pop %>%
+      filter(sex == "female") %>%
       select(area_id, year, age_group, population),
     by = c("area_id", "year", "age_group")
   ) %>%

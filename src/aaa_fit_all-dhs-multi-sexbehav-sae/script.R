@@ -166,6 +166,7 @@ df <- df %>%
   ) %>%
   left_join(
     pop %>%
+      filter(sex == "female") %>%
       select(area_id, year, age_group, population),
     by = c("area_id", "year", "age_group")
   ) %>%
@@ -181,6 +182,8 @@ df_model <- setdiff(df, df_agg)
 
 #' Specify the models to be fit
 
+#' # Gaussian Markov Kronecker random fields
+#'
 #' INLA's group argument allows specifying Gaussian Kronecker product random fields with
 #' covariance given as the Kronecker product of between group and within group covariance matrices.
 #' See https://becarioprecario.bitbucket.io/inla-gitbook/ch-temporal.html#sec:spacetime.
