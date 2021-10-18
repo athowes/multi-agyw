@@ -4,16 +4,14 @@ iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", 
 #' Check that there are indeed 13
 stopifnot(length(iso3) == 13)
 
-sapply(iso3,
+lapply(iso3,
        function(x) {
-         tryCatch(
-           orderly::orderly_pull_archive(
-             name = "aaa_scale_pop",
-             remote = "fertility",
-             parameters = list(iso3 = x),
-             recursive = FALSE
-           ),
-           error = function(e) paste0("Report corresponding to country ", x, " could not be pulled!")
-         )
-       }
-)
+       orderly::orderly_pull_archive(
+         "aaa_scale_pop",
+         id = paste0('latest(parameter:iso3 == "', x, '")'),
+         remote = "fertility",
+         recursive = FALSE
+      )
+})
+
+#' Missng BWA and ZAF for now
