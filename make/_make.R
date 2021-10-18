@@ -1,8 +1,8 @@
 #' 1. Pull the Naomi area files as reports which can be depended upon
 src("_make/pull_naomi_areas.R")
 
-#' 2. Pull the Naomi population data as global data
-src("_make/pull_naomi3.R")
+#' 2.  Pull the population data from Oli's fertility repo as reports which can be depended upon
+src("_make/pull_oli_population.R")
 
 #' 3. Run each of the _data_survey_behav scripts to prepare the input data for modelling
 src("_make/run_data_prep.R")
