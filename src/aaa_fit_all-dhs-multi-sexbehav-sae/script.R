@@ -154,39 +154,22 @@ df <- df %>%
   ) %>%
   arrange(obs_idx)
 
-#' Get age-stratified population total sizes from Naomi model outputs
+#' Get age-stratified population total sizes
 #' This is required for aggregating the estimates e.g. using 15-19 and 20-24 to create 15-24
-#' The data has been pre-filtered to only be for the age-groups and sex we are considering
-naomi3 <- readRDS("depends/naomi3.rds")
+pop <- read_csv("depends/interpolated-population.csv")
 
 #' Merge this data into df
 df <- df %>%
+  mutate(
+    #' Assuming the survey_id is structured as ISO2000DHS
+    year = as.numeric(substr(survey_id, 4, 7))
+  ) %>%
   left_join(
-    naomi3 %>%
-      filter(indicator_label == "Population",
-             #' Using the most recent estimates for now
-             #' More sophisticated approach would be to try to match
-             #' the year of the survey to the year of the estimates
-             #' This is particularly relevant here as we are using
-             #' all DHS data rather than just the most recent
-             calendar_quarter == max(calendar_quarter),
-             #' The country and analysis level of interest
-             iso3 == iso3,
-             area_level == analysis_level) %>%
-      #' More sophisticated approach is to use the distribution of population estimate
-      #' rather than just a point estimate (the mean) as we do here for now
-      rename(population_mean = mean,
-             population_lower = lower,
-             population_upper = upper,
-             age_group = age_group_label) %>%
-      select(age_group, area_name, population_mean) %>%
-      #' Rename to match df, allowing join
-      mutate(
-        age_group = fct_recode(age_group, "Y015_019" = "15-19", "Y020_024" = "20-24",
-                               "Y025_029" = "25-29", "Y015-024" = "15-24")
-      ),
-    by = c("age_group", "area_name")
-  )
+    pop %>%
+      select(area_id, year, age_group, population),
+    by = c("area_id", "year", "age_group")
+  ) %>%
+  rename(population_mean = population)
 
 #' Data for the model (df) doesn't include the aggregates (since this is using data twice)
 #' So we save them off separately

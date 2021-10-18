@@ -44,10 +44,15 @@ packages:
   - purrr
   - stringr
 
-global_resources:
-  depends/naomi3.rds: naomi3.rds
+# global_resources:
+#   depends/naomi3.rds: naomi3.rds
 
 depends:
+  depends:
+  aaa_scale_pop:
+    id: latest(parameter:iso3 == iso3)
+    use:
+      depends/interpolated-population.csv: interpolated_population.csv
   bwa_data_areas:
     id: latest
     use:
