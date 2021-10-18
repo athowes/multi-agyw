@@ -208,6 +208,39 @@ df_model <- setdiff(df, df_agg)
 #' [e(cat 1, time 1), e(cat 1, time 2), e(cat 1, time 3)]
 #' [e(cat 2, time 1), e(cat 2, time 2), e(cat 2, time 3)]
 #' [e(cat 3, time 1), e(cat 3, time 2), e(cat 3, time 3)]
+#'
+#' # Additional constraints
+#'
+#' The grouped random effects should be constrained such that the sum over the non-category index is zero.
+#' For example, in each category the sum over ages of \alpha_{ak} should be zero:
+#'
+#' \sum_a \alpha_{ak} = 0 \forall k = 1, ..., K
+#'
+#' Intuition for this constraint is as follows. Suppose that the sum over age groups in category k is non-zero.
+#'
+#' \sum_a \alpha_{a1} = C_1
+#' ...
+#' \sum_a \alpha_{ak} = C_k
+#' ...
+#' \sum_a \alpha_{aK} = C_K
+#'
+#' If C_1 =/= C_k =/= C_K, then the age x category interactions have the effect of increasing the likelihood
+#' of a particular category. This isn't the desired effect: increasing the likelihood of any of the categories
+#' relative to the others should be left to the category random effects \beta_k.
+#'
+#' Additional linear constraints may be enforced on random effects in `R-INLA` using
+#'
+#' `extraconstr = list(A = A, e = e)`
+#'
+#' See https://becarioprecario.bitbucket.io/inla-gitbook/ch-INLAfeatures.html#sec:constraints.
+#' `A` should be a matrix which has `ncol(A) = length(u)` and `nrow(A)` equal to the number of constraints required.
+#' `e` should have length equal to the number of constraints required.
+
+#' To finish off soon!
+# constraint_age_cat <- create_interaction_constraint(df_model, z_idx = "age_idx", z_cat_idx = "age_cat_idx")
+# formula1_new <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+#   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+#   f(age_cat_idx, model = "iid", extraconstr = constraint_age_cat, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 1: category random effects (IID), age x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
