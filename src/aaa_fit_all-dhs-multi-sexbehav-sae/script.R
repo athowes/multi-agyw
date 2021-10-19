@@ -236,16 +236,17 @@ df_model <- setdiff(df, df_agg)
 #' `A` should be a matrix which has `ncol(A) = length(u)` and `nrow(A)` equal to the number of constraints required.
 #' `e` should have length equal to the number of constraints required.
 
-#' To finish off soon!
-# constraint_age_cat <- create_interaction_constraint(df_model, z_idx = "age_idx", z_cat_idx = "age_cat_idx")
-# formula1_new <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
-#   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-#   f(age_cat_idx, model = "iid", extraconstr = constraint_age_cat, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+constraint_age_cat <- create_interaction_constraint(df_model, z_idx = "age_idx", z_cat_idx = "age_cat_idx")
+
+#' I think it might be the case that for grouped random effects, the default constraint works fine
+#' Or it may work fine if the right f() and group arguments are used
+constraint_area_cat <- create_interaction_constraint(df_model, z_idx = "area_idx", z_cat_idx = "area_cat_idx")
+constraint_sur_cat <-  create_interaction_constraint(df_model, z_idx = "sur_idx", z_cat_idx = "sur_cat_idx")
 
 #' Model 1: category random effects (IID), age x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+  f(age_cat_idx, model = "iid", extraconstr = constraint_age_cat, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 2: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (IID)
@@ -344,6 +345,7 @@ if(include_interactions & include_temporal) {
                                 constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
+  #' ALERT: Got an issue here in terms of the constraints being applied!
   #' Model 6x: category random effects (IID), age x category random effects (IID),
   #' space x category random effects (Besag), survey x category random effects (IID)
   #' space x survey x category random effects (Besag x IID)
@@ -352,6 +354,7 @@ if(include_interactions & include_temporal) {
                                 control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
+  #' ALERT: Got an issue here in terms of the constraints being applied!
   #' Model 8x:  category random effects (IID), age x category random effects (IID),
   #' space x category random effects (IID), survey x category random effects (AR1),
   #' space x survey x category random effects (IID x AR1)
@@ -367,6 +370,7 @@ if(include_interactions & include_temporal) {
   rownames(interaction_adjM) <- 1:nrow(interaction_adjM)
   colnames(interaction_adjM) <- 1:ncol(interaction_adjM)
 
+  #' ALERT: Got an issue here in terms of the constraints being applied!
   #' Model 9x: category random effects (IID), age x category random effects (IID),
   #' space x category random effects (Besag), survey x category random effects (AR1)
   #' space x survey x category random effects (Besag x AR1)

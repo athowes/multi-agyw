@@ -53,7 +53,7 @@ create_interaction_constraint <- function(df, z_idx, z_cat_idx) {
     select(cat_idx, !!z_idx, !!z_cat_idx) %>%
     distinct(.data[[z_cat_idx]], .keep_all = TRUE)
 
-  unique_values <- unique(key[[z_idx]])
+  unique_values <- unique(key$cat_idx)
   indices <- list()
 
   A <- matrix(0, ncol = nrow(key), nrow = length(unique_values))
