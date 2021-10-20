@@ -183,7 +183,8 @@ df_model <- setdiff(df, df_agg)
 #' Model 1: category random effects (IID), age x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-  f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+  f(age_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Kronecker products:
 #' If A (m x n) and B (p x q) are matrices then their Kronecker product C (pm x qn) is the block matrix

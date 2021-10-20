@@ -211,7 +211,7 @@ df_model <- setdiff(df, df_agg)
 #'
 #' # Additional constraints
 #'
-#' The grouped random effects should be constrained such that the sum over the non-category index is zero.
+#' The interaction random effects should be constrained such that the sum over the non-category index is zero.
 #' For example, in each category the sum over ages of \alpha_{ak} should be zero:
 #'
 #' \sum_a \alpha_{ak} = 0 \forall k = 1, ..., K
@@ -236,17 +236,18 @@ df_model <- setdiff(df, df_agg)
 #' `A` should be a matrix which has `ncol(A) = length(u)` and `nrow(A)` equal to the number of constraints required.
 #' `e` should have length equal to the number of constraints required.
 
-constraint_age_cat <- create_interaction_constraint(df_model, z_idx = "age_idx", z_cat_idx = "age_cat_idx")
+#' However, if you specify the group structure correctly, extraconstr are not needed, and the default
+#' `constr = TRUE` acomplishes what is required!
 
-#' I think it might be the case that for grouped random effects, the default constraint works fine
-#' Or it may work fine if the right f() and group arguments are used
-constraint_area_cat <- create_interaction_constraint(df_model, z_idx = "area_idx", z_cat_idx = "area_cat_idx")
-constraint_sur_cat <-  create_interaction_constraint(df_model, z_idx = "sur_idx", z_cat_idx = "sur_cat_idx")
+# constraint_age_cat <- create_interaction_constraint(df_model, z_idx = "age_idx", z_cat_idx = "age_cat_idx")
+# constraint_area_cat <- create_interaction_constraint(df_model, z_idx = "area_idx", z_cat_idx = "area_cat_idx")
+# constraint_sur_cat <-  create_interaction_constraint(df_model, z_idx = "sur_idx", z_cat_idx = "sur_cat_idx")
 
 #' Model 1: category random effects (IID), age x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-  f(age_cat_idx, model = "iid", extraconstr = constraint_age_cat, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+  f(age_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 2: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (IID)
@@ -305,16 +306,14 @@ if(include_temporal) {
   #' Model 7:  category random effects (IID), age x category random effects (IID),
   #' survey x category random effects (AR1)
   formula7 <- update(formula1,
-   . ~ . + f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))+
-           f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
+   . ~ . + f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
              constr = TRUE, hyper = ar1_group_prior)
   )
 
   #' Model 8:  category random effects (IID), age x category random effects (IID),
   #' space x category random effects (IID), survey x category random effects (AR1)
   formula8 <- update(formula1,
-    . ~ . + f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-            f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+    . ~ . + f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
               constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
             f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
               constr = TRUE, hyper = ar1_group_prior)
@@ -323,8 +322,7 @@ if(include_temporal) {
   #' Model 9: category random effects (IID), age x category random effects (IID),
   #' space x category random effects (Besag), survey x category random effects (AR1)
   formula9 <- update(formula1,
-    . ~ . + f(age_cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-            f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
+    . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
               control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
             f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
               constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
@@ -345,7 +343,10 @@ if(include_interactions & include_temporal) {
                                 constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
-  #' ALERT: Got an issue here in terms of the constraints being applied!
+  #' ALERT! Constraints not properly being applied here!
+  #' Going to need a custom extraconstr to make this one correct
+  #' Or the other option is to put area_sur_idx, but then a different model is needed
+
   #' Model 6x: category random effects (IID), age x category random effects (IID),
   #' space x category random effects (Besag), survey x category random effects (IID)
   #' space x survey x category random effects (Besag x IID)
@@ -354,7 +355,10 @@ if(include_interactions & include_temporal) {
                                 control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
-  #' ALERT: Got an issue here in terms of the constraints being applied!
+  #' ALERT! Constraints not properly being applied here!
+  #' Going to need a custom extraconstr to make this one correct
+  #' Or the other option is to put area_sur_idx, but then a different model is needed
+
   #' Model 8x:  category random effects (IID), age x category random effects (IID),
   #' space x category random effects (IID), survey x category random effects (AR1),
   #' space x survey x category random effects (IID x AR1)
@@ -370,7 +374,10 @@ if(include_interactions & include_temporal) {
   rownames(interaction_adjM) <- 1:nrow(interaction_adjM)
   colnames(interaction_adjM) <- 1:ncol(interaction_adjM)
 
-  #' ALERT: Got an issue here in terms of the constraints being applied!
+  #' ALERT! Constraints not properly being applied here!
+  #' Going to need a custom extraconstr to make this one correct
+  #' Or the other option is to put area_sur_idx, but then a different model is needed
+
   #' Model 9x: category random effects (IID), age x category random effects (IID),
   #' space x category random effects (Besag), survey x category random effects (AR1)
   #' space x survey x category random effects (Besag x AR1)
