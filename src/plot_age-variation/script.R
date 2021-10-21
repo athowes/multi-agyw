@@ -22,7 +22,7 @@ model_selector <- function(iso3, model) {
 df <- df %>%
   filter(
     model_selector(iso3, model),
-    age_group != "Y020_024"
+    age_group != "Y015_024"
   ) %>%
   mutate(
     age_group = fct_recode(age_group,
@@ -49,13 +49,12 @@ pdf("age-variation.pdf", h = 3.5, w = 6.25)
 
 cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
 
-ggplot(df_age_country, aes(x = age_group, y = estimate_smoothed, group = indicator, col = indicator)) +
-  geom_point(alpha = 0.4) +
-  geom_line(data = df_age, aes(x = age_group, y = estimate_smoothed, group = indicator, col = indicator),
-            size = 1.5, alpha = 0.7) +
-  scale_color_manual(values = cbpalette) +
+ggplot(df_age_country, aes(y = age_group, x = estimate_smoothed, fill = indicator)) +
+  geom_density_ridges(alpha = 0.7, col = NA) +
+  scale_fill_manual(values = cbpalette) +
   theme_minimal() +
-  scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
-  labs(x = "Age group", y = "Proportion", col = "Category")
+  scale_x_continuous(labels = function(x) paste0(100 * x, "%")) +
+  xlim(0, 1) +
+  labs(y = "Age group", x = "Proportion", fill = "Category")
 
 dev.off()
