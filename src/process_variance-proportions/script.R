@@ -62,7 +62,7 @@ df %>%
   mutate(
     random_effect = fct_reorg(random_effect,
       "Category" = "cat_idx",
-      "Age x Category" = "age_cat_idx",
+      "Age x Category" = "age_idx",
       "Area x Category" = "area_idx",
       "Survey x Category" = "sur_idx"
     )
@@ -89,7 +89,7 @@ df %>%
     "Country" = "iso3",
     #' Can't write LaTeX math in gt yet
     "sigma-beta" = "percentage_variance_cat_idx",
-    "sigma-alpha" = "percentage_variance_age_cat_idx",
+    "sigma-alpha" = "percentage_variance_age_idx",
     "sigma-phi" = "percentage_variance_area_idx",
     "sigma-gamma" = "percentage_variance_sur_idx",
   ) %>%
@@ -107,7 +107,7 @@ df %>%
   group_by(model) %>%
   summarise(
     cat_idx = mean(percentage_variance_cat_idx),
-    age_cat_idx = mean(percentage_variance_age_cat_idx),
+    age_idx = mean(percentage_variance_age_idx),
     area_idx = mean(percentage_variance_area_idx),
     sur_idx = mean(percentage_variance_sur_idx)
   ) %>%
