@@ -10,8 +10,6 @@ lapply(iso3,
          "aaa_scale_pop",
          id = paste0('latest(parameter:iso3 == "', x, '")'),
          remote = "fertility",
-         recursive = FALSE
+         recursive = TRUE
       )
 })
-
-#' Missng BWA and ZAF for now
