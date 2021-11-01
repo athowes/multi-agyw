@@ -596,7 +596,8 @@ cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#C
 
 res_df %>%
   filter(area_id != iso3) %>%
-  split(.$survey_id) %>% lapply(function(x)
+  split(.$survey_id) %>%
+  lapply(function(x)
   x %>% mutate(
     age_group = fct_relevel(age_group, "Y015_024", after = 3) %>%
       fct_recode(
@@ -635,11 +636,11 @@ res_df %>%
 
 dev.off()
 
-#' Artefact: Posterior predictive check of coverage
+#' Artefact: Posterior predictive checks of coverage
 
 pdf("coverage-histograms.pdf", h = 10, w = 12)
 
-res_df %>%
+coverage_df <- res_df %>%
   filter(
     area_id != iso3,
     age_group != "Y015_024"
@@ -655,15 +656,50 @@ res_df %>%
       "Cohabiting partner" = "sexcohab",
       "Nonregular partner" = "sexnonregplus"
     )
-  ) %>%
-  split(.$model) %>% lapply(function(x)
+  )
+
+coverage_df %>%
+  split(.$model) %>%
+  lapply(function(x) {
   ggplot(x, aes(x = prob_quantile)) +
-    facet_grid(age_group ~ survey_id + indicator, drop = TRUE, scales = "free") +
-    geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
-                  bins = 10, fill = "#D3D3D3", col = "#FFFFFF", alpha = 0.9) +
-    geom_hline(linetype = "dashed", yintercept = 0.1, col = "#000000") +
+    facet_grid(indicator ~ survey_id, drop = TRUE, scales = "free") +
+    geom_histogram(aes(y = (..count..) / tapply(..count..,..PANEL..,sum)[..PANEL..]),
+                   bins = 10, fill = "#D3D3D3", col = "#FFFFFF", alpha = 0.9) +
+    geom_hline(linetype = "dashed", yintercept = 0.1, col = "#56B4E9") +
     labs(title = paste0(x$model[1]), x = "Quantile", y = "Proportion of raw estimates in corresponding quantile") +
     scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1))
-  )
+  })
+
+dev.off()
+
+pdf("coverage-quantiles.pdf", h = 10, w = 12)
+
+empirical_coverage <- function(x, nominal_coverage) {
+  alpha <- (1 - nominal_coverage)
+  y <- (x >= (alpha / 2)) & (x <= 1 - (alpha / 2))
+  sum(y) / length(y)
+}
+
+coverage_df %>%
+  split(.$model) %>%
+  lapply(function(x) {
+  x %>%
+    select(indicator, survey_id, prob_quantile) %>%
+    filter(!is.na(prob_quantile)) %>%
+    split(~ indicator + survey_id) %>%
+    lapply(function(y) {
+      empirical_coverage <- purrr::map_dbl(seq(0, 1, by = 0.01), ~ empirical_coverage(y$prob_quantile, .x))
+      data.frame(nominal_coverage = seq(0, 1, by = 0.01), empirical_coverage = empirical_coverage)
+    }) %>%
+    purrr::map_df(~as.data.frame(.x), .id = c("indicator.survey_id")) %>%
+    separate(indicator.survey_id, c("indicator", "survey_id"), sep = "[.]") %>%
+    ggplot(aes(x = nominal_coverage, y = empirical_coverage)) +
+      facet_grid(indicator ~ survey_id, drop = TRUE, scales = "free") +
+      geom_line(col = "#999999") +
+      geom_abline(intercept = 0, slope = 1, linetype = "dashed", col = "#009E73") +
+      ylim(0, 1) +
+      labs(x = "Nominal coverage", y = "Empirical coverage") +
+      scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1))
+  })
 
 dev.off()

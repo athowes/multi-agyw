@@ -52,7 +52,7 @@ nominal_empirical <- nominal_df %>%
   ggplot(aes(x = nominal_coverage, y = empirical_coverage)) +
   facet_grid(~factor(indicator, levels = c("No sex (past 12 months)", "Cohabiting partner", "Nonregular partner(s)")),
              drop = TRUE, scales = "free") +
-  geom_line(col = "#D3D3D3") +
+  geom_line(col = "#999999") +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", col = "#009E73") +
   ylim(0, 1) +
   labs(x = "Nominal coverage", y = "Empirical coverage") +

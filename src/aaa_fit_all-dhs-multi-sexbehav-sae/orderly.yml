@@ -26,9 +26,10 @@ artefacts:
       filenames:
         - sample-size-recovery.pdf
   - data:
-      description: Coverage histogram posterior predictive check
+      description: Coverage posterior predictive checks
       filenames:
         - coverage-histograms.pdf
+        - coverage-quantiles.pdf
 
 parameters:
   iso3:
