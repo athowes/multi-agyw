@@ -65,7 +65,7 @@ multinomial_model <- function(formula, model_name, S = 100) {
     split(.$obs_idx) %>%
     lapply(function(x)
       x %>%
-        mutate(mean = stable_softmax(eta))
+        mutate(prob_mean = stable_softmax(eta))
     ) %>%
     bind_rows() %>%
     #' Remove eta
@@ -90,13 +90,23 @@ multinomial_model <- function(formula, model_name, S = 100) {
       filter(substr(rowname, 1, 10) == "Predictor:") %>%
       bind_cols(
         df_model %>%
-          select(age_idx, area_idx, sur_idx,
-                 obs_idx, cat_idx, population_mean)
+          select(age_idx, area_idx, sur_idx, obs_idx,
+                 cat_idx, n_eff_kish, population_mean)
       ) %>%
       split(.$obs_idx) %>%
       lapply(function(x)
         x %>%
-          mutate(prob = stable_softmax(eta))
+          mutate(
+            #' Use stable_softmax(eta) here as the probability with additional multinomial sampling variability
+            #' Would like to sample from multinomial with non-integer counts for n_eff_kish but can't
+            #' Instead use the floor, which the size argument automatically does but written here for clarity
+            #' Sometimes n_eff_kish is NA (missing data). In these cases we use 100 (around the average)
+            #' This is a little makeshift but probably sufficient for our purposes
+            prob = ifelse(!is.na(n_eff_kish),
+                          stats::rmultinom(n = 1, size = floor(n_eff_kish), prob = stable_softmax(eta)) / n_eff_kish,
+                          stats::rmultinom(n = 1, size = 100, prob = stable_softmax(eta)) / 100
+            )
+          )
       ) %>%
       bind_rows() %>%
       mutate(
@@ -116,11 +126,11 @@ multinomial_model <- function(formula, model_name, S = 100) {
         summarise(
           #' The quantile of the raw estimate
           estimate = mean(estimate), #' These should all be identical anyway
-          quantile = ecdf(prob)(estimate),
+          prob_quantile = ecdf(prob)(estimate),
           #' Quantiles of the proportion
-          median = quantile(prob, 0.5, na.rm = TRUE),
-          lower = quantile(prob, 0.025, na.rm = TRUE),
-          upper = quantile(prob, 0.975, na.rm = TRUE),
+          prob_median = quantile(prob, 0.5, na.rm = TRUE),
+          prob_lower = quantile(prob, 0.025, na.rm = TRUE),
+          prob_upper = quantile(prob, 0.975, na.rm = TRUE),
           #' Quantiles of the intensity, used to calculate sample size recovery later
           lambda_median = quantile(lambda, 0.5, na.rm = TRUE),
           lambda_lower = quantile(lambda, 0.025, na.rm = TRUE),
@@ -143,12 +153,11 @@ multinomial_model <- function(formula, model_name, S = 100) {
   }
 
   #' Adding in aggregates
-
   mean_aggregate_Y015_024 <- df_model %>%
     #' The 15-19 and 20-24 age groups
     filter(age_idx %in% c(1, 2)) %>%
     group_by(area_idx, sur_idx, cat_idx) %>%
-    summarise(mean = sum(mean * population_mean) / sum(population_mean), .groups = "drop")
+    summarise(prob_mean = sum(prob_mean * population_mean) / sum(population_mean), .groups = "drop")
 
   quantiles_aggregate_Y015_024 <- x %>%
     #' The 15-19 and 20-24 age groups
@@ -158,14 +167,14 @@ multinomial_model <- function(formula, model_name, S = 100) {
     summarise(prob = sum(prob * population_mean) / sum(population_mean),
               .groups = "drop") %>%
     group_by(area_idx, sur_idx, cat_idx) %>%
-    summarise(median = quantile(prob, 0.5, na.rm = TRUE),
-              lower = quantile(prob, 0.025, na.rm = TRUE),
-              upper = quantile(prob, 0.975, na.rm = TRUE),
+    summarise(prob_median = quantile(prob, 0.5, na.rm = TRUE),
+              prob_lower = quantile(prob, 0.025, na.rm = TRUE),
+              prob_upper = quantile(prob, 0.975, na.rm = TRUE),
               .groups = "drop")
 
   mean_aggregate_national <- df_model %>%
     group_by(age_idx, sur_idx, cat_idx) %>%
-    summarise(mean = sum(mean * population_mean) / sum(population_mean), .groups = "drop")
+    summarise(prob_mean = sum(prob_mean * population_mean) / sum(population_mean), .groups = "drop")
 
   quantiles_aggregate_national <- x %>%
     group_by(age_idx, sur_idx, cat_idx, sample) %>%
@@ -173,9 +182,9 @@ multinomial_model <- function(formula, model_name, S = 100) {
     summarise(prob = sum(prob * population_mean) / sum(population_mean),
               .groups = "drop") %>%
     group_by(age_idx, sur_idx, cat_idx) %>%
-    summarise(median = quantile(prob, 0.5, na.rm = TRUE),
-              lower = quantile(prob, 0.025, na.rm = TRUE),
-              upper = quantile(prob, 0.975, na.rm = TRUE),
+    summarise(prob_median = quantile(prob, 0.5, na.rm = TRUE),
+              prob_lower = quantile(prob, 0.025, na.rm = TRUE),
+              prob_upper = quantile(prob, 0.975, na.rm = TRUE),
               .groups = "drop")
 
   #' TODO: There are still NA in the intersection of 15-24 and country
@@ -186,21 +195,21 @@ multinomial_model <- function(formula, model_name, S = 100) {
     #' The mean of the national aggregate measures
     left_join(mean_aggregate_national, by = c("age_idx", "sur_idx", "cat_idx")) %>%
     #' Overwriting NAs left_join
-    within(., mean.x <- ifelse(!is.na(mean.y), mean.y, mean.x)) %>%
-    select(-mean.y) %>%
-    rename(mean = mean.x) %>%
+    within(., prob_mean.x <- ifelse(!is.na(prob_mean.y), prob_mean.y, prob_mean.x)) %>%
+    select(-prob_mean.y) %>%
+    rename(prob_mean = prob_mean.x) %>%
     #' The quantiles of 15-24 age group aggregate measures
     left_join(quantiles_aggregate_Y015_024, by = c("area_idx", "sur_idx", "cat_idx")) %>%
     #' The quantiles of the national aggregate measures
     left_join(quantiles_aggregate_national, by = c("age_idx", "sur_idx", "cat_idx")) %>%
     #' Overwriting NAs left_join
     within(., {
-      median.x <- ifelse(!is.na(median.y), median.y, median.x)
-      lower.x <- ifelse(!is.na(lower.y), lower.y, lower.x)
-      upper.x <- ifelse(!is.na(upper.y), upper.y, upper.x)
+      prob_median.x <- ifelse(!is.na(prob_median.y), prob_median.y, prob_median.x)
+      prob_lower.x <- ifelse(!is.na(prob_lower.y), prob_lower.y, prob_lower.x)
+      prob_upper.x <- ifelse(!is.na(prob_upper.y), prob_upper.y, prob_upper.x)
     }) %>%
-    select(-median.y, -lower.y, -upper.y) %>%
-    rename(median = median.x, lower = lower.x, upper = upper.x)
+    select(-prob_median.y, -prob_lower.y, -prob_upper.y) %>%
+    rename(prob_median = prob_median.x, prob_lower = prob_lower.x, prob_upper = prob_upper.x)
 
   message(paste0("Completed fitting ", model_name, "."))
 

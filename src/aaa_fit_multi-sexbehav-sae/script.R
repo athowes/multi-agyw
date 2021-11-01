@@ -348,10 +348,10 @@ res_df <- res_df %>%
     estimate_raw = estimate,
     ci_lower_raw = ci_lower,
     ci_upper_raw = ci_upper,
-    estimate_smoothed = mean,
-    median_smoothed = median,
-    ci_lower_smoothed = lower,
-    ci_upper_smoothed = upper
+    estimate_smoothed = prob_mean,
+    median_smoothed = prob_median,
+    ci_lower_smoothed = prob_lower,
+    ci_upper_smoothed = prob_upper
   ) %>%
   mutate(iso3 = iso3, .before = indicator) %>%
   relocate(model, .before = estimate_smoothed)

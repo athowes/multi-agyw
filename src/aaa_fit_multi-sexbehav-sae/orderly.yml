@@ -43,6 +43,7 @@ packages:
   - tidyr
   - purrr
   - stringr
+  - stats
 
 # global_resources:
 #   depends/naomi3.rds: naomi3.rds

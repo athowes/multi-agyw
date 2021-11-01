@@ -524,10 +524,10 @@ res_df <- res_df %>%
     estimate_raw = estimate,
     ci_lower_raw = ci_lower,
     ci_upper_raw = ci_upper,
-    estimate_smoothed = mean,
-    median_smoothed = median,
-    ci_lower_smoothed = lower,
-    ci_upper_smoothed = upper
+    estimate_smoothed = prob_mean,
+    median_smoothed = prob_median,
+    ci_lower_smoothed = prob_lower,
+    ci_upper_smoothed = prob_upper
   ) %>%
   mutate(iso3 = iso3, .before = indicator) %>%
   relocate(model, .before = estimate_smoothed)
@@ -657,7 +657,7 @@ res_df %>%
     )
   ) %>%
   split(.$model) %>% lapply(function(x)
-  ggplot(x, aes(x = quantile)) +
+  ggplot(x, aes(x = prob_quantile)) +
     facet_grid(age_group ~ survey_id + indicator, drop = TRUE, scales = "free") +
     geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
                   bins = 10, fill = "#D3D3D3", col = "#FFFFFF", alpha = 0.9) +
