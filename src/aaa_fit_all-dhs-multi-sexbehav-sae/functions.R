@@ -42,30 +42,6 @@ tau_pc <- function(x, u, alpha) {
   list(prec = list(prec = "pc.prec", param = c(u, alpha), initial = log(x)))
 }
 
-#' Create group-wise sum-to-zero constraint for `R-INLA`
-#'
-#' @param df
-#' @param z_idx
-#' @param z_cat_idx
-#' @return Constraint as used by `R-INLA`.
-create_interaction_constraint <- function(df, z_idx, z_cat_idx) {
-  key <- df %>%
-    select(cat_idx, !!z_idx, !!z_cat_idx) %>%
-    distinct(.data[[z_cat_idx]], .keep_all = TRUE)
-
-  unique_values <- unique(key$cat_idx)
-  indices <- list()
-
-  A <- matrix(0, ncol = nrow(key), nrow = length(unique_values))
-  e <- matrix(0, ncol = length(unique_values))
-
-  for(i in seq_along(unique_values)) {
-    A[i, which(key[[z_idx]] == i)] <- 1
-  }
-
-  return(list(A = A, e = e))
-}
-
 #' Fit multinomial model using Poisson trick.
 #'
 #' @param formula A formula object passed to `R-INLA`.
