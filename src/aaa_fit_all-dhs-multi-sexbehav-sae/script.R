@@ -698,7 +698,7 @@ coverage_df %>%
       geom_line(col = "#999999") +
       geom_abline(intercept = 0, slope = 1, linetype = "dashed", col = "#009E73") +
       ylim(0, 1) +
-      labs(x = "Nominal coverage", y = "Empirical coverage") +
+      labs(title = paste0(x$model[1]), x = "Nominal coverage", y = "Empirical coverage") +
       scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1))
   })
 
