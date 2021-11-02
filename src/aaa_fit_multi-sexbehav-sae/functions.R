@@ -46,8 +46,9 @@ tau_pc <- function(x, u, alpha) {
 #'
 #' @param formula A formula object passed to `R-INLA`.
 #' @param model A string containing the name of the model.
+#' @param S The number of Monte Carlo samples used in posterior predictive checks.
 #' @return A dataframe adding columns to `df_model`.
-multinomial_model <- function(formula, model_name, S = 100) {
+multinomial_model <- function(formula, model_name, S = 1000) {
 
   message(paste0("Begin fitting ", model_name, "."))
 
