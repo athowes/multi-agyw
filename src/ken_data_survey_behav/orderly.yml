@@ -1,14 +1,10 @@
-script: ken_survey_behav.R
+script: script.R
 
 artefacts:
   - data:
-      description: survey indicator dataset
+      description: Survey indicator dataset
       filenames:
         - ken_survey_indicators_sexbehav.csv
-  - data:
-      description: hiv indicator dataset
-      filenames:
-        - ken_hiv_indicators_sexbehav.csv
 
 packages:
   - dplyr

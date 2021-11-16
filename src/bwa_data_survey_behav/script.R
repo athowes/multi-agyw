@@ -1,3 +1,7 @@
+#' Uncomment and run the two line below to resume development of this script
+# orderly::orderly_develop_start("bwa_data_survey_behav")
+# setwd("src/bwa_data_survey_behav")
+
 areas <- read_sf("depends/bwa_areas.geojson")
 raw <- read_csv("depends/bwa2013bais-recode-sexbehav.csv")
 
@@ -9,7 +13,6 @@ survey_regions <- raw %>%
          survey_region_id = district_code,
          survey_region_name = district_name) %>%
   distinct()
-
 
 survey_clusters <- raw %>%
   transmute(survey_id,
@@ -28,7 +31,6 @@ survey_clusters <- raw %>%
   as.data.frame()
 
 #' Recode list assembled by plotting survey clusters vs. areas
-
 survey_clusters %>%
   left_join(survey_regions, by = c("survey_id", "survey_region_id")) %>%
   st_as_sf() %>%
@@ -68,7 +70,6 @@ survey_areas_recode <- list(
   `91` = "BWA_3_11ah"
 )
 
-
 stopifnot(unlist(survey_areas_recode) %in% areas$area_id)
 
 survey_region_areas <- survey_regions %>%
@@ -92,24 +93,27 @@ survey_clusters <- assign_dhs_cluster_areas(survey_clusters, survey_region_areas
 
 survey_region_boundaries <- survey_regions %>%
   mutate(
-    survey_region_area_id = case_when(survey_region_name == "Kweneng East" ~ "BWA_3_14to",
-                                      TRUE ~ survey_region_area_id)
+    survey_region_area_id = case_when(
+      survey_region_name == "Kweneng East" ~ "BWA_3_14to",
+      TRUE ~ survey_region_area_id
+    )
   ) %>%
   left_join(areas, by = c("survey_region_area_id" = "area_id")) %>%
   st_as_sf()
 
 
-p_coord_check <- plot_survey_coordinate_check(survey_clusters,
-                                              survey_region_boundaries,
-                                              survey_region_areas)
+p_coord_check <- plot_survey_coordinate_check(
+  survey_clusters,
+  survey_region_boundaries,
+  survey_region_areas
+)
 
 dir.create("check")
 pdf("check/bwa2013bais-cluster-check.pdf", h = 5, w = 7)
 p_coord_check
 dev.off()
 
-
-#' ## Survey individuals dataset
+#' Survey individuals dataset
 
 #' Create individuals data
 survey_individuals <- raw %>%
@@ -127,7 +131,7 @@ survey_individuals <- raw %>%
   )
 
 survey_biomarker <- raw %>%
-  group_by(survey_id) %>%  # for normalizing weights
+  group_by(survey_id) %>%  #' For normalizing weights
   transmute(
     individual_id,
     hivweight = Weight1 / mean(Weight1),
@@ -140,20 +144,19 @@ survey_biomarker <- raw %>%
   ) %>%
   ungroup()
 
-
-#' ## Survey meta data
-
+#' Survey meta data
 survey_meta <- survey_individuals %>%
   group_by(survey_id) %>%
-  summarise(female_age_min = min(if_else(sex == "female", age, NA_integer_), na.rm=TRUE),
-            female_age_max = max(if_else(sex == "female", age, NA_integer_), na.rm=TRUE),
-            male_age_min = min(if_else(sex == "male", age, NA_integer_), na.rm=TRUE),
-            male_age_max = max(if_else(sex == "male", age, NA_integer_), na.rm=TRUE)) %>%
+  summarise(
+    female_age_min = min(if_else(sex == "female", age, NA_integer_), na.rm = TRUE),
+    female_age_max = max(if_else(sex == "female", age, NA_integer_), na.rm = TRUE),
+    male_age_min = min(if_else(sex == "male", age, NA_integer_), na.rm = TRUE),
+    male_age_max = max(if_else(sex == "male", age, NA_integer_), na.rm = TRUE)
+  ) %>%
   mutate(survey_mid_calendar_quarter = "CY2013Q1") %>%
   ungroup()
 
 #' Create sexual behaviour data
-
 survey_sexbehav <- raw %>%
   group_by(survey_id) %>%  # for normalizing weights
   transmute(
@@ -168,11 +171,10 @@ survey_sexbehav <- raw %>%
 
 survey_other <- list(survey_sexbehav)
 
-age_group_include <- c("Y015_019","Y020_024", "Y025_029","Y015_024")
+age_group_include <- c("Y015_019", "Y020_024", "Y025_029", "Y015_024")
 sex <- c("female")
 
-#' ## Calculate indicators by area/sex/age
-
+#' Survey indicator dataset
 survey_indicators <- calc_survey_indicators(
   survey_meta,
   survey_regions,
@@ -186,55 +188,13 @@ survey_indicators <- calc_survey_indicators(
   area_bottom_level = 3
 )
 
-#' ## Save survey indiciators dataset
+#' Save survey indicators dataset
 write_csv(survey_indicators, "bwa_survey_indicators_sexbehav.csv", na = "")
 
-#' ## Save formatted datasets
+#' Save formatted datasets
 write_csv(survey_meta, "bwa2013bais_survey_meta.csv", na = "")
 write_csv(survey_regions, "bwa2013bais_survey_regions.csv", na = "")
 write_csv(survey_clusters, "bwa2013bais_survey_clusters.csv", na = "")
 write_csv(survey_individuals, "bwa2013bais_survey_individuals.csv", na = "")
 write_csv(survey_biomarker, "bwa2013bais_survey_biomarker.csv", na = "")
 write_csv(survey_sexbehav, "bwa2013bais_survey_sexbehav.csv", na = "")
-
-#' ## Get prevalence estimates for different sexual behaviours
-
-hiv_indicators <- calc_survey_hiv_indicators(
-  survey_meta,
-  survey_regions,
-  survey_clusters,
-  survey_individuals,
-  survey_biomarker,
-  survey_other,
-  as.data.frame(areas),
-  sex = sex,
-  age_group_include = age_group_include,
-  area_top_level = 0,
-  area_bottom_level = 0,
-  formula = ~ indicator + survey_id + area_id + res_type + sex + age_group +
-    sex12m + eversex + sexcohab + sexnonreg + sexpaid12m + sti12m
-)
-
-#' ## Keep only the stratifications w/"all" for others
-
-hiv_indicators <- dplyr::bind_rows(dplyr::filter(hiv_indicators, eversex=="all" & sexcohab=="all" &
-                                                   sexnonreg=="all" & sexpaid12m=="all" & sti12m=="all" &
-                                                   (!is.na(sex12m) & sex12m!="all")),
-                                   dplyr::filter(hiv_indicators, sex12m=="all" & sexcohab=="all" &
-                                                   sexnonreg=="all" & sexpaid12m=="all" & sti12m=="all" &
-                                                   (!is.na(eversex) & eversex!="all")),
-                                   dplyr::filter(hiv_indicators, sex12m=="all" & eversex=="all" &
-                                                   sexnonreg=="all" & sexpaid12m=="all" & sti12m=="all" &
-                                                   (!is.na(sexcohab) & sexcohab!="all")),
-                                   dplyr::filter(hiv_indicators, sex12m=="all" & eversex=="all" &
-                                                   sexcohab=="all" & sexpaid12m=="all" & sti12m=="all" &
-                                                   (!is.na(sexnonreg) & sexnonreg!="all")),
-                                   dplyr::filter(hiv_indicators, sex12m=="all" & eversex=="all" &
-                                                   sexcohab=="all" & sexnonreg=="all" & sti12m=="all" &
-                                                   (!is.na(sexpaid12m) & sexpaid12m!="all")),
-                                   dplyr::filter(hiv_indicators, sex12m=="all" & eversex=="all" &
-                                                   sexcohab=="all" & sexnonreg=="all" & sexpaid12m=="all" &
-                                                   (!is.na(sti12m) & sti12m!="all")))
-
-#' ## Save HIV inidcators dataset
-write_csv(hiv_indicators, "bwa_hiv_indicators_sexbehav.csv", na = "")

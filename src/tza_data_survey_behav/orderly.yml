@@ -1,14 +1,10 @@
-script: tza_survey_behav.R
+script: script.R
 
 artefacts:
   - data:
-      description: survey indicator dataset
+      description: Survey indicator dataset
       filenames:
         - tza_survey_indicators_sexbehav.csv
-  - data:
-      description: hiv indicator dataset
-      filenames:
-        - tza_hiv_indicators_sexbehav.csv
 
 packages:
   - sf

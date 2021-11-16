@@ -1,23 +1,21 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("zwe_data_survey_behav")
-# setwd("src/zwe_data_survey_behav")
+# orderly::orderly_develop_start("zaf_data_survey_behav")
+# setwd("src/zaf_data_survey_behav")
 
 #' ISO3 country code
-iso3 <- "UGA"
+iso3 <- "ZAF"
 
 #' Load area hierarchy
-areas <- read_sf("depends/uga_areas.geojson")
+areas <- read_sf("depends/zaf_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
+areas_wide <- st_make_valid(areas_wide) #' Is this bad?
 
-surveys <- create_surveys_dhs(iso3, survey_characteristics = 24)
-
+surveys <- create_surveys_dhs(iso3)
 survey_meta <- create_survey_meta_dhs(surveys)
 
-#' Having issues downloading the region boundaries for some surveys, so excluding
-surveys <- surveys %>%
-  filter(!(SurveyId %in% c("UG2004AIS")))
-
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
+survey_region_boundaries <- st_make_valid(survey_region_boundaries)
+# survey_region_boundaries <- st_buffer(survey_region_boundaries, 0)
 surveys <- surveys_add_dhs_regvar(surveys, survey_region_boundaries)
 
 #' Allocate each area to survey region
@@ -66,7 +64,7 @@ survey_other <- list(survey_sexbehav)
 age_group_include <- c("Y015_019", "Y020_024", "Y025_029", "Y015_024")
 sex <- c("female")
 
-#' # Survey indicator dataset
+#' Survey indicator dataset
 survey_indicators <- calc_survey_indicators(
   survey_meta,
   survey_regions,
@@ -76,8 +74,9 @@ survey_indicators <- calc_survey_indicators(
   survey_other,
   st_drop_geometry(areas),
   sex = sex,
-  age_group_include = age_group_include
+  age_group_include = age_group_include,
+  area_bottom_level = 2
 )
 
 #' Save survey indicators dataset
-write_csv(survey_indicators, "uga_survey_indicators_sexbehav.csv", na = "")
+write_csv(survey_indicators, "zaf_survey_indicators_sexbehav.csv", na = "")

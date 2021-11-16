@@ -9,8 +9,7 @@ iso3 <- "MWI"
 areas <- read_sf("depends/mwi_areas.geojson")
 areas_wide <- spread_areas(areas)
 
-#' Filter all of the DHS with the corresponding iso3 code to the most recent survey
-#' and obtain the meta data
+#' Filter all of the DHS with the corresponding iso3 code to the most recent survey and obtain the meta data
 surveys <- create_surveys_dhs(iso3)
 survey_meta <- create_survey_meta_dhs(surveys)
 
@@ -35,29 +34,39 @@ hrd <- dhs_datasets(surveyIds = "MW2015DHS", fileType = "HR", fileFormat = "FL")
 hr <- readRDS(get_datasets(hrd)[[1]]) #' There is only one survey here
 
 hr15dhs_regions <- hr %>%
-  distinct(survey_id = "MWI2015DHS",
-           survey_region_id = shdist,
-           survey_region_name = as_factor(shdist))
+  distinct(
+    survey_id = "MWI2015DHS",
+    survey_region_id = shdist,
+    survey_region_name = as_factor(shdist)
+  )
 
 #' All of the rows of hr15dhs_regions without a match in survey_region_boundaries (107, 210, 314, 315)
-anti_join(hr15dhs_regions,
-          survey_region_boundaries,
-          by = c("survey_id", "survey_region_id"))
+anti_join(
+  hr15dhs_regions,
+  survey_region_boundaries,
+  by = c("survey_id", "survey_region_id")
+)
 
 metro_boundaries <- areas %>%
-  filter(area_level == 5,
-         grepl("City$", area_name)) %>%
+  filter(
+    area_level == 5,
+    grepl("City$", area_name)
+  ) %>%
   select(area_id, area_name)
 
-survey_region_id_recode <- c("MWI_5_08" = 107,
-                             "MWI_5_18" = 210,
-                             "MWI_5_25" = 314,
-                             "MWI_5_33" = 315)
+survey_region_id_recode <- c(
+  "MWI_5_08" = 107,
+  "MWI_5_18" = 210,
+  "MWI_5_25" = 314,
+  "MWI_5_33" = 315
+)
 
-survey_region_name_recode <- c("MWI_5_08" = "Mzuzu City",
-                               "MWI_5_18" = "Lilongwe City",
-                               "MWI_5_25" = "Zomba City",
-                               "MWI_5_33" = "Blantyre City")
+survey_region_name_recode <- c(
+  "MWI_5_08" = "Mzuzu City",
+  "MWI_5_18" = "Lilongwe City",
+  "MWI_5_25" = "Zomba City",
+  "MWI_5_33" = "Blantyre City"
+)
 
 metro_boundaries <- metro_boundaries %>%
   mutate(
@@ -95,15 +104,17 @@ validate_survey_region_areas(survey_region_areas, survey_region_boundaries)
 
 survey_regions <- create_survey_regions_dhs(survey_region_areas)
 
-#' # Survey clusters dataset
+#' Survey clusters dataset
 survey_clusters <- create_survey_clusters_dhs(surveys)
 
 #' Snap survey clusters to areas
 survey_clusters <- assign_dhs_cluster_areas(survey_clusters, survey_region_areas)
 
-p_coord_check <- plot_survey_coordinate_check(survey_clusters,
-                                              survey_region_boundaries,
-                                              survey_region_areas)
+p_coord_check <- plot_survey_coordinate_check(
+  survey_clusters,
+  survey_region_boundaries,
+  survey_region_areas
+)
 
 dir.create("check")
 pdf(paste0("check/", tolower(iso3), "_dhs-cluster-check.pdf"), h = 7, w = 6)
@@ -112,27 +123,37 @@ dev.off()
 
 #' Individual dataset
 individuals <- create_individual_hiv_dhs(surveys)
+names(individuals)
 
+#' Extract the individual characteristics from the survey
 survey_individuals <- create_survey_individuals_dhs(individuals)
-survey_biomarker <- create_survey_biomarker_dhs(individuals)
+names(survey_individuals)
 
+#' Extract the HIV related characteristics from the survey
+survey_biomarker <- create_survey_biomarker_dhs(individuals)
+names(survey_biomarker)
+
+#' Extract sexual behaviour characteristics from the survey
+#' giftsvar is a special case indicator used to determine the type of survey question
 survey_sexbehav <- create_sexbehav_dhs(surveys) %>%
-  #' giftsvar is a special case indicator used to determine the type of survey question
   select(-giftsvar)
+names(survey_sexbehav)
+
+survey_other <- list(survey_sexbehav)
+
+age_group_include <- c("Y015_019", "Y020_024", "Y025_029", "Y015_024")
+sex <- c("female")
 
 #' Remaining NA are all in eversex and sti12m
 survey_sexbehav %>% is.na() %>% colSums()
 
 #' Verify no overlap
 stopifnot(
-  mutate(survey_sexbehav, r_sum = (1 - sex12m) + sexcohab + sexnonreg + sexpaid12m) %>%
-    filter(r_sum != 1) %>% nrow() == 0
+  survey_sexbehav %>%
+    mutate(r_sum = (1 - sex12m) + sexcohab + sexnonreg + sexpaid12m) %>%
+    filter(r_sum != 1) %>%
+    nrow() == 0
 )
-
-survey_other <- list(survey_sexbehav)
-
-age_group_include <- c("Y015_019", "Y020_024", "Y025_029","Y015_024")
-sex <- c("female")
 
 #' Survey indicator dataset
 survey_indicators <- calc_survey_indicators(
@@ -150,44 +171,3 @@ survey_indicators <- calc_survey_indicators(
 
 #' Save survey indicators dataset
 write_csv(survey_indicators, "mwi_survey_indicators_sexbehav.csv", na = "")
-
-#' Get prevalence estimates for different sexual behaviours
-hiv_indicators <- calc_survey_hiv_indicators(
-  survey_meta,
-  survey_regions,
-  survey_clusters,
-  survey_individuals,
-  survey_biomarker,
-  #' Including sexnonregplus causes errors
-  survey_other = list(survey_sexbehav %>% select(-sexnonregplus)),
-  st_drop_geometry(areas),
-  sex = sex,
-  age_group_include = age_group_include,
-  area_top_level = 0,
-  area_bottom_level = 0,
-  formula = ~ indicator + survey_id + area_id + res_type + sex + age_group +
-    sex12m + eversex + sexcohab + sexnonreg + sexpaid12m + sti12m
-)
-
-#' Keep only the stratifications with "all" for others
-hiv_indicators <- dplyr::bind_rows(dplyr::filter(hiv_indicators, eversex=="all" & sexcohab=="all" &
-                                         sexnonreg=="all" & sexpaid12m=="all" & sti12m=="all" &
-                                         (!is.na(sex12m) & sex12m!="all")),
-                         dplyr::filter(hiv_indicators, sex12m=="all" & sexcohab=="all" &
-                                         sexnonreg=="all" & sexpaid12m=="all" & sti12m=="all" &
-                                         (!is.na(eversex) & eversex!="all")),
-                         dplyr::filter(hiv_indicators, sex12m=="all" & eversex=="all" &
-                                         sexnonreg=="all" & sexpaid12m=="all" & sti12m=="all" &
-                                       (!is.na(sexcohab) & sexcohab!="all")),
-                         dplyr::filter(hiv_indicators, sex12m=="all" & eversex=="all" &
-                                         sexcohab=="all" & sexpaid12m=="all" & sti12m=="all" &
-                                       (!is.na(sexnonreg) & sexnonreg!="all")),
-                         dplyr::filter(hiv_indicators, sex12m=="all" & eversex=="all" &
-                                         sexcohab=="all" & sexnonreg=="all" & sti12m=="all" &
-                                       (!is.na(sexpaid12m) & sexpaid12m!="all")),
-                         dplyr::filter(hiv_indicators, sex12m=="all" & eversex=="all" &
-                                         sexcohab=="all" & sexnonreg=="all" & sexpaid12m=="all" &
-                                       (!is.na(sti12m) & sti12m!="all")))
-
-#' Save HIV indicators dataset
-write_csv(hiv_indicators, "mwi_hiv_indicators_sexbehav.csv", na = "")

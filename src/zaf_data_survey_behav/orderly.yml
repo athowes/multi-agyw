@@ -1,14 +1,10 @@
-script: zaf_survey_behav.R
+script: script.R
 
 artefacts:
   - data:
-      description: survey indicator dataset
+      description: Survey indicator dataset
       filenames:
         - zaf_survey_indicators_sexbehav.csv
-  - data:
-      description: hiv indicator dataset
-      filenames:
-        - zaf_hiv_indicators_sexbehav.csv
 
 packages:
   - readr
