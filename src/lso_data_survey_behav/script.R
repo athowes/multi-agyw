@@ -5,6 +5,10 @@
 #' ISO3 country code
 iso3 <- "LSO"
 
+#' Obtain PHIA data
+phia <- read_csv("depends/phia_sexbehav.csv") %>%
+  filter(substr(survey_id, 1, 3) == iso3)
+
 #' Load area hierarchy
 areas <- read_sf("depends/lso_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
