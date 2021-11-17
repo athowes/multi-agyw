@@ -15,6 +15,20 @@ stable_softmax <- function(x) {
   exp(x) / sum(exp(x))
 }
 
+#' Repeat a matrix along the diagonal.
+#'
+#' The output should have dimensions `dim(M) * n`.
+#'
+#' @param M A matrix.
+#' @param n The number of times to be repeated.
+#' @return A repeated matrix.
+repeat_matrix <- function(M, n) {
+  MM <- Matrix::bdiag(rep(list(M), n))
+  rownames(MM) <- 1:nrow(MM)
+  colnames(MM) <- 1:ncol(MM)
+  return(MM)
+}
+
 #' Categorical to indicators (dummy variables).
 #'
 #' @param x A categorical column.

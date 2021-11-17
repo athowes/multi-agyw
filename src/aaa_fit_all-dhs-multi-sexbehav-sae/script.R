@@ -343,15 +343,15 @@ if(include_interactions & include_temporal) {
                                 constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
-  #' ALERT! Constraints not properly being applied here!
-  #' Going to need a custom extraconstr to make this one correct
-  #' Or the other option is to put area_sur_idx, but then a different model is needed
+  #' Create Besag x IID interaction adjacency matrix
+  #' Check the resulting matrix with image()
+  interaction_adjM_6x <- repeat_matrix(adjM, n = length(unique(df$sur_idx)))
 
   #' Model 6x: category random effects (IID), age x category random effects (IID),
   #' space x category random effects (Besag), survey x category random effects (IID)
   #' space x survey x category random effects (Besag x IID)
   formula6x <- update(formula6,
-                      . ~ . + f(area_idx_copy, model = "besag", graph = adjM, scale.model = TRUE, group = sur_cat_idx,
+                      . ~ . + f(area_sur_idx, model = "besag", graph = interaction_adjM_6x, scale.model = TRUE, group = cat_idx,
                                 control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
@@ -368,11 +368,8 @@ if(include_interactions & include_temporal) {
   )
 
   #' Create Besag x IID interaction adjacency matrix
-  #' Check the resulting matrix with image(interaction_adjM)
-  #' Three copies of adjM below because K = 3 (could be done better)
-  interaction_adjM <- Matrix::bdiag(adjM, adjM, adjM)
-  rownames(interaction_adjM) <- 1:nrow(interaction_adjM)
-  colnames(interaction_adjM) <- 1:ncol(interaction_adjM)
+  #' Check the resulting matrix with image()
+  interaction_adjM_9x <-  repeat_matrix(adjM, n = length(unique(df$cat_idx)))
 
   #' ALERT! Constraints not properly being applied here!
   #' Going to need a custom extraconstr to make this one correct
@@ -383,7 +380,7 @@ if(include_interactions & include_temporal) {
   #' space x survey x category random effects (Besag x AR1)
   formula9x <- update(
     formula9,
-    . ~ . + f(area_cat_idx, model = "besag", graph = interaction_adjM, scale.model = TRUE, group = sur_idx,
+    . ~ . + f(area_cat_idx, model = "besag", graph = interaction_adjM_9x, scale.model = TRUE, group = sur_idx,
               control.group = list(model = "ar1", hyper = list(rho = list(prior = "pc.cor1", param = c(0, 0.75)))),
               constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
