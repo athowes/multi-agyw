@@ -146,7 +146,7 @@ df <- df %>%
     sur_cat_idx = to_int(interaction(sur_idx, cat_idx)),
     age_cat_idx = to_int(interaction(age_idx, cat_idx)),
     area_cat_idx = to_int(interaction(area_idx, cat_idx)),
-    area_sur_idx = interaction(area_idx, sur_idx),
+    area_sur_idx = to_int(interaction(area_idx, sur_idx)),
     #' Is the best way to add obs_idx? Perhaps can be added earlier in the pipeline
     obs_idx = to_int(interaction(age_idx, area_idx, sur_idx)),
     area_idx_copy = area_idx,
