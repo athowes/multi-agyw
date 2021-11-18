@@ -390,8 +390,12 @@ if(include_interactions & include_temporal) {
 }
 
 #' Fit the models
+
+#' Number of Monte Carlo samples
+S <- 100
+
 res <- purrr::pmap(
-  list(formula = formulas, model_name = models),
+  list(formula = formulas, model_name = models, S = ),
   multinomial_model
 )
 
