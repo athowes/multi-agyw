@@ -587,15 +587,8 @@ dev.off()
 
 #' Artefact: Stacked proportion barplots
 
-pdf("stacked-proportions.pdf", h = 10, w = 12)
-
-cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
-
-res_df %>%
-  filter(area_id != iso3) %>%
-  split(.$survey_id) %>%
-  lapply(function(x)
-  x %>% mutate(
+res_df <- res_df %>%
+  mutate(
     age_group = fct_relevel(age_group, "Y015_024", after = 3) %>%
       fct_recode(
         "15-19" = "Y015_019",
@@ -603,51 +596,6 @@ res_df %>%
         "25-29" = "Y025_029",
         "15-24" = "Y015_024"
       ),
-    model = fct_recode(model,
-      "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
-      "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
-      "7" = "Model 7", "8" = "Model 8", "9" = "Model 9"
-    ),
-    indicator = fct_recode(indicator,
-      "No sex (past 12 months)" = "nosex12m",
-      "Cohabiting partner" = "sexcohab",
-      "Nonregular partner(s) or paid for sex (past 12 months)" = "sexnonregplus"
-    )
-  ) %>%
-  ggplot(aes(x = model, y = estimate_smoothed, group = model, fill = indicator)) +
-  geom_bar(position = "fill", stat = "identity", alpha = 0.8) +
-  facet_grid(age_group ~ area_name, space = "free_x", scales = "free_x", switch = "x") +
-  labs(x = "District", y = "Proportion", fill = "Category") +
-  scale_color_manual(values = cbpalette) +
-  theme_minimal() +
-  labs(title = paste0(paste(unique(x$survey_id), collapse = ", "), ": posterior category mean proportions by model")) +
-  theme(
-    axis.text.x = element_blank(),
-    plot.title = element_text(face = "bold"),
-    legend.position = "bottom",
-    legend.key.width = unit(4, "lines"),
-    strip.placement = "outside",
-    strip.text.x = element_text(angle = 90, hjust = 0)
-  )
-)
-
-dev.off()
-
-#' Artefact: Posterior predictive checks of coverage
-
-pdf("coverage-histograms.pdf", h = 10, w = 12)
-
-coverage_df <- res_df %>%
-  filter(
-    area_id != iso3,
-    age_group != "Y015_024"
-  ) %>%
-  mutate(
-    age_group = fct_recode(age_group,
-      "15-19" = "Y015_019",
-      "20-24" = "Y020_024",
-      "25-29" = "Y025_029",
-    ),
     indicator = fct_recode(indicator,
       "No sex" = "nosex12m",
       "Cohabiting partner" = "sexcohab",
@@ -655,7 +603,50 @@ coverage_df <- res_df %>%
     )
   )
 
-coverage_df %>%
+pdf("stacked-proportions.pdf", h = 10, w = 12)
+
+cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
+
+res_df %>%
+  filter(area_id != iso3) %>%
+  mutate(
+    model = fct_recode(model,
+      "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
+      "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
+      "7" = "Model 7", "8" = "Model 8", "9" = "Model 9"
+    )
+  ) %>%
+  split(.$survey_id) %>%
+  lapply(function(x) {
+    ggplot(x, aes(x = model, y = estimate_smoothed, group = model, fill = indicator)) +
+      geom_bar(position = "fill", stat = "identity", alpha = 0.8) +
+      facet_grid(age_group ~ area_name, space = "free_x", scales = "free_x", switch = "x") +
+      labs(x = "District", y = "Proportion", fill = "Category") +
+      scale_color_manual(values = cbpalette) +
+      theme_minimal() +
+      labs(title = paste0(paste(unique(x$survey_id), collapse = ", "), ": posterior category mean proportions by model")) +
+      theme(
+        axis.text.x = element_blank(),
+        plot.title = element_text(face = "bold"),
+        legend.position = "bottom",
+        legend.key.width = unit(4, "lines"),
+        strip.placement = "outside",
+        strip.text.x = element_text(angle = 90, hjust = 0)
+      )
+    }
+  )
+
+dev.off()
+
+#' Artefact: Posterior predictive checks of coverage
+
+pdf("coverage-histograms.pdf", h = 10, w = 12)
+
+res_df %>%
+  filter(
+    area_id != iso3,
+    age_group != "15-24"
+  ) %>%
   split(.$model) %>%
   lapply(function(x) {
   ggplot(x, aes(x = prob_quantile)) +
@@ -677,7 +668,7 @@ empirical_coverage <- function(x, nominal_coverage) {
   sum(y) / length(y)
 }
 
-coverage_df %>%
+res_df %>%
   split(.$model) %>%
   lapply(function(x) {
   x %>%
