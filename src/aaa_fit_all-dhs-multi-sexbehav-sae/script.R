@@ -395,7 +395,7 @@ if(include_interactions & include_temporal) {
 S <- 100
 
 res <- purrr::pmap(
-  list(formula = formulas, model_name = models, S = ),
+  list(formula = formulas, model_name = models, S = S),
   multinomial_model
 )
 
@@ -609,7 +609,7 @@ res_df <- res_df %>%
 
 pdf("stacked-proportions.pdf", h = 10, w = 12)
 
-cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
+cbpalette <- c("#56B4E9", "#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
 
 res_df %>%
   filter(area_id != iso3) %>%
@@ -646,6 +646,20 @@ dev.off()
 
 pdf("coverage-histograms.pdf", h = 10, w = 12)
 
+bins <- 20
+alpha <- 0.05
+
+ci <- qbinom(
+  p = c(alpha / 2, 0.5, (1 - alpha / 2)),
+  size = S,
+  prob = 1 / bins
+)
+
+polygon_data <- data.frame(
+  x = c(-0.05, 0, 1, 0, -0.05, 1.05, 1, 1.05, -0.05),
+  y = c(ci[1], ci[2], ci[2], ci[2], ci[3], ci[3], ci[2], ci[1], ci[1]) / S
+)
+
 res_df %>%
   filter(
     area_id != iso3,
@@ -656,9 +670,9 @@ res_df %>%
   ggplot(x, aes(x = prob_quantile)) +
     facet_grid(indicator ~ survey_id, drop = TRUE, scales = "free") +
     geom_histogram(aes(y = (..count..) / tapply(..count..,..PANEL..,sum)[..PANEL..]),
-                   bins = 10, fill = "#D3D3D3", col = "#FFFFFF", alpha = 0.9) +
-    geom_hline(linetype = "dashed", yintercept = 0.1, col = "#56B4E9") +
-    labs(title = paste0(x$model[1]), x = "Quantile", y = "Proportion of raw estimates in corresponding quantile") +
+                   breaks = seq(0, 1, length.out = bins + 1), fill = "#009E73", col = "black", alpha = 0.9) +
+    geom_polygon(data = polygon_data, aes(x = x, y = y), fill = "grey75", color = "grey50", alpha = 0.6) +
+    labs(title = paste0(x$model[1]), x = "", y = "") +
     scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1))
   })
 
