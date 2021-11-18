@@ -2,6 +2,7 @@ script: script.R
 
 sources:
   - functions.R
+  - ecdf.R
 
 artefacts:
   - data:
