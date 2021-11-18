@@ -29,7 +29,7 @@ artefacts:
       description: Coverage posterior predictive checks
       filenames:
         - coverage-histograms.pdf
-        - coverage-quantiles.pdf
+        - coverage-ecdf-diff.pdf
 
 parameters:
   iso3:

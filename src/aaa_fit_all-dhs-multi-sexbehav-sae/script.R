@@ -678,7 +678,7 @@ res_df %>%
 
 dev.off()
 
-pdf("coverage-quantiles.pdf", h = 10, w = 12)
+pdf("coverage-ecdf-diff.pdf", h = 10, w = 12)
 
 empirical_coverage <- function(x, nominal_coverage) {
   alpha <- (1 - nominal_coverage)
@@ -695,16 +695,18 @@ res_df %>%
     split(~ indicator + survey_id) %>%
     lapply(function(y) {
       empirical_coverage <- purrr::map_dbl(seq(0, 1, by = 0.01), ~ empirical_coverage(y$prob_quantile, .x))
-      data.frame(nominal_coverage = seq(0, 1, by = 0.01), empirical_coverage = empirical_coverage)
+      data.frame(nominal_coverage = seq(0, 1, by = 0.01), empirical_coverage = empirical_coverage) %>%
+        mutate(
+          ecdf_diff = empirical_coverage - nominal_coverage
+        )
     }) %>%
     purrr::map_df(~as.data.frame(.x), .id = c("indicator.survey_id")) %>%
     separate(indicator.survey_id, c("indicator", "survey_id"), sep = "[.]") %>%
-    ggplot(aes(x = nominal_coverage, y = empirical_coverage)) +
+    ggplot(aes(x = nominal_coverage, y = ecdf_diff)) +
       facet_grid(indicator ~ survey_id, drop = TRUE, scales = "free") +
-      geom_line(col = "#999999") +
-      geom_abline(intercept = 0, slope = 1, linetype = "dashed", col = "#009E73") +
-      ylim(0, 1) +
-      labs(title = paste0(x$model[1]), x = "Nominal coverage", y = "Empirical coverage") +
+      geom_line(col = "#009E73") +
+      geom_abline(intercept = 0, slope = 0, linetype = "dashed", col = "grey50") +
+      labs(title = paste0(x$model[1]), x = "", y = "ECDF difference") +
       scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1))
   })
 
