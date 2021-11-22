@@ -5,10 +5,6 @@
 #' ISO3 country code
 iso3 <- "LSO"
 
-#' Obtain PHIA data
-phia <- read_csv("depends/phia_sexbehav.csv") %>%
-  filter(substr(survey_id, 1, 3) == iso3)
-
 #' Load area hierarchy
 areas <- read_sf("depends/lso_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
@@ -81,3 +77,78 @@ survey_indicators <- calc_survey_indicators(
 
 #' Save survey indicators dataset
 write_csv(survey_indicators, "lso_survey_indicators_sexbehav.csv", na = "")
+
+#' PHIA data from Jeff's reports
+phia_survey_meta <- read_csv("depends/lso2017phia_survey_meta.csv")
+phia_survey_regions <- read_csv("depends/lso2017phia_survey_regions.csv")
+phia_survey_clusters <- read_csv("depends/lso2017phia_survey_clusters.csv")
+phia_survey_individuals <- read_csv("depends/lso2017phia_survey_individuals.csv")
+phia_survey_biomarker <- read_csv("depends/lso2017phia_survey_biomarker.csv")
+
+#' Sexual behaviour PHIA data
+#'
+#' * sexbehav_time_intercourse:	(integer)	Time since last intercourse (imputed)
+#' * sexbehav_age: (integer) Age at first intercourse (imp)
+#' * sexbehav_partner_num: (integer) No. had sex including husband in last 12 months
+#' * sexbehav_relationship:	(character)	Relationship with last sex partner
+#' * sexbehav_other1: (character)	Relationship with other sex partner (1)
+#' * sexbehav_other2: (character)	Relationship with other sex partner (2)
+#' * sexbehav_sti: (integer) Had any STD in last 12 months
+#' * sexbehav_sore:	(integer)	Had genital sore/ulcer in last 12 months
+#' * sexbehav_discharge: (integer)	Had genital discharge in last 12 months
+#' * sexbehav_marital: (integer) Current marital status
+#' * sexbehav_condom:	(integer)	Condom used during last sex with most recent partner
+
+phia_survey_sexbehav <- read_csv("depends/phia_sexbehav.csv") %>%
+  filter(substr(survey_id, 1, 3) == iso3)
+
+#' Add categories
+phia_survey_sexbehav <- phia_survey_sexbehav %>%
+  mutate(
+    #' Ever had sex
+    eversex = case_when(
+      sexbehav_age == 0 ~ FALSE,
+      sexbehav_age > 0 ~ TRUE,
+      sexbehav_partner_num > 0 ~ TRUE, #' Sex in past year implies eversex
+      is.na(sexbehav_age) ~ TRUE
+    ),
+    #' Reports sexual activity in the last 12 months
+    sex12m = case_when(
+      sexbehav_partner_num == 0 ~ FALSE,
+      sexbehav_partner_num > 0 ~ TRUE,
+      is.na(sexbehav_partner_num) ~ NA
+    ),
+    #' Does not report sexual activity in the last 12 months
+    nosex12m = case_when(
+      sex12m ~ FALSE,
+      !sex12m ~ TRUE
+    ),
+    #' Reports sexual activity with exactly one cohabiting partner in the past 12 months
+    sexcohab = case_when(
+      eversex == FALSE ~ FALSE,
+      sexbehav_partner_num == 1 & ((!sexbehav_other1 %in% 3:8) & (!sexbehav_other2 %in% 3:8)) ~ TRUE,
+      is.na(sexbehav_partner_num) ~ NA,
+      TRUE ~ FALSE
+    ),
+    #' Reports one or more non-regular sexual partner
+    sexnonreg = case_when(
+      eversex == FALSE ~ FALSE,
+      sexbehav_partner_num > 1 ~ TRUE,
+      (sexbehav_other1 %in% 3:8 | sexbehav_other2 %in% 3:8) ~ TRUE,
+      is.na(sexbehav_partner_num) ~ NA,
+      TRUE ~ FALSE
+    ),
+    #' Reports having exchanged gifts, cash, or anything else for sex in the past 12 months
+    sexpaid12m = case_when(
+      (sexbehav_other1 %in% 6:7 | sexbehav_other2 %in% 6:7) ~ TRUE,
+      TRUE ~ FALSE
+    ),
+    #' Either sexnonreg or sexpaid12m
+    sexnonregplus = ifelse(sexpaid12m, TRUE, sexnonreg),
+    #' Just want the highest risk category that an individual belongs to
+    nosex12m = ifelse(sexcohab | sexnonreg | sexpaid12m, FALSE, nosex12m),
+    sexcohab = ifelse(sexnonreg | sexpaid12m, FALSE, sexcohab),
+    sexnonreg = ifelse(sexpaid12m, FALSE, sexnonreg),
+    #' Turn everything from TRUE / FALSE coding to 1 / 0
+    across(eversex:sexnonregplus, ~ as.numeric(.x))
+  )
