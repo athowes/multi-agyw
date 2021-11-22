@@ -333,8 +333,6 @@ survey_circumcision <- phia %>%
     circ_who = recode(mcwho, !!!mcwho_recode)
   )
 
-
-
 survey_meta <- survey_individuals %>%
   group_by(survey_id) %>%
   summarise(female_age_min = min(if_else(sex == "female", age, NA_integer_), na.rm=TRUE),
@@ -357,3 +355,64 @@ write_csv(survey_clusters, paste0(tolower(survey_id), "_survey_clusters.csv"), n
 write_csv(survey_individuals, paste0(tolower(survey_id), "_survey_individuals.csv"), na = "")
 write_csv(survey_biomarker, paste0(tolower(survey_id), "_survey_biomarker.csv"), na = "")
 write_csv(survey_circumcision, paste0(tolower(survey_id), "_survey_circumcision.csv"), na = "")
+
+#' All of the sexual behaviour variables we're interested in
+#' From LePHIA 2016 - 2017 Adult Questionaire
+sb_vars <- c(
+  "firstsxage",
+  "firstsxagedk",
+  "lifetimesex",
+  "lifetimesexdk",
+  "part12monum",
+  "part12modkr",
+  paste0("partlivew", 1:3),
+  paste0("partrelation", 1:3),
+  paste0("partlastsup", 1:3),
+  paste0("partlastsxtimed", 1:3),
+  "sellsx12mo",
+  "buysx12mo"
+)
+
+dat <- ind %>%
+  mutate(
+    survey_id = survey_id,
+    individual_id = personid
+  ) %>%
+  select(survey_id, individual_id, sb_vars)
+
+dat$sex12m <- case_when(
+  dat$part12monum > 0 ~ TRUE,
+  dat$part12monum == -8 ~ TRUE, #' If don't know number of partners, assume > 1
+  is.na(dat$part12monum) ~ NA,
+  TRUE ~ FALSE
+)
+
+dat$nosex12m <- !dat$sex12m
+
+dat$sexcohab <- case_when(
+  (dat$part12monum == 1) & (dat$partlivew1 == 1) ~ TRUE,
+  is.na(dat$part12monum) ~ NA,
+  TRUE ~ FALSE
+)
+
+dat$sexnonreg <- case_when(
+  dat$nosex12m == TRUE ~ FALSE,
+  dat$part12monum > 1 ~ TRUE,
+  (dat$part12monum == 1) & (dat$partlivew1 == 2) ~ TRUE
+)
+
+dat$sexpaid12m <- case_when(
+  dat$sellsx12mo == 1 ~ TRUE,
+  dat$buysx12mo == 1 ~ TRUE,
+  TRUE ~ FALSE
+)
+
+dat$sexnonregplus <- case_when(
+  dat$sexnonreg == TRUE ~ TRUE,
+  dat$sexpaid12m == TRUE ~ TRUE,
+  TRUE ~ FALSE
+)
+
+dat %>%
+  select(survey_id, individual_id, sex12m:sexnonregplus) %>%
+  mutate(across(sex12m:sexnonregplus, ~ as.numeric(.x)))
