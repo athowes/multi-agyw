@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("bwa_data_survey_behav")
-# setwd("src/bwa_data_survey_behav")
+# orderly::orderly_develop_start("bwa_survey_behav")
+# setwd("src/bwa_survey_behav")
 
 areas <- read_sf("depends/bwa_areas.geojson")
 raw <- read_csv("depends/bwa2013bais-recode-sexbehav.csv")

@@ -1,28 +1,19 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("zmb_data_survey_behav")
-# setwd("src/zmb_data_survey_behav")
+# orderly::orderly_develop_start("tza_survey_behav")
+# setwd("src/tza_survey_behav")
 
 #' ISO3 country code
-iso3 <- "ZMB"
+iso3 <- "TZA"
 
 #' Load area hierarchy
-areas <- read_sf("depends/zmb_areas.geojson")
+areas <- read_sf("depends/tza_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
-#' Removing the 2002 DHS, as it doesn't release GPS dataset, not allowing clusters to be snapped to districts
-#' https://dhsprogram.com/data/available-datasets.cfm
-surveys <- create_surveys_dhs(iso3) %>%
-  filter(SurveyId != "ZM2002DHS")
-
+surveys <- create_surveys_dhs(iso3)
 survey_meta <- create_survey_meta_dhs(surveys)
 
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
 surveys <- surveys_add_dhs_regvar(surveys, survey_region_boundaries)
-
-#' REGVAR miscoded as "v024" instead of "hv024" in ZM2013DHS
-surveys$REGVAR[surveys$survey_id == "ZMB2013DHS"] <- "hv024"
-
-survey_region_boundaries <- st_make_valid(survey_region_boundaries)
 
 #' Allocate each area to survey region
 survey_region_areas <- allocate_areas_survey_regions(areas_wide, survey_region_boundaries)
@@ -32,17 +23,6 @@ survey_regions <- create_survey_regions_dhs(survey_region_areas)
 
 #' Survey clusters dataset
 survey_clusters <- create_survey_clusters_dhs(surveys)
-
-#' Recode (0, 0) survey cluster in ZM2018DHS to NA
-filter(survey_clusters, abs(longitude) < 0.001)
-
-survey_clusters  <- survey_clusters %>%
-  mutate(
-    longitude = if_else(abs(longitude) < 0.0001 & abs(latitude) < 0.0001, NA_real_, longitude),
-    latitude = if_else(abs(latitude) < 0.0001 & abs(latitude) < 0.0001, NA_real_, latitude)
-  )
-
-filter(survey_clusters, abs(longitude) < 0.001)
 
 #' Snap survey clusters to areas
 survey_clusters <- assign_dhs_cluster_areas(survey_clusters, survey_region_areas)
@@ -62,9 +42,11 @@ dev.off()
 individuals <- create_individual_hiv_dhs(surveys)
 names(individuals)
 
+#' Extract the individual characteristics from the survey
 survey_individuals <- create_survey_individuals_dhs(individuals)
 names(survey_individuals)
 
+#' Extract the HIV related characteristics from the survey
 survey_biomarker <- create_survey_biomarker_dhs(individuals)
 names(survey_biomarker)
 
@@ -79,7 +61,8 @@ survey_other <- list(survey_sexbehav)
 age_group_include <- c("Y015_019", "Y020_024", "Y025_029", "Y015_024")
 sex <- c("female")
 
-#' Survey indicator dataset
+#' # Survey indicator dataset
+
 survey_indicators <- calc_survey_indicators(
   survey_meta,
   survey_regions,
@@ -93,4 +76,4 @@ survey_indicators <- calc_survey_indicators(
 )
 
 #' Save survey indicators dataset
-write_csv(survey_indicators, "zmb_survey_indicators_sexbehav.csv", na = "")
+write_csv(survey_indicators, "tza_survey_indicators_sexbehav.csv", na = "")

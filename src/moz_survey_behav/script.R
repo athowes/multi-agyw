@@ -1,19 +1,18 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("ken_data_survey_behav")
-# setwd("src/ken_data_survey_behav")
+# orderly::orderly_develop_start("moz_survey_behav")
+# setwd("src/moz_survey_behav")
 
 #' ISO3 country code
-iso3 <- "KEN"
+iso3 <- "MOZ"
 
 #' Load area hierarchy
-areas <- read_sf("depends/ken_areas.geojson")
+areas <- read_sf("depends/moz_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
-surveys <- create_surveys_dhs(iso3, survey_characteristics = 24)
+surveys <- create_surveys_dhs(iso3)
 survey_meta <- create_survey_meta_dhs(surveys)
 
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
-survey_region_boundaries <- st_make_valid(survey_region_boundaries)
 surveys <- surveys_add_dhs_regvar(surveys, survey_region_boundaries)
 
 #' Allocate each area to survey region
@@ -72,9 +71,8 @@ survey_indicators <- calc_survey_indicators(
   survey_other,
   st_drop_geometry(areas),
   sex = sex,
-  age_group_include = age_group_include,
-  area_bottom_level = 2
+  age_group_include = age_group_include
 )
 
 #' Save survey indicators dataset
-write_csv(survey_indicators, "ken_survey_indicators_sexbehav.csv", na = "")
+write_csv(survey_indicators, "moz_survey_indicators_sexbehav.csv", na = "")

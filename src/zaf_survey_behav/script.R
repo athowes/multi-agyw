@@ -1,18 +1,21 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("swz_data_survey_behav")
-# setwd("src/swz_data_survey_behav")
+# orderly::orderly_develop_start("zaf_survey_behav")
+# setwd("src/zaf_survey_behav")
 
 #' ISO3 country code
-iso3 <- "SWZ"
+iso3 <- "ZAF"
 
 #' Load area hierarchy
-areas <- read_sf("depends/swz_areas.geojson")
+areas <- read_sf("depends/zaf_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
+areas_wide <- st_make_valid(areas_wide) #' Is this bad?
 
 surveys <- create_surveys_dhs(iso3)
 survey_meta <- create_survey_meta_dhs(surveys)
 
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
+survey_region_boundaries <- st_make_valid(survey_region_boundaries)
+# survey_region_boundaries <- st_buffer(survey_region_boundaries, 0)
 surveys <- surveys_add_dhs_regvar(surveys, survey_region_boundaries)
 
 #' Allocate each area to survey region
@@ -72,8 +75,8 @@ survey_indicators <- calc_survey_indicators(
   st_drop_geometry(areas),
   sex = sex,
   age_group_include = age_group_include,
-  area_bottom_level = 1
+  area_bottom_level = 2
 )
 
 #' Save survey indicators dataset
-write_csv(survey_indicators, "swz_survey_indicators_sexbehav.csv", na = "")
+write_csv(survey_indicators, "zaf_survey_indicators_sexbehav.csv", na = "")

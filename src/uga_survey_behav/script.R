@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("zwe_data_survey_behav")
-# setwd("src/zwe_data_survey_behav")
+# orderly::orderly_develop_start("zwe_survey_behav")
+# setwd("src/zwe_survey_behav")
 
 #' ISO3 country code
 iso3 <- "UGA"

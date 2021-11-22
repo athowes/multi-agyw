@@ -1,18 +1,19 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("tza_data_survey_behav")
-# setwd("src/tza_data_survey_behav")
+# orderly::orderly_develop_start("ken_survey_behav")
+# setwd("src/ken_survey_behav")
 
 #' ISO3 country code
-iso3 <- "TZA"
+iso3 <- "KEN"
 
 #' Load area hierarchy
-areas <- read_sf("depends/tza_areas.geojson")
+areas <- read_sf("depends/ken_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
-surveys <- create_surveys_dhs(iso3)
+surveys <- create_surveys_dhs(iso3, survey_characteristics = 24)
 survey_meta <- create_survey_meta_dhs(surveys)
 
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
+survey_region_boundaries <- st_make_valid(survey_region_boundaries)
 surveys <- surveys_add_dhs_regvar(surveys, survey_region_boundaries)
 
 #' Allocate each area to survey region
@@ -61,8 +62,7 @@ survey_other <- list(survey_sexbehav)
 age_group_include <- c("Y015_019", "Y020_024", "Y025_029", "Y015_024")
 sex <- c("female")
 
-#' # Survey indicator dataset
-
+#' Survey indicator dataset
 survey_indicators <- calc_survey_indicators(
   survey_meta,
   survey_regions,
@@ -72,8 +72,9 @@ survey_indicators <- calc_survey_indicators(
   survey_other,
   st_drop_geometry(areas),
   sex = sex,
-  age_group_include = age_group_include
+  age_group_include = age_group_include,
+  area_bottom_level = 2
 )
 
 #' Save survey indicators dataset
-write_csv(survey_indicators, "tza_survey_indicators_sexbehav.csv", na = "")
+write_csv(survey_indicators, "ken_survey_indicators_sexbehav.csv", na = "")

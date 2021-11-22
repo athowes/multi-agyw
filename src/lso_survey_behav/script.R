@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("lso_data_survey_behav")
-# setwd("src/lso_data_survey_behav")
+# orderly::orderly_develop_start("lso_survey_behav")
+# setwd("src/lso_survey_behav")
 
 #' ISO3 country code
 iso3 <- "LSO"
@@ -152,3 +152,17 @@ phia_survey_sexbehav <- phia_survey_sexbehav %>%
     #' Turn everything from TRUE / FALSE coding to 1 / 0
     across(eversex:sexnonregplus, ~ as.numeric(.x))
   )
+
+#' PHIA survey indicator dataset
+phia_survey_indicators <- calc_survey_indicators(
+  phia_survey_meta,
+  phia_survey_regions,
+  phia_survey_clusters,
+  phia_survey_individuals,
+  phia_survey_biomarker,
+  survey_other = NULL,
+  st_drop_geometry(areas),
+  sex = sex,
+  age_group_include = age_group_include,
+  area_bottom_level = 1
+)

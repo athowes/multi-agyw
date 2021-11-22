@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("cmr_data_survey_behav")
-# setwd("src/cmr_data_survey_behav")
+# orderly::orderly_develop_start("cmr_survey_behav")
+# setwd("src/cmr_survey_behav")
 
 #' ISO3 country code
 iso3 <- "CMR"

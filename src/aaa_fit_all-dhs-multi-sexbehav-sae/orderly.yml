@@ -115,55 +115,55 @@ depends:
     id: latest
     use:
       depends/zwe_areas.geojson: zwe_areas.geojson
-  bwa_data_survey_behav:
+  bwa_survey_behav:
     id: latest
     use:
       depends/bwa_survey_indicators_sexbehav.csv: bwa_survey_indicators_sexbehav.csv
-  cmr_data_survey_behav:
+  cmr_survey_behav:
     id: latest
     use:
       depends/cmr_survey_indicators_sexbehav.csv: cmr_survey_indicators_sexbehav.csv
-  ken_data_survey_behav:
+  ken_survey_behav:
     id: latest
     use:
       depends/ken_survey_indicators_sexbehav.csv: ken_survey_indicators_sexbehav.csv
-  lso_data_survey_behav:
+  lso_survey_behav:
     id: latest
     use:
       depends/lso_survey_indicators_sexbehav.csv: lso_survey_indicators_sexbehav.csv
-  moz_data_survey_behav:
+  moz_survey_behav:
     id: latest
     use:
       depends/moz_survey_indicators_sexbehav.csv: moz_survey_indicators_sexbehav.csv
-  mwi_data_survey_behav:
+  mwi_survey_behav:
     id: latest
     use:
       depends/mwi_survey_indicators_sexbehav.csv: mwi_survey_indicators_sexbehav.csv
-  nam_data_survey_behav:
+  nam_survey_behav:
     id: latest
     use:
       depends/nam_survey_indicators_sexbehav.csv: nam_survey_indicators_sexbehav.csv
-  swz_data_survey_behav:
+  swz_survey_behav:
     id: latest
     use:
       depends/swz_survey_indicators_sexbehav.csv: swz_survey_indicators_sexbehav.csv
-  tza_data_survey_behav:
+  tza_survey_behav:
     id: latest
     use:
       depends/tza_survey_indicators_sexbehav.csv: tza_survey_indicators_sexbehav.csv
-  uga_data_survey_behav:
+  uga_survey_behav:
     id: latest
     use:
       depends/uga_survey_indicators_sexbehav.csv: uga_survey_indicators_sexbehav.csv
-  zaf_data_survey_behav:
+  zaf_survey_behav:
     id: latest
     use:
       depends/zaf_survey_indicators_sexbehav.csv: zaf_survey_indicators_sexbehav.csv
-  zmb_data_survey_behav:
+  zmb_survey_behav:
     id: latest
     use:
       depends/zmb_survey_indicators_sexbehav.csv: zmb_survey_indicators_sexbehav.csv
-  zwe_data_survey_behav:
+  zwe_survey_behav:
     id: latest
     use:
       depends/zwe_survey_indicators_sexbehav.csv: zwe_survey_indicators_sexbehav.csv

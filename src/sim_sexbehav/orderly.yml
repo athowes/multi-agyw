@@ -27,7 +27,7 @@ depends:
     id: latest
     use:
       depends/mwi_areas.geojson: mwi_areas.geojson
-  mwi_data_survey_behav:
+  mwi_survey_behav:
     id: latest
     use:
       depends/mwi_survey_indicators_sexbehav.csv: mwi_survey_indicators_sexbehav.csv

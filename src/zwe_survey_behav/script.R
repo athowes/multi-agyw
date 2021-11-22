@@ -1,12 +1,12 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("moz_data_survey_behav")
-# setwd("src/moz_data_survey_behav")
+# orderly::orderly_develop_start("zwe_survey_behav")
+# setwd("src/zwe_survey_behav")
 
 #' ISO3 country code
-iso3 <- "MOZ"
+iso3 <- "ZWE"
 
 #' Load area hierarchy
-areas <- read_sf("depends/moz_areas.geojson")
+areas <- read_sf("depends/zwe_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
 surveys <- create_surveys_dhs(iso3)
@@ -75,4 +75,4 @@ survey_indicators <- calc_survey_indicators(
 )
 
 #' Save survey indicators dataset
-write_csv(survey_indicators, "moz_survey_indicators_sexbehav.csv", na = "")
+write_csv(survey_indicators, "zwe_survey_indicators_sexbehav.csv", na = "")

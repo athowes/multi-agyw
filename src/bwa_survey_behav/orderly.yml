@@ -31,7 +31,7 @@ depends:
     id: latest
     use:
       depends/bwa_areas.geojson: bwa_areas.geojson
-  bwa_raw_survey_bwa2013bais_addsexbehav:
+  bwa_survey_bais:
     id: latest
     use:
       depends/bwa2013bais-recode-sexbehav.csv: bwa2013bais-recode-sexbehav.csv
