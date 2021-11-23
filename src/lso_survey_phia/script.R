@@ -7,7 +7,6 @@ survey_mid_calendar_quarter <- "CY2017Q4"
 fieldwork_start <- NA
 fieldwork_end <- NA
 
-
 #' ## Load area hierarchy
 areas <- read_sf("depends/lso_areas.geojson")
 
@@ -356,63 +355,73 @@ write_csv(survey_individuals, paste0(tolower(survey_id), "_survey_individuals.cs
 write_csv(survey_biomarker, paste0(tolower(survey_id), "_survey_biomarker.csv"), na = "")
 write_csv(survey_circumcision, paste0(tolower(survey_id), "_survey_circumcision.csv"), na = "")
 
-#' All of the sexual behaviour variables we're interested in
-#' From LePHIA 2016 - 2017 Adult Questionaire
-sb_vars <- c(
-  "firstsxage",
-  "firstsxagedk",
-  "lifetimesex",
-  "lifetimesexdk",
-  "part12monum",
-  "part12modkr",
-  paste0("partlivew", 1:3),
-  paste0("partrelation", 1:3),
-  paste0("partlastsup", 1:3),
-  paste0("partlastsxtimed", 1:3),
-  "sellsx12mo",
-  "buysx12mo"
-)
+extract_sexbehav_phia <- function(ind) {
+  #' All of the sexual behaviour variables we're interested in
+  #' From LePHIA 2016 - 2017 Adult Questionaire
+  sb_vars <- c(
+    "firstsxage", #' Age at first vaginal sex
+    "firstsxagedk", #' Age at first vaginal sex (don't know)
+    "lifetimesex", #' Total sexual partners (lifetime)
+    "lifetimesexdk", #' Total sexual partners (lifetime) (don't know)
+    "part12monum", #' Total sexual partners (past 12 months)
+    "part12modkr", #' Total sexual partners (past 12 months) (don't know)
+    paste0("partlivew", 1:3), #' Does partner i live in this household
+    paste0("partrelation", 1:3), #' Relationship to partner i
+    paste0("partlastsup", 1:3), #' Expectation of gifts, payment, other help with partner i
+    paste0("partlastsxtimed", 1:3), #' How long since last sex with partner i
+    "sellsx12mo", #' Had sex for money, gifts during past 12 months
+    "buysx12mo" #' Paid money or given gifts for sex during past 12 months
+  )
 
-dat <- ind %>%
-  mutate(
-    survey_id = survey_id,
-    individual_id = personid
-  ) %>%
-  select(survey_id, individual_id, sb_vars)
+  ind %>%
+    mutate(
+      survey_id = survey_id,
+      individual_id = personid
+    ) %>%
+    select(survey_id, individual_id, all_of(sb_vars)) %>%
+    mutate(
+      #' Reports sexual activity in the last 12 months
+      sex12m = case_when(
+        part12monum > 0 ~ TRUE,
+        part12monum == -8 ~ TRUE, #' If don't know number of partners, assume > 1
+        is.na(part12monum) ~ NA,
+        TRUE ~ FALSE
+      ),
+      #' Does not report sexual activity in the last 12 months
+      nosex12m = !sex12m,
+      #' Reports sexual activity with exactly one cohabiting partner in the past 12 months
+      sexcohab = case_when(
+        (part12monum == 1) & (partlivew1 == 1) ~ TRUE,
+        is.na(part12monum) ~ NA,
+        TRUE ~ FALSE
+      ),
+      #' Reports one or more non-regular sexual partner
+      sexnonreg = case_when(
+        nosex12m == TRUE ~ FALSE,
+        part12monum > 1 ~ TRUE,
+        (part12monum == 1) & (partlivew1 == 2) ~ TRUE,
+        TRUE ~ FALSE
+      ),
+      #' Reports having exchanged gifts, cash, or anything else for sex in the past 12 months
+      sexpaid12m = case_when(
+        sellsx12mo == 1 ~ TRUE,
+        buysx12mo == 1 ~ TRUE,
+        TRUE ~ FALSE
+      ),
+      #' Either sexnonreg or sexpaid12m
+      sexnonregplus = case_when(
+        sexnonreg == TRUE ~ TRUE,
+        sexpaid12m == TRUE ~ TRUE,
+        TRUE ~ FALSE
+      ),
+      #' Just want the highest risk category that an individual belongs to
+      nosex12m = ifelse(sexcohab | sexnonreg | sexpaid12m, FALSE, nosex12m),
+      sexcohab = ifelse(sexnonreg | sexpaid12m, FALSE, sexcohab),
+      sexnonreg = ifelse(sexpaid12m, FALSE, sexnonreg),
+      #' Turn everything from TRUE / FALSE coding to 1 / 0
+      across(sex12m:sexnonregplus, ~ as.numeric(.x))
+    ) %>%
+    select(-all_of(sb_vars))
+}
 
-dat$sex12m <- case_when(
-  dat$part12monum > 0 ~ TRUE,
-  dat$part12monum == -8 ~ TRUE, #' If don't know number of partners, assume > 1
-  is.na(dat$part12monum) ~ NA,
-  TRUE ~ FALSE
-)
-
-dat$nosex12m <- !dat$sex12m
-
-dat$sexcohab <- case_when(
-  (dat$part12monum == 1) & (dat$partlivew1 == 1) ~ TRUE,
-  is.na(dat$part12monum) ~ NA,
-  TRUE ~ FALSE
-)
-
-dat$sexnonreg <- case_when(
-  dat$nosex12m == TRUE ~ FALSE,
-  dat$part12monum > 1 ~ TRUE,
-  (dat$part12monum == 1) & (dat$partlivew1 == 2) ~ TRUE
-)
-
-dat$sexpaid12m <- case_when(
-  dat$sellsx12mo == 1 ~ TRUE,
-  dat$buysx12mo == 1 ~ TRUE,
-  TRUE ~ FALSE
-)
-
-dat$sexnonregplus <- case_when(
-  dat$sexnonreg == TRUE ~ TRUE,
-  dat$sexpaid12m == TRUE ~ TRUE,
-  TRUE ~ FALSE
-)
-
-dat %>%
-  select(survey_id, individual_id, sex12m:sexnonregplus) %>%
-  mutate(across(sex12m:sexnonregplus, ~ as.numeric(.x)))
+survey_sexbehav <- extract_sexbehav_phia(ind)
