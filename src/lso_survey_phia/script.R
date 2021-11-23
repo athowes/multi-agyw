@@ -361,6 +361,7 @@ extract_sexbehav_phia <- function(ind) {
   sb_vars <- c(
     "firstsxage", #' Age at first vaginal sex
     "firstsxagedk", #' Age at first vaginal sex (don't know)
+    "analsxever", #' Age at first anal sex
     "lifetimesex", #' Total sexual partners (lifetime)
     "lifetimesexdk", #' Total sexual partners (lifetime) (don't know)
     "part12monum", #' Total sexual partners (past 12 months)
@@ -382,17 +383,21 @@ extract_sexbehav_phia <- function(ind) {
     mutate(
       #' Reports sexual activity in the last 12 months
       sex12m = case_when(
+        (is.na(firstsxage) & (firstsxagedk == 96)) & (analsxever %in% c(2, -8, -9)) ~ FALSE, #' 96 is code for no sex
         part12monum > 0 ~ TRUE,
-        part12monum == -8 ~ TRUE, #' If don't know number of partners, assume > 1
-        is.na(part12monum) ~ NA,
+        part12modkr == -8 ~ TRUE, #' If don't know number of partners, assume > 1
         TRUE ~ FALSE
       ),
       #' Does not report sexual activity in the last 12 months
-      nosex12m = !sex12m,
+      nosex12m = case_when(
+        sex12m == TRUE ~ FALSE,
+        sex12m == FALSE ~ TRUE,
+        is.na(sex12m) ~ NA
+      ),
       #' Reports sexual activity with exactly one cohabiting partner in the past 12 months
       sexcohab = case_when(
+        sex12m == FALSE ~ FALSE,
         (part12monum == 1) & (partlivew1 == 1) ~ TRUE,
-        is.na(part12monum) ~ NA,
         TRUE ~ FALSE
       ),
       #' Reports one or more non-regular sexual partner
@@ -425,3 +430,12 @@ extract_sexbehav_phia <- function(ind) {
 }
 
 survey_sexbehav <- extract_sexbehav_phia(ind)
+
+survey_sexbehav %>%
+  mutate(
+    r_tot = nosex12m + sexcohab + sexnonreg + sexpaid12m
+  ) %>%
+  summarise(
+    #' Proportion in one and
+    prop_correct = sum(r_tot == 1) / n()
+  )
