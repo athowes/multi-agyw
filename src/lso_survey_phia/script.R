@@ -431,11 +431,20 @@ extract_sexbehav_phia <- function(ind) {
 
 survey_sexbehav <- extract_sexbehav_phia(ind)
 
-survey_sexbehav %>%
-  mutate(
-    r_tot = nosex12m + sexcohab + sexnonreg + sexpaid12m
-  ) %>%
-  summarise(
-    #' Proportion in one and
-    prop_correct = sum(r_tot == 1) / n()
+check_survey_sexbehav <- function(survey_sexbehav) {
+  df <- survey_sexbehav %>%
+    mutate(
+      r_tot = nosex12m + sexcohab + sexnonreg + sexpaid12m
+    )
+
+  cat(
+    paste0(
+      "The proportion of rows allocatated to one and only one category is ",
+      round(sum(df$r_tot == 1) / nrow(df), 3) * 100, "%.\n",
+      "The following rows are incorrectly allocated to multiple, or no, categories:\n"
+    )
   )
+
+  df %>%
+    filter(r_tot != 1)
+}
