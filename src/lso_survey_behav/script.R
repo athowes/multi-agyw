@@ -84,7 +84,7 @@ phia_survey_regions <- read_csv("depends/lso2017phia_survey_regions.csv")
 phia_survey_clusters <- read_csv("depends/lso2017phia_survey_clusters.csv")
 phia_survey_individuals <- read_csv("depends/lso2017phia_survey_individuals.csv")
 phia_survey_biomarker <- read_csv("depends/lso2017phia_survey_biomarker.csv")
-phia_survey_sexbehav <- read_csv("depends/lso2017phia_survey_biomarker.csv"
+phia_survey_sexbehav <- read_csv("depends/lso2017phia_survey_sexbehav.csv")
 
 #' PHIA survey indicator dataset
 phia_survey_indicators <- calc_survey_indicators(
