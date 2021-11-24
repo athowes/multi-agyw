@@ -5,7 +5,7 @@ iso3 <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", 
 # Completed for KEN, LSO, UGA, ZAF, ZWE
 
 #' The names of the reports to run
-reports <- paste0(tolower(iso3), "_data_survey_behav")
+reports <- paste0(tolower(iso3), "_survey_behav")
 
 #' Try to run them (with error catching)
 sapply(
@@ -41,11 +41,16 @@ sapply(
 
 #' Running BWA
 
-#' This is requried to be run before bwa_data_survey_behav
-id <- orderly::orderly_run("bwa_raw_survey_bwa2013bais_addsexbehav")
+#' This is requried to be run before bwa_survey_behav
+id <- orderly::orderly_run("bwa_survey_bais")
 orderly::orderly_commit(id)
-orderly::orderly_push_archive("bwa_raw_survey_bwa2013bais_addsexbehav")
+orderly::orderly_push_archive("bwa_survey_bais")
 
-id <- orderly::orderly_run("bwa_data_survey_behav")
+id <- orderly::orderly_run("bwa_survey_behav")
 orderly::orderly_commit(id)
-orderly::orderly_push_archive("bwa_raw_survey_bwa2013bais_addsexbehav")
+orderly::orderly_push_archive("bwa_survey_behav")
+
+#' Add PHIA testing in LSO
+
+id <- orderly::orderly_run("lso_survey_phia")
+orderly::orderly_commit(id)
