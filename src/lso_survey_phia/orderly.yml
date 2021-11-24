@@ -10,6 +10,7 @@ artefacts:
         - lso2017phia_survey_individuals.csv
         - lso2017phia_survey_biomarker.csv
         - lso2017phia_survey_circumcision.csv
+        - lso2017phia_survey_sexbehav.csv
 
 packages:
   - dplyr

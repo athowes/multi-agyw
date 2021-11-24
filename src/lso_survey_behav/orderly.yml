@@ -32,3 +32,4 @@ depends:
       depends/lso2017phia_survey_clusters.csv: lso2017phia_survey_clusters.csv
       depends/lso2017phia_survey_individuals.csv: lso2017phia_survey_individuals.csv
       depends/lso2017phia_survey_biomarker.csv: lso2017phia_survey_biomarker.csv
+      depends/lso2017phia_survey_sexbehav.csv: lso2017phia_survey_sexbehav.csv

@@ -383,7 +383,7 @@ extract_sexbehav_phia <- function(ind) {
     mutate(
       #' Reports sexual activity in the last 12 months
       sex12m = case_when(
-        (is.na(firstsxage) & (firstsxagedk == 96)) & (analsxever %in% c(2, -8, -9)) ~ FALSE, #' 96 is code for no sex
+        (is.na(firstsxage) & (firstsxagedk %in% c(96, -7))) & (analsxever %in% c(2, -8, -9)) ~ FALSE, #' 96 is code for no sex
         part12monum > 0 ~ TRUE,
         part12modkr == -8 ~ TRUE, #' If don't know number of partners, assume > 1
         TRUE ~ FALSE
@@ -448,3 +448,7 @@ check_survey_sexbehav <- function(survey_sexbehav) {
   df %>%
     filter(r_tot != 1)
 }
+
+(misallocation <- check_survey_sexbehav(survey_sexbehav))
+
+write_csv(survey_sexbehav, paste0(tolower(survey_id), "_survey_sexbehav.csv"), na = "")
