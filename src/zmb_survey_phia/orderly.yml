@@ -1,0 +1,34 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: ZamPHIA 2015-16 survey microdata
+      filenames:
+        - zmb2016phia_survey_meta.csv
+        - zmb2016phia_survey_regions.csv
+        - zmb2016phia_survey_clusters.csv
+        - zmb2016phia_survey_individuals.csv
+        - zmb2016phia_survey_biomarker.csv
+        - zmb2016phia_survey_circumcision.csv
+  - data:
+      description: PHIA survey boundary comparison
+      filenames:
+        - check/zambia-reallocated-districts.pdf
+        - check/zamphia-survey-regions.pdf
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  zmb_data_areas:
+    id: latest
+    use:
+      depends/zmb_areas.geojson: zmb_areas.geojson
+  

@@ -1,0 +1,29 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: NAMPHIA 2017 survey microdata
+      filenames:
+        - nam2017phia_survey_meta.csv
+        - nam2017phia_survey_regions.csv
+        - nam2017phia_survey_clusters.csv
+        - nam2017phia_survey_individuals.csv
+        - nam2017phia_survey_biomarker.csv
+        - nam2017phia_survey_circumcision.csv
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  nam_data_areas:
+    id: latest
+    use:
+      depends/nam_areas.geojson: nam_areas.geojson
+  

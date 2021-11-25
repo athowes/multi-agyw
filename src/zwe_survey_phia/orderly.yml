@@ -1,0 +1,29 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: ZimPHIA 2015-16 survey microdata
+      filenames:
+        - zwe2016phia_survey_meta.csv
+        - zwe2016phia_survey_regions.csv
+        - zwe2016phia_survey_clusters.csv
+        - zwe2016phia_survey_individuals.csv
+        - zwe2016phia_survey_biomarker.csv
+        - zwe2016phia_survey_circumcision.csv
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  zwe_data_areas:
+    id: latest
+    use:
+      depends/zwe_areas.geojson: zwe_areas.geojson
+  

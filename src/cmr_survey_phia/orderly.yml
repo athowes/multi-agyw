@@ -1,0 +1,29 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: CamPHIA 2017 survey microdata
+      filenames:
+        - cmr2017phia_survey_meta.csv
+        - cmr2017phia_survey_regions.csv
+        - cmr2017phia_survey_clusters.csv
+        - cmr2017phia_survey_individuals.csv
+        - cmr2017phia_survey_biomarker.csv
+        - cmr2017phia_survey_circumcision.csv
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  cmr_data_areas:
+    id: latest
+    use:
+      depends/cmr_areas.geojson: cmr_areas.geojson
+  

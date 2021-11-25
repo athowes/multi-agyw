@@ -1,0 +1,33 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: MPHIA 2015-16 survey microdata
+      filenames:
+        - mwi2016phia_survey_meta.csv
+        - mwi2016phia_survey_regions.csv
+        - mwi2016phia_survey_clusters.csv
+        - mwi2016phia_survey_individuals.csv
+        - mwi2016phia_survey_biomarker.csv
+        - mwi2016phia_survey_circumcision.csv
+  - staticgraph:
+      description: Comparison of MPHIA survey regions and health zones
+      filenames: 
+        - check/compare_survey_regions.png
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  mwi_data_areas:
+    id: latest
+    use:
+      depends/mwi_areas.geojson: mwi_areas.geojson
+  

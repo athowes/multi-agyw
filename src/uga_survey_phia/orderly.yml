@@ -1,0 +1,33 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: UPHIA 2016-17 survey microdata
+      filenames:
+        - uga2016phia_survey_meta.csv
+        - uga2016phia_survey_regions.csv
+        - uga2016phia_survey_clusters.csv
+        - uga2016phia_survey_individuals.csv
+        - uga2016phia_survey_biomarker.csv
+        - uga2016phia_survey_circumcision.csv
+  - staticgraph:
+       description: UPHIA survey regions vs. area hierarchy
+       filenames:
+         - check/uphia-survey-region-boundaries.png
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  uga_data_areas:
+    id: latest
+    use:
+      depends/uga_areas.geojson: uga_areas.geojson
+  
