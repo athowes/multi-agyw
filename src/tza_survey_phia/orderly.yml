@@ -10,8 +10,9 @@ artefacts:
         - tza2016phia_survey_individuals.csv
         - tza2016phia_survey_biomarker.csv
         - tza2016phia_survey_circumcision.csv
+        - tza2016phia_survey_sexbehav.csv
   - staticgraph:
-       description:  TZA PHIA survey regions 
+       description:  TZA PHIA survey regions
        filenames:
          - check/tza-phia-survey-region-boundaries.png
 
@@ -30,4 +31,4 @@ depends:
     id: latest
     use:
       depends/tza_areas.geojson: tza_areas.geojson
-  
+

@@ -10,9 +10,10 @@ artefacts:
         - mwi2016phia_survey_individuals.csv
         - mwi2016phia_survey_biomarker.csv
         - mwi2016phia_survey_circumcision.csv
+        - mwi2016phia_survey_sexbehav.csv
   - staticgraph:
       description: Comparison of MPHIA survey regions and health zones
-      filenames: 
+      filenames:
         - check/compare_survey_regions.png
 
 packages:
@@ -30,4 +31,4 @@ depends:
     id: latest
     use:
       depends/mwi_areas.geojson: mwi_areas.geojson
-  
+

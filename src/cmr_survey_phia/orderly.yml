@@ -10,6 +10,7 @@ artefacts:
         - cmr2017phia_survey_individuals.csv
         - cmr2017phia_survey_biomarker.csv
         - cmr2017phia_survey_circumcision.csv
+        - cmr2017phia_survey_sexbehav.csv
 
 packages:
   - dplyr
@@ -26,4 +27,3 @@ depends:
     id: latest
     use:
       depends/cmr_areas.geojson: cmr_areas.geojson
-  

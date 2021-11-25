@@ -10,6 +10,7 @@ artefacts:
         - uga2016phia_survey_individuals.csv
         - uga2016phia_survey_biomarker.csv
         - uga2016phia_survey_circumcision.csv
+        - uga2016phia_survey_sexbehav.csv
   - staticgraph:
        description: UPHIA survey regions vs. area hierarchy
        filenames:
@@ -30,4 +31,4 @@ depends:
     id: latest
     use:
       depends/uga_areas.geojson: uga_areas.geojson
-  
+

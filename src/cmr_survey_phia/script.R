@@ -157,7 +157,7 @@ survey_clusters <- hh %>%
 
 
 #' Snap clusters to areas
-#' 
+#'
 #' This is slow because it maps to the lowest level immediately
 #' It would be more efficient to do this recursively through
 #' the location hierarchy tree -- but not worth the effort right now.
@@ -209,7 +209,7 @@ survey_clusters <- survey_clusters %>%
 survey_clusters %>%
   filter(geoloc_distance > 0) %>%
   arrange(-geoloc_distance) %>%
-  left_join(survey_regions) 
+  left_join(survey_regions)
 
 #' ## Survey individuals dataset
 
@@ -294,7 +294,7 @@ survey_individuals <-
     )
   ) %>%
   mutate(age = as.integer(age),
-         indweight = indweight / mean(indweight, na.rm=TRUE)) 
+         indweight = indweight / mean(indweight, na.rm=TRUE))
 
 
 survey_biomarker <-
@@ -367,6 +367,9 @@ survey_meta <- survey_individuals %>%
          fieldwork_start = fieldwork_start,
          fieldwork_end   = fieldwork_end)
 
+survey_sexbehav <- extract_sexbehav_phia(ind, survey_id)
+(misallocation <- check_survey_sexbehav(survey_sexbehav))
+
 #' ## Save survey datasets
 
 write_csv(survey_meta, paste0(tolower(survey_id), "_survey_meta.csv"), na = "")
@@ -375,3 +378,5 @@ write_csv(survey_clusters, paste0(tolower(survey_id), "_survey_clusters.csv"), n
 write_csv(survey_individuals, paste0(tolower(survey_id), "_survey_individuals.csv"), na = "")
 write_csv(survey_biomarker, paste0(tolower(survey_id), "_survey_biomarker.csv"), na = "")
 write_csv(survey_circumcision, paste0(tolower(survey_id), "_survey_circumcision.csv"), na = "")
+write_csv(survey_sexbehav, paste0(tolower(survey_id), "_survey_sexbehav.csv"), na = "")
+

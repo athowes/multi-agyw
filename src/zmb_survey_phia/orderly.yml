@@ -10,7 +10,8 @@ artefacts:
         - zmb2016phia_survey_individuals.csv
         - zmb2016phia_survey_biomarker.csv
         - zmb2016phia_survey_circumcision.csv
-  - data:
+        - zmb2016phia_survey_sexbehav.csv
+  - staticgraph:
       description: PHIA survey boundary comparison
       filenames:
         - check/zambia-reallocated-districts.pdf
@@ -31,4 +32,4 @@ depends:
     id: latest
     use:
       depends/zmb_areas.geojson: zmb_areas.geojson
-  
+

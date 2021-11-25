@@ -10,6 +10,7 @@ artefacts:
         - nam2017phia_survey_individuals.csv
         - nam2017phia_survey_biomarker.csv
         - nam2017phia_survey_circumcision.csv
+        - nam2017phia_survey_sexbehav.csv
 
 packages:
   - dplyr
@@ -26,4 +27,4 @@ depends:
     id: latest
     use:
       depends/nam_areas.geojson: nam_areas.geojson
-  
+

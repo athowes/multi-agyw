@@ -10,6 +10,7 @@ artefacts:
         - zwe2016phia_survey_individuals.csv
         - zwe2016phia_survey_biomarker.csv
         - zwe2016phia_survey_circumcision.csv
+        - zwe2016phia_survey_sexbehav.csv
 
 packages:
   - dplyr
@@ -26,4 +27,4 @@ depends:
     id: latest
     use:
       depends/zwe_areas.geojson: zwe_areas.geojson
-  
+

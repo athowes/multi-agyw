@@ -10,6 +10,7 @@ artefacts:
         - swz2017phia_survey_individuals.csv
         - swz2017phia_survey_biomarker.csv
         - swz2017phia_survey_circumcision.csv
+        - swz2017phia_survey_sexbehav.csv
   - staticgraph:
        description: SHIMS2 survey regions vs. area hierarchy
        filenames:
@@ -30,4 +31,4 @@ depends:
     id: latest
     use:
       depends/swz_areas.geojson: swz_areas.geojson
-  
+
