@@ -346,7 +346,7 @@ survey_meta <- survey_individuals %>%
          fieldwork_start = fieldwork_start,
          fieldwork_end   = fieldwork_end)
 
-survey_sexbehav <- extract_sexbehav_phia(ind)
+survey_sexbehav <- extract_sexbehav_phia(ind, survey_id)
 (misallocation <- check_survey_sexbehav(survey_sexbehav))
 
 #' ## Save survey datasets

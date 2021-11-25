@@ -1,6 +1,7 @@
-extract_sexbehav_phia <- function(ind) {
+extract_sexbehav_phia <- function(ind, survey_id) {
   #' All of the sexual behaviour variables we're interested in
-  #' From LePHIA 2016 - 2017 Adult Questionaire
+
+  #' From LePHIA 2016 - 2017 Adult Questionnaire
   sb_vars <- c(
     "firstsxage", #' Age at first vaginal sex
     "firstsxagedk", #' Age at first vaginal sex (don't know)
