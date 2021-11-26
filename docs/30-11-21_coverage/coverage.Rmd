@@ -1,0 +1,90 @@
+---
+title: Graphical tests for coverage
+subtitle: HIV Inference Lab Group Meeting
+author: "Adam Howes"
+date: "November 2021"
+output:
+  beamer_presentation:
+    latex_engine: pdflatex
+    highlight: haddock
+    fig_width: 7
+    fig_height: 3
+    includes:
+      in_header: preamble.tex
+  slidy_presentation:
+    highlight: haddock
+bibliography: citations.bib
+institute: Imperial College London
+---
+
+##
+
+**Calibration** If I say something I mean it (in some weak probabilistic sense).
+
+If I say "this event happens with probability $p$" then it does actually happen $p$ proportion of the time.
+
+##
+
+A **credible interval** is a Bayesian alternative to a confidence interval.
+
+I think people often talk about them as if they are interchangeable, which is probably fine.
+
+##
+
+A $(1 - \alpha)100$% **confidence interval** $[L, U]$ for a parameter $\theta$ is intended to have the property that $(1 - \alpha)100$% of intervals calculated according to the procedure contain $\theta$.
+
+(According to frequentist interpretation, the probability that $\theta \in [L, U]$ is either 0 or 1, it either is or it isn't covered.
+It's the interval rather than the parameter which is random.)    
+
+##
+
+On the other hand, a $(1 - \alpha)100$% **credible interval** $[L, U]$ for $\theta$ is intended to have the (more natural) property that
+$$
+\mathbb{P}(L \leq \theta \leq U) = 1 - \alpha.
+$$
+
+Now this is a probability statement! We can talk about if these claims about coverage are calibrated.
+
+##
+
+For example, in the Naomi app often when you hover over a number it comes up with an interval (I think these are 90%).
+
+It would be good if 90% of the time the actual number was contained within that interval!
+
+##
+
+**Note** this means we also want it to be outside the interval 10% of the time.
+Saying you're 90% sure and being right 100% of the time (under-confidence) is also an error.
+
+##
+
+**Also note** that this isn't the only thing we care about.
+If I tell you that the probability HIV prevalence is within $[0, 1]$ (no one to everyone) then you can't really fault my coverage, but also I'm not very useful.
+Other thing we might care about is sharpness (saying more precise things).
+Proper scoring rules assess these together, but I don't think they can be decomposed.
+
+##
+
+How could you assess this?
+
+As usual, we have the problem of not (and never being able to) know what the true value of the parameter is.
+
+Workaround is to try to have the raw estimate (no model) be contained in the (modelled) interval instead.
+
+##
+
+Compare 
+
+* **nominal coverage**, probability we claimed that interval contains the number, to
+* **empirical coverage**, proportion of intervals which actually contain the number.
+
+Ideally they should be the same.
+
+##
+
+**Criticism**: intervals are defined based on a particular significance level $\alpha$.
+The choice of this significance level is *arbitrary* (a bad word).
+
+How do we assess the calibration of our credible intervals for all possible $\alpha$?
+
+## References {.allowframebreaks}
