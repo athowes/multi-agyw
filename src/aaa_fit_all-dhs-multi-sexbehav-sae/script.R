@@ -365,7 +365,7 @@ if(include_interactions & include_temporal) {
   #' space x survey x category random effects (Besag x AR1)
   formula9x <- update(
     formula9,
-    . ~ . + f(area_idx_copy, model = "besag", graph = interaction_adjM_9x, scale.model = TRUE, group = sur_idx, replicate = cat_idx,
+    . ~ . + f(area_idx_copy, model = "besag", graph = adjM, scale.model = TRUE, group = sur_idx, replicate = cat_idx,
               control.group = list(model = "ar1", hyper = list(rho = list(prior = "pc.cor1", param = c(0, 0.75)))),
               constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
