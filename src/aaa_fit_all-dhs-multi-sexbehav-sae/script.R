@@ -147,7 +147,7 @@ df <- df %>%
     age_cat_idx = to_int(interaction(age_idx, cat_idx)),
     area_cat_idx = to_int(interaction(area_idx, cat_idx)),
     area_sur_idx = to_int(interaction(area_idx, sur_idx)),
-    #' Is the best way to add obs_idx? Perhaps can be added earlier in the pipeline
+    #' Is this the best way to add obs_idx? Perhaps can be added earlier in the pipeline
     obs_idx = to_int(interaction(age_idx, area_idx, sur_idx)),
     area_idx_copy = area_idx,
     sur_idx_copy = sur_idx
@@ -328,7 +328,7 @@ if(include_temporal) {
   models <- append(models, paste0("Model ", 4:9) %>% as.list())
 }
 
-#' Should the interaction models currently under development should be fit too?
+#' Should the interaction models under development should be fit too?
 if(include_interactions & include_temporal) {
 
   #' Model 5x:  category random effects (IID), age x category random effects (IID),
@@ -351,32 +351,21 @@ if(include_interactions & include_temporal) {
                                 control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
-  #' ALERT! Constraints not properly being applied here!
-  #' Going to need a custom extraconstr to make this one correct
-  #' Or the other option is to put area_sur_idx, but then a different model is needed
-
   #' Model 8x:  category random effects (IID), age x category random effects (IID),
   #' space x category random effects (IID), survey x category random effects (AR1),
   #' space x survey x category random effects (IID x AR1)
   formula8x <- update(formula8,
-                      . ~ . + f(sur_idx_copy, model = "ar1", group = area_cat_idx, control.group = list(model = "iid"),
-                                constr = TRUE, hyper = ar1_group_prior)
+                      . ~ . + f(area_idx_copy, model = "iid", group = sur_idx, replicate = cat_idx,
+                                control.group = list(model = "ar1", hyper = list(rho = list(prior = "pc.cor1", param = c(0, 0.75)))),
+                                constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
-
-  #' Create Besag x IID interaction adjacency matrix
-  #' Check the resulting matrix with image()
-  interaction_adjM_9x <-  repeat_matrix(adjM, n = length(unique(df$cat_idx)))
-
-  #' ALERT! Constraints not properly being applied here!
-  #' Going to need a custom extraconstr to make this one correct
-  #' Or the other option is to put area_sur_idx, but then a different model is needed
 
   #' Model 9x: category random effects (IID), age x category random effects (IID),
   #' space x category random effects (Besag), survey x category random effects (AR1)
   #' space x survey x category random effects (Besag x AR1)
   formula9x <- update(
     formula9,
-    . ~ . + f(area_cat_idx, model = "besag", graph = interaction_adjM_9x, scale.model = TRUE, group = sur_idx,
+    . ~ . + f(area_idx_copy, model = "besag", graph = interaction_adjM_9x, scale.model = TRUE, group = sur_idx, replicate = cat_idx,
               control.group = list(model = "ar1", hyper = list(rho = list(prior = "pc.cor1", param = c(0, 0.75)))),
               constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
