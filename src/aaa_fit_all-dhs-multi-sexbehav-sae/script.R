@@ -236,12 +236,8 @@ df_model <- setdiff(df, df_agg)
 #' `A` should be a matrix which has `ncol(A) = length(u)` and `nrow(A)` equal to the number of constraints required.
 #' `e` should have length equal to the number of constraints required.
 
-#' However, if you specify the group structure correctly, extraconstr are not needed, and the default
-#' `constr = TRUE` acomplishes what is required!
-
-# constraint_age_cat <- create_interaction_constraint(df_model, z_idx = "age_idx", z_cat_idx = "age_cat_idx")
-# constraint_area_cat <- create_interaction_constraint(df_model, z_idx = "area_idx", z_cat_idx = "area_cat_idx")
-# constraint_sur_cat <-  create_interaction_constraint(df_model, z_idx = "sur_idx", z_cat_idx = "sur_cat_idx")
+#' For some random effects, if the group structure is correctly specified, `extraconstr` are not needed, and
+#' the default `constr = TRUE` can be sufficient.
 
 #' Model 1: category random effects (IID), age x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
