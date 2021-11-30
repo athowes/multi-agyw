@@ -21,7 +21,7 @@ institute: Imperial College London
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Caliration
+## Calibration
 
 **Calibration** If I say something I mean it (in some weak probabilistic sense).
 
@@ -32,6 +32,7 @@ If I say "this event happens with probability $p$" then it does actually happen 
 A **credible interval** is a Bayesian alternative to a confidence interval.
 
 I think people often talk about them as if they are interchangeable, which is probably fine.
+The difference is mostly about philosophical interpretation, and I'd guess most people talking about confidence intervals have the credible interval interpretation in mind.
 
 ## Confidence interval
 
@@ -53,12 +54,15 @@ Now this is a probability statement! We can talk about if these claims about cov
 
 For example, in the Naomi app often when you hover over a number it comes up with an interval (I think these are 90%).
 
-It would be good if 90% of the time the actual number was contained within that interval!
+It would be good if 90% of the time the actual number was contained within that interval! Then we can say that our app is **calibrated**.
 
 ## Expect to "be wrong" sometimes
 
 **Note** this means we also want it to be outside the interval 10% of the time.
-Saying you're 90% sure and being right 100% of the time (under-confidence) is also an error.
+Saying you're 90% sure and being right 100% of the time is also an error.
+
+It helps to have sample size.
+For small sample size then if you're 90% sure then you'd hope you're right.
 
 ## Sharpness and SPSR
 
@@ -70,11 +74,15 @@ Other thing we might care about is sharpness (saying more precise things).
 Scoring rules assess these together.
 Defining feature of (strictly) proper scoring rules is that they can't be gamed.
 
+## Decomposition of SPSR
+
 It would be nice is there was some type of decomposition along the lines of
 $$
 \text{score(forecast)} = \text{calibration(forecast)} + \text{sharpness(forecast)},
 $$
-but AFAIK that doesn't exist.
+Wikipedia says that:
+
+> The expectation value of a proper scoring rule can be decomposed into the sum of three components, called uncertainty, reliability, and resolution.
 
 ## Using raw data rather than truth
 
@@ -162,17 +170,21 @@ ggplot() +
 
 ##
 
-Given a collection of posterior predictive quantile results $q_1, \ldots, q_n$, what can we do?
+Collection of posterior predictive quantile results $q_1, \ldots, q_n$, then what can we do?
 
-**Main point** if our forecast is calibrated then $q_i \sim \mathcal{U}[0, 1]$.
+**Main point** if our forecast is calibrated then $q_i \sim \mathcal{U}[0, 1]$ because the truth is a draw from the posterior predictive.
+Sometimes called "Probability Integral Transform".
 
 Hence "tests for discrete uniformity" [@sailynoja2021graphical].
 
-##
+## BP (before paper)
 
 Prior to seeing the paper, I was making some plots to check if the quantiles in my models looked uniform:
 
-##
+1. **PIT-histograms** True value should lie in each decile 10% of the time so that the grey bars are level with the blue dashed line.
+2. **Nominal coverage versus actual coverage** If nominal coverage equals actual coverage then the grey line should be along the green line.
+
+## 
 
 ```{r}
 knitr::include_graphics("twitter1.png")
@@ -184,5 +196,22 @@ knitr::include_graphics("twitter1.png")
 knitr::include_graphics("twitter2.png")
 ```
 
+## AP (after paper)
+
+* That second plot is alright, but how far can we reasonably expect the empirical coverage to stray from the nominal coverage? Especially when we are considerince all the possible confidence levels $\alpha$ simultaneously
+* One answer provided by @sailynoja2021graphical who give "simultaneous confidence bands" which "jointly satisfy a desired coverage"
+* Code is available: github.com/TeemuSailynoja/simultaneous-confidence-bands
+
+##
+
+```{r}
+knitr::include_graphics("twitter_new1.png")
+```
+
+##
+
+```{r}
+knitr::include_graphics("twitter_new2.png")
+```
 
 ## References {.allowframebreaks}
