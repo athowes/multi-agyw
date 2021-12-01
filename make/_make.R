@@ -4,17 +4,14 @@ src("make/pull_naomi_areas.R")
 #' 2.  Pull the population data from Oli's fertility repo as reports which can be depended upon
 src("make/pull_oli_population.R")
 
-#' 3. Pull PHIA survey data as reports which can be depended upon
-src("make/pull_phia_surveys.R")
-
-#' 4. Run each of the _data_survey_behav scripts to prepare the input data for modelling
+#' 3. Run each of the _data_survey_behav scripts to prepare the input data for modelling
 src("make/run_data_prep.R")
 
-#' 5. Run the four category single survey models for applicable countries
+#' 4. Run the four category single survey models for applicable countries
 src("make/run_aaa_fit_multi-sexbehav-sae.R")
 
-#' 6. Run the three category multi-survey models for all countries
+#' 5. Run the three category multi-survey models for all countries
 src("make/run_aaa_fit_multi-sexbehav-sae.R")
 
-#' 7. Post processing of the modelling results
+#' 6. Post processing of the modelling results
 src("make/post_process.R")

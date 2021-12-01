@@ -1,45 +1,30 @@
-#' The 13 GF AGYW countries minus BWA
+#' Run and optionally commit or push a collection of reports.
+#'
+#' @param `reports` A vector of report names.
+#' @param `commit` Should the reports be commited? Defaults to `TRUE`.
+#' @param `push` Should the reports be commited? Defaults to `TRUE`.
+run_commit_push <- function(reports, commit = TRUE, push = TRUE) {
+  sapply(
+    reports,
+    function(report) {
+      id <- orderly::orderly_run(report)
+      if(commit) { orderly::orderly_commit(id) }
+      if(push) { orderly::orderly_push_archive(report) }
+    }
+  )
+}
+
+#' Prepare PHIA data in the 8 GF AGYW countries that have surveys
+iso3 <- c("CMR", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZMB", "ZWE")
+reports <- paste0(tolower(iso3), "_survey_phia")
+run_commit_push(reports, push = FALSE)
+
+#' Prepare sexual behaviour datasets in the 13 GF AGYW countries minus BWA
 iso3 <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
-
-# Error for CMR, MOZ, MWI, NAM, SWZ, ZMB
-# Completed for KEN, LSO, UGA, ZAF, ZWE
-
-#' The names of the reports to run
 reports <- paste0(tolower(iso3), "_survey_behav")
+run_commit_push(reports, push = FALSE)
 
-#' Try to run them (with error catching)
-sapply(
-  reports,
-  function(report) {
-    #' Run the report
-    tryCatch(
-      id <- orderly::orderly_run(report),
-      error = function(e) paste0("Report ", report, " failed to run.")
-    )
-    #' Commit it to archive
-    tryCatch(
-      orderly::orderly_commit(id),
-      error = function(e) paste0("Report ", report, " failed to commit.")
-    )
-    #' Push archive to remote
-    tryCatch(
-      orderly::orderly_push_archive(report),
-      error = function(e) paste0("Report ", report, " could not be pushed to the remote.")
-    )
-  }
-)
-
-#' Running without error catching
-sapply(
-  reports,
-  function(report) {
-    id <- orderly::orderly_run(report)
-    orderly::orderly_commit(id)
-    orderly::orderly_push_archive(report)
-  }
-)
-
-#' Running BWA
+#' Running BWA separately
 
 #' This is requried to be run before bwa_survey_behav
 id <- orderly::orderly_run("bwa_survey_bais")
@@ -49,8 +34,3 @@ orderly::orderly_push_archive("bwa_survey_bais")
 id <- orderly::orderly_run("bwa_survey_behav")
 orderly::orderly_commit(id)
 orderly::orderly_push_archive("bwa_survey_behav")
-
-#' Add PHIA testing in LSO
-
-id <- orderly::orderly_run("lso_survey_phia")
-orderly::orderly_commit(id)
