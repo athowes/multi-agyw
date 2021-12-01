@@ -464,6 +464,7 @@ variance_df <- map(res_fit, function(fit)
   #' Add model identifier and country columns
   mutate(
     iso3 = iso3,
+    #' TODO: Needs to be updated for interaction models
     model = paste("Model", row_number()),
     .before = everything()
   )

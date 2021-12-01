@@ -8,6 +8,27 @@ iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", 
 files <- paste0("depends/", tolower(iso3), "_variance-proportions.csv")
 df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
+#' Random effects created using area_idx_copy represent area_sur_idx
+#' Put those values into area_sur_idx then remove the left-over columns
+variance_effects <- c(
+  "variance_cat_idx", "variance_age_idx", "variance_area_idx", "variance_sur_idx", "variance_area_sur_idx"
+)
+
+df <- df %>%
+  mutate(
+    variance_area_sur_idx = case_when(
+      is.na(variance_area_sur_idx) & !is.na(variance_area_idx_copy) ~ variance_area_idx_copy,
+      TRUE ~ variance_area_sur_idx
+    ),
+    percentage_variance_area_sur_idx = case_when(
+      is.na(percentage_variance_area_sur_idx) & !is.na(percentage_variance_area_idx_copy) ~ percentage_variance_area_idx_copy,
+      TRUE ~ percentage_variance_area_sur_idx
+    )
+  ) %>%
+  select(-variance_area_idx_copy, percentage_variance_area_idx_copy) %>%
+  #' Reordering the columns as I'd prefer to see them appear
+  select(iso3, model, all_of(variance_effects), total_variance, all_of(paste0("percentage_", variance_effects)))
+
 write_csv(df, "variance-proportions.csv", na = "")
 
 df <- df %>%
@@ -45,7 +66,7 @@ single_survey <- df %>%
 model_selector <- function(iso3, model) {
   case_when(
     iso3 %in% single_survey$iso3 ~ model == "Model 3",
-    T ~ model == "Model 6"
+    T ~ model == "Model 11" #' TODO: This will say Model 6x in future!
   )
 }
 
@@ -53,7 +74,7 @@ model_selector <- function(iso3, model) {
 #' 8-1/4 take away 1 inch margins gives 6-1/4
 pdf("variance-proportions.pdf", h = 3.5, w = 6.25)
 
-cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
+cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
 
 df %>%
   filter(model_selector(iso3, model)) %>%
@@ -64,7 +85,8 @@ df %>%
       "Category" = "cat_idx",
       "Age x Category" = "age_idx",
       "Area x Category" = "area_idx",
-      "Survey x Category" = "sur_idx"
+      "Survey x Category" = "sur_idx",
+      "Area x Survey x Category" = "area_sur_idx"
     )
   ) %>%
   ggplot(aes(x = fct_rev(iso3), y = value, group = random_effect, fill = random_effect)) +
@@ -92,6 +114,7 @@ df %>%
     "sigma-alpha" = "percentage_variance_age_idx",
     "sigma-phi" = "percentage_variance_area_idx",
     "sigma-gamma" = "percentage_variance_sur_idx",
+    "sigma-delta" = "percentage_variance_area_sur_idx"
   ) %>%
   gt() %>%
   fmt_number(columns = -matches("Country"), rows = everything(), decimals = 3) %>%
@@ -109,6 +132,7 @@ df %>%
     cat_idx = mean(percentage_variance_cat_idx),
     age_idx = mean(percentage_variance_age_idx),
     area_idx = mean(percentage_variance_area_idx),
-    sur_idx = mean(percentage_variance_sur_idx)
+    sur_idx = mean(percentage_variance_sur_idx),
+    area_sur_idx = mean(percentage_variance_area_sur_idx)
   ) %>%
   write_csv("average-variance-proportions.csv", na = "")
