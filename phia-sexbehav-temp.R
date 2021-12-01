@@ -20,8 +20,8 @@ extract_sexbehav_phia <- function(ind, survey_id) {
 
   #' Fix issues with particular surveys having different variable names
   if(survey_id %in% c("ZWE2016PHIA")) { ind <- rename(ind, "part12modkr" = "part12monumdk") }
-  if(survey_id %in% c("ZMB2016PHIA") { ind <- rename(ind, "part12monum" = "part12mo") }
-  if(survey_id %in% c("MWI2016PHIA") { ind <- rename(ind, "par12modkr" = "part12monumdk") }
+  if(survey_id %in% c("ZMB2016PHIA")) { ind <- rename(ind, "part12monum" = "part12mo") }
+  if(survey_id %in% c("MWI2016PHIA")) { ind <- rename(ind, "par12modkr" = "part12monumdk") }
 
   ind %>%
     mutate(
