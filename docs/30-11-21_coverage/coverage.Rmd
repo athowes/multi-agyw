@@ -107,8 +107,8 @@ Say that the nominal coverage is 90%:
 
 | Analyst   | $n$ | Inside the CrI | Empirical coverage | Diagnosis |
 | --------- | --- | -------------- | ------------------ | --------- |
-| Hai Kon   | 28  | 27             | 96%                | Overconfident |
-| Relan     | 28  | 21             | 75%                | Underconfident |
+| Hai Kon   | 28  | 27             | 96%                | Underconfident |
+| Relan     | 28  | 21             | 75%                | Overconfident |
 
 *Any resemblance to real people living or dead is purely coincidental.*
 
