@@ -23,3 +23,12 @@ depends:
     id: latest
     use:
       depends/swz_areas.geojson: swz_areas.geojson
+  swz_survey_phia:
+    id: latest
+    use:
+      depends/swz2017phia_survey_meta.csv: swz2017phia_survey_meta.csv
+      depends/swz2017phia_survey_regions.csv: swz2017phia_survey_regions.csv
+      depends/swz2017phia_survey_clusters.csv: swz2017phia_survey_clusters.csv
+      depends/swz2017phia_survey_individuals.csv: swz2017phia_survey_individuals.csv
+      depends/swz2017phia_survey_biomarker.csv: swz2017phia_survey_biomarker.csv
+      depends/swz2017phia_survey_sexbehav.csv: swz2017phia_survey_sexbehav.csv

@@ -22,3 +22,12 @@ depends:
     id: latest
     use:
       depends/tza_areas.geojson: tza_areas.geojson
+  tza_survey_phia:
+    id: latest
+    use:
+      depends/tza2016phia_survey_meta.csv: tza2016phia_survey_meta.csv
+      depends/tza2016phia_survey_regions.csv: tza2016phia_survey_regions.csv
+      depends/tza2016phia_survey_clusters.csv: tza2016phia_survey_clusters.csv
+      depends/tza2016phia_survey_individuals.csv: tza2016phia_survey_individuals.csv
+      depends/tza2016phia_survey_biomarker.csv: tza2016phia_survey_biomarker.csv
+      depends/tza2016phia_survey_sexbehav.csv: tza2016phia_survey_sexbehav.csv

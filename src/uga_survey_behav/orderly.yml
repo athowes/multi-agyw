@@ -24,3 +24,12 @@ depends:
     id: latest
     use:
       depends/uga_areas.geojson: uga_areas.geojson
+  uga_survey_phia:
+    id: latest
+    use:
+      depends/uga2016phia_survey_meta.csv: uga2016phia_survey_meta.csv
+      depends/uga2016phia_survey_regions.csv: uga2016phia_survey_regions.csv
+      depends/uga2016phia_survey_clusters.csv: uga2016phia_survey_clusters.csv
+      depends/uga2016phia_survey_individuals.csv: uga2016phia_survey_individuals.csv
+      depends/uga2016phia_survey_biomarker.csv: uga2016phia_survey_biomarker.csv
+      depends/uga2016phia_survey_sexbehav.csv: uga2016phia_survey_sexbehav.csv

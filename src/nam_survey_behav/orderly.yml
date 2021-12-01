@@ -25,3 +25,12 @@ depends:
     id: latest
     use:
       depends/nam_areas.geojson: nam_areas.geojson
+  nam_survey_phia:
+    id: latest
+    use:
+      depends/nam2017phia_survey_meta.csv: nam2017phia_survey_meta.csv
+      depends/nam2017phia_survey_regions.csv: nam2017phia_survey_regions.csv
+      depends/nam2017phia_survey_clusters.csv: nam2017phia_survey_clusters.csv
+      depends/nam2017phia_survey_individuals.csv: nam2017phia_survey_individuals.csv
+      depends/nam2017phia_survey_biomarker.csv: nam2017phia_survey_biomarker.csv
+      depends/nam2017phia_survey_sexbehav.csv: nam2017phia_survey_sexbehav.csv

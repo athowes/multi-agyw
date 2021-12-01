@@ -24,3 +24,12 @@ depends:
     id: latest
     use:
       depends/zwe_areas.geojson: zwe_areas.geojson
+  zwe_survey_phia:
+    id: latest
+    use:
+      depends/zwe2016phia_survey_meta.csv: zwe2016phia_survey_meta.csv
+      depends/zwe2016phia_survey_regions.csv: zwe2016phia_survey_regions.csv
+      depends/zwe2016phia_survey_clusters.csv: zwe2016phia_survey_clusters.csv
+      depends/zwe2016phia_survey_individuals.csv: zwe2016phia_survey_individuals.csv
+      depends/zwe2016phia_survey_biomarker.csv: zwe2016phia_survey_biomarker.csv
+      depends/zwe2016phia_survey_sexbehav.csv: zwe2016phia_survey_sexbehav.csv
