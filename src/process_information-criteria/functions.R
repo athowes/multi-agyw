@@ -93,6 +93,10 @@ rank_ic_plot <- function(df) {
 }
 
 create_latex_table <- function(df, file_name) {
+
+  #' Required for labeling later
+  unique_models <- as.character(unique(df$model))
+
   #' Create tables to output to LaTeX
   df <- df %>%
     mutate(
@@ -148,7 +152,7 @@ create_latex_table <- function(df, file_name) {
   tab <- gt(df, groupname_col = "iso3") %>%
     tab_spanner(
       label = "Model",
-      columns = "1":"9"
+      columns = unique_models
     ) %>%
     #' It's clear from context that these are the criteria
     #' (such that the label is not required)
