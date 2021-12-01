@@ -3,7 +3,7 @@
 
 report <- "aaa_fit_all-dhs-multi-sexbehav-sae"
 iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
-params <- data.frame(iso3 = iso3, include_interactions = FALSE)
+params <- data.frame(iso3 = iso3, include_interactions = TRUE)
 ids <- orderly::orderly_batch(report, params)
 
 #' Get the most recent archived or drafted version of each of the reports
