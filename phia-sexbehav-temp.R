@@ -1,22 +1,27 @@
 extract_sexbehav_phia <- function(ind, survey_id) {
   #' All of the sexual behaviour variables we're interested in
-
-  #' From LePHIA 2016 - 2017 Adult Questionnaire
   sb_vars <- c(
     "firstsxage", #' Age at first vaginal sex
     "firstsxagedk", #' Age at first vaginal sex (don't know)
-    "analsxever", #' Age at first anal sex
-    "lifetimesex", #' Total sexual partners (lifetime)
-    "lifetimesexdk", #' Total sexual partners (lifetime) (don't know)
     "part12monum", #' Total sexual partners (past 12 months)
     "part12modkr", #' Total sexual partners (past 12 months) (don't know)
     paste0("partlivew", 1:3), #' Does partner i live in this household
     paste0("partrelation", 1:3), #' Relationship to partner i
     paste0("partlastsup", 1:3), #' Expectation of gifts, payment, other help with partner i
-    paste0("partlastsxtimed", 1:3), #' How long since last sex with partner i
     "sellsx12mo", #' Had sex for money, gifts during past 12 months
     "buysx12mo" #' Paid money or given gifts for sex during past 12 months
   )
+
+  #' The following other variables may be of future interest, but are not in all the surveys:
+  #' * analsxever: Age at first anal sex
+  #' * lifetimesex: Total lifetime sexual partners
+  #' * lifetimesexdk: Total lifetime sexual partners
+  #' * paste0("partlastsxtimed", 1:3): How long since last sex with partner i
+
+  #' Fix issues with particular surveys having different variable names
+  if(survey_id %in% c("ZWE2016PHIA")) { ind <- rename(ind, "part12modkr" = "part12monumdk") }
+  if(survey_id %in% c("ZMB2016PHIA") { ind <- rename(ind, "part12monum" = "part12mo") }
+  if(survey_id %in% c("MWI2016PHIA") { ind <- rename(ind, "par12modkr" = "part12monumdk") }
 
   ind %>%
     mutate(
@@ -27,7 +32,7 @@ extract_sexbehav_phia <- function(ind, survey_id) {
     mutate(
       #' Reports sexual activity in the last 12 months
       sex12m = case_when(
-        (is.na(firstsxage) & (firstsxagedk %in% c(96, -7))) & (analsxever %in% c(2, -8, -9)) ~ FALSE, #' 96 is code for no sex
+        (is.na(firstsxage) & (firstsxagedk %in% c(96, -7))) ~ FALSE, #' 96 is code for no sex
         part12monum > 0 ~ TRUE,
         part12modkr == -8 ~ TRUE, #' If don't know number of partners, assume > 1
         TRUE ~ FALSE
