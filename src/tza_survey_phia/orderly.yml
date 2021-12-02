@@ -21,6 +21,7 @@ packages:
   - ggplot2
   - haven
   - naomi
+  - naomi.utils
   - spud
   - rdhs
   - readr
@@ -31,4 +32,3 @@ depends:
     id: latest
     use:
       depends/tza_areas.geojson: tza_areas.geojson
-

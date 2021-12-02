@@ -21,6 +21,7 @@ packages:
   - ggplot2
   - haven
   - naomi
+  - naomi.utils
   - spud
   - rdhs
   - readr
