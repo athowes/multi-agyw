@@ -23,12 +23,17 @@ extract_sexbehav_phia <- function(ind, survey_id) {
   if(survey_id %in% c("ZMB2016PHIA")) { ind <- rename(ind, "part12monum" = "part12mo") }
   if(survey_id %in% c("MWI2016PHIA")) { ind <- rename(ind, "par12modkr" = "part12monumdk") }
 
-  ind %>%
+  dat <- ind %>%
     mutate(
       survey_id = survey_id,
       individual_id = personid
     ) %>%
-    select(survey_id, individual_id, all_of(sb_vars)) %>%
+    select(survey_id, individual_id, tidyselect::any_of(sb_vars))
+
+  #' Fixes issue with e.g. some surveys not having paid sex questions
+  dat[setdiff(sb_vars, names(dat))] <- NA
+
+  dat %>%
     mutate(
       #' Reports sexual activity in the last 12 months
       sex12m = case_when(
@@ -52,14 +57,14 @@ extract_sexbehav_phia <- function(ind, survey_id) {
       #' Reports one or more non-regular sexual partner
       sexnonreg = case_when(
         nosex12m == TRUE ~ FALSE,
-        part12monum > 1 ~ TRUE,
-        (part12monum == 1) & (partlivew1 == 2) ~ TRUE,
+        part12monum > 1 ~ TRUE, #' More than one partner
+        (part12monum == 1) & (partlivew1 == 2) ~ TRUE, #' One partner not cohabiting
         TRUE ~ FALSE
       ),
       #' Reports having exchanged gifts, cash, or anything else for sex in the past 12 months
       sexpaid12m = case_when(
-        sellsx12mo == 1 ~ TRUE,
-        buysx12mo == 1 ~ TRUE,
+        sellsx12mo | buysx12mo ~ TRUE,
+        (partrelation1 %in% c(6, 7) | partrelation2 %in% c(6, 7) | partrelation3 %in% c(6, 7)) ~ TRUE,
         TRUE ~ FALSE
       ),
       #' Either sexnonreg or sexpaid12m
