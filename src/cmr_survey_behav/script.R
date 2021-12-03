@@ -56,6 +56,11 @@ survey_sexbehav <- create_sexbehav_dhs(surveys) %>%
   select(-giftsvar)
 names(survey_sexbehav)
 
+survey_other <- list(survey_sexbehav)
+
+age_group_include <- c("Y015_019", "Y020_024", "Y025_029", "Y015_024")
+sex <- c("female")
+
 #' Survey indicator dataset
 survey_indicators <- calc_survey_indicators(
   survey_meta,
@@ -84,7 +89,7 @@ phia_survey_indicators <- calc_survey_indicators(
   phia_survey_clusters,
   phia_survey_individuals,
   phia_survey_biomarker,
-  phia_survey_sexbehav,
+  list(phia_survey_sexbehav),
   st_drop_geometry(areas),
   sex = sex,
   age_group_include = age_group_include
@@ -92,7 +97,6 @@ phia_survey_indicators <- calc_survey_indicators(
 
 #' Combine all surveys together
 survey_indicators <- bind_rows(survey_indicators, phia_survey_indicators)
-
 
 #' Save survey indicators dataset
 write_csv(survey_indicators, "cmr_survey_indicators_sexbehav.csv", na = "")
