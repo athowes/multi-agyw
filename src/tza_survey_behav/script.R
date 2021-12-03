@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-                                        # orderly::orderly_develop_start("tza_survey_behav")
-                                        # setwd("src/tza_survey_behav")
+# orderly::orderly_develop_start("tza_survey_behav")
+# setwd("src/tza_survey_behav")
 
 #' ISO3 country code
 iso3 <- "TZA"
@@ -15,7 +15,6 @@ surveys <- create_surveys_dhs(iso3, survey_characteristics = NULL) %>%
 survey_meta <- create_survey_meta_dhs(surveys)
 
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
-
 
 #' Boundary file for 2007 AIS has single region for Pemba and single region for Unguja, both coded 9999
 #' But hv024 in the HR dataset for 2007 AIS has five regions (survey_region_id = 51:55); these are the

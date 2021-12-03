@@ -9,7 +9,9 @@ iso3 <- "LSO"
 areas <- read_sf("depends/lso_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
-surveys <- create_surveys_dhs(iso3)
+surveys <- create_surveys_dhs(iso3, survey_characteristics = NULL) %>%
+  filter(as.numeric(SurveyYear) > 1994)
+
 survey_meta <- create_survey_meta_dhs(surveys)
 
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
