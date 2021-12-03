@@ -75,9 +75,6 @@ survey_indicators <- calc_survey_indicators(
   area_bottom_level = 1
 )
 
-#' Save survey indicators dataset
-write_csv(survey_indicators, "lso_survey_indicators_sexbehav.csv", na = "")
-
 #' PHIA data
 phia_survey_meta <- read_csv("depends/lso2017phia_survey_meta.csv")
 phia_survey_regions <- read_csv("depends/lso2017phia_survey_regions.csv")
@@ -93,9 +90,15 @@ phia_survey_indicators <- calc_survey_indicators(
   phia_survey_clusters,
   phia_survey_individuals,
   phia_survey_biomarker,
-  survey_other = NULL,
+  list(phia_survey_sexbehav),
   st_drop_geometry(areas),
   sex = sex,
   age_group_include = age_group_include,
   area_bottom_level = 1
 )
+
+#' Combine all surveys together
+survey_indicators <- bind_rows(survey_indicators, phia_survey_indicators)
+
+#' Save survey indicators dataset
+write_csv(survey_indicators, "lso_survey_indicators_sexbehav.csv", na = "")

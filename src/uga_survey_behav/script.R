@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("zwe_survey_behav")
-# setwd("src/zwe_survey_behav")
+# orderly::orderly_develop_start("uga_survey_behav")
+# setwd("src/uga_survey_behav")
 
 #' ISO3 country code
 iso3 <- "UGA"
@@ -78,6 +78,30 @@ survey_indicators <- calc_survey_indicators(
   sex = sex,
   age_group_include = age_group_include
 )
+
+#' PHIA data
+phia_survey_meta <- read_csv("depends/uga2016phia_survey_meta.csv")
+phia_survey_regions <- read_csv("depends/uga2016phia_survey_regions.csv")
+phia_survey_clusters <- read_csv("depends/uga2016phia_survey_clusters.csv")
+phia_survey_individuals <- read_csv("depends/uga2016phia_survey_individuals.csv")
+phia_survey_biomarker <- read_csv("depends/uga2016phia_survey_biomarker.csv")
+phia_survey_sexbehav <- read_csv("depends/uga2016phia_survey_sexbehav.csv")
+
+#' PHIA survey indicator dataset
+phia_survey_indicators <- calc_survey_indicators(
+  phia_survey_meta,
+  phia_survey_regions,
+  phia_survey_clusters,
+  phia_survey_individuals,
+  phia_survey_biomarker,
+  list(phia_survey_sexbehav),
+  st_drop_geometry(areas),
+  sex = sex,
+  age_group_include = age_group_include
+)
+
+#' Combine all surveys together
+survey_indicators <- bind_rows(survey_indicators, phia_survey_indicators)
 
 #' Save survey indicators dataset
 write_csv(survey_indicators, "uga_survey_indicators_sexbehav.csv", na = "")

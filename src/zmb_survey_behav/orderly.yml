@@ -26,10 +26,10 @@ depends:
   zmb_survey_phia:
     id: latest
     use:
-      depends/zwe2016phia_survey_meta.csv: zwe2016phia_survey_meta.csv
-      depends/zwe2016phia_survey_regions.csv: zwe2016phia_survey_regions.csv
-      depends/zwe2016phia_survey_clusters.csv: zwe2016phia_survey_clusters.csv
-      depends/zwe2016phia_survey_individuals.csv: zwe2016phia_survey_individuals.csv
-      depends/zwe2016phia_survey_biomarker.csv: zwe2016phia_survey_biomarker.csv
-      depends/zwe2016phia_survey_sexbehav.csv: zwe2016phia_survey_sexbehav.csv
+      depends/zmb2016phia_survey_meta.csv: zmb2016phia_survey_meta.csv
+      depends/zmb2016phia_survey_regions.csv: zmb2016phia_survey_regions.csv
+      depends/zmb2016phia_survey_clusters.csv: zmb2016phia_survey_clusters.csv
+      depends/zmb2016phia_survey_individuals.csv: zmb2016phia_survey_individuals.csv
+      depends/zmb2016phia_survey_biomarker.csv: zmb2016phia_survey_biomarker.csv
+      depends/zmb2016phia_survey_sexbehav.csv: zmb2016phia_survey_sexbehav.csv
 
