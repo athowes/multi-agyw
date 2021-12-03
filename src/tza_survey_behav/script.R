@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("tza_survey_behav")
-# setwd("src/tza_survey_behav")
+                                        # orderly::orderly_develop_start("tza_survey_behav")
+                                        # setwd("src/tza_survey_behav")
 
 #' ISO3 country code
 iso3 <- "TZA"
@@ -9,12 +9,34 @@ iso3 <- "TZA"
 areas <- read_sf("depends/tza_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
-surveys <- create_surveys_dhs(iso3)
+surveys <- create_surveys_dhs(iso3, survey_characteristics = NULL) %>%
+  filter(as.numeric(SurveyYear) > 1994)
+
 survey_meta <- create_survey_meta_dhs(surveys)
 
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
-surveys <- surveys_add_dhs_regvar(surveys, survey_region_boundaries)
 
+
+#' Boundary file for 2007 AIS has single region for Pemba and single region for Unguja, both coded 9999
+#' But hv024 in the HR dataset for 2007 AIS has five regions (survey_region_id = 51:55); these are the
+#' same as the 2010 DHS.
+#' ACTION: Replace regions coded 9999 from the 2007 AIS with regions 51:55 from the 2010 DHS.
+
+hrd07 <- dhs_datasets(surveyIds = "TZ2007AIS", fileType = "HR", fileFormat = "FL")
+tz2007hr <- readRDS(get_datasets(hrd07)[[1]])
+
+count(tz2007hr, hv024)
+
+survey_region_boundaries <- survey_region_boundaries %>%
+  filter( !(survey_id == "TZA2007AIS" & survey_region_id == 9999) ) %>%
+  bind_rows(
+    survey_region_boundaries %>%
+    filter(survey_id == "TZA2010DHS",  survey_region_id %in% 51:55) %>%
+    mutate(survey_id = "TZA2007AIS")
+  )
+
+
+surveys <- surveys_add_dhs_regvar(surveys, survey_region_boundaries)
 #' Allocate each area to survey region
 survey_region_areas <- allocate_areas_survey_regions(areas_wide, survey_region_boundaries)
 validate_survey_region_areas(survey_region_areas, survey_region_boundaries)
