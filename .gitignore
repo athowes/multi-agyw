@@ -12,3 +12,7 @@ data
 archive
 global
 depends/
+.orderly/
+backup/
+metadata/
+README.html
