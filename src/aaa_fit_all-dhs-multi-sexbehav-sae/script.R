@@ -40,20 +40,6 @@ admin1_level <- admin1_level[iso3]
 areas <- read_sf(paste0("depends/", tolower(iso3), "_areas.geojson"))
 ind <- read_csv(paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.csv"))
 
-#' Append an indicator for 1 - sex12m
-ind <- dplyr::bind_rows(
-  ind,
-  ind %>%
-    filter(indicator == "sex12m") %>%
-    mutate(indicator = "nosex12m",
-          estimate = 1 - estimate,
-          ci_upper_new = 1 - ci_lower,
-          ci_lower_new = 1 - ci_upper) %>%
-    select(-ci_upper, -ci_lower) %>%
-    rename(ci_upper = ci_upper_new,
-           ci_lower = ci_lower_new)
-)
-
 #' Set ind > 1 to 1, as well as ind < 0 to 0
 message(
   paste0(

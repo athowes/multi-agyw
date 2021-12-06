@@ -44,23 +44,6 @@ ind <- read_csv(paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.c
 ind <- ind %>%
   filter(survey_id == max(ind$survey_id))
 
-#' Append an indicator for 1 - sex12m
-#' This could be earlier in the pipeline with a mutate call, e.g. modify naomi.utils
-#' Though it's probably not necessary and this works OK seeing as it's not so
-#' difficult to calculate the standard errors for 1 - existing_indicator
-ind <- dplyr::bind_rows(
-  ind,
-  ind %>%
-    filter(indicator == "sex12m") %>%
-    mutate(indicator = "nosex12m",
-          estimate = 1 - estimate,
-          ci_upper_new = 1 - ci_lower,
-          ci_lower_new = 1 - ci_upper) %>%
-    select(-ci_upper, -ci_lower) %>%
-    rename(ci_upper = ci_upper_new,
-           ci_lower = ci_lower_new)
-)
-
 #' Set ind > 1 to 1, as well as ind < 0 to 0
 message(
   paste0(
