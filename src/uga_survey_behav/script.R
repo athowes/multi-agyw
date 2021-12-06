@@ -9,7 +9,6 @@ iso3 <- "UGA"
 areas <- read_sf("depends/uga_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
-# surveys <- create_surveys_dhs(iso3, survey_characteristics = 24)
 surveys <- create_surveys_dhs(iso3, survey_characteristics = NULL) %>%
   filter(as.numeric(SurveyYear) > 1994)
 
