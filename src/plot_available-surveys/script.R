@@ -36,7 +36,7 @@ df <- df %>%
       "Zambia" = "ZMB",
       "Zimbabwe" = "ZWE"
     ),
-    year = substr(survey_id, 4, 7),
+    year = as.numeric(substr(survey_id, 4, 7)),
     type = substr(survey_id, 8, length(survey_id))
   )
 
@@ -48,9 +48,10 @@ cbpalette <- c("#56B4E9", "#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00",
 
 df %>%
   ggplot(aes(x = year, y = fct_rev(country), col = type)) +
-  geom_point(size = 2) +
+  geom_point(size = 2, position = ggstance::position_dodgev(height = 0.75)) +
   labs(x = "", y = "", col = "Survey type") +
   scale_color_manual(values = cbpalette) +
+  scale_x_continuous(breaks = min(df$year):max(df$year)) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),

@@ -20,6 +20,7 @@ packages:
   - tidyr
   - readxl
   - naomi.utils
+  - ggstance
 
 depends:
   bwa_survey_behav:
