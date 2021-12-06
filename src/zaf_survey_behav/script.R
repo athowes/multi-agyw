@@ -10,7 +10,7 @@ areas <- read_sf("depends/zaf_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 areas_wide <- st_make_valid(areas_wide) #' Is this bad?
 
-surveys <- create_surveys_dhs(iso3, survey_characteristics = NULL) %>%
+surveys <- create_surveys_dhs(iso3, survey_characteristics = 24) %>%
   filter(as.numeric(SurveyYear) > 1994)
 
 survey_meta <- create_survey_meta_dhs(surveys)

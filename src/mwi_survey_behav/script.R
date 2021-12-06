@@ -9,7 +9,7 @@ iso3 <- "MWI"
 areas <- read_sf("depends/mwi_areas.geojson")
 areas_wide <- spread_areas(areas)
 
-surveys <- create_surveys_dhs(iso3, survey_characteristics = NULL) %>%
+surveys <- create_surveys_dhs(iso3, survey_characteristics = 24) %>%
   filter(as.numeric(SurveyYear) > 1994)
 
 survey_meta <- create_survey_meta_dhs(surveys)

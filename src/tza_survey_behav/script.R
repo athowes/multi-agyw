@@ -9,7 +9,7 @@ iso3 <- "TZA"
 areas <- read_sf("depends/tza_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
-surveys <- create_surveys_dhs(iso3, survey_characteristics = NULL) %>%
+surveys <- create_surveys_dhs(iso3, survey_characteristics = 24) %>%
   filter(as.numeric(SurveyYear) > 1994)
 
 survey_meta <- create_survey_meta_dhs(surveys)
@@ -34,8 +34,8 @@ survey_region_boundaries <- survey_region_boundaries %>%
     mutate(survey_id = "TZA2007AIS")
   )
 
-
 surveys <- surveys_add_dhs_regvar(surveys, survey_region_boundaries)
+
 #' Allocate each area to survey region
 survey_region_areas <- allocate_areas_survey_regions(areas_wide, survey_region_boundaries)
 validate_survey_region_areas(survey_region_areas, survey_region_boundaries)

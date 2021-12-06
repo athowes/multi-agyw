@@ -11,7 +11,7 @@ areas_wide <- naomi::spread_areas(areas)
 
 #' Removing the 2002 DHS, as it doesn't release GPS dataset, not allowing clusters to be snapped to districts
 #' https://dhsprogram.com/data/available-datasets.cfm
-surveys <- create_surveys_dhs(iso3, survey_characteristics = NULL) %>%
+surveys <- create_surveys_dhs(iso3, survey_characteristics = 24) %>%
   filter(
     SurveyId != "ZM2002DHS",
     as.numeric(SurveyYear) > 1994
