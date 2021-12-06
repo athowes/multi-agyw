@@ -19,16 +19,13 @@ iso3 <- c("CMR", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZMB", "ZWE")
 reports <- paste0(tolower(iso3), "_survey_phia")
 run_commit_push(reports, push = FALSE)
 
+#' Prepare BAIS data in Botswana
+run_commit_push("bwa_survey_bais", push = FALSE)
+
 #' Prepare sexual behaviour datasets in the 13 GF AGYW countries minus BWA
-iso3 <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 reports <- paste0(tolower(iso3), "_survey_behav")
 run_commit_push(reports, push = FALSE)
-
-#' Running BWA separately
-
-#' This is required to be run before bwa_survey_behav
-run_commit_push("bwa_survey_bais", push = FALSE)
-run_commit_push("bwa_survey_behav", push = FALSE)
 
 #' Make a plot of all available surveys for manuscript
 run_commit_push("plot_available-surveys", push = FALSE)
