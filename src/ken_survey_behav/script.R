@@ -54,9 +54,7 @@ survey_biomarker <- create_survey_biomarker_dhs(individuals)
 names(survey_biomarker)
 
 #' Extract sexual behaviour characteristics from the survey
-#' giftsvar is a special case indicator used to determine the type of survey question
-survey_sexbehav <- create_sexbehav_dhs(surveys) %>%
-  select(-giftsvar)
+survey_sexbehav <- create_sexbehav_dhs(surveys)
 names(survey_sexbehav)
 
 survey_other <- list(survey_sexbehav)
