@@ -26,11 +26,9 @@ run_commit_push(reports, push = FALSE)
 
 #' Running BWA separately
 
-#' This is requried to be run before bwa_survey_behav
-id <- orderly::orderly_run("bwa_survey_bais")
-orderly::orderly_commit(id)
-orderly::orderly_push_archive("bwa_survey_bais")
+#' This is required to be run before bwa_survey_behav
+run_commit_push("bwa_survey_bais", push = FALSE)
+run_commit_push("bwa_survey_behav", push = FALSE)
 
-id <- orderly::orderly_run("bwa_survey_behav")
-orderly::orderly_commit(id)
-orderly::orderly_push_archive("bwa_survey_behav")
+#' Make a plot of all available surveys for manuscript
+run_commit_push("plot_available-surveys", push = FALSE)

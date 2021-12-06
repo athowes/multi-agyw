@@ -1,0 +1,76 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Plot showing which surveys are used in our analysis
+      filenames:
+        - available-surveys.pdf
+        - available-surveys.csv
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - readxl
+  - naomi.utils
+
+depends:
+  bwa_survey_behav:
+    id: latest
+    use:
+      depends/bwa_survey_indicators_sexbehav.csv: bwa_survey_indicators_sexbehav.csv
+  cmr_survey_behav:
+    id: latest
+    use:
+      depends/cmr_survey_indicators_sexbehav.csv: cmr_survey_indicators_sexbehav.csv
+  ken_survey_behav:
+    id: latest
+    use:
+      depends/ken_survey_indicators_sexbehav.csv: ken_survey_indicators_sexbehav.csv
+  lso_survey_behav:
+    id: latest
+    use:
+      depends/lso_survey_indicators_sexbehav.csv: lso_survey_indicators_sexbehav.csv
+  moz_survey_behav:
+    id: latest
+    use:
+      depends/moz_survey_indicators_sexbehav.csv: moz_survey_indicators_sexbehav.csv
+  mwi_survey_behav:
+    id: latest
+    use:
+      depends/mwi_survey_indicators_sexbehav.csv: mwi_survey_indicators_sexbehav.csv
+  nam_survey_behav:
+    id: latest
+    use:
+      depends/nam_survey_indicators_sexbehav.csv: nam_survey_indicators_sexbehav.csv
+  swz_survey_behav:
+    id: latest
+    use:
+      depends/swz_survey_indicators_sexbehav.csv: swz_survey_indicators_sexbehav.csv
+  tza_survey_behav:
+    id: latest
+    use:
+      depends/tza_survey_indicators_sexbehav.csv: tza_survey_indicators_sexbehav.csv
+  uga_survey_behav:
+    id: latest
+    use:
+      depends/uga_survey_indicators_sexbehav.csv: uga_survey_indicators_sexbehav.csv
+  zaf_survey_behav:
+    id: latest
+    use:
+      depends/zaf_survey_indicators_sexbehav.csv: zaf_survey_indicators_sexbehav.csv
+  zmb_survey_behav:
+    id: latest
+    use:
+      depends/zmb_survey_indicators_sexbehav.csv: zmb_survey_indicators_sexbehav.csv
+  zwe_survey_behav:
+    id: latest
+    use:
+      depends/zwe_survey_indicators_sexbehav.csv: zwe_survey_indicators_sexbehav.csv
