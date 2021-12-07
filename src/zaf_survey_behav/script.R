@@ -16,6 +16,10 @@ surveys <- create_surveys_dhs(iso3, survey_characteristics = NULL) %>%
 
 survey_meta <- create_survey_meta_dhs(surveys)
 
+#' These should be integers, not characters
+survey_meta$male_age_min <- as.integer(survey_meta$male_age_min)
+survey_meta$male_age_max <- as.integer(survey_meta$male_age_max)
+
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
 survey_region_boundaries <- st_make_valid(survey_region_boundaries)
 # survey_region_boundaries <- st_buffer(survey_region_boundaries, 0)
