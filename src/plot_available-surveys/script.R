@@ -6,7 +6,16 @@ iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", 
 files <- paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.csv")
 
 df <- lapply(files, function(file) {
-  read_csv(file) %>%
+  #' indicators as produced by aaa_survey_indicators_sexbehav
+  ind <- read_csv(file)
+
+  #' What's the average value of giftsvar in each survey?
+  giftsvar <- ind %>%
+    filter(indicator == "giftsvar") %>%
+    group_by(survey_id) %>%
+    summarise(giftsvar = as.factor(mean(estimate)))
+
+  ind %>%
     filter(
       #' Just at the country level
       area_id == toupper(substr(file, 9, 11)),
@@ -14,9 +23,17 @@ df <- lapply(files, function(file) {
       indicator == "sexcohab"
     ) %>%
     group_by(survey_id) %>%
-    summarise(sample_size = sum(n_observations))
+    summarise(sample_size = sum(n_observations)) %>%
+    left_join(giftsvar, by = "survey_id")
 }) %>%
   bind_rows()
+
+fct_case_when <- function(...) {
+  args <- as.list(match.call())
+  levels <- sapply(args[-1], function(f) f[[3]])
+  levels <- levels[!is.na(levels)]
+  factor(dplyr::case_when(...), levels = levels)
+}
 
 df <- df %>%
   mutate(
@@ -37,26 +54,38 @@ df <- df %>%
       "Zimbabwe" = "ZWE"
     ),
     year = as.numeric(substr(survey_id, 4, 7)),
-    type = substr(survey_id, 8, length(survey_id))
+    type = substr(survey_id, 8, length(survey_id)),
+    sample_size_factor = fct_case_when(
+      sample_size < 5000 ~ "<5k",
+      sample_size < 10000 ~ "5k-10k",
+      sample_size < 15000 ~ "10k-15k",
+      sample_size < 20000 ~ "15k-20k",
+      20000 <= sample_size ~ ">20k"
+    )
   )
 
 write_csv(df, "available-surveys.csv", na = "")
 
-pdf("available-surveys.pdf", h = 3, w = 6.25)
+pdf("available-surveys.pdf", h = 4, w = 6.25)
 
 cbpalette <- c("#56B4E9", "#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
 
 df %>%
-  ggplot(aes(x = year, y = fct_rev(country), col = type)) +
-  geom_point(size = 2, position = ggstance::position_dodgev(height = 0.75)) +
-  labs(x = "", y = "", col = "Survey type") +
+  #' For now replace NA with a string NA
+  mutate(
+    giftsvar = ifelse(is.na(giftsvar), "NA", giftsvar)
+  ) %>%
+  ggplot(aes(x = year, y = fct_rev(country), col = type, size = sample_size_factor, shape = giftsvar)) +
+  geom_point(position = ggstance::position_dodgev(height = 0.75), alpha = 0.5) +
+  labs(x = "", y = "", col = "Type", shape = "Paid sex question?", size = "Sample size") +
   scale_color_manual(values = cbpalette) +
   scale_x_continuous(breaks = min(df$year):max(df$year)) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
     plot.title = element_text(face = "bold"),
-    legend.key.width = unit(4, "lines")
+    legend.position = "bottom",
+    legend.box = "vertical"
   )
 
 dev.off()
