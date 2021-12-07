@@ -73,13 +73,18 @@ cbpalette <- c("#56B4E9", "#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00",
 df %>%
   #' For now replace NA with a string NA
   mutate(
-    giftsvar = ifelse(is.na(giftsvar), "NA", giftsvar)
+    giftsvar = fct_case_when(
+      giftsvar == 1 ~ "Yes",
+      giftsvar == 0 ~ "No",
+      is.na(giftsvar) ~ "Missing"
+    )
   ) %>%
   ggplot(aes(x = year, y = fct_rev(country), col = type, size = sample_size_factor, shape = giftsvar)) +
-  geom_point(position = ggstance::position_dodgev(height = 0.75), alpha = 0.5) +
+  geom_point(position = ggstance::position_dodgev(height = 0.75)) +
   labs(x = "", y = "", col = "Type", shape = "Paid sex question?", size = "Sample size") +
-  scale_color_manual(values = cbpalette) +
+  scale_color_manual(values = cbpalette[c(3, 7, 1, 2)]) +
   scale_x_continuous(breaks = min(df$year):max(df$year)) +
+  scale_size_discrete(range = c(2, 5)) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
