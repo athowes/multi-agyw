@@ -14,7 +14,7 @@ areas_wide <- naomi::spread_areas(areas)
 surveys <- create_surveys_dhs(iso3, survey_characteristics = 24) %>%
   filter(
     SurveyId != "ZM2002DHS",
-    as.numeric(SurveyYear) > 1994
+    as.numeric(SurveyYear) > 1998
   )
 
 survey_meta <- create_survey_meta_dhs(surveys)
