@@ -38,6 +38,7 @@ admin1_level <- admin1_level[iso3]
 
 areas <- read_sf(paste0("depends/", tolower(iso3), "_areas.geojson"))
 ind <- read_csv(paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.csv"))
+pop <- read_csv("depends/interpolated-population.csv")
 
 #' In this report, we only use the most recent DHS survey from each country
 #' max(ind$survey_id) is plausibly dodgy: survey_id is a string
@@ -93,7 +94,7 @@ df <- crossing(
            area_sort_order, center_x, center_y)
 )
 
-#' Add district observations to the scaffolding by merging with ind
+#' Merge district observations into df
 df <- df %>%
   left_join(
     ind %>%
@@ -105,6 +106,21 @@ df <- df %>%
              x_eff, estimate, ci_lower, ci_upper),
     by = c("indicator", "age_group", "area_id")
   )
+
+#' Merge age-stratified population total sizes into df
+#' This is required for aggregating the estimates e.g. using 15-19 and 20-24 to create 15-24
+df <- df %>%
+  mutate(
+    #' Assuming the survey_id is structured as ISO2000DHS
+    year = as.numeric(substr(survey_id, 4, 7))
+  ) %>%
+  left_join(
+    pop %>%
+      filter(sex == "female") %>%
+      select(area_id, year, age_group, population),
+    by = c("area_id", "year", "age_group")
+  ) %>%
+  rename(population_mean = population)
 
 #' Add indicies for:
 #'  * age (age_idx)
@@ -119,28 +135,9 @@ df <- df %>%
     age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
     age_cat_idx = to_int(interaction(age_idx, cat_idx)),
     area_cat_idx = to_int(interaction(area_idx, cat_idx)),
-    #' Is the best way to do it for obs_idx? Perhaps can be added earlier in the pipeline
     obs_idx = to_int(interaction(age_idx, area_idx))
   ) %>%
   arrange(obs_idx)
-
-#' Get age-stratified population total sizes
-#' This is required for aggregating the estimates e.g. using 15-19 and 20-24 to create 15-24
-pop <- read_csv("depends/interpolated-population.csv")
-
-#' Merge this data into df
-df <- df %>%
-  mutate(
-    #' Assuming the survey_id is structured as ISO2000DHS
-    year = as.numeric(substr(survey_id, 4, 7))
-  ) %>%
-  left_join(
-    pop %>%
-      filter(sex == "female") %>%
-      select(area_id, year, age_group, population),
-    by = c("area_id", "year", "age_group")
-  ) %>%
-  rename(population_mean = population)
 
 #' Data for the model (df) doesn't include the aggregates (since this is using data twice)
 #' So we save them off separately

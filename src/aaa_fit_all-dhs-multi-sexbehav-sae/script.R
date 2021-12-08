@@ -39,6 +39,7 @@ admin1_level <- admin1_level[iso3]
 
 areas <- read_sf(paste0("depends/", tolower(iso3), "_areas.geojson"))
 ind <- read_csv(paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.csv"))
+pop <- read_csv("depends/interpolated-population.csv")
 
 #' Set ind$estimate > 1 to 1, as well as ind$estimate < 0 to 0
 ind$estimate <- constrain_interval(ind$estimate, lower = 0, upper = 1)
@@ -79,7 +80,7 @@ colnames(adjM) <- rownames(adjM)
 df <- crossing(
   #' In this model we are using three risk categories (rather than four)
   indicator = c("nosex12m", "sexcohab", "sexnonregplus"),
-  #' Add in the survey_id to deal with multiple surveys
+  #' All of the difference surveys
   survey_id = unique(ind$survey_id),
   #' Three age groups, plus aggregate category
   age_group = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"),
@@ -90,7 +91,7 @@ df <- crossing(
            area_sort_order, center_x, center_y)
 )
 
-#' Add district observations to the scaffolding by merging with ind
+#' Merge district observations into df
 df <- df %>%
   left_join(
     ind %>%
@@ -102,6 +103,21 @@ df <- df %>%
              x_eff, estimate, ci_lower, ci_upper),
     by = c("indicator", "survey_id", "age_group", "area_id")
   )
+
+#' Merge age-stratified population total sizes into df
+#' This is required for aggregating the estimates e.g. using 15-19 and 20-24 to create 15-24
+df <- df %>%
+  mutate(
+    #' Assuming the survey_id is structured as ISO2000DHS
+    year = as.numeric(substr(survey_id, 4, 7))
+  ) %>%
+  left_join(
+    pop %>%
+      filter(sex == "female") %>%
+      select(area_id, year, age_group, population),
+    by = c("area_id", "year", "age_group")
+  ) %>%
+  rename(population_mean = population)
 
 #' Add indicies for:
 #'  * survey (sur_idx)
@@ -128,24 +144,6 @@ df <- df %>%
     sur_idx_copy = sur_idx
   ) %>%
   arrange(obs_idx)
-
-#' Get age-stratified population total sizes
-#' This is required for aggregating the estimates e.g. using 15-19 and 20-24 to create 15-24
-pop <- read_csv("depends/interpolated-population.csv")
-
-#' Merge this data into df
-df <- df %>%
-  mutate(
-    #' Assuming the survey_id is structured as ISO2000DHS
-    year = as.numeric(substr(survey_id, 4, 7))
-  ) %>%
-  left_join(
-    pop %>%
-      filter(sex == "female") %>%
-      select(area_id, year, age_group, population),
-    by = c("area_id", "year", "age_group")
-  ) %>%
-  rename(population_mean = population)
 
 #' Data for the model (df) doesn't include the aggregates (since this is using data twice)
 #' So we save them off separately
