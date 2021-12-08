@@ -44,19 +44,8 @@ ind <- read_csv(paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.c
 ind <- ind %>%
   filter(survey_id == max(ind$survey_id))
 
-#' Set ind > 1 to 1, as well as ind < 0 to 0
-message(
-  paste0(
-    "There are: ",
-    filter(ind, estimate < 0) %>% nrow(), " values of ind$estimate < 0 and ",
-    filter(ind, estimate > 1) %>% nrow(), " values of ind$estimate > 1.
-    If they exist, these values have been set to be inside [0, 1]!"
-  )
-)
-
-ind <- ind %>%
-  mutate(estimate = pmin(1, estimate),
-         estimate = pmax(0, estimate))
+#' Set ind$estimate > 1 to 1, as well as ind$estimate < 0 to 0
+ind$estimate <- constrain_interval(ind$estimate, lower = 0, upper = 1)
 
 areas <- select(areas, area_id, area_name, area_level, area_level_label,
                 parent_area_id, area_sort_order, center_x, center_y)
