@@ -16,19 +16,13 @@ dev.off()
 saveRDS(areas, "areas.rds")
 
 #' Merge all of the indicator datasets
-indicators <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_survey_indicators_sexbehav.csv"))) %>%
+ind <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_survey_indicators_sexbehav.csv"))) %>%
   bind_rows()
 
-write_csv(indicators, "survey_indicators_sexbehav.csv")
+write_csv(ind, "survey_indicators_sexbehav.csv")
 
 #' Merge all of the population datasets
+pop <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_interpolated-population.csv"))) %>%
+  bind_rows()
 
-#' Dirty temporary solution because orderly isn't working here
-# archives <- list.dirs("../../archive/aaa_scale_pop", recursive = FALSE)
-# files <- paste0(archives, "/interpolated_population.csv")
-# population <- lapply(files, function(file) read_csv(file)) %>%
-#   bind_rows()
-# write_csv(population, "../../global/interpolated_population_all.csv")
-
-population <- read_csv("depends/interpolated_population_all.csv")
-write_csv(population, "interpolated_population.csv")
+write_csv(pop, "interpolated_population.csv")
