@@ -4,7 +4,7 @@
 
 iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 
-#' Merge all of the areas
+#' Merge all of the area datasets
 areas <- lapply(iso3, function(x) read_sf(paste0("depends/", tolower(x), "_areas.geojson")))
 areas[[9]]$epp_level <- as.numeric(areas[[9]]$epp_level) #' Fix non-conforming column type
 areas <- bind_rows(areas)
@@ -20,3 +20,15 @@ indicators <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "
   bind_rows()
 
 write_csv(indicators, "survey_indicators_sexbehav.csv")
+
+#' Merge all of the population datasets
+
+#' Dirty temporary solution because orderly isn't working here
+# archives <- list.dirs("../../archive/aaa_scale_pop", recursive = FALSE)
+# files <- paste0(archives, "/interpolated_population.csv")
+# population <- lapply(files, function(file) read_csv(file)) %>%
+#   bind_rows()
+# write_csv(population, "../../global/interpolated_population_all.csv")
+
+population <- read_csv("depends/interpolated_population_all.csv")
+write_csv(population, "interpolated_population.csv")
