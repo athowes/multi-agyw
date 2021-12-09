@@ -75,7 +75,8 @@ multinomial_model <- function(formula, model_name, S = 1000) {
   fit <- inla(formula, data = df_model, family = 'xPoisson',
               control.predictor = list(link = 1),
               control.compute = list(dic = TRUE, waic = TRUE,
-                                     cpo = TRUE, config = TRUE))
+                                     cpo = TRUE, config = TRUE),
+              inla.mode = "experimental")
 
   df_model <- df_model %>%
     mutate(
