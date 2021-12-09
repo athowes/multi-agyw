@@ -158,4 +158,24 @@ df_agg <- df %>%
   filter(age_group == "Y015_024" | area_id %in% iso3)
 
 #' The rows of df to be included in the model
-df_model <- setdiff(df, df_agg)
+#' Note that setdiff behaving strangely here
+df_model <- df %>%
+  filter(
+    age_group != "Y015_024",
+    !(area_id %in% iso3)
+  )
+
+#' Model 1:
+#' * category random effects (IID)
+#' * age x category random effects (IID)
+formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(age_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+
+#' Fit the models
+
+#' Number of Monte Carlo samples
+S <- 100
+
+res <- multinomial_model(formula1, model_name = "Model 1", df_model = df_model, df_agg = df_agg, S = S)

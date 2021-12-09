@@ -1,4 +1,3 @@
-
 #' Constrain vector to be inside interval
 #'
 #' @param x A vector.
@@ -110,19 +109,6 @@ multinomial_model <- function(formula, model_name, S = 1000) {
               inla.mode = "experimental")
 
   df_model <- df_model %>%
-    mutate(
-      #' Add mean of linear predictor
-      eta = fit$summary.linear.predictor$mean
-    ) %>%
-    #' Split by observation indicator and lapply softmax
-    split(.$obs_idx) %>%
-    lapply(function(x)
-      x %>%
-        mutate(prob_mean = stable_softmax(eta))
-    ) %>%
-    bind_rows() %>%
-    #' Remove eta
-    select(-eta) %>%
     #' Add model identifier
     mutate(model = model_name)
 
@@ -181,10 +167,12 @@ multinomial_model <- function(formula, model_name, S = 1000) {
           estimate = mean(estimate), #' These should all be identical anyway
           prob_quantile = ecdf(prob)(estimate),
           #' Quantiles of the proportion
+          prob_mean = mean(prob, na.rm = TRUE),
           prob_median = quantile(prob, 0.5, na.rm = TRUE),
           prob_lower = quantile(prob, 0.025, na.rm = TRUE),
           prob_upper = quantile(prob, 0.975, na.rm = TRUE),
           #' Quantiles of the intensity, used to calculate sample size recovery later
+          lambda_mean = mean(lambda, na.rm = TRUE),
           lambda_median = quantile(lambda, 0.5, na.rm = TRUE),
           lambda_lower = quantile(lambda, 0.025, na.rm = TRUE),
           lambda_upper = quantile(lambda, 0.975, na.rm = TRUE),
@@ -220,10 +208,13 @@ multinomial_model <- function(formula, model_name, S = 1000) {
     summarise(prob = sum(prob * population_mean) / sum(population_mean),
               .groups = "drop") %>%
     group_by(area_idx, year_idx, cat_idx) %>%
-    summarise(prob_median = quantile(prob, 0.5, na.rm = TRUE),
-              prob_lower = quantile(prob, 0.025, na.rm = TRUE),
-              prob_upper = quantile(prob, 0.975, na.rm = TRUE),
-              .groups = "drop")
+    summarise(
+      prob_mean = mean(prob, na.rm = TRUE),
+      prob_median = quantile(prob, 0.5, na.rm = TRUE),
+      prob_lower = quantile(prob, 0.025, na.rm = TRUE),
+      prob_upper = quantile(prob, 0.975, na.rm = TRUE),
+      .groups = "drop"
+    )
 
   mean_aggregate_national <- df_model %>%
     group_by(age_idx, year_idx, cat_idx) %>%
@@ -235,10 +226,13 @@ multinomial_model <- function(formula, model_name, S = 1000) {
     summarise(prob = sum(prob * population_mean) / sum(population_mean),
               .groups = "drop") %>%
     group_by(age_idx, year_idx, cat_idx) %>%
-    summarise(prob_median = quantile(prob, 0.5, na.rm = TRUE),
-              prob_lower = quantile(prob, 0.025, na.rm = TRUE),
-              prob_upper = quantile(prob, 0.975, na.rm = TRUE),
-              .groups = "drop")
+    summarise(
+      prob_mean = mean(prob, na.rm = TRUE),
+      prob_median = quantile(prob, 0.5, na.rm = TRUE),
+      prob_lower = quantile(prob, 0.025, na.rm = TRUE),
+      prob_upper = quantile(prob, 0.975, na.rm = TRUE),
+      .groups = "drop"
+    )
 
   #' TODO: There are still NA in the intersection of 15-24 and country
   df_agg <- df_agg %>%
