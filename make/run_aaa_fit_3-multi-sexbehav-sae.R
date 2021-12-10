@@ -1,7 +1,7 @@
-#' Run aaa_fit_all-dhs-multi-sexbehav-sae in bulk
+#' Run aaa_fit_3-multi-sexbehav-sae in bulk
 #' For all 13 countries
 
-report <- "aaa_fit_all-dhs-multi-sexbehav-sae"
+report <- "aaa_fit_3-multi-sexbehav-sae"
 iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 params <- data.frame(iso3 = iso3, include_interactions = TRUE)
 ids <- orderly::orderly_batch(report, params)

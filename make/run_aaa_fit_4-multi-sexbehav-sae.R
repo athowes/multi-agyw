@@ -1,6 +1,6 @@
-#' Run aaa_fit_multi-sexbehav-sae in bulk
+#' Run aaa_fit_4-multi-sexbehav-sae in bulk
 
-report <- "aaa_fit_multi-sexbehav-sae"
+report <- "aaa_fit_4-multi-sexbehav-sae"
 iso3 <- c("CMR", "MWI", "ZAF", "ZMB", "ZWE") #' Only those countries which have survey question V7191A
 params <- data.frame(iso3 = iso3)
 ids <- orderly::orderly_batch(report, params)
