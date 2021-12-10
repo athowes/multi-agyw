@@ -10,7 +10,6 @@ run_commit_push("bwa_survey_bais", push = FALSE)
 
 #' Prepare sexual behaviour datasets in the 13 GF AGYW countries minus BWA
 iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
-iso3 <- c("CMR") #' These are missing!
 reports <- paste0(tolower(iso3), "_survey_behav")
 run_commit_push(reports, push = FALSE)
 
