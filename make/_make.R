@@ -11,7 +11,7 @@ src("make/run_data_prep.R")
 src("make/run_aaa_fit_4-multi-sexbehav-sae.R")
 
 #' 5. Run the three category models for all countries
-src("make/run_aaa_fit_3-multi-sexbehav-sae.R") multi-survey
+src("make/run_aaa_fit_3-multi-sexbehav-sae.R")
 
 #' 6. Post processing of the modelling results
 src("make/post_process.R")
