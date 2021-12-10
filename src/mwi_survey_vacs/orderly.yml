@@ -1,0 +1,32 @@
+script: script.R
+
+resources:
+  - malawi_pubuse_Female_04072020.sas7bdat
+
+artefacts:
+  - data:
+      description: MWI2013VACS survey microdata
+      filenames:
+        - mwi2013vacs_survey_meta.csv
+        - mwi2013vacs_survey_regions.csv
+        - mwi2013vacs_survey_clusters.csv
+        - mwi2013vacs_survey_individuals.csv
+        - mwi2013vacs_survey_biomarker.csv
+        - mwi2013vacs_survey_sexbehav.csv
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - naomi.utils
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  mwi_data_areas:
+    id: latest
+    use:
+      depends/mwi_areas.geojson: mwi_areas.geojson

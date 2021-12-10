@@ -1,0 +1,42 @@
+script: script.R
+
+resources:
+  - Kenya_pubuse_092121.sas7bdat
+  - vacs400_finaldta_fem_pubusev.sas7bdat
+
+artefacts:
+  - data:
+      description: KEN2014VACS survey microdata
+      filenames:
+        - ken2014vacs_survey_meta.csv
+        - ken2014vacs_survey_regions.csv
+        - ken2014vacs_survey_clusters.csv
+        - ken2014vacs_survey_individuals.csv
+        - ken2014vacs_survey_biomarker.csv
+        - ken2014vacs_survey_sexbehav.csv
+  - data:
+      description: KEN2020VACS survey microdata
+      filenames:
+        - ken2020vacs_survey_meta.csv
+        - ken2020vacs_survey_regions.csv
+        - ken2020vacs_survey_clusters.csv
+        - ken2020vacs_survey_individuals.csv
+        - ken2020vacs_survey_biomarker.csv
+        - ken2020vacs_survey_sexbehav.csv
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - naomi.utils
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  ken_data_areas:
+    id: latest
+    use:
+      depends/ken_areas.geojson: ken_areas.geojson

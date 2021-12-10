@@ -1,0 +1,32 @@
+script: script.R
+
+resources:
+  - zimbabwe_pubuse_11212019.sas7bdat
+
+artefacts:
+  - data:
+      description: ZWE2017VACS survey microdata
+      filenames:
+        - zwe2017vacs_survey_meta.csv
+        - zwe2017vacs_survey_regions.csv
+        - zwe2017vacs_survey_clusters.csv
+        - zwe2017vacs_survey_individuals.csv
+        - zwe2017vacs_survey_biomarker.csv
+        - zwe2017vacs_survey_sexbehav.csv
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - naomi.utils
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  zwe_data_areas:
+    id: latest
+    use:
+      depends/zwe_areas.geojson: zwe_areas.geojson

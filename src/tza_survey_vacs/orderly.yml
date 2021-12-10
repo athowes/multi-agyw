@@ -1,0 +1,32 @@
+script: script.R
+
+resources:
+  - tanzfemale_04_07_11pubuse.sas7bdat
+
+artefacts:
+  - data:
+      description: TZA2009VACS survey microdata
+      filenames:
+        - tza2009vacs_survey_meta.csv
+        - tza2009vacs_survey_regions.csv
+        - tza2009vacs_survey_clusters.csv
+        - tza2009vacs_survey_individuals.csv
+        - tza2009vacs_survey_biomarker.csv
+        - tza2009vacs_survey_sexbehav.csv
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - naomi.utils
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  tza_data_areas:
+    id: latest
+    use:
+      depends/tza_areas.geojson: tza_areas.geojson

@@ -1,0 +1,32 @@
+script: script.R
+
+resources:
+  - lesotho_pubuse_113021.sas7bdat
+
+artefacts:
+  - data:
+      description: LSO2019VACS survey microdata
+      filenames:
+        - lso2019vacs_survey_meta.csv
+        - lso2019vacs_survey_regions.csv
+        - lso2019vacs_survey_clusters.csv
+        - lso2019vacs_survey_individuals.csv
+        - lso2019vacs_survey_biomarker.csv
+        - lso2019vacs_survey_sexbehav.csv
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - naomi.utils
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  lso_data_areas:
+    id: latest
+    use:
+      depends/lso_areas.geojson: lso_areas.geojson

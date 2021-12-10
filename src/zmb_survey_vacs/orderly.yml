@@ -1,0 +1,32 @@
+script: script.R
+
+resources:
+  - zmfemale_pubuse.sas7bdat
+
+artefacts:
+  - data:
+      description: ZMB2014VACS survey microdata
+      filenames:
+        - zmb2014vacs_survey_meta.csv
+        - zmb2014vacs_survey_regions.csv
+        - zmb2014vacs_survey_clusters.csv
+        - zmb2014vacs_survey_individuals.csv
+        - zmb2014vacs_survey_biomarker.csv
+        - zmb2014vacs_survey_sexbehav.csv
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - naomi.utils
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  zmb_data_areas:
+    id: latest
+    use:
+      depends/zmb_areas.geojson: zmb_areas.geojson
