@@ -147,6 +147,11 @@ df_agg <- df %>%
 #' The rows of df to be included in the model
 df_model <- setdiff(df, df_agg)
 
+#' Check that the rows in the full is a sum of that in the model and aggregate
+stopifnot(
+  nrow(df) == nrow(df_model) + nrow(df_agg)
+)
+
 #' Specify the models to be fit
 
 #' Model 1: category random effects (IID), age x category random effects (IID)
