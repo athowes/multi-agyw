@@ -6,6 +6,7 @@ artefacts:
       filenames:
         - available-surveys.pdf
         - available-surveys.csv
+        - available-surveys.txt
 
 packages:
   - dplyr

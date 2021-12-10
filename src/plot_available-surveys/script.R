@@ -6,7 +6,7 @@ iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", 
 files <- paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.csv")
 
 df <- lapply(files, function(file) {
-  #' indicators as produced by aaa_survey_indicators_sexbehav
+  #' indicators as produced by fitting reports
   ind <- read_csv(file)
 
   #' What's the average value of giftsvar in each survey?
@@ -94,3 +94,20 @@ df %>%
   )
 
 dev.off()
+
+df %>%
+  select(country, type, year, sample_size) %>%
+  mutate(sample_size = round(sample_size, -2)) %>%
+  rename(
+    "Country" = "country",
+    "Type" = "type",
+    "Year" = "year",
+    "Sample size" = "sample_size"
+  ) %>%
+  gt() %>%
+  cols_align(
+    align = c("left")
+  ) %>%
+  as_latex() %>%
+  as.character() %>%
+  cat(file = "available-surveys.txt")
