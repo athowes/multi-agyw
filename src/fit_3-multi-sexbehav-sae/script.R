@@ -165,6 +165,11 @@ df_model <- df %>%
     !(area_id %in% iso3)
   )
 
+#' Check that the rows in the full is a sum of that in the model and aggregate
+stopifnot(
+  nrow(df) == nrow(df_model) + nrow(df_agg)
+)
+
 #' Model 1:
 #' * category random effects (IID)
 #' * age x category random effects (IID)
@@ -178,4 +183,90 @@ formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) 
 #' Number of Monte Carlo samples
 S <- 100
 
-res <- multinomial_model(formula1, model_name = "Model 1", df_model = df_model, df_agg = df_agg, S = S)
+models <- "Model 1"
+res <- multinomial_model(formula1, model_name = "Model 1", S = S)
+
+res <- list(res)
+
+#' Extract the df and the full fitted models
+res_df <- lapply(res, "[[", 1) %>% bind_rows()
+res_fit <- lapply(res, "[[", 2)
+
+#' Add columns for local DIC, WAIC, CPO and PIT
+#' res_df has the 15-24 category too
+res_df <- bind_cols(
+  res_df,
+  lapply(res_fit,
+         function(fit) {
+           return(data.frame(
+             local_dic = fit$dic$local.dic,
+             local_waic = fit$waic$local.waic,
+             local_cpo = fit$cpo$cpo,
+             local_pit = fit$cpo$pit
+           ))
+         }
+  ) %>%
+    bind_rows() %>%
+    #' Being safe here and explictly adding the NA entires for df_agg
+    bind_rows(data.frame(
+      local_dic = rep(NA, length(models) * nrow(df_agg)),
+      local_waic = rep(NA, length(models) * nrow(df_agg)),
+      local_cpo = rep(NA, length(models) * nrow(df_agg)),
+      local_pit = rep(NA, length(models) * nrow(df_agg))
+    ))
+)
+
+#' Artefact: Model selection information criteria for multinomial models
+#' Some of the entries might be NA where there is missing data (INLA ignores these in its calculations)
+ic_df <- sapply(res_fit, function(fit) {
+  local_dic <- na.omit(fit$dic$local.dic)
+  local_waic <- na.omit(fit$waic$local.waic)
+  local_cpo <- na.omit(fit$cpo$cpo)
+  local_pit <- na.omit(fit$cpo$pit)
+
+  c("dic" = sum(local_dic),
+    "dic_se" = stats::sd(local_dic) * sqrt(length(local_dic)),
+    "waic" = sum(local_waic),
+    "waic_se" = stats::sd(local_waic) * sqrt(length(local_waic)),
+    "cpo" = sum(local_cpo),
+    "cpo_se" = stats::sd(local_cpo) * sqrt(length(local_cpo)),
+    "pit" = sum(local_pit),
+    "pit_se" = stats::sd(local_pit) * sqrt(length(local_pit)))
+}) %>%
+  t() %>%
+  round() %>%
+  as.data.frame() %>%
+  mutate(
+    model = unlist(models),
+    .before = dic
+  )
+
+write_csv(ic_df, "information-criteria.csv", na = "")
+
+#' Artefact: Random effect variance parameter posterior means
+variance_df <- map(res_fit, function(fit)
+  fit$marginals.hyperpar %>%
+    #' Calculate the expectation of the variance
+    map_df(function(x) inla.emarginal(fun = function(y) 1/y, x)) %>%
+    #' Rename Precision to variance
+    rename_all(list(~ str_replace(., "Precision for ", "variance_")))
+  ) %>%
+  bind_rows() %>%
+  #' Some of the models have other hyperparameters (e.g. rho)
+  select(starts_with("Variance")) %>%
+  #' Sum of variance means
+  mutate(total_variance = rowSums(., na.rm = TRUE)) %>%
+  #' Create new columns with the percentage variance
+  mutate(
+    across(
+      .cols = starts_with("Variance"),
+      .fns = list(percentage = ~ . / total_variance),
+      .names = "{fn}_{col}"
+    )
+  ) %>%
+  #' Add model identifier and country columns
+  mutate(
+    #' TODO: Needs to be updated for interaction models
+    model = paste("Model", row_number()),
+    .before = everything()
+  )

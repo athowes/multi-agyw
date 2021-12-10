@@ -2,7 +2,7 @@
 # orderly::orderly_develop_start("plot_age-variation")
 # setwd("src/plot_age-variation")
 
-df <- read_csv("depends/every-all-dhs-multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/every-3-multinomial-smoothed-district-sexbehav.csv")
 
 #' When there is only one survey, we want to select Model 3, and when there are multiple, we want to select Model 6
 single_survey <- df %>%
@@ -47,7 +47,7 @@ df_age <- df %>%
 
 pdf("age-variation.pdf", h = 3.5, w = 6.25)
 
-cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
+cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
 
 ggplot(df_age_country, aes(y = age_group, x = estimate_smoothed, fill = indicator)) +
   geom_density_ridges(alpha = 0.7, col = NA) +

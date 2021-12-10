@@ -20,7 +20,7 @@ packages:
   - cowplot
 
 depends:
-  aaa_fit_all-dhs-multi-sexbehav-sae:
+  aaa_fit_3-multi-sexbehav-sae:
     id: latest(parameter:iso3 == "ZMB")
     use:
       depends/zmb_multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv

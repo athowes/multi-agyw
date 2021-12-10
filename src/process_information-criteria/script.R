@@ -8,7 +8,7 @@ cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", 
 
 #' A single survey and four categories, so only those countries which have survey question V7191A
 iso3 <- c("CMR", "MWI", "ZAF", "ZMB", "ZWE")
-files <- paste0("depends/", tolower(iso3), "_information-criteria.csv")
+files <- paste0("depends/", tolower(iso3), "_4-information-criteria.csv")
 df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
 df <- df %>%
@@ -27,9 +27,9 @@ df <- df %>%
     )
   )
 
-write_csv(df, "model-comparison.csv", na = "")
+write_csv(df, "4-model-comparison.csv", na = "")
 
-pdf("model-comparison.pdf", h = 5, w = 6.25)
+pdf("4-model-comparison.pdf", h = 5, w = 6.25)
 
 ic_plot(df, ic = "dic")
 ic_plot(df, ic = "waic")
@@ -38,19 +38,19 @@ ic_plot(df, ic = "pit")
 
 dev.off()
 
-pdf("rank-comparison.pdf", h = 3.5, w = 6.25)
+pdf("4-rank-comparison.pdf", h = 3.5, w = 6.25)
 
 rank_ic_plot(df)
 
 dev.off()
 
-create_latex_table(df, file_name = "model-comparison.txt")
+create_latex_table(df, file_name = "4-model-comparison.txt")
 
-#' aaa_fit_all-dhs-multi-sexbehav-sae
+#' aaa_fit_3-multi-sexbehav-sae
 
 #' Single survey and three categories
 iso3 <- c("BWA", "NAM", "SWZ", "TZA", "ZAF")
-files <- paste0("depends/", tolower(iso3), "_all-dhs-information-criteria.csv")
+files <- paste0("depends/", tolower(iso3), "_3-information-criteria.csv")
 df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
 df <- df %>%
@@ -69,9 +69,9 @@ df <- df %>%
     )
   )
 
-write_csv(df, "all-dhs-single-model-comparison.csv", na = "")
+write_csv(df, "3-single-model-comparison.csv", na = "")
 
-pdf("all-dhs-single-model-comparison.pdf", h = 5, w = 6.25)
+pdf("3-single-model-comparison.pdf", h = 5, w = 6.25)
 
 ic_plot(df, ic = "dic")
 ic_plot(df, ic = "waic")
@@ -80,17 +80,17 @@ ic_plot(df, ic = "pit")
 
 dev.off()
 
-pdf("all-dhs-single-rank-comparison.pdf", h = 3.5, w = 6.25)
+pdf("3-single-rank-comparison.pdf", h = 3.5, w = 6.25)
 
 rank_ic_plot(df)
 
 dev.off()
 
-create_latex_table(df, file_name = "all-dhs-single-model-comparison.txt")
+create_latex_table(df, file_name = "3-single-model-comparison.txt")
 
 #' Multiple surveys and three categories
 iso3 <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "UGA", "ZMB", "ZWE")
-files <- paste0("depends/", tolower(iso3), "_all-dhs-information-criteria.csv")
+files <- paste0("depends/", tolower(iso3), "_3-information-criteria.csv")
 df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
 if(include_interactions) {
@@ -123,9 +123,9 @@ df <- df %>%
     )
   )
 
-write_csv(df, "all-dhs-multi-model-comparison.csv", na = "")
+write_csv(df, "3-multi-model-comparison.csv", na = "")
 
-pdf("all-dhs-multi-model-comparison.pdf", h = 5, w = 6.25)
+pdf("3-multi-model-comparison.pdf", h = 5, w = 6.25)
 
 ic_plot(df, ic = "dic")
 ic_plot(df, ic = "waic")
@@ -134,10 +134,10 @@ ic_plot(df, ic = "pit")
 
 dev.off()
 
-pdf("all-dhs-multi-rank-comparison.pdf", h = 3.5, w = 6.25)
+pdf("3-multi-rank-comparison.pdf", h = 3.5, w = 6.25)
 
 rank_ic_plot(df)
 
 dev.off()
 
-create_latex_table(df, file_name = "all-dhs-multi-model-comparison.txt")
+create_latex_table(df, file_name = "3-multi-model-comparison.txt")

@@ -8,20 +8,20 @@ artefacts:
       description: Model comparison results
       filenames:
         #' Four category
-        - model-comparison.csv
-        - model-comparison.txt
-        - model-comparison.pdf
-        - rank-comparison.pdf
+        - 4-model-comparison.csv
+        - 4-model-comparison.txt
+        - 4-model-comparison.pdf
+        - 4-rank-comparison.pdf
         #' Three category one survey
-        - all-dhs-single-model-comparison.csv
-        - all-dhs-single-model-comparison.txt
-        - all-dhs-single-model-comparison.pdf
-        - all-dhs-single-rank-comparison.pdf
+        - 3-single-model-comparison.csv
+        - 3-single-model-comparison.txt
+        - 3-single-model-comparison.pdf
+        - 3-single-rank-comparison.pdf
         #' Three category multiple survey
-        - all-dhs-multi-model-comparison.csv
-        - all-dhs-multi-model-comparison.txt
-        - all-dhs-multi-model-comparison.pdf
-        - all-dhs-multi-rank-comparison.pdf
+        - 3-multi-model-comparison.csv
+        - 3-multi-model-comparison.txt
+        - 3-multi-model-comparison.pdf
+        - 3-multi-rank-comparison.pdf
 
 parameters:
   #' If the interaction models currently under development should be included in the model comparison
@@ -42,107 +42,107 @@ packages:
   - gt
 
 depends:
-  - aaa_fit_multi-sexbehav-sae:
+  - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "BWA")
       use:
-        depends/bwa_information-criteria.csv: information-criteria.csv
-  - aaa_fit_multi-sexbehav-sae:
+        depends/bwa_4-information-criteria.csv: information-criteria.csv
+  - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "CMR")
       use:
-        depends/cmr_information-criteria.csv: information-criteria.csv
-  - aaa_fit_multi-sexbehav-sae:
+        depends/cmr_4-information-criteria.csv: information-criteria.csv
+  - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "KEN")
       use:
-        depends/ken_information-criteria.csv: information-criteria.csv
-  - aaa_fit_multi-sexbehav-sae:
+        depends/ken_4-information-criteria.csv: information-criteria.csv
+  - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "LSO")
       use:
-        depends/lso_information-criteria.csv: information-criteria.csv
-  - aaa_fit_multi-sexbehav-sae:
+        depends/lso_4-information-criteria.csv: information-criteria.csv
+  - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MOZ")
       use:
-        depends/moz_information-criteria.csv: information-criteria.csv
-  - aaa_fit_multi-sexbehav-sae:
+        depends/moz_4-information-criteria.csv: information-criteria.csv
+  - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MWI")
       use:
-        depends/mwi_information-criteria.csv: information-criteria.csv
-  - aaa_fit_multi-sexbehav-sae:
+        depends/mwi_4-information-criteria.csv: information-criteria.csv
+  - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "NAM")
       use:
-        depends/nam_information-criteria.csv: information-criteria.csv
-  - aaa_fit_multi-sexbehav-sae:
+        depends/nam_4-information-criteria.csv: information-criteria.csv
+  - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "SWZ")
       use:
-        depends/swz_information-criteria.csv: information-criteria.csv
-  - aaa_fit_multi-sexbehav-sae:
+        depends/swz_4-information-criteria.csv: information-criteria.csv
+  - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "TZA")
       use:
-        depends/tza_information-criteria.csv: information-criteria.csv
-  - aaa_fit_multi-sexbehav-sae:
+        depends/tza_4-information-criteria.csv: information-criteria.csv
+  - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "UGA")
       use:
-        depends/uga_information-criteria.csv: information-criteria.csv
-  - aaa_fit_multi-sexbehav-sae:
+        depends/uga_4-information-criteria.csv: information-criteria.csv
+  - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZAF")
       use:
-        depends/zaf_information-criteria.csv: information-criteria.csv
-  - aaa_fit_multi-sexbehav-sae:
+        depends/zaf_4-information-criteria.csv: information-criteria.csv
+  - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZMB")
       use:
-        depends/zmb_information-criteria.csv: information-criteria.csv
-  - aaa_fit_multi-sexbehav-sae:
+        depends/zmb_4-information-criteria.csv: information-criteria.csv
+  - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZWE")
       use:
-        depends/zwe_information-criteria.csv: information-criteria.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
+        depends/zwe_4-information-criteria.csv: information-criteria.csv
+  - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "BWA")
       use:
-        depends/bwa_all-dhs-information-criteria.csv: information-criteria.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
+        depends/bwa_3-information-criteria.csv: information-criteria.csv
+  - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "CMR")
       use:
-        depends/cmr_all-dhs-information-criteria.csv: information-criteria.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
+        depends/cmr_3-information-criteria.csv: information-criteria.csv
+  - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "KEN")
       use:
-        depends/ken_all-dhs-information-criteria.csv: information-criteria.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
+        depends/ken_3-information-criteria.csv: information-criteria.csv
+  - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "LSO")
       use:
-        depends/lso_all-dhs-information-criteria.csv: information-criteria.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
+        depends/lso_3-information-criteria.csv: information-criteria.csv
+  - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MOZ")
       use:
-        depends/moz_all-dhs-information-criteria.csv: information-criteria.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
+        depends/moz_3-information-criteria.csv: information-criteria.csv
+  - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MWI")
       use:
-        depends/mwi_all-dhs-information-criteria.csv: information-criteria.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
+        depends/mwi_3-information-criteria.csv: information-criteria.csv
+  - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "NAM")
       use:
-        depends/nam_all-dhs-information-criteria.csv: information-criteria.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
+        depends/nam_3-information-criteria.csv: information-criteria.csv
+  - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "SWZ")
       use:
-        depends/swz_all-dhs-information-criteria.csv: information-criteria.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
+        depends/swz_3-information-criteria.csv: information-criteria.csv
+  - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "TZA")
       use:
-        depends/tza_all-dhs-information-criteria.csv: information-criteria.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
+        depends/tza_3-information-criteria.csv: information-criteria.csv
+  - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "UGA")
       use:
-        depends/uga_all-dhs-information-criteria.csv: information-criteria.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
+        depends/uga_3-information-criteria.csv: information-criteria.csv
+  - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZAF")
       use:
-        depends/zaf_all-dhs-information-criteria.csv: information-criteria.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
+        depends/zaf_3-information-criteria.csv: information-criteria.csv
+  - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZMB")
       use:
-        depends/zmb_all-dhs-information-criteria.csv: information-criteria.csv
-  - aaa_fit_all-dhs-multi-sexbehav-sae:
+        depends/zmb_3-information-criteria.csv: information-criteria.csv
+  - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZWE")
       use:
-        depends/zwe_all-dhs-information-criteria.csv: information-criteria.csv
+        depends/zwe_3-information-criteria.csv: information-criteria.csv
