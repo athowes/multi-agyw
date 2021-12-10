@@ -3,6 +3,7 @@
 .RData
 .Ruserdata
 *.pdf
+*.sas7bdat
 
 # Orderly will store data in a sqlite database, by default orderly.sqlite
 *.sqlite
