@@ -85,6 +85,7 @@ df %>%
   scale_color_manual(values = cbpalette[c(3, 7, 1, 2)]) +
   scale_x_continuous(breaks = min(df$year):max(df$year)) +
   scale_size_discrete(range = c(2, 5)) +
+  scale_shape_manual(values = c(2, 1, 4)) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
