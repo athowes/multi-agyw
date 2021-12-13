@@ -22,6 +22,7 @@ packages:
   - readxl
   - naomi.utils
   - ggstance
+  - gt
 
 depends:
   bwa_survey_behav:
