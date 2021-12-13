@@ -448,7 +448,7 @@ variance_df <- map(res_fit, function(fit)
 write_csv(variance_df, "variance-proportions.csv", na = "")
 
 #' Artefact: Sample size recovery diagnostic
-pdf("sample-size-recovery.pdf", h = 10, w = 8.5)
+pdf("sample-size-recovery.pdf", h = 11.75, w = 8.25)
 
 res_df %>%
   filter(age_group %in% c("Y015_019", "Y020_024", "Y025_029")) %>%
@@ -513,7 +513,7 @@ res_plot <- res_df %>%
 
 #' Artefact: Cloropleths
 
-pdf("multinomial-smoothed-district-sexbehav.pdf", h = 11, w = 8.5)
+pdf("multinomial-smoothed-district-sexbehav.pdf", h = 8.25, w = 11.75)
 
 res_plot %>%
   split(~indicator + model) %>%
@@ -536,7 +536,7 @@ res_plot %>%
     facet_grid(age_group ~ survey_id + source) +
     theme_minimal() +
     labs(
-      title = paste0(paste(unique(x$survey_id), collapse = ", "), ": ", x$indicator[1], " (", x$model[1], ")")
+      title = paste0(substr(x$survey_id[1], 1, 3), ": ", x$indicator[1], " (", x$model[1], ")")
     ) +
     theme(
       axis.text = element_blank(),
@@ -569,7 +569,7 @@ res_df <- res_df %>%
     )
   )
 
-pdf("stacked-proportions.pdf", h = 10, w = 12)
+pdf("stacked-proportions.pdf", h = 8.25, w = 11.75)
 
 cbpalette <- c("#56B4E9", "#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
 
@@ -606,7 +606,7 @@ dev.off()
 
 #' Artefact: Posterior predictive checks of coverage
 
-pdf("coverage-histograms.pdf", h = 10, w = 12)
+pdf("coverage-histograms.pdf", h = 8.25, w = 11.75)
 
 bins <- 20
 alpha <- 0.05
