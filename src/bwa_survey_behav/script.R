@@ -166,7 +166,8 @@ survey_sexbehav <- raw %>%
     sexcohab,
     sexnonreg,
     sexpaid12m,
-    sti12m
+    sti12m,
+    giftsvar
   )
 
 survey_other <- list(survey_sexbehav)

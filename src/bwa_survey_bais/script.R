@@ -302,12 +302,14 @@ bais4 <- bais4 %>%
                                       TRUE ~ FALSE)),
     sti12m = as.integer(case_when(Q411_2 == 1 | Q411_6 == 1 ~ TRUE,
                                   (is.na(Q411_2) & is.na(Q411_6) & is.na(sex12m)) ~ NA,
-                                  TRUE ~ FALSE))
+                                  TRUE ~ FALSE)),
+    giftsvar = as.integer(case_when(sum(!is.na(Q319)) > 0 ~ TRUE,
+                          TRUE ~ FALSE))
   )
 
 bais4out <- bais4 %>%
   select(district_code, district_name, stratum, urban_rural, cluster_id, latitude, longitude,
          individual_id, sex, age, hivstatus, evertest, test12m, artself, Weight1, eversex,
-         sex12m, sexcohab, sexnonreg, sexpaid12m, sti12m)
+         sex12m, sexcohab, sexnonreg, sexpaid12m, sti12m, giftsvar)
 
 write_csv(bais4out, "bwa2013bais-recode-sexbehav.csv", na = "")
