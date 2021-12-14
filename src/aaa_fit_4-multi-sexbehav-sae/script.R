@@ -40,10 +40,22 @@ areas <- read_sf(paste0("depends/", tolower(iso3), "_areas.geojson"))
 ind <- read_csv(paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.csv"))
 pop <- read_csv("depends/interpolated-population.csv")
 
-#' In this report, we only use the most recent DHS survey from each country
-#' max(ind$survey_id) is plausibly dodgy: survey_id is a string
+#' Use only the surveys which contain a specific paid sex question
+available_surveys <- read_csv("depends/available-surveys.csv")
+
+giftsvar_surveys <- available_surveys %>%
+  #' Having trouble doing iso3 == iso3, so use this workaround
+  rename(
+    iso3_copy = iso3
+  ) %>%
+  filter(
+    giftsvar == 1,
+    iso3_copy == iso3
+  ) %>%
+  pull(survey_id)
+
 ind <- ind %>%
-  filter(survey_id == max(ind$survey_id))
+  filter(survey_id %in% giftsvar_surveys)
 
 #' Set ind$estimate > 1 to 1, as well as ind$estimate < 0 to 0
 ind$estimate <- constrain_interval(ind$estimate, lower = 0, upper = 1)
@@ -192,8 +204,12 @@ formulas <- list(formula1, formula2, formula3)
 models <- list("Model 1", "Model 2", "Model 3")
 
 #' Fit the models
+
+#' Number of Monte Carlo samples
+S <- 100
+
 res <- purrr::pmap(
-  list(formula = formulas, model_name = models),
+  list(formula = formulas, model_name = models, S = S),
   multinomial_model
 )
 

@@ -46,6 +46,10 @@ packages:
   - stats
 
 depends:
+  plot_available-surveys:
+    id: latest
+    use:
+      depends/available-surveys.csv: available-surveys.csv
   aaa_scale_pop:
     id: latest(parameter:iso3 == iso3)
     use:
