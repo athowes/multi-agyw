@@ -185,7 +185,7 @@ multinomial_model <- function(formula, model_name, S = 1000) {
     filter(age_idx %in% c(1, 2)) %>%
     group_by(area_idx, cat_idx, sample) %>%
     #' prob = sum_i(prob_i * pop_i) / sum_i(pop_i)
-    summarise(prob = sum(prob_mean * population_mean) / sum(population_mean),
+    summarise(prob = sum(prob * population_mean) / sum(population_mean),
               .groups = "drop") %>%
     group_by(area_idx, cat_idx) %>%
     summarise(prob_median = quantile(prob, 0.5, na.rm = TRUE),
