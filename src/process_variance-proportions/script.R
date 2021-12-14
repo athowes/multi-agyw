@@ -66,7 +66,7 @@ single_survey <- df %>%
 model_selector <- function(iso3, model) {
   case_when(
     iso3 %in% single_survey$iso3 ~ model == "Model 3",
-    T ~ model == "Model 11" #' TODO: This will say Model 6x in future!
+    T ~ model == "Model 6"
   )
 }
 
