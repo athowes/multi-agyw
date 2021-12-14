@@ -45,9 +45,6 @@ packages:
   - stringr
   - stats
 
-# global_resources:
-#   depends/naomi3.rds: naomi3.rds
-
 depends:
   aaa_scale_pop:
     id: latest(parameter:iso3 == iso3)
