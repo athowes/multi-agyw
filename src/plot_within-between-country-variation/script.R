@@ -64,10 +64,13 @@ df <- df %>%
   ungroup()
 
 df_subnational <- df %>%
-  filter(!(area_id %in% c("CMR", "KEN", "LSO",
-                          "MOZ", "MWI", "NAM",
-                          "SWZ", "TZA", "UGA",
-                          "ZAF", "ZMB", "ZWE")))
+  filter(
+    !(area_id %in% c(
+      "BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM",
+      "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE"
+      )
+    )
+  )
 
 df_national <- setdiff(df, df_subnational)
 
