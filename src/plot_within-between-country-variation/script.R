@@ -96,6 +96,8 @@ df_subnational <- df_subnational %>%
 
 pdf("within-between-country-variation.pdf", h = 7, w = 6.25)
 
+cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
+
 ggplot(df_subnational, aes(x = fct_rev(iso3), y = estimate_smoothed, col = Region)) +
   geom_jitter(width = 0.1, alpha = 0.6, shape = 20) +
   geom_point(data = df_national, aes(x = fct_rev(iso3), y = estimate_smoothed),
