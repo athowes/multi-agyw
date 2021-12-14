@@ -1,0 +1,20 @@
+---
+title: A multinomial spatio-temporal model for sexual risk behaviour in AGYW
+subtitle: HIV Inference Lab Group Meeting
+author: Adam Howes
+institute: Imperial College London
+date: January 2022
+bibliography: citations.bib
+output:
+  beamer_presentation:
+    latex_engine: pdflatex
+    highlight: haddock
+    fig_width: 7 
+    fig_height: 3
+    includes:
+        in_header: preamble.tex
+---
+
+## To-do
+
+## References {.allowframebreaks}
