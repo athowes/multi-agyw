@@ -17,6 +17,7 @@ packages:
   - sf
   - spdep
   - tidyr
+  - ggridges
 
 depends:
   - process_multinomial-smoothed-district-sexbehav:
