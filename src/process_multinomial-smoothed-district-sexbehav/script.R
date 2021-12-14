@@ -2,7 +2,7 @@
 # orderly::orderly_develop_start("process_multinomial-smoothed-district-sexbehav")
 # setwd("src/process_multinomial-smoothed-district-sexbehav")
 
-iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+iso3 <- c("BWA", "CMR", "LSO", "MWI", "NAM", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 
 #' The four category survey estimates
 files <- paste0("depends/", tolower(iso3), "_4-multinomial-smoothed-district-sexbehav.csv")
