@@ -1,7 +1,16 @@
 #' Run aaa_fit_4-multi-sexbehav-sae in bulk
 
 report <- "aaa_fit_4-multi-sexbehav-sae"
-iso3 <- c("CMR", "MWI", "ZAF", "ZMB", "ZWE") #' Only those countries which have survey question V7191A
+
+#' Only those countries which have any surveys with a dedicated sex paid question
+recent <- orderly::orderly_search(query = "latest(parameter:placeholder == TRUE)", name = "plot_available-surveys")
+available_surveys <- read_csv(paste0("archive/plot_available-surveys/", recent, "/available-surveys.csv"))
+
+iso3 <- available_surveys %>%
+  filter(giftsvar == 1) %>%
+  pull(iso3) %>%
+  unique()
+
 params <- data.frame(iso3 = iso3)
 ids <- orderly::orderly_batch(report, params)
 
