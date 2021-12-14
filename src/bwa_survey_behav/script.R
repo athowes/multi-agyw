@@ -161,13 +161,13 @@ survey_sexbehav <- raw %>%
   group_by(survey_id) %>%  # for normalizing weights
   transmute(
     individual_id,
-    eversex,
     sex12m,
+    nosex12m,
     sexcohab,
     sexnonreg,
     sexpaid12m,
-    sti12m,
-    giftsvar
+    giftsvar,
+    sexnonregplus
   )
 
 survey_other <- list(survey_sexbehav)

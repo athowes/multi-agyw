@@ -4,7 +4,6 @@ path <- sharepoint$download(URLencode(url))
 
 raw <- read_dta(path)
 
-
 ## District_Code                    "District Code(2)"
 ## EA_Code                          "EA number"
 ## DWELLING_NO                      NULL
@@ -283,6 +282,7 @@ bais4 <- bais4 %>%
                                   Q307A == 2 ~ FALSE,
                                   Q307A == 1 ~ TRUE,
                                   TRUE ~ NA)),
+    nosex12m = 1 - sex12m,
     sexcohab = as.integer(case_when(sex12m == FALSE ~ FALSE,
                                     Q307B == 1 & ((!Q308_P1 %in% cas_cats) &
                                                     (!Q308_P2 %in% cas_cats) &
@@ -300,6 +300,7 @@ bais4 <- bais4 %>%
                                       (is.na(Q319) & is.na(Q308_P1) & is.na(Q308_P2) & is.na(Q308_P3) &
                                          is.na(sex12m)) ~ NA,
                                       TRUE ~ FALSE)),
+    sexnonregplus = ifelse(sexpaid12m == 1, 1, sexnonreg),
     sti12m = as.integer(case_when(Q411_2 == 1 | Q411_6 == 1 ~ TRUE,
                                   (is.na(Q411_2) & is.na(Q411_6) & is.na(sex12m)) ~ NA,
                                   TRUE ~ FALSE)),
@@ -309,7 +310,7 @@ bais4 <- bais4 %>%
 
 bais4out <- bais4 %>%
   select(district_code, district_name, stratum, urban_rural, cluster_id, latitude, longitude,
-         individual_id, sex, age, hivstatus, evertest, test12m, artself, Weight1, eversex,
-         sex12m, sexcohab, sexnonreg, sexpaid12m, sti12m, giftsvar)
+         individual_id, sex, age, hivstatus, evertest, test12m, artself, Weight1,
+         sex12m, nosex12m, sexcohab, sexnonreg, sexpaid12m, giftsvar, sexnonregplus)
 
 write_csv(bais4out, "bwa2013bais-recode-sexbehav.csv", na = "")
