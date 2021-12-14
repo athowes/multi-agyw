@@ -2,7 +2,7 @@
 # orderly::orderly_develop_start("plot_within-between-country-variation")
 # setwd("src/plot_within-between-country-variation")
 
-df <- read_csv("depends/every-all-dhs-multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/every-3-multinomial-smoothed-district-sexbehav.csv")
 
 #' When there is only one survey, we want to select Model 3, and when there are multiple, we want to select Model 6
 single_survey <- df %>%
