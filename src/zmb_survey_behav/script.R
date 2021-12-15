@@ -9,15 +9,18 @@ iso3 <- "ZMB"
 areas <- read_sf("depends/zmb_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
-#' Removing the 2002 DHS, as it doesn't release GPS dataset, not allowing clusters to be snapped to districts
+#' Not including the 2002 DHS, as it doesn't release GPS dataset, not allowing clusters to be snapped to districts
 #' https://dhsprogram.com/data/available-datasets.cfm
-surveys <- create_surveys_dhs(iso3, survey_characteristics = 24) %>%
+surveys <- create_surveys_dhs(iso3, survey_characteristics = NULL) %>%
   filter(
-    SurveyId != "ZM2002DHS",
-    as.numeric(SurveyYear) > 1998
+    SurveyId %in% c("ZM2007DHS", "ZM2013DHS", "ZM2018DHS")
   )
 
 survey_meta <- create_survey_meta_dhs(surveys)
+
+#' These should be integers, not characters
+survey_meta$male_age_min <- as.integer(survey_meta$male_age_min)
+survey_meta$male_age_max <- as.integer(survey_meta$male_age_max)
 
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
 surveys <- surveys_add_dhs_regvar(surveys, survey_region_boundaries)
