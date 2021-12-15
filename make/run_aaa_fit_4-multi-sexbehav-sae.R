@@ -3,7 +3,7 @@
 report <- "aaa_fit_4-multi-sexbehav-sae"
 
 #' Only those countries which have any surveys with a dedicated sex paid question
-recent <- orderly::orderly_search(query = "latest(parameter:placeholder == TRUE)", name = "plot_available-surveys")
+recent <- orderly::orderly_latest(name = "plot_available-surveys")
 available_surveys <- read_csv(paste0("archive/plot_available-surveys/", recent, "/available-surveys.csv"))
 
 iso3 <- available_surveys %>%

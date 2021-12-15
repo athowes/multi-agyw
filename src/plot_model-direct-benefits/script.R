@@ -7,16 +7,14 @@ areas <- read_sf(paste0("depends/zmb_areas.geojson"))
 
 df <- df %>%
   filter(
-    survey_id == "ZMB2018DHS",
+    survey_id == "ZMB2013DHS",
     age_group == "Y020_024",
     model == "Model 6",
     area_name != "Zambia",
   ) %>%
   mutate(
     age_group = fct_recode(age_group,
-      "15-19" = "Y015_019",
       "20-24" = "Y020_024",
-      "25-29" = "Y025_029"
     ),
     indicator = fct_recode(indicator,
       "No sex (past 12 months)" = "nosex12m",

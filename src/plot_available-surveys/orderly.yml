@@ -8,10 +8,6 @@ artefacts:
         - available-surveys.csv
         - available-surveys.txt
 
-parameters:
-  placeholder:
-    default: TRUE
-
 packages:
   - dplyr
   - forcats
