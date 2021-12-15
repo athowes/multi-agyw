@@ -2,7 +2,7 @@
 # orderly::orderly_develop_start("plot_temporal-variation")
 # setwd("src/plot_temporal-variation")
 
-df <- read_csv("depends/every-all-dhs-multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/every-3-multinomial-smoothed-district-sexbehav.csv")
 
 #' When there is only one survey, we want to select Model 3, and when there are multiple, we want to select Model 6
 single_survey <- df %>%
@@ -44,11 +44,11 @@ df <- df %>%
   )
 
 df_subnational <- df %>%
-  filter(!(area_id %in% c("CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")))
+  filter(!(area_id %in% c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")))
 
 df_national <- setdiff(df, df_subnational)
 
-pdf("temporal-variation.pdf", h = 10, w = 12)
+pdf("temporal-variation.pdf", h = 8.25, w = 11.75)
 
 ggplot(df_subnational, aes(x = year, y = estimate_smoothed, col = iso3, group = area_name)) +
   geom_line(alpha = 0.1) +
@@ -57,6 +57,7 @@ ggplot(df_subnational, aes(x = year, y = estimate_smoothed, col = iso3, group = 
   facet_grid(age_group ~  indicator) +
   labs(x = "Year of survey", y = "Posterior mean proportion by region", col = "Country") +
   guides(col = guide_legend(override.aes = list(alpha = 0.5))) +
+  theme_minimal() +
   theme(
     plot.title = element_text(face = "bold"),
     legend.position = "bottom",
@@ -80,7 +81,7 @@ df_national <- df_national %>%
     by = c("iso3", "age_group", "indicator")
   )
 
-pdf("temporal-variation-alt.pdf", h = 10, w = 12)
+pdf("temporal-variation-alt.pdf", h = 8.25, w = 11.75)
 
 ggplot(df_national, aes(x = year, y = estimate_smoothed, fill = iso3, group = area_name)) +
   geom_line(aes(col = iso3), size = 1.5) +
@@ -88,6 +89,7 @@ ggplot(df_national, aes(x = year, y = estimate_smoothed, fill = iso3, group = ar
   geom_ribbon(aes(ymin = subnational_q250, ymax = subnational_q750), alpha = 0.3) +
   facet_grid(age_group ~  indicator) +
   labs(x = "Year of survey", y = "Posterior mean proportion", col = "Country", fill = "Country") +
+  theme_minimal() +
   theme(
     plot.title = element_text(face = "bold"),
     legend.position = "bottom",
