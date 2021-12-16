@@ -1,23 +1,11 @@
-id <- orderly::orderly_run("process_multinomial-smoothed-district-sexbehav")
-orderly::orderly_commit(id)
+source("make/utils.R")
 
-id <- orderly::orderly_run("process_information-criteria")
-orderly::orderly_commit(id)
-
-id <- orderly::orderly_run("process_variance-proportions")
-orderly::orderly_commit(id)
-
-id <- orderly::orderly_run("process_coverage") #' To fix probably
-orderly::orderly_commit(id)
-
-id <- orderly::orderly_run("plot_temporal-variation")
-orderly::orderly_commit(id)
-
-id <- orderly::orderly_run("plot_within-between-country-variation")
-orderly::orderly_commit(id)
-
-id <- orderly::orderly_run("plot_age-variation")
-orderly::orderly_commit(id)
-
-id <- orderly::orderly_run("plot_model-direct-benefits")
-orderly::orderly_commit(id)
+run_commit_push("process_multinomial-smoothed-district-sexbehav")
+run_commit_push("process_information-criteria")
+run_commit_push("process_variance-proportions")
+run_commit_push("process_coverage") #' To fix probably
+run_commit_push("plot_temporal-variation")
+run_commit_push("plot_within-between-country-variation")
+run_commit_push("plot_age-variation")
+run_commit_push("process_multinomial-smoothed-district-sexbehav")
+run_commit_push("plot_continental-map")
