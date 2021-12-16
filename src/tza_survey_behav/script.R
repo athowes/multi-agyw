@@ -9,11 +9,12 @@ iso3 <- "TZA"
 areas <- read_sf("depends/tza_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
-#' Exclude the 1999 DHS
+#' Exclude the 1999 and 2015 DHSs
 surveys <- create_surveys_dhs(iso3, survey_characteristics = 24) %>%
   filter(
     as.numeric(SurveyYear) > 1998,
-    survey_id != "TZA1999DHS"
+    survey_id != "TZA1999DHS",
+    survey_id != "TZA2015DHS"
   )
 
 survey_meta <- create_survey_meta_dhs(surveys)
