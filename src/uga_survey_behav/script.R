@@ -9,6 +9,7 @@ iso3 <- "UGA"
 areas <- read_sf("depends/uga_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
+#' Missing the Uganda 2004-05 AIS which STATcomplier thinks should be relevant here
 surveys <- create_surveys_dhs(iso3, survey_characteristics = 24) %>%
   filter(as.numeric(SurveyYear) > 1998)
 

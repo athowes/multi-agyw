@@ -1,0 +1,30 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Comparison of surveys listed on STATcompiler versus those we have
+      filenames:
+        - surveys-stat-compiler.txt
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - readxl
+
+resources:
+  - STATcompilerExport2021127_12313.xlsx
+  - countries_codes_and_coordinates.csv
+
+depends:
+  plot_available-surveys:
+    id: latest
+    use:
+      depends/available-surveys.csv: available-surveys.csv

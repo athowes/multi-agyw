@@ -9,7 +9,8 @@ iso3 <- "ZMB"
 areas <- read_sf("depends/zmb_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
-#' Not including the 2002 DHS, as it doesn't release GPS dataset, not allowing clusters to be snapped to districts
+#' Even though STATcomplier thinks that the Zambia 2001-02 DHS has relevant questions, we do not
+#' include it  as there is no released GPS dataset, preventing clusters being snapped to districts
 #' https://dhsprogram.com/data/available-datasets.cfm
 surveys <- create_surveys_dhs(iso3, survey_characteristics = NULL) %>%
   filter(
