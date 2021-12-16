@@ -4,7 +4,7 @@ Code for the manuscript Howes *et al.* "A multinomial spatio-temporal model for 
 
 New HIV infections are disproportionately common in adolescent girls and young women.
 Accelerating provision of HIV prevention programming in this key population is a top priority, but funding is insufficient to reach everyone ([HIV Prevention Coalition, 2020](https://hivpreventioncoalition.unaids.org/wp-content/uploads/2020/06/Decision-making-aide-AGYW-investment-Version-March-2020-Final.pdf)).
-Small-area estimation of risk group population sizes enables countries to prioritise provision of services to those at greatest risk.
+Small-area estimation of risk group population sizes enables countries to prioritise provision of services to those at greatest risk, taking into account both geographic and behavioral factors, as called for in the [Global AIDS Strategy 2021-2026](https://www.unaids.org/en/Global-AIDS-Strategy-2021-2026).
 
 Using [AIS](https://dhsprogram.com/methodology/survey-types/ais.cfm), [BAIS](https://baisv20.com/), [DHS](https://dhsprogram.com/) and [PHIA](https://phia.icap.columbia.edu/) survey data, we fit multinomial logistic regressions to priority countries using the package [`R-INLA`](https://www.r-inla.org/).
 To enable inference with the `R-INLA` package, each model is reformulated as an equivalent Poisson log linear model using the multinomial-Poisson transformation [(Baker, 1994)](https://www.jstor.org/stable/2348134?seq=1#metadata_info_tab_contents).
