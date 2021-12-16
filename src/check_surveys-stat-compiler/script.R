@@ -50,3 +50,5 @@ cat("The surveys that STATcomplier thinks that we should have are:")
 filter(stat_compiler, country %in% disputed_countries)
 
 sink()
+
+#' Note on multiple years that Naomi uses the calendar quarter for the survey midpoint
