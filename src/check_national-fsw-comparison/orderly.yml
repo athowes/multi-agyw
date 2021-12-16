@@ -20,13 +20,13 @@ packages:
   - tidyr
   - readxl
 
-global_resources:
-  depends/aykp_pse_july17.xlsx: aykp_pse_july17.xlsx
-  depends/final_country_est_laga.csv: final_country_est_laga.csv
-  depends/countries_codes_and_coordinates.csv: countries_codes_and_coordinates.csv
+resources:
+  aykp_pse_july17.xlsx
+  final_country_est_laga.csv
+  countries_codes_and_coordinates.csv
 
 depends:
   process_multinomial-smoothed-district-sexbehav:
     id: latest
     use:
-      depends/every-multinomial-smoothed-district-sexbehav.csv: every-multinomial-smoothed-district-sexbehav.csv
+      depends/every-4-multinomial-smoothed-district-sexbehav.csv: every-4-multinomial-smoothed-district-sexbehav.csv

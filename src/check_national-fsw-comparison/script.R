@@ -15,27 +15,14 @@ analysis_level <- c("CMR" = 2,
                     "ZMB" = 2,
                     "ZWE" = 2)
 
-admin1_level <- c("CMR" = 1,
-                  "KEN" = 1,
-                  "LSO" = 1,
-                  "MOZ" = 1,
-                  "MWI" = 1,
-                  "NAM" = 1,
-                  "SWZ" = 1,
-                  "TZA" = 2,
-                  "UGA" = 1,
-                  "ZAF" = 1,
-                  "ZMB" = 1,
-                  "ZWE" = 1)
-
-priority_countries <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+priority_countries <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 
 #' Read in the population size estimates (PSEs) for AYKP
-johnston <- read_excel("depends/aykp_pse_july17.xlsx", sheet = "FSW", range = "A3:F187")
+johnston <- read_excel("aykp_pse_july17.xlsx", sheet = "FSW", range = "A3:F187")
 names(johnston) <- c("region", "country", "size_15-19", "size_20-24", "size_15-24", "size_25-49")
 
 #' iso3 codes from https://gist.github.com/tadast/8827699
-country_codes <- read_csv("depends/countries_codes_and_coordinates.csv") %>%
+country_codes <- read_csv("countries_codes_and_coordinates.csv") %>%
   select(Country, `Alpha-3 code`) %>%
   rename(country = Country,
          iso3 = `Alpha-3 code`)
@@ -52,7 +39,7 @@ johnston <- johnston %>%
 priority_countries[!(priority_countries %in% johnston$iso3)]
 
 #' Look at the Laga estimates
-laga <- read_csv("depends/final_country_est_laga.csv")
+laga <- read_csv("final_country_est_laga.csv")
 
 laga <- laga %>%
   rename(
@@ -63,12 +50,12 @@ laga <- laga %>%
   select(-X, -ref_pop, -Uncertainty, -Upper, -Lower, -Prev, -Percent, -Predictor_only, -Predictor_only_rank)
 
 #' These are the proportion estimates from the sexpaid12m category of our model
-ind <- read_csv("depends/every-multinomial-smoothed-district-sexbehav.csv")
+ind <- read_csv("depends/every-4-multinomial-smoothed-district-sexbehav.csv")
 
 ind <- ind %>%
   filter(indicator == "sexpaid12m",
          #' Using the smoothed estimates from Model 3
-         model == "Model 3: BYM2") %>%
+         model == "Model 3") %>%
   #' Rename to match the population data, allowing join
   mutate(age_group = fct_recode(age_group,
     "15-24" = "Y015_024", "15-19" = "Y015_019", "20-24" = "Y020_024", "25-29" = "Y025_029")
