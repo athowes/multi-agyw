@@ -5,10 +5,12 @@ artefacts:
       description: Multinomial smoothed district estimate results (four categories)
       filenames:
         - every-4-multinomial-smoothed-district-sexbehav.csv
+        - best-4-multinomial-smoothed-district-sexbehav.csv
   - data:
       description: Multinomial smoothed district estimate results (three categories)
       filenames:
         - every-3-multinomial-smoothed-district-sexbehav.csv
+        - best-3-multinomial-smoothed-district-sexbehav.csv
 
 packages:
   - dplyr
