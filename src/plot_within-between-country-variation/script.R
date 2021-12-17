@@ -2,27 +2,11 @@
 # orderly::orderly_develop_start("plot_within-between-country-variation")
 # setwd("src/plot_within-between-country-variation")
 
-df <- read_csv("depends/every-3-multinomial-smoothed-district-sexbehav.csv")
-
-#' When there is only one survey, we want to select Model 3, and when there are multiple, we want to select Model 6
-single_survey <- df %>%
-  group_by(iso3) %>%
-  select(survey_id) %>%
-  unique() %>%
-  count() %>%
-  filter(n == 1)
-
-model_selector <- function(iso3, model) {
-  case_when(
-    iso3 %in% single_survey$iso3 ~ model == "Model 3",
-    T ~ model == "Model 6"
-  )
-}
+df <- read_csv("depends/best-3-multinomial-smoothed-district-sexbehav.csv")
 
 df <- df %>%
   filter(
-    model_selector(iso3, model),
-    age_group != "Y015_024",
+    age_group != "Y015_024"
   ) %>%
   mutate(
     #' Assuming the survey_id is structured as ISO2000DHS
