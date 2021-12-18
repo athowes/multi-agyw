@@ -2,12 +2,11 @@
 # orderly::orderly_develop_start("process_coverage")
 # setwd("src/process_coverage")
 
-df <- read_csv("depends/every-3-multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/best-3-multinomial-smoothed-district-sexbehav.csv")
 
 df <- df %>%
   filter(
     age_group != "Y015_024",
-    model == "Model 6"
   ) %>%
   mutate(
     age_group = fct_recode(age_group,
@@ -29,18 +28,18 @@ empirical_coverage <- function(x, nominal_coverage) {
 }
 
 nominal_df <- df %>%
-  select(indicator, quantile) %>%
-  filter(!is.na(quantile)) %>%
+  select(indicator, prob_quantile) %>%
+  filter(!is.na(prob_quantile)) %>%
   split(.$indicator) %>%
   lapply(function(y) {
-    empirical_coverage <- purrr::map_dbl(seq(0, 1, by = 0.01), ~ empirical_coverage(y$quantile, .x))
+    empirical_coverage <- purrr::map_dbl(seq(0, 1, by = 0.01), ~ empirical_coverage(y$prob_quantile, .x))
     data.frame(nominal_coverage = seq(0, 1, by = 0.01), empirical_coverage = empirical_coverage)
   }) %>%
   purrr::map_df(~as.data.frame(.x), .id = "indicator")
 
 pdf("coverage.pdf", h = 4, w = 6.25)
 
-histograms <- ggplot(df, aes(x = quantile)) +
+histograms <- ggplot(df, aes(x = prob_quantile)) +
   facet_grid(~indicator, drop = TRUE, scales = "free") +
   geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
                  bins = 10, fill = "#D3D3D3", col = "#FFFFFF", alpha = 0.9) +
