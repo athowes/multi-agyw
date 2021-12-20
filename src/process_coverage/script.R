@@ -21,46 +21,57 @@ df <- df %>%
     )
   )
 
-empirical_coverage <- function(x, nominal_coverage) {
-  alpha <- (1 - nominal_coverage)
-  y <- (x >= (alpha / 2)) & (x <= 1 - (alpha / 2))
-  sum(y) / length(y)
-}
+pdf("coverage.pdf", h = 4, w = 6.25)
 
-nominal_df <- df %>%
+S <- 100 #' Number of Monte Carlo samples
+bins <- 20
+alpha <- 0.05
+
+ci <- qbinom(
+  p = c(alpha / 2, 0.5, (1 - alpha / 2)),
+  size = S,
+  prob = 1 / bins
+)
+
+polygon_data <- data.frame(
+  x = c(-0.05, 0, 1, 0, -0.05, 1.05, 1, 1.05, -0.05),
+  y = c(ci[1], ci[2], ci[2], ci[2], ci[3], ci[3], ci[2], ci[1], ci[1]) / S
+)
+
+histograms <- ggplot(df, aes(x = prob_quantile)) +
+  facet_grid(~indicator, drop = TRUE, scales = "free") +
+  geom_histogram(aes(y = (..count..) / tapply(..count..,..PANEL..,sum)[..PANEL..]),
+                 breaks = seq(0, 1, length.out = bins + 1), fill = "#009E73", col = "black", alpha = 0.9) +
+  geom_polygon(data = polygon_data, aes(x = x, y = y), fill = "grey75", color = "grey50", alpha = 0.6) +
+  labs(x = "", y = "") +
+  scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1))
+
+lims <- get_lims(n = S, alpha, K = 100)
+
+ecdf_diff <- df %>%
   select(indicator, prob_quantile) %>%
   filter(!is.na(prob_quantile)) %>%
   split(.$indicator) %>%
   lapply(function(y) {
     empirical_coverage <- purrr::map_dbl(seq(0, 1, by = 0.01), ~ empirical_coverage(y$prob_quantile, .x))
-    data.frame(nominal_coverage = seq(0, 1, by = 0.01), empirical_coverage = empirical_coverage)
+    data.frame(nominal_coverage = seq(0, 1, by = 0.01), empirical_coverage = empirical_coverage) %>%
+      mutate(
+        ecdf_diff = empirical_coverage - nominal_coverage,
+        ecdf_diff_lower = lims$lower / S - nominal_coverage,
+        ecdf_diff_upper = lims$upper / S - nominal_coverage,
+      )
   }) %>%
-  purrr::map_df(~as.data.frame(.x), .id = "indicator")
-
-pdf("coverage.pdf", h = 4, w = 6.25)
-
-histograms <- ggplot(df, aes(x = prob_quantile)) +
-  facet_grid(~indicator, drop = TRUE, scales = "free") +
-  geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
-                 bins = 10, fill = "#D3D3D3", col = "#FFFFFF", alpha = 0.9) +
-  geom_hline(linetype = "dashed", yintercept = 0.1, col = "#56B4E9") +
-  labs(x = "Quantile", y = "Proportion in quantile") +
-  scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1))
-
-nominal_empirical <- nominal_df %>%
-  ggplot(aes(x = nominal_coverage, y = empirical_coverage)) +
+  purrr::map_df(~as.data.frame(.x), .id = "indicator") %>%
+  ggplot(aes(x = nominal_coverage, y = ecdf_diff)) +
   facet_grid(~factor(indicator, levels = c("No sex (past 12 months)", "Cohabiting partner", "Nonregular partner(s)")),
              drop = TRUE, scales = "free") +
-  geom_line(col = "#999999") +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", col = "#009E73") +
-  ylim(0, 1) +
-  labs(x = "Nominal coverage", y = "Empirical coverage") +
-  scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1)) +
-  theme(
-    strip.background = element_blank(),
-    strip.text.x = element_blank()
-  )
+  geom_line(col = "#009E73") +
+  geom_step(aes(x = nominal_coverage, y = ecdf_diff_upper), alpha = 0.7) +
+  geom_step(aes(x = nominal_coverage, y = ecdf_diff_lower), alpha = 0.7) +
+  geom_abline(intercept = 0, slope = 0, linetype = "dashed", col = "grey50") +
+  labs(x = "", y = "ECDF difference") +
+  scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1))
 
-cowplot::plot_grid(histograms, nominal_empirical, ncol = 1)
+cowplot::plot_grid(histograms, ecdf_diff, ncol = 1)
 
 dev.off()
