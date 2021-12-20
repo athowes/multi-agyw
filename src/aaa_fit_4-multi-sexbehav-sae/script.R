@@ -157,7 +157,8 @@ df_agg <- df %>%
   filter(age_group == "Y015_024" | area_id == toupper(iso3))
 
 #' The rows of df to be included in the model
-df_model <- setdiff(df, df_agg)
+df_model <- df %>%
+  filter(age_group != "Y015_024", area_id != toupper(iso3))
 
 #' Check that the rows in the full is a sum of that in the model and aggregate
 stopifnot(
