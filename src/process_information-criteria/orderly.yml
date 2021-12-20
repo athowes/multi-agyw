@@ -7,11 +7,21 @@ artefacts:
   - data:
       description: Model comparison results
       filenames:
-        #' Four category
+        #' All four category currently
         - 4-model-comparison.csv
         - 4-model-comparison.txt
         - 4-model-comparison.pdf
         - 4-rank-comparison.pdf
+        # #' Four category one survey
+        # - 4-single-model-comparison.csv
+        # - 4-single-model-comparison.txt
+        # - 4-single-model-comparison.pdf
+        # - 4-single-rank-comparison.pdf
+        # #' Four category multiple survey
+        # - 4-multi-model-comparison.csv
+        # - 4-multi-model-comparison.txt
+        # - 4-multi-model-comparison.pdf
+        # - 4-multi-rank-comparison.pdf
         #' Three category one survey
         - 3-single-model-comparison.csv
         - 3-single-model-comparison.txt
@@ -42,6 +52,10 @@ packages:
   - gt
 
 depends:
+  - plot_available-surveys:
+      id: latest
+      use:
+        depends/available-surveys.csv: available-surveys.csv
   - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "BWA")
       use:
@@ -50,18 +64,10 @@ depends:
       id: latest(parameter:iso3 == "CMR")
       use:
         depends/cmr_4-information-criteria.csv: information-criteria.csv
-  # - aaa_fit_4-multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "KEN")
-  #     use:
-  #       depends/ken_4-information-criteria.csv: information-criteria.csv
   - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "LSO")
       use:
         depends/lso_4-information-criteria.csv: information-criteria.csv
-  # - aaa_fit_4-multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "MOZ")
-  #     use:
-  #       depends/moz_4-information-criteria.csv: information-criteria.csv
   - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MWI")
       use:
@@ -70,10 +76,6 @@ depends:
       id: latest(parameter:iso3 == "NAM")
       use:
         depends/nam_4-information-criteria.csv: information-criteria.csv
-  # - aaa_fit_4-multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "SWZ")
-  #     use:
-  #       depends/swz_4-information-criteria.csv: information-criteria.csv
   - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "TZA")
       use:

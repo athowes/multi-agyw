@@ -4,140 +4,122 @@
 
 cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
 
-#' aaa_fit_multi-sexbehav-sae
+available_surveys <- read_csv("depends/available-surveys.csv")
 
-#' A single survey and four categories, so only those countries which have survey question V7191A
-iso3 <- c("CMR", "MWI", "ZAF", "ZMB", "ZWE")
-files <- paste0("depends/", tolower(iso3), "_4-information-criteria.csv")
-df <- bind_rows(lapply(files, function(file) read_csv(file)))
+#' Four categories
 
-df <- df %>%
-  mutate(
-    model = fct_recode(
-      model,
-      "1" = "Model 1", "2" = "Model 2", "3" = "Model 3"
-    ),
-    iso3 = fct_recode(
-      iso3,
-      "Cameroon" = "CMR",
-      "Malawi" = "MWI",
-      "South Africa" = "ZAF",
-      "Zambia" = "ZMB",
-      "Zimbabwe" = "ZWE"
-    )
-  )
+#' All surveys with a transactional sex question
+giftsvar_surveys <- available_surveys %>%
+  filter(giftsvar == 1)
 
-write_csv(df, "4-model-comparison.csv", na = "")
+files <- paste0("depends/", tolower(unique(giftsvar_surveys$iso3)), "_4-information-criteria.csv")
+df_4 <- bind_rows(lapply(files, function(file) read_csv(file))) %>%
+  update_naming()
+
+#' Countries with only one survey with a transactional sex question
+iso3_4_single <- giftsvar_surveys %>%
+  group_by(iso3) %>%
+  summarise(count = length(unique(survey_id))) %>%
+  filter(count == 1) %>%
+  pull(iso3)
+
+#' Countries with multiple surveys with a transactional sex question
+iso3_4_multi <- giftsvar_surveys %>%
+  group_by(iso3) %>%
+  summarise(count = length(unique(survey_id))) %>%
+  filter(count > 1) %>%
+  pull(iso3)
+
+#' Check that all the countries are covered
+stopifnot(
+  length(iso3_4_single) + length(iso3_4_multi) == length(unique(giftsvar_surveys$iso3))
+)
+
+#' Four category
+
+#' Currently all the four category models are just spatial, no temporal
+
+write_csv(df_4, "4-model-comparison.csv", na = "")
 
 pdf("4-model-comparison.pdf", h = 5, w = 6.25)
 
-ic_plot(df, ic = "dic")
-ic_plot(df, ic = "waic")
-ic_plot(df, ic = "cpo")
-ic_plot(df, ic = "pit")
+ic_plot(df_4, ic = "dic")
+ic_plot(df_4, ic = "waic")
+ic_plot(df_4, ic = "cpo")
+ic_plot(df_4, ic = "pit")
 
 dev.off()
 
 pdf("4-rank-comparison.pdf", h = 3.5, w = 6.25)
 
-rank_ic_plot(df)
+rank_ic_plot(df_4)
 
 dev.off()
 
-create_latex_table(df, file_name = "4-model-comparison.txt")
+create_latex_table(df_4, file_name = "4-model-comparison.txt")
 
-#' aaa_fit_3-multi-sexbehav-sae
+#' Three categories
+
+files <- paste0("depends/", tolower(unique(available_surveys$iso3)), "_3-information-criteria.csv")
+df_3 <- bind_rows(lapply(files, function(file) read_csv(file))) %>%
+  update_naming()
+
+#' Countries with only one survey
+iso3_3_single <- available_surveys %>%
+  group_by(iso3) %>%
+  summarise(count = length(unique(survey_id))) %>%
+  filter(count == 1) %>%
+  pull(iso3)
+
+#' Countries with multiple surveys
+iso3_3_multi <- available_surveys %>%
+  group_by(iso3) %>%
+  summarise(count = length(unique(survey_id))) %>%
+  filter(count > 1) %>%
+  pull(iso3)
 
 #' Single survey and three categories
-iso3 <- c("BWA", "NAM", "SWZ", "TZA", "ZAF")
-files <- paste0("depends/", tolower(iso3), "_3-information-criteria.csv")
-df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
-df <- df %>%
-  mutate(
-    model = fct_recode(
-      model,
-      "1" = "Model 1", "2" = "Model 2", "3" = "Model 3"
-    ),
-    iso3 = fct_recode(
-      iso3,
-      "Botswana" = "BWA",
-      "Namibia" = "NAM",
-      "Swaziland" = "SWZ",
-      "Tanzania" = "TZA",
-      "South Africa" = "ZAF",
-    )
-  )
+df_3_single <- filter(df_3, iso3 %in% iso3_3_single)
 
-write_csv(df, "3-single-model-comparison.csv", na = "")
+write_csv(df_3_single, "3-single-model-comparison.csv", na = "")
 
 pdf("3-single-model-comparison.pdf", h = 5, w = 6.25)
 
-ic_plot(df, ic = "dic")
-ic_plot(df, ic = "waic")
-ic_plot(df, ic = "cpo")
-ic_plot(df, ic = "pit")
+ic_plot(df_3_single, ic = "dic")
+ic_plot(df_3_single, ic = "waic")
+ic_plot(df_3_single, ic = "cpo")
+ic_plot(df_3_single, ic = "pit")
 
 dev.off()
 
 pdf("3-single-rank-comparison.pdf", h = 3.5, w = 6.25)
 
-rank_ic_plot(df)
+rank_ic_plot(df_3_single)
 
 dev.off()
 
 create_latex_table(df, file_name = "3-single-model-comparison.txt")
 
 #' Multiple surveys and three categories
-iso3 <- c("CMR", "KEN", "LSO", "MOZ", "MWI", "UGA", "ZMB", "ZWE")
-files <- paste0("depends/", tolower(iso3), "_3-information-criteria.csv")
-df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
-if(include_interactions) {
-  df <- mutate(df, model = fct_recode(
-    model,
-    "5x" = "Model 5x", "6x" = "Model 6x", "8x" = "Model 8x", "9x" = "Model 9x")
-  )
-} else {
-  #' If we're not including interactions, remove all the models ending in "x" (the interaction models)
-  df <- filter(df, !stringr::str_ends(model, "x"))
-}
+df_3_multi <- filter(df_3, iso3 %in% iso3_3_multi)
 
-df <- df %>%
-  mutate(
-    model = fct_recode(
-      model,
-      "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
-      "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
-      "7" = "Model 7", "8" = "Model 8", "9" = "Model 9"),
-    iso3 = fct_recode(
-      iso3,
-      "Cameroon" = "CMR",
-      "Kenya" = "KEN",
-      "Lesotho" = "LSO",
-      "Mozambique" = "MOZ",
-      "Malawi" = "MWI",
-      "Uganda" = "UGA",
-      "Zambia" = "ZMB",
-      "Zimbabwe" = "ZWE"
-    )
-  )
-
-write_csv(df, "3-multi-model-comparison.csv", na = "")
+write_csv(df_3_multi, "3-multi-model-comparison.csv", na = "")
 
 pdf("3-multi-model-comparison.pdf", h = 5, w = 6.25)
 
-ic_plot(df, ic = "dic")
-ic_plot(df, ic = "waic")
-ic_plot(df, ic = "cpo")
-ic_plot(df, ic = "pit")
+ic_plot(df_3_multi, ic = "dic")
+ic_plot(df_3_multi, ic = "waic")
+ic_plot(df_3_multi, ic = "cpo")
+ic_plot(df_3_multi, ic = "pit")
 
 dev.off()
 
 pdf("3-multi-rank-comparison.pdf", h = 3.5, w = 6.25)
 
-rank_ic_plot(df)
+rank_ic_plot(df_3_multi)
 
 dev.off()
 
-create_latex_table(df, file_name = "3-multi-model-comparison.txt")
+create_latex_table(df_3_multi, file_name = "3-multi-model-comparison.txt")

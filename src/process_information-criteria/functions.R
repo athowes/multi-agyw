@@ -1,3 +1,33 @@
+update_naming <- function(df) {
+  df <- df %>%
+    mutate(
+      model = fct_recode(
+        model,
+        "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
+        "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
+        "7" = "Model 7", "8" = "Model 8", "9" = "Model 9",
+        "5x" = "Model 5x", "6x" = "Model 6x",
+        "8x" = "Model 8x", "9x" = "Model 9x"
+      ),
+      country = fct_recode(
+        iso3,
+        "Botswana" = "BWA",
+        "Cameroon" = "CMR",
+        "Kenya" = "KEN",
+        "Lesotho" = "LSO",
+        "Mozambique" = "MOZ",
+        "Malawi" = "MWI",
+        "Namibia" = "NAM",
+        "Swaziland" = "SWZ",
+        "Tanzania" = "TZA",
+        "Uganda" = "UGA",
+        "South Africa" = "ZAF",
+        "Zambia" = "ZMB",
+        "Zimbabwe" = "ZWE"
+      )
+    )
+}
+
 ic_plot <- function(df, ic = "dic") {
   df %>%
     group_by(iso3) %>%
@@ -18,7 +48,7 @@ ic_plot <- function(df, ic = "dic") {
     scale_color_manual(values = c("black", "#E69F00")) +
     scale_shape_manual(values = c(16, 15)) +
     labs(x = "", y = paste0(toupper(ic)),
-         title = paste0(toupper(ic), " results for the models in ", length(iso3), " countries"),
+         title = paste0(toupper(ic), " results"),
          subtitle = "Missing entries indicate that the value returned was NA.") +
     theme_minimal() +
     theme(
@@ -82,7 +112,8 @@ rank_ic_plot <- function(df) {
       stat = "identity", position = "dodge", alpha = 0.6, col = "black", width = 0.25
     ) +
     scale_fill_manual(values = cbpalette) +
-    labs(x = "Model", y = "Average rank", fill = "Metric") +
+    labs(title = paste(unique(df$iso3), sep = ", "),
+         x = "Model", y = "Average rank", fill = "Metric") +
     guides(color = FALSE, alpha = FALSE) +
     theme_minimal() +
     theme(
