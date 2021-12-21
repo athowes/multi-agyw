@@ -24,7 +24,6 @@ df <- df %>%
       )
   ) %>%
   filter(
-    model_selector(iso3, model),
     age_group != "15-24"
   )
 
