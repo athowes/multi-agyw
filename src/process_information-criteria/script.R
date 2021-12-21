@@ -99,7 +99,7 @@ rank_ic_plot(df_3_single)
 
 dev.off()
 
-create_latex_table(df, file_name = "3-single-model-comparison.txt")
+create_latex_table(df_3, file_name = "3-single-model-comparison.txt")
 
 #' Multiple surveys and three categories
 

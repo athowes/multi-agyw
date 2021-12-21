@@ -112,8 +112,7 @@ rank_ic_plot <- function(df) {
       stat = "identity", position = "dodge", alpha = 0.6, col = "black", width = 0.25
     ) +
     scale_fill_manual(values = cbpalette) +
-    labs(title = paste(unique(df$iso3), sep = ", "),
-         x = "Model", y = "Average rank", fill = "Metric") +
+    labs(x = "Model", y = "Average rank", fill = "Metric") +
     guides(color = FALSE, alpha = FALSE) +
     theme_minimal() +
     theme(
@@ -138,7 +137,11 @@ create_latex_table <- function(df, file_name) {
     ) %>%
     select(-contains("se")) %>%
     rename_with(~toupper(.), 3:6) %>%
-    rename(Model = model) %>%
+    rename(
+      Model = model,
+      Country = country
+    ) %>%
+    select(-iso3) %>%
     pivot_longer(
       cols = c("DIC", "WAIC", "CPO", "PIT"),
       names_to = "Criteria"
@@ -150,9 +153,9 @@ create_latex_table <- function(df, file_name) {
 
   #' The column(s) which have the minimum value of the criteria
   min_idx <- df %>%
-    select(-iso3, -Criteria) %>%
+    select(-Country, -Criteria) %>%
     as.matrix() %>%
-    #' Adding 2 because of the iso3 and Criteria columns
+    #' Adding 2 because of the country and Criteria columns
     apply(1, FUN = function(x) {
       cr <- sapply(x, stringr::word) %>%
         as.numeric()
@@ -161,9 +164,9 @@ create_latex_table <- function(df, file_name) {
 
   #' The column(s) which have the maximum value of the criteria
   max_idx <- df %>%
-    select(-iso3, -Criteria) %>%
+    select(-Country, -Criteria) %>%
     as.matrix() %>%
-    #' Adding 2 because of the iso3 and Criteria columns
+    #' Adding 2 because of the country and Criteria columns
     apply(1, FUN = function(x) {
       cr <- sapply(x, stringr::word) %>%
         as.numeric()
@@ -180,7 +183,7 @@ create_latex_table <- function(df, file_name) {
       best_idx[[i]] <- max_idx[[i]]
   }
 
-  tab <- gt(df, groupname_col = "iso3") %>%
+  tab <- gt(df, groupname_col = "Country") %>%
     tab_spanner(
       label = "Model",
       columns = unique_models
