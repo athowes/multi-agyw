@@ -1,3 +1,6 @@
+# orderly::orderly_develop_start("lso_survey_phia")
+# setwd("src/lso_survey_phia/")
+
 #' ## Survey meta data
 
 iso3 <- "LSO"
@@ -9,7 +12,6 @@ fieldwork_end <- NA
 
 #' ## Load area hierarchy
 areas <- read_sf("depends/lso_areas.geojson")
-
 
 #' ## Load PHIA datasets
 sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")

@@ -1,3 +1,5 @@
+# orderly::orderly_develop_start("uga_survey_phia")
+# setwd("src/uga_survey_phia/")
 
 #' ## Survey meta data
 
@@ -8,10 +10,8 @@ survey_mid_calendar_quarter <- "CY2016Q4"
 fieldwork_start <- NA
 fieldwork_end <- NA
 
-
 #' ## Load area hierarchy
 areas <- read_sf("depends/uga_areas.geojson")
-
 
 #' ## Load PHIA datasets
 sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")

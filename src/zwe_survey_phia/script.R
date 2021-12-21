@@ -1,13 +1,13 @@
+# orderly::orderly_develop_start("zwe_survey_phia")
+# setwd("src/zwe_survey_phia/")
 
 iso3 <- "ZWE"
 country <- "Zimbabwe"
 survey_id  <- "ZWE2016PHIA"
 survey_mid_calendar_quarter <- "CY2016Q1"
 
-
 #' ## Load area hierarchy
 areas <- read_sf("depends/zwe_areas.geojson")
-
 
 #' ## Load PHIA datasets
 sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")

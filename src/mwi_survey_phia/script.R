@@ -1,3 +1,5 @@
+# orderly::orderly_develop_start("mwi_survey_phia")
+# setwd("src/mwi_survey_phia/")
 
 #' ## Survey meta data
 
@@ -8,10 +10,8 @@ survey_mid_calendar_quarter <- "CY2016Q1"
 fieldwork_start <- "2015-11-01"
 fieldwork_end <- "2016-08-01"
 
-
 #' ## Load area hierarchy
 areas <- read_sf("depends/mwi_areas.geojson")
-
 
 #' ## Load PHIA datasets
 sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
