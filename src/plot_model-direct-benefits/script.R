@@ -2,15 +2,15 @@
 # orderly::orderly_develop_start("plot_model-direct-benefits")
 # setwd("src/plot_model-direct-benefits")
 
-df <- read_csv("depends/zmb_multinomial-smoothed-district-sexbehav.csv")
-areas <- read_sf(paste0("depends/zmb_areas.geojson"))
+df <- read_csv("depends/tza_multinomial-smoothed-district-sexbehav.csv")
+areas <- read_sf(paste0("depends/tza_areas.geojson"))
 
 df <- df %>%
   filter(
-    survey_id == "ZMB2013DHS",
+    survey_id == "TZA2010DHS",
     age_group == "Y020_024",
     model == "Model 6",
-    area_name != "Zambia",
+    area_id != "TZA",
   ) %>%
   mutate(
     age_group = fct_recode(age_group,
@@ -49,7 +49,6 @@ missing_districts <- df %>%
   select(area_name)
 
 missing_districts$area_name %>% sort()
-plot(missing_districts)
 
 pdf("model-direct-benefits.pdf", h = 8, w = 6.25)
 
@@ -73,12 +72,13 @@ ggplot(df, aes(fill = estimate)) +
 
 dev.off()
 
+#' This is a potential plot to compare the raw and smoothed estimates using a stacked barplot
+#' I haven't got it to look great though so far, so not including
 # cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
 #
 # ggplot(df, aes(fill = indicator, y = estimate, x = fct_rev(area_name))) +
 #   geom_bar(position = "stack", stat = "identity") +
 #   facet_wrap(~source) +
-#   geom_hline(yintercept = 1, linetype = "dashed") +
 #   scale_fill_manual(values = cbpalette) +
 #   scale_y_continuous(labels = scales::percent) +
 #   labs(x = "", y = "", fill = "Category") +

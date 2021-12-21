@@ -21,10 +21,10 @@ packages:
 
 depends:
   aaa_fit_3-multi-sexbehav-sae:
-    id: latest(parameter:iso3 == "ZMB")
+    id: latest(parameter:iso3 == "TZA")
     use:
-      depends/zmb_multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
-  zmb_data_areas:
+      depends/tza_multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+  tza_data_areas:
     id: latest
     use:
-      depends/zmb_areas.geojson: zmb_areas.geojson
+      depends/tza_areas.geojson: tza_areas.geojson
