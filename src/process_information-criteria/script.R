@@ -46,11 +46,10 @@ pdf("4-model-comparison.pdf", h = 5, w = 6.25)
 ic_plot(df_4, ic = "dic")
 ic_plot(df_4, ic = "waic")
 ic_plot(df_4, ic = "cpo")
-ic_plot(df_4, ic = "pit")
 
 dev.off()
 
-pdf("4-rank-comparison.pdf", h = 3.5, w = 6.25)
+pdf("4-rank-comparison.pdf", h = 2.5, w = 6.25)
 
 rank_ic_plot(df_4)
 
@@ -89,11 +88,10 @@ pdf("3-single-model-comparison.pdf", h = 5, w = 6.25)
 ic_plot(df_3_single, ic = "dic")
 ic_plot(df_3_single, ic = "waic")
 ic_plot(df_3_single, ic = "cpo")
-ic_plot(df_3_single, ic = "pit")
 
 dev.off()
 
-pdf("3-single-rank-comparison.pdf", h = 3.5, w = 6.25)
+pdf("3-single-rank-comparison.pdf", h = 2.5, w = 6.25)
 
 rank_ic_plot(df_3_single)
 
@@ -112,14 +110,32 @@ pdf("3-multi-model-comparison.pdf", h = 5, w = 6.25)
 ic_plot(df_3_multi, ic = "dic")
 ic_plot(df_3_multi, ic = "waic")
 ic_plot(df_3_multi, ic = "cpo")
-ic_plot(df_3_multi, ic = "pit")
 
 dev.off()
 
-pdf("3-multi-rank-comparison.pdf", h = 3.5, w = 6.25)
+pdf("3-multi-rank-comparison.pdf", h = 2.5, w = 6.25)
 
 rank_ic_plot(df_3_multi)
 
 dev.off()
 
 create_latex_table(df_3_multi, file_name = "3-multi-model-comparison.txt")
+
+#' Together plots
+#' This is the one designed to be used in the manuscript
+
+pdf("3-rank-comparison.pdf", h = 5, w = 6.25)
+
+cowplot::plot_grid(
+  rank_ic_plot(df_3_single) +
+    labs(title = "Countries with a single survey", y = "") +
+    coord_flip(),
+  rank_ic_plot(df_3_multi) +
+    labs(title = "Countries with multiple surveys") +
+    guides(fill = "none") +
+    coord_flip(),
+  ncol = 1,
+  rel_heights = c(0.8, 1)
+)
+
+dev.off()

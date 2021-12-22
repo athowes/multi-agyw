@@ -65,7 +65,6 @@ rank_ic_plot <- function(df) {
       waic_rank = rank(waic),
       #' Negative because we want desc = TRUE
       cpo_rank = rank(-cpo),
-      pit_rank = rank(-pit)
     ) %>%
     ungroup() %>%
     group_by(model) %>%
@@ -75,9 +74,7 @@ rank_ic_plot <- function(df) {
       waic_rank_mean = mean(waic_rank),
       waic_rank_se = sd(waic_rank) / sqrt(n()),
       cpo_rank_mean = mean(cpo_rank),
-      cpo_rank_se = sd(cpo_rank) / sqrt(n()),
-      pit_rank_mean = mean(pit_rank),
-      pit_rank_se = sd(pit_rank) / sqrt(n()),
+      cpo_rank_se = sd(cpo_rank) / sqrt(n())
     ) %>%
     ungroup() %>%
     pivot_longer(
@@ -99,21 +96,20 @@ rank_ic_plot <- function(df) {
       metric = fct_recode(metric,
                           "DIC" = "dic",
                           "WAIC" = "waic",
-                          "CPO" = "cpo",
-                          "PIT" = "pit"
+                          "CPO" = "cpo"
       )
     ) %>%
     ggplot(aes(x = model, y = rank_mean, fill = metric, group = metric)) +
     facet_wrap(~metric) +
     geom_col(aes(alpha = best_idx), position = "dodge") +
-    scale_alpha_discrete(range = c(0.6, 0.9)) +
+    scale_alpha_discrete(range = c(0.3, 1)) +
     geom_errorbar(
       aes(ymin = rank_mean - rank_se, ymax = rank_mean + rank_se),
-      stat = "identity", position = "dodge", alpha = 0.6, col = "black", width = 0.25
+      stat = "identity", position = "dodge", alpha = 0.6, col = "black", width = 0
     ) +
     scale_fill_manual(values = cbpalette) +
-    labs(x = "Model", y = "Average rank", fill = "Metric") +
-    guides(color = FALSE, alpha = FALSE) +
+    labs(x = "Model ID", y = "Average rank", fill = "Metric") +
+    guides(color = "none", alpha  = "none") +
     theme_minimal() +
     theme(
       panel.spacing = unit(1.5, "lines"),
@@ -124,6 +120,10 @@ rank_ic_plot <- function(df) {
 
 create_latex_table <- function(df, file_name) {
 
+  #' Remove PIT columns if they exist
+  df <- df %>%
+    select(-any_of(contains("pit")))
+
   #' Required for labeling later
   unique_models <- as.character(unique(df$model))
 
@@ -133,17 +133,16 @@ create_latex_table <- function(df, file_name) {
       dic = paste0(dic, " (", dic_se, ")"),
       waic = paste0(waic, " (", waic_se, ")"),
       cpo = paste0(cpo, " (", dic_se, ")"),
-      pit = paste0(pit, " (", pit_se, ")")
     ) %>%
     select(-contains("se")) %>%
-    rename_with(~toupper(.), 3:6) %>%
+    rename_with(~toupper(.), 3:5) %>%
     rename(
       Model = model,
       Country = country
     ) %>%
     select(-iso3) %>%
     pivot_longer(
-      cols = c("DIC", "WAIC", "CPO", "PIT"),
+      cols = c("DIC", "WAIC", "CPO"),
       names_to = "Criteria"
     ) %>%
     pivot_wider(
@@ -175,17 +174,17 @@ create_latex_table <- function(df, file_name) {
 
   #' The column(s) which have the best value of the criteria
   #' * DIC, WAIC this is min_idx
-  #' * CPO, PIT this is max_idx
+  #' * CPO this is max_idx
   best_idx <- min_idx
 
   for(i in seq_along(df$Criteria)) {
-    if(df$Criteria[[i]] %in% c("CPO", "PIT"))
+    if(df$Criteria[[i]] %in% c("CPO"))
       best_idx[[i]] <- max_idx[[i]]
   }
 
   tab <- gt(df, groupname_col = "Country") %>%
     tab_spanner(
-      label = "Model",
+      label = "Model ID",
       columns = unique_models
     ) %>%
     #' It's clear from context that these are the criteria

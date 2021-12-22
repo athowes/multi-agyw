@@ -32,11 +32,8 @@ artefacts:
         - 3-multi-model-comparison.txt
         - 3-multi-model-comparison.pdf
         - 3-multi-rank-comparison.pdf
-
-parameters:
-  #' If the interaction models currently under development should be included in the model comparison
-  include_interactions:
-    default: TRUE
+        #' Joint single and multi plots
+        - 3-rank-comparison.pdf
 
 packages:
   - dplyr
