@@ -4,6 +4,7 @@
 
 df <- read_csv("depends/best-3-multinomial-smoothed-district-sexbehav.csv")
 areas <- readRDS("depends/areas.rds")
+national_areas <- readRDS("depends/national_areas.rds")
 
 df <- df %>%
   filter(
@@ -52,23 +53,40 @@ df <- df %>%
   ) %>%
   st_as_sf()
 
+priority_iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+
 df_subnational <- df %>%
-  filter(
-    !(area_id %in% c(
-      "BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM",
-      "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE"
-    )
-    )
-  )
+  filter(!(area_id %in% priority_iso3))
 
 df_national <- setdiff(df, df_subnational)
 
-pdf("continential-map.pdf", h = 11.75, w = 8.25)
+#' Using these just to show missing data for the countries we don't consider in the analysis
+national_areas <- national_areas %>%
+  filter(!(GID_0 %in% priority_iso3)) %>%
+  rename(
+    iso3 = NAME_0, #' Weird but OK
+  ) %>%
+  select(-GID_0)
+
+df_national_areas <- crossing(
+  indicator = c("No sex (past 12 months)" , "Cohabiting partner", "Nonregular partner(s)"),
+  age_group = c("15-19", "20-24", "25-29"),
+  iso3 = unique(national_areas$iso3)
+) %>%
+  left_join(national_areas, by = "iso3")
+
+df_subnational <- bind_rows(
+  df_subnational,
+  df_national_areas
+)
+
+pdf("continential-map.pdf", h = 8, w = 6.25)
 
 ggplot(df_subnational, aes(fill = estimate_smoothed)) +
   geom_sf(size = 0.1) +
-  scale_fill_viridis_c(option = "C", label = label_percent()) +
+  scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "transparent") +
   facet_grid(age_group ~ indicator) +
+  labs(fill = "Estimated proportion") +
   theme_minimal() +
   theme(
     axis.text = element_blank(),

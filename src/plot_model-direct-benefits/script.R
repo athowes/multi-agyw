@@ -54,7 +54,7 @@ pdf("model-direct-benefits.pdf", h = 8, w = 6.25)
 
 ggplot(df, aes(fill = estimate)) +
   geom_sf(size = 0.1) +
-  scale_fill_viridis_c(option = "C", label = label_percent()) +
+  scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "transparent") +
   facet_grid(indicator ~ source) +
   labs(fill = "Estimated proportion") +
   theme_minimal() +

@@ -7,5 +7,6 @@ run_commit_push("process_coverage")
 run_commit_push("plot_temporal-variation")
 run_commit_push("plot_within-between-country-variation")
 run_commit_push("plot_age-variation")
+run_commit_push("national_data_areas") #' Required for plot_continental-map
 run_commit_push("plot_continental-map")
 run_commit_push("plot_model-direct-benefits")

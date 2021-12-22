@@ -1,0 +1,15 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: National areas dataset
+      filenames:
+        - national_areas.rds
+        - national-areas.pdf
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - readr
+  - sf

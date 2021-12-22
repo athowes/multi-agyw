@@ -23,9 +23,13 @@ depends:
   - process_multinomial-smoothed-district-sexbehav:
       id: latest
       use:
-        depends/best-3-multinomial-smoothed-district-sexbehav.csv: every-3-multinomial-smoothed-district-sexbehav.csv
-        depends/best-4-multinomial-smoothed-district-sexbehav.csv: every-4-multinomial-smoothed-district-sexbehav.csv
+        depends/best-3-multinomial-smoothed-district-sexbehav.csv: best-3-multinomial-smoothed-district-sexbehav.csv
+        depends/best-4-multinomial-smoothed-district-sexbehav.csv: best-4-multinomial-smoothed-district-sexbehav.csv
   - process_all-data:
       id: latest
       use:
         depends/areas.rds: areas.rds
+  - national_data_areas:
+      id: latest
+      use:
+        depends/national_areas.rds: national_areas.rds
