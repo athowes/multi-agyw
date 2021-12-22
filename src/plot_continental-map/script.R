@@ -84,7 +84,7 @@ pdf("continential-map.pdf", h = 8, w = 6.25)
 
 ggplot(df_subnational, aes(fill = estimate_smoothed)) +
   geom_sf(size = 0.1) +
-  scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "transparent") +
+  scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
   facet_grid(age_group ~ indicator) +
   labs(fill = "Estimated proportion") +
   theme_minimal() +
