@@ -1,0 +1,10 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Category flowchart
+      filenames:
+        - category-flowchart.pdf
+
+resources:
+  - category-flowchart.tex
