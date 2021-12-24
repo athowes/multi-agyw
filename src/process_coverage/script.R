@@ -44,7 +44,8 @@ histograms <- ggplot(df, aes(x = prob_quantile)) +
                  breaks = seq(0, 1, length.out = bins + 1), fill = "#009E73", col = "black", alpha = 0.9) +
   geom_polygon(data = polygon_data, aes(x = x, y = y), fill = "grey75", color = "grey50", alpha = 0.6) +
   labs(x = "", y = "") +
-  scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1))
+  scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1)) +
+  theme_minimal()
 
 lims <- get_lims(n = S, alpha, K = 100)
 
@@ -66,11 +67,12 @@ ecdf_diff <- df %>%
   facet_grid(~factor(indicator, levels = c("No sex (past 12 months)", "Cohabiting partner", "Nonregular partner(s)")),
              drop = TRUE, scales = "free") +
   geom_line(col = "#009E73") +
-  geom_step(aes(x = nominal_coverage, y = ecdf_diff_upper), alpha = 0.7) +
-  geom_step(aes(x = nominal_coverage, y = ecdf_diff_lower), alpha = 0.7) +
-  geom_abline(intercept = 0, slope = 0, linetype = "dashed", col = "grey50") +
+  geom_step(aes(x = nominal_coverage, y = ecdf_diff_upper), alpha = 0.7, col = "grey50") +
+  geom_step(aes(x = nominal_coverage, y = ecdf_diff_lower), alpha = 0.7, col = "grey50") +
+  geom_abline(intercept = 0, slope = 0, linetype = "dashed", col = "grey75") +
   labs(x = "", y = "ECDF difference") +
-  scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1))
+  scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1)) +
+  theme_minimal()
 
 cowplot::plot_grid(histograms, ecdf_diff, ncol = 1)
 
