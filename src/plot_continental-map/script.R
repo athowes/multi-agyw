@@ -80,7 +80,7 @@ df_subnational <- bind_rows(
   df_national_areas
 )
 
-pdf("continential-map.pdf", h = 8, w = 6.25)
+pdf("continental-map.pdf", h = 8, w = 6.25)
 
 ggplot(df_subnational, aes(fill = estimate_smoothed)) +
   geom_sf(size = 0.1) +

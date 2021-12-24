@@ -4,7 +4,7 @@ artefacts:
   - data:
       description: Cloropleth of smoothed estimates at a continental level
       filenames:
-        - continential-map.pdf
+        - continental-map.pdf
 
 packages:
   - dplyr
