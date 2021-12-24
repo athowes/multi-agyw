@@ -58,6 +58,26 @@ df_subnational <- df %>%
 
 df_national <- setdiff(df, df_subnational)
 
+#' Countries that are missing a national level aggregate
+#' This is a temporary solution and we should go back over and get these aggregates in properly
+missing_national <- df_national %>%
+  filter(is.na(estimate_smoothed)) %>%
+  pull(iso3) %>%
+  unique()
+
+#' Overwriting NAs left_join (there must be a better way to do this, looks a lot simpler in data.table)
+df_national <- left_join(
+  df_national,
+  df_subnational %>%
+    filter(iso3 %in% missing_national) %>%
+    group_by(iso3, age_group, indicator) %>%
+    summarise(estimate_smoothed = mean(estimate_smoothed)),
+  by = c("iso3", "age_group", "indicator")
+) %>%
+  within(., estimate_smoothed.x <- ifelse(!is.na(estimate_smoothed.y), estimate_smoothed.y, estimate_smoothed.x)) %>%
+  select(-estimate_smoothed.y) %>%
+  rename(estimate_smoothed = estimate_smoothed.x)
+
 #' Add region column
 region_key <- c(
   "Botswana" = "South",
