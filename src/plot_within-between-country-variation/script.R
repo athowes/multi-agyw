@@ -114,11 +114,12 @@ ggplot(df_subnational, aes(x = fct_rev(iso3), y = estimate_smoothed, col = Regio
   scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
   coord_flip() +
   labs(x = "", y = "Proportion") +
-  guides(colour = guide_legend(override.aes = list(alpha = 0.9))) +
+  guides(colour = guide_legend(override.aes = list(alpha = 0.9, size = 5))) +
   theme_minimal() +
   theme(
     panel.spacing = unit(1.5, "lines"),
     legend.position = "bottom",
+    strip.text = element_text(face = "bold")
   )
 
 dev.off()
