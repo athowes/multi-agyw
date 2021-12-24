@@ -62,7 +62,11 @@ df_national <- setdiff(df, df_subnational)
 
 #' Using these just to show missing data for the countries we don't consider in the analysis
 national_areas <- national_areas %>%
-  filter(!(GID_0 %in% priority_iso3)) %>%
+  filter(
+    !(GID_0 %in% priority_iso3),
+    #' These are just chosen manually by looking at countries between CMR and the rest on a map
+    GID_0 %in% c("AGO", "DRC", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
+  ) %>%
   rename(
     iso3 = NAME_0, #' Weird but OK
   ) %>%
