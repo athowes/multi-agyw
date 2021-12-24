@@ -66,7 +66,7 @@ df <- df %>%
 
 write_csv(df, "available-surveys.csv", na = "")
 
-pdf("available-surveys.pdf", h = 4, w = 6.25)
+pdf("available-surveys.pdf", h = 3.5, w = 6.25)
 
 cbpalette <- c("#56B4E9", "#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
 
@@ -86,11 +86,15 @@ df %>%
   scale_x_continuous(breaks = min(df$year):max(df$year)) +
   scale_size_discrete(range = c(2, 5)) +
   scale_shape_manual(values = c(2, 1, 4)) +
+  guides(
+    size = guide_legend(ncol = 2, override.aes = list(shape = 1)),
+    colour = guide_legend(ncol = 2, override.aes = list(size = 3)),
+    shape = guide_legend(ncol = 2, override.aes = list(size = 3))
+  ) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
     plot.title = element_text(face = "bold"),
-    legend.position = "bottom",
     legend.box = "vertical"
   )
 
