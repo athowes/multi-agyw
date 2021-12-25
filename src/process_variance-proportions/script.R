@@ -118,6 +118,8 @@ df %>%
   ) %>%
   gt() %>%
   fmt_number(columns = -matches("Country"), rows = everything(), decimals = 3) %>%
+  #' Replace NA with "-" as it looks better on a table
+  fmt_missing(columns = everything(), rows = everything(), missing_text = "-") %>%
   cols_align(
     align = c("left"),
     columns = matches("Country")

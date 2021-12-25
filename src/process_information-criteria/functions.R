@@ -183,6 +183,8 @@ create_latex_table <- function(df, file_name) {
   }
 
   tab <- gt(df, groupname_col = "Country") %>%
+    #' Replace NA with "-" as it looks better on a table
+    fmt_missing(columns = everything(), rows = everything(), missing_text = "-") %>%
     tab_spanner(
       label = "Model ID",
       columns = unique_models
