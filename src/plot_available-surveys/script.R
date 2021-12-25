@@ -101,12 +101,19 @@ df %>%
 dev.off()
 
 df %>%
-  select(country, type, year, sample_size) %>%
-  mutate(sample_size = round(sample_size, -2)) %>%
+  select(country, type, year, giftsvar, sample_size) %>%
+  mutate(
+    sample_size = round(sample_size, -2),
+    giftsvar = case_when(
+      giftsvar == 1 ~ "[/]cmark",
+      giftsvar == 0 ~ "[/]xmark"
+    )
+  ) %>%
   rename(
     "Country" = "country",
     "Type" = "type",
     "Year" = "year",
+    "Paid sex question" = "giftsvar",
     "Sample size" = "sample_size"
   ) %>%
   gt() %>%
