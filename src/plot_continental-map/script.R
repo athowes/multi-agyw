@@ -73,7 +73,7 @@ national_areas <- national_areas %>%
   select(-GID_0)
 
 df_national_areas <- crossing(
-  indicator = c("No sex (past 12 months)" , "Cohabiting partner", "Nonregular partner(s)"),
+  indicator = as.factor(c("No sex (past 12 months)" , "Cohabiting partner", "Nonregular partner(s)")),
   age_group = c("15-19", "20-24", "25-29"),
   iso3 = unique(national_areas$iso3)
 ) %>%
