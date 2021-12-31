@@ -8,3 +8,6 @@ artefacts:
 
 resources:
   - category-flowchart.tex
+
+packages:
+  - tools

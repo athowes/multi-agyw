@@ -2,4 +2,4 @@
 # orderly::orderly_develop_start("plot-tikz_category-flowchart")
 # setwd("src/plot-tikz_category-flowchart")
 
-system("lualatex category-flowchart.tex")
+tools::texi2dvi("category-flowchart.tex", pdf = TRUE, clean = TRUE)

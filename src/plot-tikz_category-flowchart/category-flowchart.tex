@@ -1,51 +1,35 @@
 \documentclass[tikz]{standalone}
 
 \usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning}
 
 \begin{document}
 
-\begin{tikzpicture}
-\node[] at (-1, 1.5) {(i)};nonumber
-\node[] at (-0.5, 0) {1};
-\node[] at (0.5, 0) {2};
-\node[] at (1.5, 0) {3};
-\draw (-1,1) -- (2,1);
-\draw (-1,-1) -- (2,-1);
-\draw (-1,-1) -- (-1,1);
-\draw (2,-1) -- (2,1);
-\draw (0,-1) -- (0,1);
-\draw (1,-1) -- (1,1);
+\tikzstyle{question} = [rectangle, draw, text width=10em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{category} = [rectangle, draw, fill=gray!10, text width=10em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{outerblock} = [rectangle, draw, text width=11em, text centered, rounded corners, minimum height=22em]
+\tikzstyle{line} = [draw, -latex']
 
-\node[] at (3, 1.5) {(ii)};
-\node[] at (4.5, 0) {1};
-\node[] at (5.25, 0) {2};
-\node[] at (5.75, 0) {3};
-\draw (4.5,0) circle (.5);
-\draw (4.5,0) circle (1);
-\draw (4.5,0) circle (1.5);
+\begin{tikzpicture}[node distance = 2cm, auto]
+    \node[category] at (0, 0) (1) {Not sexually active};
+    \node[category] at (0, -2) (2) {One cohabiting sexual partner};
+    \node[category] at (0, -4) (3) {Non-regular sexual partner(s)};
+    \node[category] at (0, -6) (4) {Key populations};
+    % \node[outerblock] at (0, -3) {};
 
-\node[] at (-1, -2) {(iii)};
-\node[] at (-0.5, -3.5) {1};
-\node[] at (0.5, -3.5) {2};
-\node[] at (1.5, -3.5) {3};
-\draw (-1,-3) -- (2,-2);
-\draw (-1,-4) -- (2,-5);
-\draw (-1,-4) -- (-1,-3);
-\draw (2,-5) -- (2,-2);
-\draw (0,-0.8333 - 3.5) -- (0,0.8333 - 3.5);
-\draw (1,-1.1666 - 3.5) -- (1,1.1666 - 3.5);
+    \node[question] at (-10, 0) (a) {Is the respondent sexually active in the past 12 months?};
+    \node[question] at (-10, -2) (b) {Number of partners of the respondent of the past 12 months?};
+    \node[question] at (-5, -2) (c) {Does that partner live in the same household as the respondent?};
+    \node[question] at (-10, -4) (d) {Has the respondent had transactional sex?};
 
-\node[] at (3, 1.5 - 3.5) {(iv)};nonumber
-\node[] at (3.25, 0 - 3.5) {1};
-\node[] at (4, 0 - 3.5) {2};
-\node[] at (5.25, 0 - 3.5) {3};
-\draw (3,1 - 3.5) -- (6,1 - 3.5);
-\draw (3,-1 - 3.5) -- (6,-1 - 3.5);
-\draw (3,-1 - 3.5) -- (3,1 - 3.5);
-\draw (6,-1 - 3.5) -- (6,1 - 3.5);
-\draw (3.5,-1 - 3.5) -- (3.5,1 - 3.5);
-\draw (4.5,-1 - 3.5) -- (4.5,1 - 3.5);
-
+    \path[line] (a) -- node {No}(1);
+    \path[line] (a) -- node {Yes}(b);
+    \path[line] (b) -- node {$1$}(c);
+    \path[line] (b) -- node {$>1$}(d);
+    \path[line] (c) -- node {Yes}(2);
+    \path[line] (c) |- node[near end] {No}(3);
+    \path[line] (d) |- node[near end] {Yes}(4);
+    \path[line] (d) -- (3);
 \end{tikzpicture}
 
 \end{document}
