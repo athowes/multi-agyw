@@ -1,0 +1,60 @@
+---
+title: A multinomial spatio-temporal model for sexual risk behaviour with application to adolescent girls and young women in 13 sub-Saharan African countries
+subtitle: HIV Inference Lab Group Meeting
+author: Adam Howes
+institute: Imperial College London
+date: January 2022
+bibliography: citations.bib
+output:
+  beamer_presentation:
+    latex_engine: pdflatex
+    highlight: haddock
+    fig_width: 7 
+    fig_height: 3
+    includes:
+        in_header: preamble.tex
+---
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/available-surveys.pdf")
+```
+
+## 
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/3-rank-comparison.pdf")
+```
+
+## 
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/model-direct-benefits.pdf")
+```
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/continental-map.pdf")
+```
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/variance-proportions.pdf")
+```
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/within-between-country-variation.pdf")
+```
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/age-variation.pdf")
+```
+
+## References {.allowframebreaks}
