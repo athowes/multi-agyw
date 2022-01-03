@@ -15,6 +15,10 @@ packages:
   - rmarkdown
 
 depends:
+  plot-tikz_category-flowchart:
+    id: latest
+    use:
+      depends/category-flowchart.pdf: category-flowchart.pdf
   plot_available-surveys:
     id: latest
     use:
