@@ -17,6 +17,31 @@ output:
 
 ##
 
+\begin{table}
+\centering
+\begin{tabularx}{\textwidth}{lXlX}
+\toprule
+Category & Description & Risk ratio & Notes \\ 
+ \midrule
+None & Not sexually active & 0 & Ignores incidence from e.g. drug injection (assumed to be negligible). \\
+Low & One cohabiting sexual partner & 1 & Baseline category. \\
+High & Non-regular sexual partner(s) & 1.72 & From ALPHA network pooled analysis. Supported by Jia et al. \\
+Very high & Young women from key populations & 13 & Sabin et al. \\
+\bottomrule
+\end{tabularx}
+\caption{HIV risk categories and risk ratios.}
+\label{tab:risk-categories}
+\end{table}
+
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/category-flowchart.pdf")
+```
+
+##
+
 ```{r echo=FALSE}
 knitr::include_graphics("depends/available-surveys.pdf")
 ```
@@ -26,8 +51,36 @@ knitr::include_graphics("depends/available-surveys.pdf")
 ```{r echo=FALSE}
 knitr::include_graphics("depends/3-rank-comparison.pdf")
 ```
+ 
+##
 
-## 
+Final model selected:
+
+\begin{align}
+    y_{itak}^\star &\sim \text{xPoisson}(\lambda_{itak}) \\
+    \log(\lambda_{itak}) &= \beta_k + \alpha_{ak} + \phi_{ik} + \gamma_{tk} + \theta_{iat}.
+\end{align}
+
+## Benefits of smoothing
+
+1. Get estimates even where there isn't direct data
+
+* Some people think of this as "making up data"
+* In some sense all estimates are "made up" though
+* Uncertainty should be higher in regions with infilling
+* Perhaps we do a bad job communicating uncertainty, or it's just hard
+
+## Benefits of smoothing
+
+2. Borrow information across space, surveys, categories
+
+* Space-category effects, survey-category effects, space-survey-category effects (using Kronecker products)
+* Fun to think about what models might be reasonable for this and whether structured category effects might be interesting
+  * e.g. some model for misclassification of individuals into categories could give a kind of structured category effect (currently it's IID always)
+* Wonder to what extent we're oversmoothing
+  * e.g. might expect to see discontunities in the data (e.g. urban centers) which we're smoothing away
+
+##
 
 ```{r echo=FALSE}
 knitr::include_graphics("depends/model-direct-benefits.pdf")
@@ -56,5 +109,3 @@ knitr::include_graphics("depends/within-between-country-variation.pdf")
 ```{r echo=FALSE}
 knitr::include_graphics("depends/age-variation.pdf")
 ```
-
-## References {.allowframebreaks}
