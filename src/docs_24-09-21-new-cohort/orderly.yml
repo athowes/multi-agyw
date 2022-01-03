@@ -1,0 +1,21 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Slides
+      filenames:
+        - 24-09-21-new-cohort.pdf
+
+resources:
+  - 24-09-21-new-cohort.Rmd
+  - preamble.tex
+  - citations.bib
+
+packages:
+  - rmarkdown
+
+depends:
+  process_information-criteria:
+    id: 20210916-133107-9c7e6acd
+    use:
+      depends/all-dhs-rank-comparison.pdf: all-dhs-rank-comparison.pdf

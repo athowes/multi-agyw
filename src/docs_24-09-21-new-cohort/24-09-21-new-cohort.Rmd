@@ -137,8 +137,7 @@ Temporal structure & T1 & T1 & T1 & T2 & T2 & T2 & T3 & T3 & T3 \\
 ##
 
 ```{r echo=FALSE}
-knitr::include_graphics("../../archive/process_information-criteria/20210916-133107-9c7e6acd/all-dhs-rank-comparison.pdf")
+knitr::include_graphics("depends/all-dhs-rank-comparison.pdf")
 ```
-
 
 ## References {.allowframebreaks}
