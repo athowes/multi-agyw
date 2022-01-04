@@ -46,7 +46,7 @@ df <- df %>%
       "Mozambique" = "MOZ",
       "Malawi" = "MWI",
       "Namibia" = "NAM",
-      "Swaziland" = "SWZ",
+      "Eswatini" = "SWZ",
       "Tanzania" = "TZA",
       "Uganda" = "UGA",
       "South Africa" = "ZAF",

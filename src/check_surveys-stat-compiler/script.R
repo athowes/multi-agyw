@@ -7,9 +7,7 @@
 stat_compiler <- read_xlsx("STATcompilerExport2021127_12313.xlsx", range = "A4:E110") %>%
   rename(country = Country,
          survey =  Survey) %>%
-  select(country, survey) %>%
-  mutate(country = ifelse(country == "Eswatini", "Swaziland", country))
-
+  select(country, survey)
 
 #' iso3 codes from https://gist.github.com/tadast/8827699
 country_codes <- read_csv("countries_codes_and_coordinates.csv") %>%

@@ -30,7 +30,7 @@ output:
 
 * Estimate proportions indexed by
   * District $i = 1, \ldots, n$
-    * 13 AGYW Global Fund priority countries (but fitting individually): Botswana, Cameroon, Kenya, Lesotho, Malawi, Mozambique, Namibia, South Africa, Swaziland, Tanzania, Uganda, Zambia and Zimbabwe
+    * 13 AGYW Global Fund priority countries (but fitting individually): Botswana, Cameroon, Eswatini, Kenya, Lesotho, Malawi, Mozambique, Namibia, South Africa, Tanzania, Uganda, Zambia and Zimbabwe
   * Survey $t = 1, \ldots, T$
     * The available DHSs
   * Age $a \in \{\text{15--19}, \text{20--24}, \text{25--29}\}$
