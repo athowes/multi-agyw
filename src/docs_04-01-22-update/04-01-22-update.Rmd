@@ -46,20 +46,52 @@ knitr::include_graphics("depends/category-flowchart.pdf")
 knitr::include_graphics("depends/available-surveys.pdf")
 ```
 
+## Statistical model
+
+Fit 13 models of the form:
+
+\begin{align}
+    y_{itak}^\star &\sim \text{xPoisson}(\lambda_{itak}) \\
+    \log(\lambda_{itak}) &= \beta_k + \alpha_{ak} + \phi_{ik} + \gamma_{tk} + \delta_{itk} + \theta_{ita}.
+\end{align}
+
+
+##
+
+\begin{table}[htb]
+\centering
+\begin{tabularx}{\textwidth}{llll}
+\midrule
+Model ID & Spatial structure & Temporal structure & Spatio-temporal interaction \\ 
+\midrule
+1 & None & None & \xmark \\
+2 & IID & None & \xmark \\
+3 & Besag & None & \xmark \\
+4 & None & IID & \xmark \\
+5 & IID & IID & \xmark \\
+5x & IID & IID & \cmark \\
+6 & Besag & IID & \xmark \\
+6x & Besag & IID  & \cmark \\
+7 & None & AR1 & \xmark \\
+8 & IID & AR1 & \xmark \\
+8x & IID & AR1 & \cmark \\
+9 & Besag & AR1 & \xmark \\
+9x & Besag & AR1 & \cmark \\
+\midrule
+\end{tabularx}
+\end{table}
+
 ## 
 
 ```{r echo=FALSE}
 knitr::include_graphics("depends/3-rank-comparison.pdf")
 ```
- 
+
 ##
 
-Final model selected:
-
-\begin{align}
-    y_{itak}^\star &\sim \text{xPoisson}(\lambda_{itak}) \\
-    \log(\lambda_{itak}) &= \beta_k + \alpha_{ak} + \phi_{ik} + \gamma_{tk} + \theta_{iat}.
-\end{align}
+```{r echo=FALSE}
+knitr::include_graphics("depends/model-direct-benefits.pdf")
+```
 
 ## Benefits of smoothing
 
@@ -83,19 +115,7 @@ Final model selected:
 ##
 
 ```{r echo=FALSE}
-knitr::include_graphics("depends/model-direct-benefits.pdf")
-```
-
-##
-
-```{r echo=FALSE}
 knitr::include_graphics("depends/continental-map.pdf")
-```
-
-##
-
-```{r echo=FALSE}
-knitr::include_graphics("depends/variance-proportions.pdf")
 ```
 
 ##
@@ -107,5 +127,17 @@ knitr::include_graphics("depends/within-between-country-variation.pdf")
 ##
 
 ```{r echo=FALSE}
+knitr::include_graphics("depends/variance-proportions.pdf")
+```
+
+##
+
+```{r echo=FALSE}
 knitr::include_graphics("depends/age-variation.pdf")
 ```
+
+## Next steps
+
+* Feedback on paper from people who know more about country contexts
+* Connect more to policy. For example by replicating Katie's "number of new infections by risk group" spreadsheet
+* Add logistic regression model for proportion of non-regular partner(s) who are KP
