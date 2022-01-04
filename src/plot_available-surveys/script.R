@@ -110,7 +110,6 @@ dev.off()
 df %>%
   select(country, type, year, giftsvar, sample_size) %>%
   mutate(
-    sample_size = round(sample_size, -2),
     giftsvar = case_when(
       giftsvar == 1 ~ "[/]cmark",
       giftsvar == 0 ~ "[/]xmark"
