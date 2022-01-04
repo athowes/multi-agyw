@@ -79,24 +79,27 @@ cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", 
 df %>%
   filter(model_selector(iso3, model)) %>%
   select(model, iso3, starts_with("percentage_variance")) %>%
+  mutate(iso3 = reorder(iso3, percentage_variance_area_idx)) %>%
   pivot_longer(starts_with("percentage_variance"), names_to = "random_effect", names_prefix = "percentage_variance_") %>%
   mutate(
     random_effect = fct_reorg(random_effect,
       "Category" = "cat_idx",
       "Age x Category" = "age_idx",
-      "Area x Category" = "area_idx",
       "Survey x Category" = "sur_idx",
+      "Area x Category" = "area_idx",
       "Area x Survey x Category" = "area_sur_idx"
     )
   ) %>%
-  ggplot(aes(x = fct_rev(iso3), y = value, group = random_effect, fill = random_effect)) +
-    geom_bar(position = "fill", stat = "identity", alpha = 0.8) +
-    scale_fill_manual(values = cbpalette) +
+  ggplot(aes(x = iso3, y = value, group = random_effect, fill = random_effect))+
+    geom_bar(position = "fill", stat = "identity", alpha = 0.8, width = 0.85) +
+    scale_fill_manual(values = cbpalette[c(1, 2, 4, 3)]) +
     theme_minimal() +
     scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
     labs(x = "", y = "Posterior variance", fill = "") +
     coord_flip() +
     theme(
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor.y = element_blank(),
       plot.title = element_text(face = "bold"),
       legend.key.width = unit(2, "lines"),
       strip.placement = "outside"
