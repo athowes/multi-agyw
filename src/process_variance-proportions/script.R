@@ -41,7 +41,7 @@ df <- df %>%
     "Mozambique" = "MOZ",
     "Malawi" = "MWI",
     "Namibia" = "NAM",
-    "Swaziland" = "SWZ",
+    "Eswatini" = "SWZ",
     "Tanzania" = "TZA",
     "Uganda" = "UGA",
     "South Africa" = "ZAF",
@@ -141,3 +141,11 @@ df %>%
     area_sur_idx = mean(percentage_variance_area_sur_idx)
   ) %>%
   write_csv("average-variance-proportions.csv", na = "")
+
+#' Quantification of points discussed
+#' Which are the countries with the highest and lowest proportion of variance explained by area?
+df %>%
+  filter(model_selector(iso3, model)) %>%
+  select(iso3, percentage_variance_area_idx) %>%
+  arrange(desc(percentage_variance_area_idx)) %>%
+  mutate(percentage_variance_area_idx = signif(100 * percentage_variance_area_idx, 3))
