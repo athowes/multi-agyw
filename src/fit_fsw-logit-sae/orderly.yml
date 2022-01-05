@@ -1,0 +1,38 @@
+script: script.R
+
+sources:
+  - functions.R
+
+artefacts:
+  - data:
+      description: Smoothed district indicator estimates for the proportion of women with non-regular partners who are FSW
+      filenames:
+        - fsw-logit-sae.csv
+        - fsw-logit-sae.pdf
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - purrr
+  - stringr
+  - Matrix
+
+depends:
+  plot_available-surveys:
+    id: latest
+    use:
+      depends/available-surveys.csv: available-surveys.csv
+  process_all-data:
+    id: latest
+    use:
+      depends/areas.rds: areas.rds
+      depends/survey_indicators_sexbehav.csv: survey_indicators_sexbehav.csv
+      depends/interpolated_population.csv: interpolated_population.csv
