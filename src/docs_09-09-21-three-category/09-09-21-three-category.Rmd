@@ -287,7 +287,7 @@ knitr::include_graphics("page-multinomial-smoothed-district-sexbehav.pdf")
 ##
 
 ```{r echo=FALSE}
-knitr::include_graphics("../../archive/check_sexpaid-survey-question/20210720-120340-77026581/sexpaid-survey-question.pdf")
+knitr::include_graphics("depends/sexpaid-survey-question.pdf")
 ```
 
 ## Current approach

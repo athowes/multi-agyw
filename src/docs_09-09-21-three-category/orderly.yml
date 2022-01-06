@@ -1,0 +1,24 @@
+script: script.R
+
+sources:
+ - ar1.R
+
+artefacts:
+  - data:
+      description: Slides
+      filenames:
+        - 09-09-21-three-category.pdf
+
+resources:
+  - 09-09-21-three-category.Rmd
+  - preamble.tex
+  - citations.bib
+
+packages:
+  - rmarkdown
+
+depends:
+  check_sexpaid-survey-question:
+    id: 20210720-120340-77026581
+    use:
+      depends/sexpaid-survey-question.pdf: sexpaid-survey-question.pdf

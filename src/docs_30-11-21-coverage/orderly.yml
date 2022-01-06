@@ -1,0 +1,15 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Slides
+      filenames:
+        - 30-11-21-coverage.pdf
+
+resources:
+  - 30-11-21-coverage.Rmd
+  - preamble.tex
+  - citations.bib
+
+packages:
+  - rmarkdown
