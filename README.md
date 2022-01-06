@@ -17,8 +17,8 @@ The directories of this repository are:
 
 | Directory   | Contains |
 |-------------|--------------|
-| `docs`      | Presentations and other documentation. |
 | `make`      | Scripts used to run the reports. `_make.R` runs everything in order. |
+| `misc`      | Miscellaneous code, not used as part of `orderly`. |
 | `src`       | All `orderly` reports. |
 | `tutorials` | Miscellaneous code used to study models and get up to speed. |
 | `utils`     | Helper scripts for common development tasks. |
