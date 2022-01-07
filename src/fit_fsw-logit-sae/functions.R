@@ -17,3 +17,22 @@ constrain_interval <- function(x, lower, upper, verbose = TRUE) {
   x <- pmax(0, x)
   x
 }
+
+#' Categorical to indicators.
+#'
+#' @param x A categorical column.
+#' @return Indicator variables column.
+to_int <- function(x) {
+  as.integer(as.factor(x))
+}
+
+#' Penalised complexity precision prior for `R-INLA`.
+#'
+#' @param x Used to specify the `initial`.
+#' @param u Upper threshold.
+#' @param alpha Probability that the standard deviation exceeds
+#' the upper threshold.
+#' @return A prior that can be passed to `R-INLA`.
+tau_pc <- function(x, u, alpha) {
+  list(prec = list(prec = "pc.prec", param = c(u, alpha), initial = log(x)))
+}
