@@ -149,12 +149,18 @@ df <- df %>%
 #' This shouldn't trigger in normal cases!
 message(
   paste0(
-    "There are: ", sum(df$n_eff_kish < df$x_eff), " rows when x_eff > n_eff_kish! These rows have been removed."
+    "There are ", sum(df$n_eff_kish < df$x_eff), " rows when x_eff > n_eff_kish!",
+    "\nThis occurs in the following surveys:\n",
+    paste(unique(filter(df, n_eff_kish < x_eff)$survey_id), collapse = ", "),
+    "\nx_eff and n_eff_kish have been set to zero in these cases."
   )
 )
 
 df <- df %>%
-  filter(n_eff_kish > x_eff)
+  mutate(
+    x_eff = ifelse(n_eff_kish < x_eff, 0, x_eff),
+    n_eff_kish = ifelse(n_eff_kish < x_eff, 0, n_eff_kish)
+  )
 
 #' The rows of df to be included in the model
 df_model <- df %>%
@@ -174,21 +180,87 @@ formula3 <- x_eff ~ 1 +
   f(age_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
-logistic_model <- function(formula) {
-  fit <- inla(
-    formula,
-    data = df_model,
-    family = 'xbinomial',
-    Ntrials = n_eff_kish,
-    control.family = list(control.link = list(model = "logit")),
-    control.predictor = list(compute = TRUE, link = 1),
-    control.compute = list(dic = TRUE, waic = TRUE, cpo = TRUE, config = TRUE),
-    inla.mode = "experimental"
+formulas <- list(formula1, formula2, formula3)
+models <- list("Model 1", "Model 2", "Model 3")
+
+#' Fit the models
+res <- purrr::pmap(
+  list(formula = formulas, model_name = models),
+  logistic_model
+)
+
+#' Extract the df and the full fitted models
+res_df <- lapply(res, "[[", 1) %>% bind_rows()
+res_fit <- lapply(res, "[[", 2)
+
+#' Artefact: Smoothed district indicator estimates for logistic regression models
+res_df <- res_df %>%
+  #' Remove superfluous INLA indicator columns
+  select(-area_idx, -age_idx, -obs_idx, -sur_idx) %>%
+  #' Make it clear which of the estimates are raw and which are from the model (smoothed)
+  rename(
+    estimate_raw = estimate,
+    ci_lower_raw = ci_lower,
+    ci_upper_raw = ci_upper,
+    estimate_smoothed = prob_mean,
+    median_smoothed = prob_median,
+    ci_lower_smoothed = prob_lower,
+    ci_upper_smoothed = prob_upper
+  ) %>%
+  relocate(model, .before = estimate_smoothed)
+
+write_csv(res_df, "fsw-logit-smoothed-district-sexbehav.csv", na = "")
+
+#' Create plotting data
+res_plot <- res_df %>%
+  filter(!(area_id %in% iso3)) %>%
+  pivot_longer(
+    cols = c(starts_with("estimate")),
+    names_to = c(".value", "source"),
+    names_pattern = "(.*)\\_(.*)"
+  ) %>%
+  left_join( #' Use this to make it an sf again
+    select(areas, area_id),
+    by = "area_id"
+  ) %>%
+  st_as_sf()
+
+#' Artefact: Cloropleths
+
+pdf("fsw-logit-smoothed-district-sexbehav.pdf", h = 8.25, w = 11.75)
+
+res_plot %>%
+  split(~model) %>%
+  lapply(function(x)
+    x %>%
+      mutate(
+        age_group = fct_relevel(age_group, "Y015_024") %>%
+          fct_recode(
+            "15-19" = "Y015_019",
+            "20-24" = "Y020_024",
+            "25-29" = "Y025_029",
+            "15-24" = "Y015_024"
+          ),
+        source = fct_relevel(source, "raw", "smoothed", "aggregate") %>%
+          fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed", "Admin 1 aggregate" = "aggr")
+      ) %>%
+      ggplot(aes(fill = estimate)) +
+      geom_sf(size = 0.1) +
+      scale_fill_viridis_c(option = "C", label = label_percent()) +
+      facet_grid(source ~ age_group) +
+      theme_minimal() +
+      labs(
+        title = paste0(x$model[1])
+      ) +
+      theme(
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        strip.text = element_text(face = "bold"),
+        plot.title = element_text(face = "bold"),
+        legend.position = "bottom",
+        legend.key.width = unit(4, "lines")
+      )
   )
-}
 
-#' Testing that it works!
-temp <- logistic_model(formula1)
-
-#' Approximately 6% of those with non-regular partners are FSW. Seems roughly right.
-plogis(temp$summary.fixed$mean)
+dev.off()

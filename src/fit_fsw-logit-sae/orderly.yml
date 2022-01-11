@@ -7,8 +7,8 @@ artefacts:
   - data:
       description: Smoothed district indicator estimates for the proportion of women with non-regular partners who are FSW
       filenames:
-        - fsw-logit-sae.csv
-        - fsw-logit-sae.pdf
+        - fsw-logit-smoothed-district-sexbehav.csv
+        - fsw-logit-smoothed-district-sexbehav.pdf
 
 packages:
   - dplyr
@@ -24,6 +24,10 @@ packages:
   - purrr
   - stringr
   - Matrix
+
+resources:
+  - everpaidforsex-byregion.csv
+  - recentpaidforsex-byregion.csv
 
 depends:
   plot_available-surveys:
