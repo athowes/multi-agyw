@@ -35,6 +35,8 @@ iso3 <- names(analysis_level)
 areas <- readRDS("depends/areas.rds")
 ind <- read_csv("depends/survey_indicators_sexbehav.csv")
 pop <- read_csv("depends/interpolated_population.csv")
+cfsw_ever <- read_csv("everpaidforsex-bycountry.csv")
+cfsw_recent <- read_csv("recentpaidforsex-bycountry.csv")
 
 #' Set ind$estimate > 1 to 1, as well as ind$estimate < 0 to 0
 ind$estimate <- constrain_interval(ind$estimate, lower = 0, upper = 1)
@@ -65,7 +67,26 @@ areas <- areas %>%
     data.frame(analysis_level) %>%
       tibble::rownames_to_column("iso3"),
     by = "iso3"
+  ) %>%
+  #' Add a country name column (useful for merging covariate data)
+  mutate(
+    country = fct_recode(iso3,
+      "Botswana" = "BWA",
+      "Cameroon" = "CMR",
+      "Kenya" = "KEN",
+      "Lesotho" = "LSO",
+      "Mozambique" = "MOZ",
+      "Malawi" = "MWI",
+      "Namibia" = "NAM",
+      "Eswatini" = "SWZ",
+      "Tanzania" = "TZA",
+      "Uganda" = "UGA",
+      "South Africa" = "ZAF",
+      "Zambia" = "ZMB",
+      "Zimbabwe" = "ZWE"
+    )
   )
+
 
 #' Areas at the level of analysis
 areas_model <- areas %>%
@@ -105,7 +126,7 @@ df <- crossing(
   #' Both the areas in the model and the aggregate country
   bind_rows(areas_model, country) %>%
     st_drop_geometry() %>%
-    select(area_id, area_name, area_idx, area_id_aggr,
+    select(country, iso3, area_id, area_name, area_idx, area_id_aggr,
            area_sort_order, center_x, center_y)
 )
 
@@ -120,6 +141,21 @@ df <- df %>%
              n_clusters, n_observations, n_eff_kish,
              x_eff, estimate, ci_lower, ci_upper),
     by = c("indicator", "age_group", "area_id")
+  )
+
+#' Merge covariates into df
+#' * cfswever: Proportion of men who have ever paid for sex (national level)
+#' * csfwrecent: Proporiton of men who have recently (past 12 months) paid for sex (national level)
+df <- df %>%
+  left_join(
+    cfsw_ever %>%
+      select(country = Country, csfwever = EverPaidSex),
+    by = "country"
+  ) %>%
+  left_join(
+    cfsw_recent %>%
+      select(country = Country, csfwrecent = PaidSexLast12Months),
+    by = "country"
   )
 
 #' Add indicies for:
@@ -166,17 +202,17 @@ df <- df %>%
 df_model <- df %>%
   filter(age_group != "Y015_024", !(area_id %in% toupper(iso3)))
 
-#' Model 1: intercept, age random effects (IID)
-formula1 <- x_eff ~ 1 +
+#' Model 1: intercept, covariates, age random effects (IID)
+formula1 <- x_eff ~ 1 + csfwever + csfwrecent +
   f(age_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
-#' Model 2: intercept, age random effects (IID), space random effects (IID)
-formula2 <- x_eff ~ 1 +
+#' Model 2: intercept, covariates, age random effects (IID), space random effects (IID)
+formula2 <- x_eff ~ 1 + csfwever + csfwrecent +
   f(age_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(area_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
-#' Model 3: intercept, age random effects (IID), space random effects (Besag)
-formula3 <- x_eff ~ 1 +
+#' Model 3: intercept, covariates, age random effects (IID), space random effects (Besag)
+formula3 <- x_eff ~ 1 + csfwever + csfwrecent +
   f(age_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
