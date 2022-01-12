@@ -1,0 +1,31 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Small-area estimates of incidence by risk group
+      filenames:
+        - incidence-district-sexbehav.csv
+        - incidence-district-sexbehav.pdf
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - tibble
+
+depends:
+  - process_multinomial-smoothed-district-sexbehav:
+      id: latest
+      use:
+        depends/best-3-multinomial-smoothed-district-sexbehav.csv: best-3-multinomial-smoothed-district-sexbehav.csv
+  - process_all-data:
+      id: latest
+      use:
+        depends/areas.rds: areas.rds
