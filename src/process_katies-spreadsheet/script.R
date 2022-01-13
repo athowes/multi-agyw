@@ -54,7 +54,7 @@ naomi <- naomi %>%
       TRUE ~ calendar_quarter == "CY2020Q4"
     )
   ) %>%
-  select(area_id, sex, age_group, indicator, mean) %>%
+  select(iso3, area_id, sex, age_group, indicator, mean) %>%
   pivot_wider(
     names_from = indicator,
     values_from = mean
@@ -97,10 +97,68 @@ rr_sexnonreg <- 1.72 #' Note that this is wrong because I've grouped FSW into he
 
 df <- df %>%
   mutate(
-    pop_nosex12m = population * nosex12m,
-    pop_sexcohab = population * sexcohab,
-    pop_sexnonregplus = population * sexnonregplus,
-    inc_nosex12m = 0,
-    inc_sexcohab = infections / (pop_sexcohab + 1.72 * pop_sexnonregplus),
-    inc_sexnonregplus = inc_sexcohab * 1.72
+    population_nosex12m = population * nosex12m,
+    population_sexcohab = population * sexcohab,
+    population_sexnonregplus = population * sexnonregplus,
+    incidence_nosex12m = 0,
+    incidence_sexcohab = infections / (population_sexcohab + 1.72 * population_sexnonregplus),
+    incidence_sexnonregplus = incidence_sexcohab * 1.72,
+    infections_nosex12m = 0,
+    infections_sexcohab = population_sexcohab * incidence_sexcohab,
+    infections_sexnonregplus = population_sexnonregplus * incidence_sexnonregplus
   )
+
+write_csv(df, "incidence-district-sexbehav.csv")
+
+df_plot <- df %>%
+  select(iso3, area_id, age_group, starts_with("incidence_sex")) %>%
+  pivot_longer(
+    cols = starts_with("incidence_sex"),
+    names_to = "category",
+    names_prefix = "incidence_",
+    values_to = "incidence",
+  ) %>%
+  left_join(
+    select(areas, area_id),
+    by = "area_id"
+  ) %>%
+  st_as_sf()
+
+#' Artefact: Cloropleths
+
+pdf("incidence-district-sexbehav.pdf", h = 8.25, w = 11.75)
+
+df_plot %>%
+  split(.$iso3) %>%
+  lapply(function(x)
+    x %>%
+      mutate(
+        age_group = fct_relevel(age_group, "Y015_024") %>%
+          fct_recode(
+            "15-19" = "Y015_019",
+            "20-24" = "Y020_024",
+            "25-29" = "Y025_029",
+            "15-24" = "Y015_024"
+          )
+      ) %>%
+      ggplot(aes(fill = incidence)) +
+      geom_sf(size = 0.1) +
+      scale_fill_viridis_c(option = "C", label = label_percent()) +
+      facet_grid(category ~ age_group) +
+      theme_minimal() +
+      labs(
+        title = paste0(x$iso3[1]),
+        fill = "Incidence rate"
+      ) +
+      theme(
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        strip.text = element_text(face = "bold"),
+        plot.title = element_text(face = "bold"),
+        legend.position = "bottom",
+        legend.key.width = unit(4, "lines")
+      )
+  )
+
+dev.off()
