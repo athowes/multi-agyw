@@ -119,7 +119,7 @@ colnames(adjM) <- rownames(adjM)
 
 #' Create the scaffolding for the estimates
 df <- crossing(
-  #' Only the high and very high risk groups
+  #' Only the high and very high risk groups (sexnonregplus includes both)
   indicator = c("sexnonreg", "sexpaid12m"),
   #' Three age groups, plus aggregate category
   age_group = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"),
@@ -170,14 +170,19 @@ df <- df %>%
     obs_idx = to_int(interaction(age_idx, area_idx, sur_idx)),
   )
 
-#' The proportion of sexnonreg who are sexpaid12m should have sample size x_eff from sexnonreg and observations x_eff from sexpaid12m
+#' The proportion of (sexnonreg + sexpaid12m) who are sexpaid12m should have:
+#' * sample size x_eff from (sexnonreg + sexpaid12m),
+#' * and observations x_eff from sexpaid12m
 #' This is a very slow way of doing this: perhaps after this project I should learn datatable or try dtplyr
 df <- df %>%
   split(.$obs_idx) %>%
   lapply(function(x)
     x %>%
-      mutate(n_eff_kish = filter(x, indicator == "sexnonreg")$x_eff) %>%
+      #' n_eff_kish is sum of x_eff from sexnonreg and sexpaid12m
+      mutate(n_eff_kish = sum(x$x_eff)) %>%
+      #' We just want to keep the row for sexpaid12m
       filter(indicator == "sexpaid12m") %>%
+      #' And rename it to propsexpaid12m
       mutate(indicator = "propsexpaid12m")
   ) %>%
   bind_rows()
