@@ -187,20 +187,31 @@ df <- df %>%
   ) %>%
   bind_rows()
 
+#' Check for larger observations than sample size
 #' This shouldn't trigger in normal cases!
-message(
-  paste0(
-    "There are ", sum(df$n_eff_kish < df$x_eff), " rows when x_eff > n_eff_kish!",
-    "\nThis occurs in the following surveys:\n",
-    paste(unique(filter(df, n_eff_kish < x_eff)$survey_id), collapse = ", "),
-    "\nx_eff and n_eff_kish have been set to zero in these cases."
+if(sum(df$n_eff_kish < df$x_eff) > 0) {
+  message(
+    paste0(
+      "There are ", sum(df$n_eff_kish < df$x_eff), " rows when x_eff > n_eff_kish!",
+      "\nThis occurs in the following surveys:\n",
+      paste(unique(filter(df, n_eff_kish < x_eff)$survey_id), collapse = ", "),
+      "\nx_eff and n_eff_kish have been set to zero in these cases."
+    )
   )
-)
 
+  df <- df %>%
+    mutate(
+      x_eff = ifelse(n_eff_kish < x_eff, 0, x_eff),
+      n_eff_kish = ifelse(n_eff_kish < x_eff, 0, n_eff_kish)
+    )
+}
+
+#' x_eff = 0 and n_eff_kish = 0 is causing INLA to crash (could be investigated further)
+#' Take the approach of setting both to NA in this case (no information either way)
 df <- df %>%
   mutate(
-    x_eff = ifelse(n_eff_kish < x_eff, 0, x_eff),
-    n_eff_kish = ifelse(n_eff_kish < x_eff, 0, n_eff_kish)
+    x_eff = ifelse(n_eff_kish == 0 & x_eff == 0, NA, x_eff),
+    n_eff_kish = ifelse(n_eff_kish == 0 & x_eff == 0, NA, n_eff_kish)
   )
 
 #' The rows of df to be included in the model
