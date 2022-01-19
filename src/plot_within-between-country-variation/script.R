@@ -125,18 +125,15 @@ ggplot(df_subnational, aes(x = fct_rev(iso3), y = estimate_smoothed, col = Regio
 dev.off()
 
 #' Quantification of points discussed
-#' What proportion of 15-19 year olds are sexually active?
+#' What proportion of 15-19 year olds are sexually active? And other averages for use in the abstract
 df_national %>%
-  filter(
-    indicator == "No sex (past 12 months)",
-    age_group == "15-19"
-  ) %>%
+  select(iso3, indicator, age_group, estimate_smoothed) %>%
+  group_by(indicator, age_group) %>%
   summarise(
-    min = 100 * min(estimate_smoothed),
-    median = 100 * median(estimate_smoothed),
-    max = 100 * max(estimate_smoothed)
-  ) %>%
-  signif(digits = 3)
+    lower = 100 * quantile(estimate_smoothed, probs = 0.025),
+    mean = 100 * mean(estimate_smoothed),
+    upper = 100 * quantile(estimate_smoothed, probs = 0.975)
+  )
 
 #' What proportion of 15-19 year olds are cohabiting in MOZ?
 df_national %>%
@@ -156,8 +153,8 @@ df_national %>%
     age_group %in% c("20-24", "25-29")
   ) %>%
   summarise(
-    min = 100 * min(estimate_smoothed),
-    median = 100 * median(estimate_smoothed),
-    max = 100 * max(estimate_smoothed)
+    lower = 100 * quantile(estimate_smoothed, probs = 0.025),
+    mean = 100 * mean(estimate_smoothed),
+    upper = 100 * quantile(estimate_smoothed, probs = 0.975)
   ) %>%
   signif(digits = 3)
