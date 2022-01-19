@@ -1,0 +1,143 @@
+---
+title: A multinomial spatio-temporal model for sexual risk behaviour with application to adolescent girls and young women in 13 sub-Saharan African countries
+subtitle: Statistics and Epidemiology Group Meeting
+author: Adam Howes
+institute: Imperial College London
+date: January 2022
+bibliography: citations.bib
+output:
+  beamer_presentation:
+    latex_engine: pdflatex
+    highlight: haddock
+    fig_width: 7 
+    fig_height: 3
+    includes:
+        in_header: preamble.tex
+---
+
+##
+
+\begin{table}
+\centering
+\begin{tabularx}{\textwidth}{lXlX}
+\toprule
+Category & Description & Risk ratio & Notes \\ 
+ \midrule
+None & Not sexually active & 0 & Ignores incidence from e.g. drug injection (assumed to be negligible). \\
+Low & One cohabiting sexual partner & 1 & Baseline category. \\
+High & Non-regular sexual partner(s) & 1.72 & From ALPHA network pooled analysis. Supported by Jia et al. \\
+Very high & Young women from key populations & 13 & Sabin et al. \\
+\bottomrule
+\end{tabularx}
+\caption{HIV risk categories and risk ratios.}
+\label{tab:risk-categories}
+\end{table}
+
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/category-flowchart.pdf")
+```
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/available-surveys.pdf")
+```
+
+## Statistical model
+
+Fit 13 models of the form:
+
+\begin{align}
+    y_{itak}^\star &\sim \text{xPoisson}(\lambda_{itak}) \\
+    \log(\lambda_{itak}) &= \beta_k + \alpha_{ak} + \phi_{ik} + \gamma_{tk} + \delta_{itk} + \theta_{ita}.
+\end{align}
+
+
+##
+
+\begin{table}[htb]
+\centering
+\begin{tabularx}{\textwidth}{llll}
+\midrule
+Model ID & Spatial structure & Temporal structure & Spatio-temporal interaction \\ 
+\midrule
+1 & None & None & \xmark \\
+2 & IID & None & \xmark \\
+3 & Besag & None & \xmark \\
+4 & None & IID & \xmark \\
+5 & IID & IID & \xmark \\
+5x & IID & IID & \cmark \\
+6 & Besag & IID & \xmark \\
+6x & Besag & IID  & \cmark \\
+7 & None & AR1 & \xmark \\
+8 & IID & AR1 & \xmark \\
+8x & IID & AR1 & \cmark \\
+9 & Besag & AR1 & \xmark \\
+9x & Besag & AR1 & \cmark \\
+\midrule
+\end{tabularx}
+\end{table}
+
+## 
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/3-rank-comparison.pdf")
+```
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/model-direct-benefits.pdf")
+```
+
+## Benefits of smoothing
+
+1. Get estimates even where there isn't direct data
+
+* Some people think of this as "making up data"
+* In some sense all estimates are "made up" though
+* Uncertainty should be higher in regions with infilling
+* Perhaps we do a bad job communicating uncertainty, or it's just hard
+
+## Benefits of smoothing
+
+2. Borrow information across space, surveys, categories
+
+* Space-category effects, survey-category effects, space-survey-category effects (using Kronecker products)
+* Fun to think about what models might be reasonable for this and whether structured category effects might be interesting
+  * e.g. some model for misclassification of individuals into categories could give a kind of structured category effect (currently it's IID always)
+* Wonder to what extent we're oversmoothing
+  * e.g. might expect to see discontunities in the data (e.g. urban centers) which we're smoothing away
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/continental-map.pdf")
+```
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/within-between-country-variation.pdf")
+```
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/variance-proportions.pdf")
+```
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/age-variation.pdf")
+```
+
+## Next steps
+
+* Have sent to Elona in Cape Town to get feedback
+* Connecting more to policy, recently produced "new infections by risk group"
+* Adding logistic regression model for proportion of non-regular partner(s) who are KP
