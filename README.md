@@ -1,6 +1,6 @@
 # multi-agyw
 
-Code for the manuscript Howes *et al.* "A multinomial spatio-temporal model for sexual risk behaviour with application to adolescent girls and young women in 13 sub-Saharan African countries" (in preparation).
+Code for the manuscript Howes *et al.* "Spatio-temporal estimates of risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa" (in preparation).
 
 New HIV infections are disproportionately common in adolescent girls and young women.
 Accelerating provision of HIV prevention programming in this key population is a top priority, but funding is insufficient to reach everyone ([HIV Prevention Coalition, 2020](https://hivpreventioncoalition.unaids.org/wp-content/uploads/2020/06/Decision-making-aide-AGYW-investment-Version-March-2020-Final.pdf)).
