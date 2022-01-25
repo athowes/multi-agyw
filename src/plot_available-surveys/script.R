@@ -129,3 +129,8 @@ df %>%
   as_latex() %>%
   as.character() %>%
   cat(file = "available-surveys.txt")
+
+#' How many AGYW, in total, were surveyed?
+df %>%
+  pull(sample_size) %>%
+  sum()
