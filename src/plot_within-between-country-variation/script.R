@@ -79,26 +79,31 @@ df_national <- left_join(
   rename(estimate_smoothed = estimate_smoothed.x)
 
 #' Add region column
+#' Defined based on the UN geoscheme for Africa
+#' https://en.wikipedia.org/wiki/United_Nations_geoscheme_for_Africa
 region_key <- c(
   "Botswana" = "South",
-  "Cameroon" = "Central",
+  "Cameroon" = "Middle",
   "Kenya" = "East",
   "Lesotho" = "South",
-  "Mozambique" = "South",
-  "Malawi" = "South",
+  "Mozambique" = "East",
+  "Malawi" = "East",
   "Namibia" = "South",
   "Eswatini" = "South",
   "Tanzania" = "East",
   "Uganda" = "East",
   "South Africa" = "South",
-  "Zambia" = "South",
-  "Zimbabwe" = "South"
+  "Zambia" = "East",
+  "Zimbabwe" = "East"
 ) %>%
   as.data.frame() %>%
   rename("Region" = ".") %>%
   tibble::rownames_to_column("iso3")
 
 df_subnational <- df_subnational %>%
+  left_join(region_key, by = "iso3")
+
+df_national <- df_national %>%
   left_join(region_key, by = "iso3")
 
 pdf("within-between-country-variation.pdf", h = 7, w = 6.25)
@@ -113,7 +118,7 @@ ggplot(df_subnational, aes(x = fct_rev(iso3), y = estimate_smoothed, col = Regio
   scale_color_manual(values = cbpalette) +
   scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
   coord_flip() +
-  labs(x = "", y = "Proportion") +
+  labs(x = "", y = "Proportion", col = "UN geoscheme region") +
   guides(colour = guide_legend(override.aes = list(alpha = 0.9, size = 5))) +
   theme_minimal() +
   theme(
@@ -125,7 +130,7 @@ ggplot(df_subnational, aes(x = fct_rev(iso3), y = estimate_smoothed, col = Regio
 dev.off()
 
 #' Quantification of points discussed
-#' What proportion of 15-19 year olds are sexually active? And other averages for use in the abstract
+#' What proportion of 15-19 year-olds are sexually active? And other averages for use in the abstract
 df_national %>%
   select(iso3, indicator, age_group, estimate_smoothed) %>%
   group_by(indicator, age_group) %>%
@@ -135,7 +140,7 @@ df_national %>%
     upper = 100 * quantile(estimate_smoothed, probs = 0.975)
   )
 
-#' What proportion of 15-19 year olds are cohabiting in MOZ?
+#' What proportion of 15-19 year-olds are cohabiting in MOZ?
 df_national %>%
   filter(
     indicator == "Cohabiting partner",
@@ -146,7 +151,7 @@ df_national %>%
   pull(estimate_smoothed) %>%
   signif(digits = 3)
 
-#' What proportion of 20-29 year olds are sexually active?
+#' What proportion of 20-29 year-olds are sexually active?
 df_national %>%
   filter(
     indicator == "No sex (past 12 months)",
@@ -158,3 +163,21 @@ df_national %>%
     upper = 100 * quantile(estimate_smoothed, probs = 0.975)
   ) %>%
   signif(digits = 3)
+
+#' What proportion of 20-29 year-olds are cohabiting versus with nonregular partner(s),
+#' above and below the south / east dividing border (UN geoscheme)?
+df_national %>%
+  filter(
+    indicator %in% c("Cohabiting partner", "Nonregular partner(s)"),
+    age_group %in% c("20-24", "25-29")
+  ) %>%
+  mutate(
+    border = ifelse(Region %in% c("East", "Middle"), "Above", "Below")
+  ) %>%
+  group_by(border, indicator) %>%
+  summarise(
+    lower = 100 * quantile(estimate_smoothed, probs = 0.025),
+    mean = 100 * mean(estimate_smoothed),
+    upper = 100 * quantile(estimate_smoothed, probs = 0.975)
+  ) %>%
+  mutate(across(lower:upper, ~signif(.x, digits = 3)))
