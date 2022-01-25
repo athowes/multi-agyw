@@ -97,7 +97,7 @@ region_key <- c(
   "Zimbabwe" = "East"
 ) %>%
   as.data.frame() %>%
-  rename("Region" = ".") %>%
+  rename("region" = ".") %>%
   tibble::rownames_to_column("iso3")
 
 df_subnational <- df_subnational %>%
@@ -106,26 +106,45 @@ df_subnational <- df_subnational %>%
 df_national <- df_national %>%
   left_join(region_key, by = "iso3")
 
+df_national_sort <- df_national %>%
+  select(iso3, region) %>%
+  unique() %>%
+  group_by(region) %>%
+  arrange(iso3, .by_group = TRUE) %>%
+  ungroup() %>%
+  mutate(iso3_sort_order = row_number()) %>%
+  select(iso3, iso3_sort_order)
+
+df_subnational <- df_subnational %>%
+  left_join(
+    df_national_sort,
+    by = "iso3"
+  )
+
 pdf("within-between-country-variation.pdf", h = 7, w = 6.25)
 
 cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
 
-ggplot(df_subnational, aes(x = fct_rev(iso3), y = estimate_smoothed, col = Region)) +
-  geom_jitter(width = 0.1, alpha = 0.6, shape = 20) +
-  geom_point(data = df_national, aes(x = fct_rev(iso3), y = estimate_smoothed),
-             shape = 21, size = 2, fill = "white", col = "black", alpha = 0.9) +
-  facet_grid(age_group ~  indicator) +
-  scale_color_manual(values = cbpalette) +
-  scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
-  coord_flip() +
-  labs(x = "", y = "Proportion", col = "UN geoscheme region") +
-  guides(colour = guide_legend(override.aes = list(alpha = 0.9, size = 5))) +
-  theme_minimal() +
-  theme(
-    panel.spacing = unit(1.5, "lines"),
-    legend.position = "bottom",
-    strip.text = element_text(face = "bold")
-  )
+df_subnational %>%
+  mutate(
+    iso3 = reorder(iso3, iso3_sort_order)
+  ) %>%
+  ggplot(aes(x = fct_rev(iso3), y = estimate_smoothed, col = region)) +
+    geom_jitter(width = 0.1, alpha = 0.6, shape = 20) +
+    geom_point(data = df_national, aes(x = fct_rev(iso3), y = estimate_smoothed),
+               shape = 21, size = 2, fill = "white", col = "black", alpha = 0.9) +
+    facet_grid(age_group ~  indicator) +
+    scale_color_manual(values = cbpalette) +
+    scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
+    coord_flip() +
+    labs(x = "", y = "Proportion", col = "UN geoscheme region") +
+    guides(colour = guide_legend(override.aes = list(alpha = 0.9, size = 5))) +
+    theme_minimal() +
+    theme(
+      panel.spacing = unit(1.5, "lines"),
+      legend.position = "bottom",
+      strip.text = element_text(face = "bold")
+    )
 
 dev.off()
 
@@ -171,7 +190,7 @@ df_national %>%
 #' above and below the south / east dividing border (UN geoscheme)?
 df_subnational %>%
   mutate(
-    border = ifelse(Region %in% c("East", "Middle"), "Above", "Below")
+    border = ifelse(region %in% c("East", "Middle"), "Above", "Below")
   ) %>%
   select(iso3, area_id, indicator, age_group, border, estimate_smoothed, population_mean) %>%
   filter(
