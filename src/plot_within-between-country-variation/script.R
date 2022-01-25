@@ -73,7 +73,7 @@ df_national <- left_join(
     group_by(iso3, age_group, indicator) %>%
     summarise(estimate_smoothed = mean(estimate_smoothed)),
   by = c("iso3", "age_group", "indicator")
-) %>%
+  ) %>%
   within(., estimate_smoothed.x <- ifelse(!is.na(estimate_smoothed.y), estimate_smoothed.y, estimate_smoothed.x)) %>%
   select(-estimate_smoothed.y) %>%
   rename(estimate_smoothed = estimate_smoothed.x)
@@ -130,14 +130,29 @@ ggplot(df_subnational, aes(x = fct_rev(iso3), y = estimate_smoothed, col = Regio
 dev.off()
 
 #' Quantification of points discussed
-#' What proportion of 15-19 year-olds are sexually active? And other averages for use in the abstract
-df_national %>%
+#' District level quantile information (age disaggregated)
+df_subnational %>%
   select(iso3, indicator, age_group, estimate_smoothed) %>%
   group_by(indicator, age_group) %>%
   summarise(
     lower = 100 * quantile(estimate_smoothed, probs = 0.025),
-    mean = 100 * mean(estimate_smoothed),
+    median = 100 * median(estimate_smoothed),
     upper = 100 * quantile(estimate_smoothed, probs = 0.975)
+  )
+
+#' District level quantile information aggregated by age (population weighted)
+df_subnational %>%
+  select(iso3, area_id, indicator, age_group, estimate_smoothed, population_mean) %>%
+  group_by(area_id, indicator) %>%
+  summarise(
+    estimate_smoothed = sum(estimate_smoothed * population_mean) / sum(population_mean)
+  ) %>%
+  ungroup() %>%
+  group_by(indicator) %>%
+  summarise(
+    lower = 100 * quantile(estimate_smoothed, probs = 0.025, na.rm = TRUE),
+    median = 100 * median(estimate_smoothed, na.rm = TRUE),
+    upper = 100 * quantile(estimate_smoothed, probs = 0.975, na.rm = TRUE)
   )
 
 #' What proportion of 15-19 year-olds are cohabiting in MOZ?
@@ -151,33 +166,28 @@ df_national %>%
   pull(estimate_smoothed) %>%
   signif(digits = 3)
 
-#' What proportion of 20-29 year-olds are sexually active?
-df_national %>%
-  filter(
-    indicator == "No sex (past 12 months)",
-    age_group %in% c("20-24", "25-29")
-  ) %>%
-  summarise(
-    lower = 100 * quantile(estimate_smoothed, probs = 0.025),
-    mean = 100 * mean(estimate_smoothed),
-    upper = 100 * quantile(estimate_smoothed, probs = 0.975)
-  ) %>%
-  signif(digits = 3)
-
+#' District level quantile information aggregated by age (population weighted)
 #' What proportion of 20-29 year-olds are cohabiting versus with nonregular partner(s),
 #' above and below the south / east dividing border (UN geoscheme)?
-df_national %>%
+df_subnational %>%
+  mutate(
+    border = ifelse(Region %in% c("East", "Middle"), "Above", "Below")
+  ) %>%
+  select(iso3, area_id, indicator, age_group, border, estimate_smoothed, population_mean) %>%
   filter(
     indicator %in% c("Cohabiting partner", "Nonregular partner(s)"),
     age_group %in% c("20-24", "25-29")
   ) %>%
-  mutate(
-    border = ifelse(Region %in% c("East", "Middle"), "Above", "Below")
+  group_by(area_id, indicator) %>%
+  summarise(
+    estimate_smoothed = sum(estimate_smoothed * population_mean) / sum(population_mean),
+    border = max(border) #' Should just be a way to keep border column
   ) %>%
+  ungroup() %>%
   group_by(border, indicator) %>%
   summarise(
-    lower = 100 * quantile(estimate_smoothed, probs = 0.025),
-    mean = 100 * mean(estimate_smoothed),
-    upper = 100 * quantile(estimate_smoothed, probs = 0.975)
+    lower = 100 * quantile(estimate_smoothed, probs = 0.025, na.rm = TRUE),
+    median = 100 * median(estimate_smoothed, na.rm = TRUE),
+    upper = 100 * quantile(estimate_smoothed, probs = 0.975, na.rm = TRUE)
   ) %>%
   mutate(across(lower:upper, ~signif(.x, digits = 3)))
