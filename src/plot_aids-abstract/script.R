@@ -62,6 +62,7 @@ df <- df %>%
   ungroup() %>%
   #' Aggregate up to 20-29
   group_by(iso3, area_id, indicator) %>%
+  mutate(population_mean = ifelse(is.na(population_mean), 1, population_mean)) %>%
   summarise(estimate_smoothed = sum(estimate_smoothed * population_mean) / sum(population_mean)) %>%
   mutate(age_group = "20-29") %>%
   ungroup() %>%
@@ -114,7 +115,7 @@ cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", 
 
 #' For the AIDS abstract, filter down to only 20-29 and cohabiting or non-regular partners
 
-plotA <- df_subnational %>%
+plotB <- df_subnational %>%
   filter(
     indicator %in% c("Cohabiting partner", "Nonregular partner(s)")
   ) %>%
@@ -139,13 +140,20 @@ plotA <- df_subnational %>%
   scale_color_manual(values = cbpalette) +
   scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
   coord_flip() +
-  labs(x = "", y = "Proportion", col = "UN geoscheme region") +
+  labs(
+    x = "", y = "", col = "Regions of sub-Saharan Africa",
+    caption =
+      expression(
+        paste(bold("Not sexually active"), " (not shown) + ", bold("Cohabiting partner"), " + ", bold("Nonregular partner(s)"), " = 100%")
+      )
+  ) +
   guides(colour = guide_legend(override.aes = list(alpha = 0.9, size = 5))) +
   theme_minimal() +
   theme(
-    panel.spacing = unit(1.5, "lines"),
+    panel.spacing = unit(1, "lines"),
     legend.position = "top",
-    strip.text = element_text(face = "bold")
+    strip.text = element_text(face = "bold"),
+    strip.text.y = element_blank()
   )
 
 #' The following section is copied from plot_continental-map
@@ -153,7 +161,7 @@ plotA <- df_subnational %>%
 areas <- readRDS("depends/areas.rds")
 national_areas <- readRDS("depends/national_areas.rds")
 
-df_subnational <- df_subnational %>%
+df_subnational_sf <- df_subnational %>%
   left_join(
     select(areas, area_id, geometry),
     by = "area_id"
@@ -179,18 +187,20 @@ df_national_areas <- crossing(
 ) %>%
   left_join(national_areas, by = "iso3")
 
-df_subnational <- bind_rows(
-  df_subnational,
+df_subnational_sf <- bind_rows(
+  df_subnational_sf,
   df_national_areas
 )
 
-plotB <- df_subnational %>%
+plotA <- df_subnational_sf %>%
   filter(indicator %in% c("Cohabiting partner", "Nonregular partner(s)")) %>%
   ggplot(aes(fill = estimate_smoothed)) +
-    geom_sf(size = 0.1) +
+    geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
     scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
     facet_grid(age_group ~ indicator) +
-    labs(fill = "") +
+    labs(
+      fill = "Proportion\nof women\n20-29"
+    ) +
     theme_minimal() +
     theme(
       axis.text = element_blank(),
@@ -198,11 +208,14 @@ plotB <- df_subnational %>%
       panel.grid = element_blank(),
       strip.text = element_text(face = "bold"),
       plot.title = element_text(face = "bold"),
-      legend.key.width = unit(2, "lines")
+      legend.key.width = unit(1, "lines"),
+      legend.position = "left",
+      strip.text.y = element_blank(),
+      panel.spacing = unit(1.5, "lines")
     )
 
 pdf("aids-abstract.pdf", h = 7, w = 6.25)
 
-cowplot::plot_grid(plotA, plotB, ncol = 1)
+cowplot::plot_grid(plotA, plotB, ncol = 1, rel_heights = c(1, 1.1), align = "v")
 
 dev.off()

@@ -9,7 +9,7 @@ Small-area estimation of risk group population sizes enables countries to priori
 Using [AIS](https://dhsprogram.com/methodology/survey-types/ais.cfm), [BAIS](https://baisv20.com/), [DHS](https://dhsprogram.com/) and [PHIA](https://phia.icap.columbia.edu/) survey data, we fit multinomial logistic regressions to priority countries using the package [`R-INLA`](https://www.r-inla.org/).
 To enable inference with the `R-INLA` package, each model is reformulated as an equivalent Poisson log linear model using the multinomial-Poisson transformation [(Baker, 1994)](https://www.jstor.org/stable/2348134?seq=1#metadata_info_tab_contents).
 
-![](within-between-country-variation.png)
+![This figure is produced by the report `plot_aids-abstract`](aids-abstract.png)
 
 ## File structure
 
