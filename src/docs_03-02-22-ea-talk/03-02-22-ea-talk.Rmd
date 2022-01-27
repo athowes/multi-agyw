@@ -1,0 +1,64 @@
+---
+title: How it's been doing a statistics PhD plus some research
+subtitle: EA Imperial
+author: Adam Howes
+institute: Imperial College London
+date: February 2022
+bibliography: citations.bib
+output:
+  beamer_presentation:
+    latex_engine: pdflatex
+    highlight: haddock
+    fig_width: 7 
+    fig_height: 3
+    includes:
+        in_header: preamble.tex
+---
+
+## Academic background
+
+* Maths undergraduate at Durham, no real ideas about career
+  * Worked in a pub first year, Cranfield second year, and Basque Center for Applied Mathematics third year
+  * Dissertation about Bayesian optimisation 
+* Not enough statistics courses at Durham, so did a masters at Warwick
+  * Dissertation about Bayesian models for combining sources of evidence
+* StatML CDT (Imperial / Oxford) started the year I was applying
+  * Somewhat successor to OxWaSP (Oxford / Warwick)
+
+## EA background
+
+* Heard about 80,000 Hours in 3rd year from a friend
+* Listened to a few podcasts, found them compelling, first time anything career related really resonated with me
+* Read a few books over summer, then started going to the EA society at Warwick
+  * Events like retreats, more people in the community, helped to add depth
+* First EAG I went to was the year I started at Imperial
+  * Volunteering can be a good way to get a place
+
+## Any tips about applying for PhDs
+
+* Find (and call if possible) any previous students of the supervisor
+  * What are they doing now?
+* Assess the vibe among current graduate students
+* Be interested in things, read papers, attend reading groups
+  * "List of things you don't need permission to do"
+* Doing research as an undergraduate is a good test
+
+## Reflections on PhD experience
+
+* Many (all?) of my friends doing PhDs have had periods where it has negatively effected them
+  * "The well-being costs of graduate school versus STIs"
+* Little structure, often sporadic feedback, uncertainty about research direction and progress, making a narrow contribution (that perhaps few people care about) to a large field
+* Different to undergraduate: not learning material then passing test for another 3/4 years
+
+## What's my PhD about
+
+* HIV/AIDS is an infectious disease which is endemic in sub-Saharan Africa
+* Epidemic indicators can be used to guide policy response
+* My area of research is Bayesian spatio-temporal statistics, the method we use to perform small-area estimation
+  * I'll explain what these terms mean
+
+## Bayesian statistics
+
+## Spatio-temporal statistics
+
+## Career plans going forward
