@@ -1,0 +1,34 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Plot for AIDS 2022 abstract, combining the dot-plot and cloropleth
+      filenames:
+        - aids-abstract.pdf
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - tibble
+
+depends:
+  - process_multinomial-smoothed-district-sexbehav:
+      id: latest
+      use:
+        depends/best-3-multinomial-smoothed-district-sexbehav.csv: best-3-multinomial-smoothed-district-sexbehav.csv
+  - process_all-data:
+      id: latest
+      use:
+        depends/areas.rds: areas.rds
+  - national_data_areas:
+      id: latest
+      use:
+        depends/national_areas.rds: national_areas.rds
