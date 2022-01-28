@@ -1,0 +1,26 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Plot showing the number of infections averted by using our estimates
+      filenames:
+        - infections-averted.pdf
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - tibble
+
+depends:
+  - process_katies-spreadsheet:
+      id: latest
+      use:
+        depends/incidence-district-sexbehav.csv: incidence-district-sexbehav.csv
