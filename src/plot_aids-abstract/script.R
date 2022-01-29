@@ -219,3 +219,20 @@ pdf("aids-abstract.pdf", h = 7, w = 6.25)
 cowplot::plot_grid(plotA, plotB, ncol = 1, rel_heights = c(1, 1.1), align = "v")
 
 dev.off()
+
+#' Separate versions are useful for presentations
+
+pdf("aids-abstract-A.pdf", h = 3.5, w = 6.25)
+
+plotA
+
+dev.off()
+
+pdf("aids-abstract-B.pdf", h = 3.5, w = 6.25)
+
+plotB
+
+dev.off()
+
+
+

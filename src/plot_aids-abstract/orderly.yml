@@ -5,6 +5,8 @@ artefacts:
       description: Plot for AIDS 2022 abstract, combining the dot-plot and cloropleth
       filenames:
         - aids-abstract.pdf
+        - aids-abstract-A.pdf
+        - aids-abstract-B.pdf
 
 packages:
   - dplyr
