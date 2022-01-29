@@ -55,10 +55,94 @@ output:
 * HIV/AIDS is an infectious disease which is endemic in sub-Saharan Africa
 * Epidemic indicators can be used to guide policy response
 * My area of research is Bayesian spatio-temporal statistics, the method we use to perform small-area estimation
-  * I'll explain what these terms mean
+  * (I'll explain what these terms mean)
 
 ## Bayesian statistics
 
+* First step in Bayesian statistics is to write a probabilistic model for the data
+  * Focus is on understanding and modelling scientific phenomenon, rather than e.g. remembering arcane statistical tests
+* Second step is to perform inference (which is usually done with an algorithm)
+  * Given we observed certain data, what can we learn about the parameters of the model?
+* Things might go wrong with the above two steps with the data, probabilistic model, algorithm
+  * Should also perform checks, following a "Bayesian workflow"
+
 ## Spatio-temporal statistics
 
+* Say that you have a collection of people who have taken a HIV test, and their results are either positive or negative
+* If have the location for these people, this might be important information to include in our probabilistic model
+* Similarly, the time that they took the test might also be important
+* Spatio-temporal statistics is just when we think these two features of the data are important to take into account
+* It allows us to answer spatio-temporal questions
+  * What's the situation at time $t$ and location $s$?
+  * Often important for policy
+
+## My work
+
+* I'm interested in applied and methodological work
+  * Applied: focus is on answering a question about the world
+  * Methodological: focus is on developing techniques which can be used to answer questions about the world
+* The deliniation between these might not be clear sometimes
+  * To answer questions about the world you'll often have to develop new methods
+  * To develop new (relevant) methods that you should be thinking about which questions they will allow you to answer to think
+* Some examples of my work
+  * Applied: estimating numbers of young women at risk
+  * Methodological: investigating models for spatial smoothing
+
+## Applied example
+
+* Women 15-29 are disproportionately at risk of HIV
+* To efficiently target programs and resources to the most at risk women, we're working on small-area estimates of the number of women in different risk groups
+
+##
+
+\begin{table}
+\centering
+\begin{tabularx}{\textwidth}{lXlX}
+\toprule
+Category & Description & Risk ratio \\ 
+ \midrule
+None & Not sexually active & 0 \\
+Low & One cohabiting sexual partner & 1 \\
+High & Non-regular sexual partner(s) & 1.72  \\
+Very high & Young women from key populations & 13 \\
+\bottomrule
+\end{tabularx}
+\caption{HIV risk categories and risk ratios.}
+\label{tab:risk-categories}
+\end{table}
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/category-flowchart.pdf")
+```
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/available-surveys.pdf")
+```
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/aids-abstract-A.pdf")
+```
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/aids-abstract-B.pdf")
+```
+
+## Methods example
+
+* TO-DO: Create annotated equations version of the Besag model
+
 ## Career plans going forward
+
+* Global health
+* Biosecurity
+  * Reading group this term, Fridays at St Mary's 12-1!
+
+## Thanks!

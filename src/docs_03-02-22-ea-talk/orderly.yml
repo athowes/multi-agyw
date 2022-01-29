@@ -23,27 +23,8 @@ depends:
     id: latest
     use:
       depends/available-surveys.pdf: available-surveys.pdf
-  process_information-criteria:
+  plot_aids-abstract:
     id: latest
     use:
-      depends/3-rank-comparison.pdf: 3-rank-comparison.pdf
-  process_variance-proportions:
-    id: latest
-    use:
-      depends/variance-proportions.pdf: variance-proportions.pdf
-  plot_age-variation:
-    id: latest
-    use:
-      depends/age-variation.pdf: age-variation.pdf
-  plot_model-direct-benefits:
-    id: latest
-    use:
-      depends/model-direct-benefits.pdf: model-direct-benefits.pdf
-  plot_continental-map:
-    id: latest
-    use:
-      depends/continental-map.pdf: continental-map.pdf
-  plot_within-between-country-variation:
-    id: latest
-    use:
-      depends/within-between-country-variation.pdf: within-between-country-variation.pdf
+      depends/aids-abstract-A.pdf: aids-abstract-A.pdf
+      depends/aids-abstract-B.pdf: aids-abstract-B.pdf
