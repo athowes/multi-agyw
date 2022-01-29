@@ -12,3 +12,4 @@ run_commit_push("national_data_areas") #' Required for plot_continental-map
 run_commit_push("plot_continental-map")
 run_commit_push("plot_model-direct-benefits")
 run_commit_push("plot_aids-abstract")
+run_commit_push("analyze_infections-averted")
