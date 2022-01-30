@@ -1,10 +1,14 @@
 script: script.R
 
+sources:
+  - functions.R
+
 artefacts:
   - data:
       description: Plot showing the number of infections averted by using our estimates
       filenames:
         - infections-averted.pdf
+        - infections-averted-country.pdf
 
 packages:
   - dplyr
