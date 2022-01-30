@@ -34,6 +34,16 @@ output:
 * First EAG I went to was the year I started at Imperial
   * Volunteering can be a good way to get a place
 
+## Is it worth doing a PhD?
+
+* Skills or talent gap for many causes in EA
+  * Rather than funding gap
+* Independent research skills developed during a PhD important for many causes
+  * AI, biorisk, global priorities, global health and development
+* Can be useful for signalling expertise
+  * Then transfer into e.g. policy
+* 3/4+ years, possibly large opportunity cost
+
 ## Any tips about applying for PhDs
 
 * Find (and call if possible) any previous students of the supervisor
@@ -43,17 +53,20 @@ output:
   * "List of things you don't need permission to do"
 * Doing research as an undergraduate is a good test
 
-## Reflections on PhD experience
+## Some negative reflections on PhD experience
 
-* Many (all?) of my friends doing PhDs have had periods where it has negatively effected them
-  * "The well-being costs of graduate school versus STIs"
-* Little structure, often sporadic feedback, uncertainty about research direction and progress, making a narrow contribution (that perhaps few people care about) to a large field
+* I, along with many (all?) of my friends doing PhDs, have had periods where it has negatively effected wellbeing
+  * "Grad school is worse for public health than STDs" https://www.benkuhn.net/grad/
+* Little structure, often sporadic feedback, uncertainty about research direction and progress, narrow contribution (that perhaps few people care about) to a large field, low pay, alignment with supervisor and program, (in some fields) somewhat pyramid scheme-y
 * Different to undergraduate: not learning material then passing test for another 3/4 years
 
 ## What's my PhD about
 
 * HIV/AIDS is an infectious disease which is endemic in sub-Saharan Africa
 * Epidemic indicators can be used to guide policy response
+  * Prevalence (how many people are infected)
+  * Incidence (how many people newly infected)
+  * Coverage of treatments (how many people have (don't have) treatment)
 * My area of research is Bayesian spatio-temporal statistics, the method we use to perform small-area estimation
   * (I'll explain what these terms mean)
 
@@ -135,14 +148,33 @@ knitr::include_graphics("depends/aids-abstract-A.pdf")
 knitr::include_graphics("depends/aids-abstract-B.pdf")
 ```
 
+## How impactful is this work
+
+* Could be used to guide HIV interventions for women 15-29
+  * Interventions suggested include STI-screening and treatment, economic empowerment, comprehensive sexuality education, PrEP, PEP
+* Neglectedness, tractability, scale?
+* TO-DO: Add the latest versions of infections averted graph
+
 ## Methods example
 
 * TO-DO: Create annotated equations version of the Besag model
 
-## Career plans going forward
+## Some possible routes for the future
 
-* Global health
-* Biosecurity
-  * Reading group this term, Fridays at St Mary's 12-1!
+* Small-area estimation of health and development indicators
+* Outbreak disease surveillance
+* Monitoring of the environment (e.g. sea-ice for climate, air-pollution for global health)
+* Statistical ecology (as it relates to animal welfare)
+* AI safety (likely the more applied FAT-style work than theoretical)
+* Predicting (or helping to win) elections
+* Meta EA
+
+## Current plan
+
+* Outbreak disease surveillance for reducing GCBRs
+* Longtermist issues likely score better on neglectedness and scope
+* Biorisk cause area "competitive" with AI risk
+  * Better personal fit to biorisk
+* Biosecurity reading group this term, Fridays at St Mary's 12-1!
 
 ## Thanks!
