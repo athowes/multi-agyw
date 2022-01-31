@@ -339,3 +339,25 @@ res_plot %>%
   )
 
 dev.off()
+
+ic_df <- sapply(res_fit, function(fit) {
+  local_dic <- na.omit(fit$dic$local.dic)
+  local_waic <- na.omit(fit$waic$local.waic)
+  local_cpo <- na.omit(fit$cpo$cpo)
+
+  c("dic" = sum(local_dic),
+    "dic_se" = stats::sd(local_dic) * sqrt(length(local_dic)),
+    "waic" = sum(local_waic),
+    "waic_se" = stats::sd(local_waic) * sqrt(length(local_waic)),
+    "cpo" = sum(local_cpo),
+    "cpo_se" = stats::sd(local_cpo) * sqrt(length(local_cpo)))
+}) %>%
+  t() %>%
+  round() %>%
+  as.data.frame() %>%
+  mutate(
+    model = unlist(models),
+    .before = dic
+  )
+
+write_csv(ic_df, "information-criteria.csv", na = "")

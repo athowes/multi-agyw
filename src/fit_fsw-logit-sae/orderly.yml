@@ -14,6 +14,10 @@ artefacts:
       filenames:
         - fsw-logit-smoothed-district-sexbehav.csv
         - fsw-logit-smoothed-district-sexbehav.pdf
+  - data:
+      description: Model selection information criteria for logistic regression models
+      filenames:
+        - information-criteria.csv
 
 packages:
   - dplyr
