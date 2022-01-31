@@ -218,7 +218,7 @@ res <- purrr::pmap(
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
 
-#' Add columns for local DIC, WAIC, CPO and PIT
+#' Add columns for local DIC, WAIC, CPO
 #' res_df has the 15-24 category too
 res_df <- bind_cols(
   res_df,
@@ -227,8 +227,7 @@ res_df <- bind_cols(
            return(data.frame(
              local_dic = fit$dic$local.dic,
              local_waic = fit$waic$local.waic,
-             local_cpo = fit$cpo$cpo,
-             local_pit = fit$cpo$pit
+             local_cpo = fit$cpo$cpo
            ))
          }
   ) %>%
@@ -237,8 +236,7 @@ res_df <- bind_cols(
     bind_rows(data.frame(
       local_dic = rep(NA, length(models) * nrow(df_agg)),
       local_waic = rep(NA, length(models) * nrow(df_agg)),
-      local_cpo = rep(NA, length(models) * nrow(df_agg)),
-      local_pit = rep(NA, length(models) * nrow(df_agg))
+      local_cpo = rep(NA, length(models) * nrow(df_agg))
     ))
 )
 
@@ -248,16 +246,13 @@ ic_df <- sapply(res_fit, function(fit) {
   local_dic <- na.omit(fit$dic$local.dic)
   local_waic <- na.omit(fit$waic$local.waic)
   local_cpo <- na.omit(fit$cpo$cpo)
-  local_pit <- na.omit(fit$cpo$pit)
 
   c("dic" = sum(local_dic),
     "dic_se" = stats::sd(local_dic) * sqrt(length(local_dic)),
     "waic" = sum(local_waic),
     "waic_se" = stats::sd(local_waic) * sqrt(length(local_waic)),
     "cpo" = sum(local_cpo),
-    "cpo_se" = stats::sd(local_cpo) * sqrt(length(local_cpo)),
-    "pit" = sum(local_pit),
-    "pit_se" = stats::sd(local_pit) * sqrt(length(local_pit)))
+    "cpo_se" = stats::sd(local_cpo) * sqrt(length(local_cpo)))
 }) %>%
   t() %>%
   round() %>%
