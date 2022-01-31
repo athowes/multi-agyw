@@ -67,19 +67,33 @@ inc <- bind_rows(
   inc_none
 )
 
+#' Add "improvement over no targetting" column
+infections_averted_per_population_baseline <- inc %>%
+  filter(stratification == "None") %>%
+  #' Just the end of the line
+  filter(population_cumulative == max(population_cumulative)) %>%
+  mutate(infections_averted_per_population_baseline = infections_averted_cumulative / population_cumulative) %>%
+  pull(infections_averted_per_population_baseline)
+
+inc <- inc %>%
+  mutate(
+    infections_averted_cumulative_baseline = population_cumulative * infections_averted_per_population_baseline,
+    infections_averted_cumulative_improvement = infections_averted_cumulative - infections_averted_cumulative_baseline
+  )
+
 pdf("infections-averted.pdf", h = 4, w = 6.25)
 
 cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
 
-ggplot(inc, aes(x = population_cumulative, y = infections_averted_cumulative, col = stratification)) +
-  geom_line(linetype = 2) +
+ggplot(inc, aes(x = population_cumulative, y = infections_averted_cumulative_improvement, col = stratification)) +
+  geom_line(alpha = 0.8, size = 0.7) +
   theme_minimal() +
   scale_color_manual(values = cbpalette[-c(4, 5)]) +
-  scale_y_continuous(labels = unit_format(unit = "Th", scale = 1e-3)) +
-  scale_x_continuous(labels = unit_format(unit = "M", scale = 1e-6)) +
+  scale_y_continuous(labels = label_number(scale = 1e-3)) +
+  scale_x_continuous(labels = label_number(scale = 1e-6)) +
   labs(
-    x = "Total population reached",
-    y = "Total infections reached",
+    x = "Total population reached (10E6)",
+    y = "Improvement in total infections reached (10E3)",
     title = "Population stratification targetting comparison",
     col = "Stratification"
   )
@@ -88,9 +102,9 @@ dev.off()
 
 #' Separate analysis with each country separate
 
-inc_country_area_age_behav <- compute_infections_averted_by_country(df_area_age_behav, stratification_name = "Area, age, behaviour")
-inc_country_area_age <- compute_infections_averted_by_country(df_area_age, stratification_name = "Area, age")
-inc_country_area_behav <- compute_infections_averted_by_country(df_area_behav, stratification_name = "Area, behaviour")
+inc_country_area_age_behav <- compute_infections_averted(df_area_age_behav, stratification_name = "Area, age, behaviour", by_country = TRUE)
+inc_country_area_age <- compute_infections_averted(df_area_age, stratification_name = "Area, age", by_country = TRUE)
+inc_country_area_behav <- compute_infections_averted(df_area_behav, stratification_name = "Area, behaviour", by_country = TRUE)
 
 df_age_behav <- df_area_age_behav %>%
   group_by(iso3, age_group, category) %>%
@@ -100,7 +114,7 @@ df_age_behav <- df_area_age_behav %>%
   ) %>%
   ungroup()
 
-inc_country_age_behav <- compute_infections_averted_by_country(df_age_behav, stratification_name = "Age, behaviour")
+inc_country_age_behav <- compute_infections_averted(df_age_behav, stratification_name = "Age, behaviour", by_country = TRUE)
 
 df_none <- df_area_age_behav %>%
   group_by(iso3) %>%
@@ -110,7 +124,7 @@ df_none <- df_area_age_behav %>%
   ) %>%
   ungroup()
 
-inc_country_none <- compute_infections_averted_by_country(df_none, stratification_name = "None")
+inc_country_none <- compute_infections_averted(df_none, stratification_name = "None", by_country = TRUE)
 
 inc_country <- bind_rows(
   inc_country_area_age_behav,
@@ -120,23 +134,43 @@ inc_country <- bind_rows(
   inc_country_none
 )
 
+#' Add "improvement over no targetting" column
+infections_averted_per_population_baseline_country <- inc_country %>%
+  filter(stratification == "None") %>%
+  group_by(iso3) %>%
+  #' Just the end of the line
+  filter(population_cumulative == max(population_cumulative)) %>%
+  mutate(infections_averted_per_population_baseline = infections_averted_cumulative / population_cumulative) %>%
+  select(iso3, infections_averted_per_population_baseline)
+
+inc_country <- inc_country %>%
+  left_join(
+    infections_averted_per_population_baseline_country,
+    by = "iso3"
+  ) %>%
+  mutate(
+    infections_averted_cumulative_baseline = population_cumulative * infections_averted_per_population_baseline,
+    infections_averted_cumulative_improvement = infections_averted_cumulative - infections_averted_cumulative_baseline
+  )
+
 pdf("infections-averted-country.pdf", h = 7, w = 9)
 
-ggplot(inc_country, aes(x = population_cumulative, y = infections_averted_cumulative, col = stratification)) +
-  geom_line(alpha = 0.5) +
+ggplot(inc_country, aes(x = population_cumulative, y = infections_averted_cumulative_improvement, col = stratification)) +
+  geom_line(alpha = 0.8, size = 0.7) +
   facet_wrap(~iso3, scales = "free") +
   theme_minimal() +
   scale_color_manual(values = cbpalette[-c(4, 5)]) +
-  scale_y_continuous(labels = unit_format(unit = "Th", scale = 1e-3)) +
-  scale_x_continuous(labels = unit_format(unit = "M", scale = 1e-6)) +
+  scale_y_continuous(labels = label_number(scale = 1e-3)) +
+  scale_x_continuous(labels = label_number(scale = 1e-6)) +
   labs(
-    x = "Total population reached",
-    y = "Total infections reached",
+    x = "Total population reached (10E6)",
+    y = "Improvement in total infections reached (10E3)",
     title = "Population stratification targetting comparison",
     col = "Stratification"
   ) +
   theme(
-    legend.position = "bottom"
+    legend.position = "bottom",
+    axis.text.x = element_text(size = 10)
   )
 
 dev.off()
