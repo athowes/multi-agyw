@@ -87,7 +87,6 @@ areas <- areas %>%
     )
   )
 
-
 #' Areas at the level of analysis
 areas_model <- areas %>%
   filter(area_level == analysis_level) %>%
@@ -103,6 +102,13 @@ areas_model <- areas %>%
   #' Add an integer index for INLA
   arrange(area_sort_order) %>%
   mutate(area_idx = row_number())
+
+pdf("areas-check.pdf", h = 5, w = 8)
+
+ggplot(areas_model, aes(fill = iso3)) +
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25))
+
+dev.off()
 
 #' Country level area (not to be included in model)
 country <- areas %>%
@@ -126,8 +132,8 @@ df <- crossing(
   #' Both the areas in the model and the aggregate country
   bind_rows(areas_model, country) %>%
     st_drop_geometry() %>%
-    select(country, iso3, area_id, area_name, area_idx, area_id_aggr,
-           area_sort_order, center_x, center_y)
+    select(country, iso3, area_id, area_name, area_level,
+           area_idx, area_id_aggr, area_sort_order, center_x, center_y)
 )
 
 #' Merge district observations into df
@@ -158,6 +164,9 @@ df <- df %>%
     by = "country"
   )
 
+#' Add fake survey IDs
+df <- mutate(df, survey_id = replace_na(survey_id, "Missing"))
+
 #' Add indicies for:
 #'  * age (age_idx)
 #'  * survey (sur_idx)
@@ -186,6 +195,20 @@ df <- df %>%
       mutate(indicator = "propsexpaid12m")
   ) %>%
   bind_rows()
+
+pdf("data-check.pdf", h = 5, w = 8)
+
+df %>%
+  left_join( #' Use this to make it an sf again
+    select(areas, area_id),
+    by = "area_id"
+  ) %>%
+  mutate(est = x_eff / n_eff_kish) %>%
+  st_as_sf() %>%
+  ggplot(aes(fill = est)) +
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25))
+
+dev.off()
 
 #' Check for larger observations than sample size
 #' This shouldn't trigger in normal cases!
@@ -279,7 +302,7 @@ res_plot <- res_df %>%
 
 #' Artefact: Cloropleths
 
-pdf("fsw-logit-smoothed-district-sexbehav.pdf", h = 8.25, w = 11.75)
+pdf("fsw-logit-smoothed-district-sexbehav.pdf", h = 11, w = 8.25)
 
 res_plot %>%
   split(~model) %>%
@@ -297,8 +320,8 @@ res_plot %>%
           fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed", "Admin 1 aggregate" = "aggr")
       ) %>%
       ggplot(aes(fill = estimate)) +
-      geom_sf(size = 0.1) +
-      scale_fill_viridis_c(option = "C", label = label_percent()) +
+      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+      scale_fill_viridis_c(option = "C", label = label_percent(), limits = c(0, 0.6)) +
       facet_grid(source ~ age_group) +
       theme_minimal() +
       labs(
