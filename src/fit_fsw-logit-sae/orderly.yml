@@ -5,10 +5,12 @@ sources:
 
 artefacts:
   - data:
-      description: Check that area data is as intended
+      description: Checks that the data is as intended
       filenames:
         - areas-check.pdf
         - data-check.pdf
+        - covariate-correlation-check.pdf
+
   - data:
       description: Smoothed district indicator estimates for the proportion of women with non-regular partners who are FSW
       filenames:

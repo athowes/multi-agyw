@@ -241,6 +241,19 @@ df <- df %>%
 df_model <- df %>%
   filter(age_group != "Y015_024", !(area_id %in% toupper(iso3)))
 
+pdf("covariate-correlation-check.pdf", h = 5, w = 6.25)
+
+ggplot(df_model, aes(x = csfwrecent)) +
+  geom_histogram()
+
+ggplot(df_model, aes(x = csfwever)) +
+  geom_histogram()
+
+ggplot(df_model, aes(x = csfwrecent, y = csfwever)) +
+  geom_point()
+
+dev.off()
+
 #' Model 1: intercept, covariates, age random effects (IID)
 formula1 <- x_eff ~ 1 + csfwever + csfwrecent +
   f(age_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
@@ -361,3 +374,9 @@ ic_df <- sapply(res_fit, function(fit) {
   )
 
 write_csv(ic_df, "information-criteria.csv", na = "")
+
+sapply(res_fit, function(fit) {
+  fit$
+})
+
+res_fit[[1]]$summary.fixed
