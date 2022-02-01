@@ -99,9 +99,9 @@ output:
   * To develop new (relevant) methods that you should be thinking about which questions they will allow you to answer to think
 * Some examples of my work
   * Applied: estimating numbers of young women at risk
-  * Methodological: investigating models for spatial smoothing
+  * Methodological: investigating models for spatial structure
 
-## Applied example
+## Estimating numbers of young women at risk
 
 * Women 15-29 are disproportionately at risk of HIV
 * To efficiently target programs and resources to the most at risk women, we're working on small-area estimates of the number of women in different risk groups
@@ -127,12 +127,6 @@ Very high & Young women from key populations & 13 \\
 ##
 
 ```{r echo=FALSE}
-knitr::include_graphics("depends/category-flowchart.pdf")
-```
-
-##
-
-```{r echo=FALSE}
 knitr::include_graphics("depends/available-surveys.pdf")
 ```
 
@@ -148,16 +142,41 @@ knitr::include_graphics("depends/aids-abstract-A.pdf")
 knitr::include_graphics("depends/aids-abstract-B.pdf")
 ```
 
-## How impactful is this work
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("depends/model-direct-benefits-h.pdf")
+```
+
+## The Besag model
+
+$$
+\phi_i \, | \, \bphi_{-i} \sim \N\left(\frac{\sum_{j: j \sim i} \phi_j}{n_{\delta i}}, \frac{1}{n_{\delta i}\tau_\phi}\right)
+$$
+
+Mean of $\phi_i$ average of adjacent units and precision is proportional to $n_{\delta i}$
+
+##
+
+```{r echo=FALSE}
+knitr::include_graphics("geometry-graph-zwe.pdf")
+```
+
+## Impact of this work
 
 * Could be used to guide HIV interventions for women 15-29
-  * Interventions suggested include STI-screening and treatment, economic empowerment, comprehensive sexuality education, PrEP, PEP
-* Neglectedness, tractability, scale?
-* TO-DO: Add the latest versions of infections averted graph
+* Interventions suggested include 
+  * STI-screening and treatment
+  * Economic empowerment,
+  * Comprehensive sexuality education
+  * PrEP
+  * PEP
 
-## Methods example
+## 
 
-* TO-DO: Create annotated equations version of the Besag model
+```{r echo=FALSE}
+knitr::include_graphics("depends/infections-averted-country.pdf")
+```
 
 ## Some possible routes for the future
 
