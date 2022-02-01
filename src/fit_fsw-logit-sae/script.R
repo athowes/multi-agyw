@@ -378,3 +378,14 @@ ic_df <- sapply(res_fit, function(fit) {
   )
 
 write_csv(ic_df, "information-criteria.csv", na = "")
+
+#' Calculate average FSW proportion (temporarily useful for changing the RR for sexnonregplus)
+#' Approximately 9%
+res_df %>%
+  filter(
+    model == "Model 2",
+    area_level != 1
+  ) %>%
+  summarise(
+    propsexpaid12m = mean(estimate_smoothed, na.rm = TRUE)
+  )

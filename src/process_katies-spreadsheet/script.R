@@ -93,7 +93,9 @@ df <- naomi %>%
   )
 
 rr_sexcohab <- 1
-rr_sexnonreg <- 1.72 #' Note that this is wrong because I've grouped FSW into here!
+rr_sexnonreg <- 1.72
+rr_sexpaid12m <- 13
+rr_sexnonregplus <- rr_sexnonreg * 0.91 + rr_sexpaid12m * 0.09
 
 df <- df %>%
   mutate(
@@ -101,8 +103,8 @@ df <- df %>%
     population_sexcohab = population * sexcohab,
     population_sexnonregplus = population * sexnonregplus,
     incidence_nosex12m = 0,
-    incidence_sexcohab = infections / (population_sexcohab + 1.72 * population_sexnonregplus),
-    incidence_sexnonregplus = incidence_sexcohab * 1.72,
+    incidence_sexcohab = infections / (population_sexcohab + rr_sexnonregplus * population_sexnonregplus),
+    incidence_sexnonregplus = incidence_sexcohab * rr_sexnonregplus,
     infections_nosex12m = 0,
     infections_sexcohab = population_sexcohab * incidence_sexcohab,
     infections_sexnonregplus = population_sexnonregplus * incidence_sexnonregplus
