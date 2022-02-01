@@ -50,12 +50,34 @@ missing_districts <- df %>%
 
 missing_districts$area_name %>% sort()
 
-pdf("model-direct-benefits.pdf", h = 8, w = 6.25)
+pdf("model-direct-benefits-v.pdf", h = 8, w = 6.25)
 
 ggplot(df, aes(fill = estimate)) +
-  geom_sf(size = 0.1) +
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
   scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
   facet_grid(indicator ~ source) +
+  labs(fill = "Estimated proportion") +
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    strip.text = element_text(face = "bold", size = rel(0.85)),
+    legend.title = element_text(size = rel(0.7)),
+    legend.text = element_text(size = rel(0.7)),
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom",
+    legend.key.width = unit(4, "lines"),
+  )
+
+dev.off()
+
+pdf("model-direct-benefits-h.pdf", h = 6.25, w = 8)
+
+ggplot(df, aes(fill = estimate)) +
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+  scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
+  facet_grid(source ~ indicator) +
   labs(fill = "Estimated proportion") +
   theme_minimal() +
   theme(

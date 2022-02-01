@@ -2,9 +2,10 @@ script: script.R
 
 artefacts:
   - data:
-      description: Aiming to show the three benefits of using modelled estimates over direct
+      description: Aiming to show the three benefits of using modelled estimates over direct (vertical and horizontal versions)
       filenames:
-        - model-direct-benefits.pdf
+        - model-direct-benefits-v.pdf
+        - model-direct-benefits-h.pdf
 
 packages:
   - dplyr
@@ -25,6 +26,6 @@ depends:
     use:
       depends/tza_multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
   tza_data_areas:
-    id: latest
+    id: 20201130-150758-409ee8ac
     use:
       depends/tza_areas.geojson: tza_areas.geojson
