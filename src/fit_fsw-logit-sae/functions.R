@@ -41,7 +41,7 @@ tau_pc <- function(x, u, alpha) {
 #'
 #' @param formula A formula object passed to `R-INLA`.
 #' @return A fitted model object.
-logistic_model <- function(formula, model_name) {
+logistic_model <- function(formula, model_name, S = 1000) {
   fit <- inla(
     formula,
     data = df_model,
@@ -62,5 +62,7 @@ logistic_model <- function(formula, model_name) {
       model = model_name
     )
 
-  return(list(df = df_model, fit = fit))
+  full_samples <- inla.posterior.sample(n = S, result = fit)
+
+  return(list(df = df_model, fit = fit, samples = full_samples))
 }

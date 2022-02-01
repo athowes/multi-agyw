@@ -280,6 +280,10 @@ res <- purrr::pmap(
 #' Extract the df and the full fitted models
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
+res_samples <- lapply(res, "[[", 3)
+
+#' Artefact: Samples from all models
+saveRDS(res_samples, "fsw-logit-smoothed-district-sexbehav.rds")
 
 #' Artefact: Smoothed district indicator estimates for logistic regression models
 res_df <- res_df %>%
@@ -374,9 +378,3 @@ ic_df <- sapply(res_fit, function(fit) {
   )
 
 write_csv(ic_df, "information-criteria.csv", na = "")
-
-sapply(res_fit, function(fit) {
-  fit$
-})
-
-res_fit[[1]]$summary.fixed
