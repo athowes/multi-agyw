@@ -57,6 +57,12 @@ Alternatively, just the dependencies can be pulled using `orderly::orderly_pull_
 
 ## R package dependencies
 
+This repository is supported by the [`mutli.utils`](https://github.com/athowes/multi.utils) package, which can be installed from Github via:
+
+```r
+devtools::install_github("athowes/multi.utils")
+```
+
 The `R-INLA` package is not currently available on CRAN, and instead may be installed by following [instructions](https://www.r-inla.org/download-install) from the project website.
 As well, this repository requires a particular branch of the `naomi.utils` package, which can be installed from Github via:
 
