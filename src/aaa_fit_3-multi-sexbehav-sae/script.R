@@ -41,7 +41,7 @@ ind <- read_csv(paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.c
 pop <- read_csv("depends/interpolated-population.csv")
 
 #' Set ind$estimate > 1 to 1, as well as ind$estimate < 0 to 0
-ind$estimate <- constrain_interval(ind$estimate, lower = 0, upper = 1)
+ind$estimate <- multi.utils::constrain_interval(ind$estimate, lower = 0, upper = 1)
 
 areas <- select(areas, area_id, area_name, area_level, area_level_label,
                 parent_area_id, area_sort_order, center_x, center_y)
@@ -129,16 +129,16 @@ df <- df %>%
 #'  * space x survey (area_sur_idx)
 df <- df %>%
   mutate(
-    sur_idx = to_int(survey_id),
+    sur_idx = multi.utils::to_int(survey_id),
     #' Doing this because want Y015_024 to have ID 4 rather than 2 as it would be otherwise
     age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
-    cat_idx = to_int(indicator),
-    sur_cat_idx = to_int(interaction(sur_idx, cat_idx)),
-    age_cat_idx = to_int(interaction(age_idx, cat_idx)),
-    area_cat_idx = to_int(interaction(area_idx, cat_idx)),
-    area_sur_idx = to_int(interaction(area_idx, sur_idx)),
+    cat_idx = multi.utils::to_int(indicator),
+    sur_cat_idx = multi.utils::to_int(interaction(sur_idx, cat_idx)),
+    age_cat_idx = multi.utils::to_int(interaction(age_idx, cat_idx)),
+    area_cat_idx = multi.utils::to_int(interaction(area_idx, cat_idx)),
+    area_sur_idx = multi.utils::to_int(interaction(area_idx, sur_idx)),
     #' Is this the best way to add obs_idx? Perhaps can be added earlier in the pipeline
-    obs_idx = to_int(interaction(age_idx, area_idx, sur_idx)),
+    obs_idx = multi.utils::to_int(interaction(age_idx, area_idx, sur_idx)),
     area_idx_copy = area_idx,
     sur_idx_copy = sur_idx
   ) %>%
@@ -218,23 +218,23 @@ stopifnot(
 #' the default `constr = TRUE` can be sufficient.
 
 #' Model 1: category random effects (IID), age x category random effects (IID)
-formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
-  f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = multi.utils::tau_fixed(0.000001)) +
+  f(cat_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(age_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+    constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 2: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (IID)
 formula2 <- update(formula1,
   . ~ . + f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-            constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
 #' Model 3: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (Besag)
 formula3 <- update(formula1,
   . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
-            control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+            control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
 formulas <- list(formula1, formula2, formula3)
@@ -249,25 +249,25 @@ if(include_temporal) {
   #' survey x category random effects (IID)
   formula4 <- update(formula1,
     . ~ . + f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-              constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+              constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
   #' Model 5:  category random effects (IID), age x category random effects (IID),
   #' space x category random effects (IID), survey x category random effects (IID)
   formula5 <- update(formula1,
     . ~ . + f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-              constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+              constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
             f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-              constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+              constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
   #' Model 6: category random effects (IID), age x category random effects (IID),
   #' space x category random effects (Besag), survey x category random effects (IID)
   formula6 <- update(formula1,
     . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
-              control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+              control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
             f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-              constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+              constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
   #' Prior for the correlation parameter of the AR1 model together with the grouped precision parameter
@@ -288,7 +288,7 @@ if(include_temporal) {
   #' space x category random effects (IID), survey x category random effects (AR1)
   formula8 <- update(formula1,
     . ~ . + f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-              constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+              constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
             f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
               constr = TRUE, hyper = ar1_group_prior)
   )
@@ -297,9 +297,9 @@ if(include_temporal) {
   #' space x category random effects (Besag), survey x category random effects (AR1)
   formula9 <- update(formula1,
     . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
-              control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+              control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
             f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
-              constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+              constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
   formulas <- append(formulas, parse(text = paste0("list(", paste0("formula", 4:9, collapse = ", "), ")")) %>% eval())
@@ -314,19 +314,19 @@ if(include_interactions & include_temporal) {
   #' space x survey x category random effects (IID)
   formula5x <- update(formula5,
                       . ~ . + f(area_sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-                                constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+                                constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
   #' Create Besag x IID interaction adjacency matrix
   #' Check the resulting matrix with image()
-  interaction_adjM_6x <- repeat_matrix(adjM, n = length(unique(df$sur_idx)))
+  interaction_adjM_6x <- multi.utils::repeat_matrix(adjM, n = length(unique(df$sur_idx)))
 
   #' Model 6x: category random effects (IID), age x category random effects (IID),
   #' space x category random effects (Besag), survey x category random effects (IID)
   #' space x survey x category random effects (Besag x IID)
   formula6x <- update(formula6,
                       . ~ . + f(area_sur_idx, model = "besag", graph = interaction_adjM_6x, scale.model = TRUE, group = cat_idx,
-                                control.group = list(model = "iid"), constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+                                control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
   #' Model 8x:  category random effects (IID), age x category random effects (IID),
@@ -335,7 +335,7 @@ if(include_interactions & include_temporal) {
   formula8x <- update(formula8,
                       . ~ . + f(area_idx_copy, model = "iid", group = sur_idx, replicate = cat_idx,
                                 control.group = list(model = "ar1", hyper = list(rho = list(prior = "pc.cor1", param = c(0, 0.75)))),
-                                constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+                                constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
   #' Model 9x: category random effects (IID), age x category random effects (IID),
@@ -345,7 +345,7 @@ if(include_interactions & include_temporal) {
     formula9,
     . ~ . + f(area_idx_copy, model = "besag", graph = adjM, scale.model = TRUE, group = sur_idx, replicate = cat_idx,
               control.group = list(model = "ar1", hyper = list(rho = list(prior = "pc.cor1", param = c(0, 0.75)))),
-              constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+              constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
   formulas <- append(formulas, list(formula5x, formula6x, formula8x, formula9x))

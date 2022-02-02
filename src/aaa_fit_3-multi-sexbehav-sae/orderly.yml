@@ -54,6 +54,7 @@ packages:
   - stringr
   - Matrix
   - stats
+  - multi.utils
 
 depends:
   aaa_scale_pop:

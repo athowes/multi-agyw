@@ -35,6 +35,7 @@ packages:
   - purrr
   - stringr
   - Matrix
+  - multi.utils
 
 resources:
   - everpaidforsex-byregion.csv

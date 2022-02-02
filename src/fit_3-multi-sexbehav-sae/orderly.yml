@@ -49,6 +49,7 @@ packages:
   - purrr
   - stringr
   - Matrix
+  - multi.utils
 
 depends:
   process_all-data:
