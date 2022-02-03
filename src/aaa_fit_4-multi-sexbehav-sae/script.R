@@ -183,48 +183,33 @@ res_fit <- lapply(res, "[[", 2)
 
 #' Add columns for local DIC, WAIC, CPO
 #' res_df has the 15-24 category too
-res_df <- bind_cols(
-  res_df,
-  lapply(res_fit,
-         function(fit) {
-           return(data.frame(
-             local_dic = fit$dic$local.dic,
-             local_waic = fit$waic$local.waic,
-             local_cpo = fit$cpo$cpo
-           ))
-         }
+ic <- lapply(res_fit, function(fit) {
+  data.frame(
+    local_dic = fit$dic$local.dic,
+    local_waic = fit$waic$local.waic,
+    local_cpo = fit$cpo$cpo
   ) %>%
-    bind_rows() %>%
-    #' Being safe here and explictly adding the NA entires for df_agg
-    bind_rows(data.frame(
-      local_dic = rep(NA, length(models) * nrow(df_agg)),
-      local_waic = rep(NA, length(models) * nrow(df_agg)),
-      local_cpo = rep(NA, length(models) * nrow(df_agg))
-    ))
-)
+    bind_rows(
+      setNames(as.data.frame(matrix(data = NA, nrow = nrow(df_agg), ncol = 3)), c("local_dic", "local_waic", "local_cpo"))
+    )
+}) %>%
+  bind_rows()
+
+res_df <- bind_cols(res_df, ic)
 
 #' Artefact: Model selection information criteria for multinomial models
 #' Some of the entries might be NA where there is missing data (INLA ignores these in its calculations)
-ic_df <- sapply(res_fit, function(fit) {
-  local_dic <- na.omit(fit$dic$local.dic)
-  local_waic <- na.omit(fit$waic$local.waic)
-  local_cpo <- na.omit(fit$cpo$cpo)
-
-  c("dic" = sum(local_dic),
-    "dic_se" = stats::sd(local_dic) * sqrt(length(local_dic)),
-    "waic" = sum(local_waic),
-    "waic_se" = stats::sd(local_waic) * sqrt(length(local_waic)),
-    "cpo" = sum(local_cpo),
-    "cpo_se" = stats::sd(local_cpo) * sqrt(length(local_cpo)))
-}) %>%
-  t() %>%
-  round() %>%
-  as.data.frame() %>%
-  mutate(
-    iso3 = iso3,
-    model = unlist(models),
-    .before = dic
-  )
+ic_df <- res_df %>%
+  group_by(model) %>%
+  summarise(
+    dic = sum(local_dic, na.rm = TRUE),
+    dic_se = stats::sd(local_dic, na.rm = TRUE) * sqrt(sum(!is.na(local_dic))),
+    waic = sum(local_waic, na.rm = TRUE),
+    waic_se = stats::sd(local_waic, na.rm = TRUE) * sqrt(sum(!is.na(local_waic))),
+    cpo = sum(local_cpo, na.rm = TRUE),
+    cpo_se = stats::sd(local_cpo, na.rm = TRUE) * sqrt(sum(!is.na(local_cpo)))
+  ) %>%
+  mutate(iso3 = iso3, .before = dic)
 
 write_csv(ic_df, "information-criteria.csv", na = "")
 
