@@ -2,7 +2,7 @@
 # orderly::orderly_develop_start("plot_available-surveys")
 # setwd("src/plot_available-surveys/")
 
-iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+iso3 <- multi.utils::priority_iso3()
 files <- paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.csv")
 
 df <- lapply(files, function(file) {

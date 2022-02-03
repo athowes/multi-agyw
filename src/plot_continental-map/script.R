@@ -22,7 +22,7 @@ df <- df %>%
   ) %>%
   st_as_sf()
 
-priority_iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+priority_iso3 <- multi.utils::priority_iso3()
 
 df_subnational <- df %>%
   filter(!(area_id %in% priority_iso3))

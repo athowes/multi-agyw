@@ -3,8 +3,7 @@
 # setwd("src/check_national-fsw-comparison/")
 
 analysis_level <- multi.utils::analysis_level()
-
-priority_countries <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+priority_iso3 <- multi.utils::priority_iso3()
 
 #' Read in the population size estimates (PSEs) for AYKP
 johnston <- read_excel("aykp_pse_july17.xlsx", sheet = "FSW", range = "A3:F187")
@@ -20,12 +19,12 @@ johnston <- johnston %>%
   left_join(country_codes) %>%
   pivot_longer(cols = contains("size"), names_prefix = "size_", names_to = "age_group", values_to = "est_total_johnston") %>%
   filter(region %in% c("ESA", "WCA"),
-         iso3 %in% priority_countries,
+         iso3 %in% priority_iso3,
          age_group %in% c("15-19", "20-24", "25-29")) %>%
   select(-region)
 
 #' Johnston is missing estimates for SWZ
-priority_countries[!(priority_countries %in% johnston$iso3)]
+priority_iso3[!(priority_iso3 %in% johnston$iso3)]
 
 #' Look at the Laga estimates
 laga <- read_csv("final_country_est_laga.csv")

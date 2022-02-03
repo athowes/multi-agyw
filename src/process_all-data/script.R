@@ -2,7 +2,7 @@
 # orderly::orderly_develop_start("process_all-data")
 # setwd("src/process_all-data")
 
-iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+iso3 <- multi.utils::priority_iso3()
 
 #' Merge all of the area datasets
 areas <- lapply(iso3, function(x) read_sf(paste0("depends/", tolower(x), "_areas.geojson")))

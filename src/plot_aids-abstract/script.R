@@ -46,7 +46,7 @@ df <- df %>%
   #' Add region column
   left_join(region_key, by = "iso3")
 
-priority_iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+priority_iso3 <- multi.utils::priority_iso3()
 
 df_subnational <- df %>%
   filter(!(area_id %in% c(priority_iso3)))
@@ -208,6 +208,3 @@ pdf("aids-abstract-B.pdf", h = 3.5, w = 6.25)
 plotB
 
 dev.off()
-
-
-

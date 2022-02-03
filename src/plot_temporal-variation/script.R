@@ -12,7 +12,7 @@ df <- df %>%
   )
 
 df_subnational <- df %>%
-  filter(!(area_id %in% c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")))
+  filter(!(area_id %in% multi.utils::priority_iso3()))
 
 df_national <- setdiff(df, df_subnational)
 

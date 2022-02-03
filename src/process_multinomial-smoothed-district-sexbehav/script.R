@@ -21,7 +21,7 @@ df <- df %>%
 write_csv(df, "best-4-multinomial-smoothed-district-sexbehav.csv", na = "")
 write_csv(update_naming(df), "human-best-4-multinomial-smoothed-district-sexbehav.csv", na = "")
 
-iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+iso3 <- multi.utils::priority_iso3()
 
 #' The three category estimates
 files <- paste0("depends/", tolower(iso3), "_3-multinomial-smoothed-district-sexbehav.csv")
