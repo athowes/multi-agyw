@@ -74,8 +74,6 @@ model_selector <- function(iso3, model) {
 #' 8-1/4 take away 1 inch margins gives 6-1/4
 pdf("variance-proportions.pdf", h = 3.5, w = 6.25)
 
-cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
-
 df %>%
   filter(model_selector(iso3, model)) %>%
   select(model, iso3, starts_with("percentage_variance")) %>%
@@ -92,7 +90,7 @@ df %>%
   ) %>%
   ggplot(aes(x = iso3, y = value, group = random_effect, fill = random_effect))+
     geom_bar(position = "fill", stat = "identity", alpha = 0.8, width = 0.85) +
-    scale_fill_manual(values = cbpalette[c(1, 2, 4, 3)]) +
+    scale_fill_manual(values = multi.utils::cbpalette()[c(1, 2, 4, 3)]) +
     theme_minimal() +
     scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
     labs(x = "", y = "Posterior variance", fill = "") +

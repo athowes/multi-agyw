@@ -96,12 +96,11 @@ dev.off()
 
 #' This is a potential plot to compare the raw and smoothed estimates using a stacked barplot
 #' I haven't got it to look great though so far, so not including
-# cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
 #
 # ggplot(df, aes(fill = indicator, y = estimate, x = fct_rev(area_name))) +
 #   geom_bar(position = "stack", stat = "identity") +
 #   facet_wrap(~source) +
-#   scale_fill_manual(values = cbpalette) +
+#   scale_fill_manual(values = multi.utils::cbpalette()) +
 #   scale_y_continuous(labels = scales::percent) +
 #   labs(x = "", y = "", fill = "Category") +
 #   coord_flip() +

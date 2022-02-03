@@ -107,7 +107,7 @@ rank_ic_plot <- function(df) {
       aes(ymin = rank_mean - rank_se, ymax = rank_mean + rank_se),
       stat = "identity", position = "dodge", alpha = 0.6, col = "black", width = 0
     ) +
-    scale_fill_manual(values = cbpalette) +
+    scale_fill_manual(values = multi.utils::cbpalette()) +
     labs(x = "Model ID", y = "Average rank", fill = "Metric") +
     guides(color = "none", alpha  = "none") +
     theme_minimal() +

@@ -88,8 +88,6 @@ df_subnational <- df_subnational %>%
     by = "iso3"
   )
 
-cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
-
 #' For the AIDS abstract, filter down to only 20-29 and cohabiting or non-regular partners
 
 plotB <- df_subnational %>%
@@ -114,7 +112,7 @@ plotB <- df_subnational %>%
     alpha = 0.9
   ) +
   facet_grid(age_group ~  indicator) +
-  scale_color_manual(values = cbpalette) +
+  scale_color_manual(values = multi.utils::cbpalette()) +
   scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
   coord_flip() +
   labs(

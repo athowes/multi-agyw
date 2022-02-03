@@ -91,8 +91,6 @@ df_subnational <- df_subnational %>%
 
 pdf("within-between-country-variation.pdf", h = 7, w = 6.25)
 
-cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
-
 df_subnational %>%
   mutate(
     iso3 = reorder(iso3, iso3_sort_order)
@@ -102,7 +100,7 @@ df_subnational %>%
     geom_point(data = df_national, aes(x = fct_rev(iso3), y = estimate_smoothed),
                shape = 21, size = 2, fill = "white", col = "black", alpha = 0.9) +
     facet_grid(age_group ~  indicator) +
-    scale_color_manual(values = cbpalette) +
+    scale_color_manual(values = multi.utils::cbpalette()) +
     scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
     coord_flip() +
     labs(x = "", y = "Proportion", col = "UN geoscheme region") +

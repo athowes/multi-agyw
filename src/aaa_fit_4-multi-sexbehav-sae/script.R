@@ -402,8 +402,6 @@ dev.off()
 
 pdf("stacked-proportions.pdf", h = 8.25, w = 11.75)
 
-cbpalette <- c("#56B4E9","#009E73", "#E69F00", "#F0E442","#0072B2","#D55E00","#CC79A7", "#999999")
-
 #' In this plot, it'd be great if there was some way to label that 1, 2, 3, ... refer to models,
 #' though I think it could reasonably be done in the description for the figure.
 #'
@@ -435,7 +433,7 @@ res_df %>%
       geom_bar(position = "fill", stat = "identity", alpha = 0.8) +
       facet_grid(age_group ~ area_name, space = "free_x", scales = "free_x", switch = "x") +
       labs(x = "District", y = "Proportion", fill = "Category") +
-      scale_color_manual(values = cbpalette) +
+      scale_color_manual(values = multi.utils::cbpalette()) +
       theme_minimal() +
       labs(title = paste0(paste(unique(x$survey_id), collapse = ", "), ": posterior category mean proportions by model")) +
       theme(

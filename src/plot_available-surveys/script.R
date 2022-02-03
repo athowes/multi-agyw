@@ -68,8 +68,6 @@ write_csv(df, "available-surveys.csv", na = "")
 
 pdf("available-surveys.pdf", h = 3.5, w = 6.25)
 
-cbpalette <- c("#56B4E9", "#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
-
 df %>%
   #' For now replace NA with a string NA
   mutate(
@@ -85,7 +83,7 @@ df %>%
   #' For no dodging
   geom_point(alpha = 0.8) +
   labs(x = "", y = "", col = "Type", shape = "Paid sex question?", size = "Sample size") +
-  scale_color_manual(values = cbpalette[c(3, 7, 1, 2)]) +
+  scale_color_manual(values = multi.utils::cbpalette()[c(3, 7, 1, 2)]) +
   scale_x_continuous(breaks = min(df$year):max(df$year)) +
   scale_size_discrete(range = c(2, 5)) +
   #' For shapes with holes in them
