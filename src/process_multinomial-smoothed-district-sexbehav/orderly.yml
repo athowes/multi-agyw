@@ -1,16 +1,23 @@
 script: script.R
 
+sources:
+  - functions.R
+
 artefacts:
   - data:
       description: Multinomial smoothed district estimate results (four categories)
       filenames:
         - every-4-multinomial-smoothed-district-sexbehav.csv
+        - human-every-4-multinomial-smoothed-district-sexbehav.csv
         - best-4-multinomial-smoothed-district-sexbehav.csv
+        - human-best-4-multinomial-smoothed-district-sexbehav.csv
   - data:
       description: Multinomial smoothed district estimate results (three categories)
       filenames:
         - every-3-multinomial-smoothed-district-sexbehav.csv
+        - human-every-3-multinomial-smoothed-district-sexbehav.csv
         - best-3-multinomial-smoothed-district-sexbehav.csv
+        - human-best-3-multinomial-smoothed-district-sexbehav.csv
 
 packages:
   - dplyr

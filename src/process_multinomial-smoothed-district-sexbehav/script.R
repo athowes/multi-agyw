@@ -9,6 +9,7 @@ files <- paste0("depends/", tolower(iso3), "_4-multinomial-smoothed-district-sex
 df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
 write_csv(df, "every-4-multinomial-smoothed-district-sexbehav.csv", na = "")
+write_csv(update_naming(df), "human-every-4-multinomial-smoothed-district-sexbehav.csv", na = "")
 
 #' Best four category models
 
@@ -18,6 +19,7 @@ df <- df %>%
   )
 
 write_csv(df, "best-4-multinomial-smoothed-district-sexbehav.csv", na = "")
+write_csv(update_naming(df), "human-best-4-multinomial-smoothed-district-sexbehav.csv", na = "")
 
 iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 
@@ -26,6 +28,7 @@ files <- paste0("depends/", tolower(iso3), "_3-multinomial-smoothed-district-sex
 df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
 write_csv(df, "every-3-multinomial-smoothed-district-sexbehav.csv", na = "")
+write_csv(update_naming(df), "human-every-3-multinomial-smoothed-district-sexbehav.csv", na = "")
 
 #' Best three category models
 
@@ -51,3 +54,4 @@ df <- df %>%
   )
 
 write_csv(df, "best-3-multinomial-smoothed-district-sexbehav.csv", na = "")
+write_csv(update_naming(df), "human-best-3-multinomial-smoothed-district-sexbehav.csv", na = "")
