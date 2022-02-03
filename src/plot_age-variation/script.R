@@ -2,24 +2,8 @@
 # orderly::orderly_develop_start("plot_age-variation")
 # setwd("src/plot_age-variation")
 
-df <- read_csv("depends/best-3-multinomial-smoothed-district-sexbehav.csv")
-
-df <- df %>%
-  filter(
-    age_group != "Y015_024"
-  ) %>%
-  mutate(
-    age_group = fct_recode(age_group,
-      "15-19" = "Y015_019",
-      "20-24" = "Y020_024",
-      "25-29" = "Y025_029"
-    ),
-    indicator = fct_recode(indicator,
-      "No sex (past 12 months)" = "nosex12m",
-      "Cohabiting partner" = "sexcohab",
-      "Nonregular partner(s)" = "sexnonregplus"
-    )
-  )
+df <- read_csv("depends/human-best-3-multinomial-smoothed-district-sexbehav.csv") %>%
+  filter(age_group != "15-24")
 
 df_age_country <- df %>%
   group_by(iso3, age_group, indicator) %>%

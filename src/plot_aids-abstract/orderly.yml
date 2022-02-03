@@ -25,7 +25,7 @@ depends:
   - process_multinomial-smoothed-district-sexbehav:
       id: latest
       use:
-        depends/best-3-multinomial-smoothed-district-sexbehav.csv: best-3-multinomial-smoothed-district-sexbehav.csv
+        depends/human-best-3-multinomial-smoothed-district-sexbehav.csv: human-best-3-multinomial-smoothed-district-sexbehav.csv
   - process_all-data:
       id: latest
       use:

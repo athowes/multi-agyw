@@ -2,7 +2,7 @@
 # orderly::orderly_develop_start("plot_aids-abstract")
 # setwd("src/plot_plot_aids-abstract")
 
-df <- read_csv("depends/best-3-multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/human-best-3-multinomial-smoothed-district-sexbehav.csv")
 
 #' The following section is copied mostly from plot_within-between-country-variation
 
@@ -28,33 +28,10 @@ region_key <- c(
   tibble::rownames_to_column("iso3")
 
 df <- df %>%
-  filter(age_group %in% c("Y020_024", "Y025_029")) %>%
+  filter(age_group %in% c("20-24", "25-29")) %>%
   mutate(
     #' Assuming the survey_id is structured as ISO2000DHS
     year = substr(survey_id, 4, 7),
-    #' Labels for plot
-    indicator =
-      fct_recode(indicator,
-                 "No sex (past 12 months)" = "nosex12m",
-                 "Cohabiting partner" = "sexcohab",
-                 "Nonregular partner(s)" = "sexnonregplus"
-      ),
-    iso3 =
-      fct_recode(iso3,
-                 "Botswana" = "BWA",
-                 "Cameroon" = "CMR",
-                 "Kenya" = "KEN",
-                 "Lesotho" = "LSO",
-                 "Mozambique" = "MOZ",
-                 "Malawi" = "MWI",
-                 "Namibia" = "NAM",
-                 "Eswatini" = "SWZ",
-                 "Tanzania" = "TZA",
-                 "Uganda" = "UGA",
-                 "South Africa" = "ZAF",
-                 "Zambia" = "ZMB",
-                 "Zimbabwe" = "ZWE"
-      )
   ) %>%
   #' Only the most recent survey in each year
   group_by(iso3) %>%

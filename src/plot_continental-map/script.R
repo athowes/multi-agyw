@@ -2,46 +2,15 @@
 # orderly::orderly_develop_start("plot_continental-map")
 # setwd("src/plot_continental-map")
 
-df <- read_csv("depends/best-3-multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/human-best-3-multinomial-smoothed-district-sexbehav.csv")
 areas <- readRDS("depends/areas.rds")
 national_areas <- readRDS("depends/national_areas.rds")
 
 df <- df %>%
-  filter(
-    age_group != "Y015_024",
-  ) %>%
+  filter(age_group != "15-24") %>%
   mutate(
     #' Assuming the survey_id is structured as ISO2000DHS
-    year = substr(survey_id, 4, 7),
-    #' Labels for plot
-    age_group =
-      fct_recode(age_group,
-        "15-19" = "Y015_019",
-        "20-24" = "Y020_024",
-        "25-29" = "Y025_029",
-      ),
-    indicator =
-      fct_recode(indicator,
-                 "No sex (past 12 months)" = "nosex12m",
-                 "Cohabiting partner" = "sexcohab",
-                 "Nonregular partner(s)" = "sexnonregplus"
-      ),
-    iso3 =
-      fct_recode(iso3,
-                 "Botswana" = "BWA",
-                 "Cameroon" = "CMR",
-                 "Kenya" = "KEN",
-                 "Lesotho" = "LSO",
-                 "Mozambique" = "MOZ",
-                 "Malawi" = "MWI",
-                 "Namibia" = "NAM",
-                 "Eswatini" = "SWZ",
-                 "Tanzania" = "TZA",
-                 "Uganda" = "UGA",
-                 "South Africa" = "ZAF",
-                 "Zambia" = "ZMB",
-                 "Zimbabwe" = "ZWE"
-      )
+    year = substr(survey_id, 4, 7)
   ) %>%
   #' Only the most recent survey in each year
   group_by(iso3) %>%
