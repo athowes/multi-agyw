@@ -2,29 +2,13 @@
 # orderly::orderly_develop_start("plot_temporal-variation")
 # setwd("src/plot_temporal-variation")
 
-df <- read_csv("depends/best-3-multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/human-best-3-multinomial-smoothed-district-sexbehav.csv")
 
 df <- df %>%
+  filter(age_group != "15-24") %>%
   mutate(
     #' Assuming the survey_id is structured as ISO2000DHS
-    year = substr(survey_id, 4, 7),
-    #' Labels for plot
-    age_group = fct_relevel(age_group, "Y015_024", after = 3) %>%
-      fct_recode(
-        "15-19" = "Y015_019",
-        "20-24" = "Y020_024",
-        "25-29" = "Y025_029",
-        "15-24" = "Y015_024"
-      ),
-    indicator =
-      fct_recode(indicator,
-        "No sex (past 12 months)" = "nosex12m",
-        "Cohabiting partner" = "sexcohab",
-        "Nonregular partner(s) or paid\n for sex (past 12 months)" = "sexnonregplus"
-      )
-  ) %>%
-  filter(
-    age_group != "15-24"
+    year = substr(survey_id, 4, 7)
   )
 
 df_subnational <- df %>%
