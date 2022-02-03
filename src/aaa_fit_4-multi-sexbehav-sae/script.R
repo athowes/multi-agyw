@@ -268,8 +268,9 @@ res_df %>%
   facet_grid(survey_id ~ model) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", col = "#802D5B") +
   labs(x = "Kish ESS", y = "Sum of Poisson intensities",
-       title = paste0(res_df$survey_id[1], ": are the sample sizes accurately recovered?"),
-       subtitle = "Dashed line is x = y. Upper limit is cut off at 100 greater than median")
+       title = paste0(substr(res_df$survey_id[1], 1, 3), ": are the sample sizes accurately recovered?"),
+       subtitle = "Dashed line is x = y. Upper limit is cut off at 100 greater than median") +
+  theme_minimal()
 
 dev.off()
 
@@ -322,13 +323,13 @@ res_plot %>%
             "25-29" = "Y025_029",
             "15-24" = "Y015_024"
           ),
-        source = fct_relevel(source, "raw", "smoothed", "aggregate") %>%
-          fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed", "Admin 1 aggregate" = "aggr")
+        source = fct_relevel(source, "raw", "smoothed") %>%
+          fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed")
       ) %>%
       ggplot(aes(fill = estimate)) +
-      geom_sf(size = 0.1) +
+      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
       scale_fill_viridis_c(option = "C", label = label_percent()) +
-      facet_grid(age_group ~ source) +
+      facet_grid(age_group ~ survey_id + source) +
       theme_minimal() +
       labs(
         title = paste0(substr(x$survey_id, 1, 3), ": ", x$indicator[1], " (", x$model[1], ")")
@@ -398,8 +399,10 @@ dev.off()
 
 #' Diagnostics for the local information criteria causing issues
 res_df <- res_df %>%
-  mutate(large_local_dic = ifelse(log10(abs(local_dic)) > 5, TRUE, FALSE),
-         large_local_waic = ifelse(log10(abs(local_waic)) > 5, TRUE, FALSE))
+  mutate(
+    large_local_dic = ifelse(log10(abs(local_dic)) > 5, TRUE, FALSE),
+    large_local_waic = ifelse(log10(abs(local_waic)) > 5, TRUE, FALSE)
+  )
 
 mean_x_eff_for_large_local_dic <- res_df %>%
   filter(large_local_dic == TRUE) %>%

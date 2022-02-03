@@ -422,7 +422,7 @@ res_df %>%
   facet_grid(survey_id ~ model) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", col = "#802D5B") +
   labs(x = "Kish ESS", y = "Sum of Poisson intensities",
-       title = paste0(res_df$survey_id[1], ": are the sample sizes accurately recovered?"),
+       title = paste0(substr(res_df$survey_id[1], 1, 3), ": are the sample sizes accurately recovered?"),
        subtitle = "Dashed line is x = y. Upper limit is cut off at 100 greater than median")
 
 dev.off()
@@ -477,11 +477,11 @@ res_plot %>%
           "25-29" = "Y025_029",
           "15-24" = "Y015_024"
         ),
-      source = fct_relevel(source, "raw", "smoothed", "aggregate") %>%
-        fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed", "Admin 1 aggregate" = "aggr")
+      source = fct_relevel(source, "raw", "smoothed") %>%
+        fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed")
     ) %>%
     ggplot(aes(fill = estimate)) +
-    geom_sf(size = 0.1) +
+    geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
     scale_fill_viridis_c(option = "C", label = label_percent()) +
     facet_grid(age_group ~ survey_id + source) +
     theme_minimal() +
