@@ -2,19 +2,7 @@
 # orderly::orderly_develop_start("process_katies-spreadsheet")
 # setwd("src/process_katies-spreadsheet")
 
-analysis_level <- c("BWA" = 2,
-                    "CMR" = 2,
-                    "KEN" = 2,
-                    "LSO" = 1,
-                    "MOZ" = 2,
-                    "MWI" = 5,
-                    "NAM" = 2,
-                    "SWZ" = 1,
-                    "TZA" = 3,
-                    "UGA" = 3,
-                    "ZAF" = 2,
-                    "ZMB" = 2,
-                    "ZWE" = 2)
+analysis_level <- multi.utils::analysis_level()
 
 df <- read_csv("depends/best-3-multinomial-smoothed-district-sexbehav.csv")
 areas <- readRDS("depends/areas.rds")
