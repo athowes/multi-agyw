@@ -137,34 +137,33 @@ stopifnot(
 
 #' # Gaussian Markov Kronecker random fields
 #'
-#' INLA's group argument allows specifying Gaussian Kronecker product random fields with
+#' R-INLA's group argument allows specifying Gaussian Kronecker product random fields with
 #' covariance given as the Kronecker product of between group and within group covariance matrices.
-#' See https://becarioprecario.bitbucket.io/inla-gitbook/ch-temporal.html#sec:spacetime.
-#' Within-group is controlled by f(), and between group is controlled by the control.group
-#' argument. Often the group argument is used to define spatiotemporal covariance structures.
-#' A spatiotemporal model is called separable when space-time covariance structure can be
-#' written as a Kronecker product of a spatial and temporal covariance.
+#' If A (m x n) and B (p x q) are matrices then their Kronecker product C (pm x qn) is the block matrix
 #'
+#' C = [a_11 B ... a_1n B]
+#'     [...    ...    ...]
+#'     [a_m1 B ... a_mn B]
+#'
+#' Within-group is controlled by f(), and between group is controlled by the control.group argument.
+#' See https://becarioprecario.bitbucket.io/inla-gitbook/ch-temporal.html#sec:spacetime.
+#'
+#' Often the group argument is used to define (separable) spatiotemporal covariance structures.
 #' Following e.g. Blangiardo and Cameletti (2015), let delta_it be spatio-temporal interaction
 #' random effects. Knorr-Held (2000) present four ways to specify the structure matrix R_delta,
 #' where in the following R_space and R_time refer to spatially or temporally structured random
 #' effects and I_space and I_time unstructured random effects:
-#' * Type I: I_space (x) I_time e.g. `f(spacetime, model = "iid")` or seems possible to use group option either way
-#' * Type II: I_space (x) R_time e.g. `f(space, model = "iid", group = time, control.group = list(model = "rw1"))`
-#' * Type III: R_space (x) I_time e.g. `f(time, model = "iid", group = space, control.group = list(model = "besag"))`
-#' * Type IV: R_space (x) R_time e.g. `f(space, model = "besag", group = time, control.group = list(model = "rw1"))`
+#' * Type I: I_space (x) I_time `f(spacetime, model = "iid")`
+#' * Type II: I_space (x) R_time `f(space, model = "iid", group = time, control.group = list(model = "rw1"))`
+#' * Type III: R_space (x) I_time `f(time, model = "iid", group = space, control.group = list(model = "besag"))`
+#' * Type IV: R_space (x) R_time `f(space, model = "besag", group = time, control.group = list(model = "rw1"))`
 #'
-#' Rather than using the group option to define the spatiotemporal covariance, we use it here to define
-#' temporal random effects (indexed by the survey identifier, survey_idx) for each of the multinomial
-#' categories. In this case, setting `f(sur_idx)` with `group = cat_idx` gives the grouped random effects:
-#'
-#' [e(cat 1, time 1), e(cat 1, time 2), e(cat 1, time 3)]
-#' [e(cat 2, time 1), e(cat 2, time 2), e(cat 2, time 3)]
-#' [e(cat 3, time 1), e(cat 3, time 2), e(cat 3, time 3)]
+#' We use the group option to define random effects for each of the multinomial categories. For example,
+#' setting `f(sur_idx)` with `group = cat_idx` gives the grouped survey random effects for each category.
 #'
 #' # Additional constraints
 #'
-#' The interaction random effects should be constrained such that the sum over the non-category index is zero.
+#' Interaction random effects should be constrained such that the sum over the non-category index is zero.
 #' For example, in each category the sum over ages of \alpha_{ak} should be zero:
 #'
 #' \sum_a \alpha_{ak} = 0 \forall k = 1, ..., K
@@ -181,22 +180,21 @@ stopifnot(
 #' of a particular category. This isn't the desired effect: increasing the likelihood of any of the categories
 #' relative to the others should be left to the category random effects \beta_k.
 #'
-#' Additional linear constraints may be enforced on random effects in `R-INLA` using
-#'
-#' `extraconstr = list(A = A, e = e)`
-#'
+#' Additional linear constraints may be enforced on random effects in `R-INLA` using `extraconstr = list(A = A, e = e)`
 #' See https://becarioprecario.bitbucket.io/inla-gitbook/ch-INLAfeatures.html#sec:constraints.
 #' `A` should be a matrix which has `ncol(A) = length(u)` and `nrow(A)` equal to the number of constraints required.
 #' `e` should have length equal to the number of constraints required.
-
-#' For some random effects, if the group structure is correctly specified, `extraconstr` are not needed, and
-#' the default `constr = TRUE` can be sufficient.
 
 #' Model 1: category random effects (IID), age x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = multi.utils::tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(age_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+
+#' `formula2` below specifies the space x category random effects to have structure matrix given as
+#' the Kronecker product R_{space x category} = I_{space} (x) I_{cat} = I. An alternative is to define
+#' four separate structure matrices. A difference between these approaches is that the former only
+#' involves a single precision parameter whereas the later includes many.
 
 #' Model 2: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (IID)

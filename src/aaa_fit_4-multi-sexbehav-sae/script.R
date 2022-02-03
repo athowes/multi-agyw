@@ -148,18 +148,6 @@ formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) 
   f(age_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
-#' Kronecker products:
-#' If A (m x n) and B (p x q) are matrices then their Kronecker product C (pm x qn) is the block matrix
-#'
-#' C = [a_11 B ... a_1n B]
-#'     [...    ...    ...]
-#'     [a_m1 B ... a_mn B]
-#'
-#' `formula2` below specifies the space x category random effects to have structure matrix given as
-#' the Kronecker product R_{space x category} = I_{space} (x) I_{cat} = I. An alternative is to define
-#' four separate structure matrices. A difference between these approaches is that the former only
-#' involves a single precision parameter whereas the later includes many.
-
 #' Model 2: category random effects (IID), age x category random effects (IID),
 #' space x category random effects (IID)
 formula2 <- update(formula1,
