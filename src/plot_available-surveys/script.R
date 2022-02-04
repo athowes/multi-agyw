@@ -78,29 +78,25 @@ df %>%
     )
   ) %>%
   ggplot(aes(x = year, y = fct_rev(country), col = type, size = sample_size_factor, shape = giftsvar)) +
-  #' For dodging
-  # geom_point(position = ggstance::position_dodgev(height = 0.75)) +
-  #' For no dodging
-  geom_point(alpha = 0.8) +
-  labs(x = "", y = "", col = "Type", shape = "Paid sex question?", size = "Sample size") +
+  geom_point(alpha = 0.7) +
+  labs(x = "", y = "", col = "Type", shape = "Does the survey include\na specific paid sex question?", size = "Sample size") +
   scale_color_manual(values = multi.utils::cbpalette()[c(3, 7, 1, 2)]) +
   scale_x_continuous(breaks = min(df$year):max(df$year)) +
   scale_size_discrete(range = c(2, 5)) +
-  #' For shapes with holes in them
-  # scale_shape_manual(values = c(2, 1)) +
-  #' For shapes without holes
   scale_shape_manual(values = c(17, 19)) +
   guides(
-    size = guide_legend(ncol = 2, override.aes = list(shape = 19)),
+    size = guide_legend(ncol = 2, override.aes = list(shape = 19, col = "darkgrey")),
     colour = guide_legend(ncol = 2, override.aes = list(size = 3)),
-    shape = guide_legend(ncol = 2, override.aes = list(size = 3))
+    shape = guide_legend(ncol = 2, override.aes = list(size = 3, col = "darkgrey"))
   ) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
     panel.grid.minor = element_blank(),
     plot.title = element_text(face = "bold"),
-    legend.box = "vertical"
+    legend.box = "vertical",
+    legend.title = element_text(size = 9),
+    legend.text = element_text(size = 9)
   )
 
 dev.off()
