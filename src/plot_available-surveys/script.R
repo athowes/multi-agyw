@@ -128,3 +128,20 @@ df %>%
 df %>%
   pull(sample_size) %>%
   sum()
+
+#' What was the raw FSW proportion in surveys with and without a specific paid sex question?
+giftsvar_surveys <- df %>%
+  filter(giftsvar == 1) %>%
+  pull(survey_id)
+
+lapply(files, function(file) {
+  read_csv(file)
+}) %>%
+  bind_rows() %>%
+  mutate(giftsvar_survey = survey_id %in% giftsvar_surveys) %>%
+  group_by(giftsvar_survey) %>%
+  filter(indicator == "sexpaid12m") %>%
+  summarise(
+    mean = 100 * mean(estimate),
+    median = 100 * median(estimate)
+  )
