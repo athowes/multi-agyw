@@ -22,8 +22,7 @@ giftsvar_surveys <- available_surveys %>%
   filter(giftsvar == 1) %>%
   pull(survey_id)
 
-ind <- ind %>%
-  filter(survey_id %in% giftsvar_surveys)
+ind <- filter(ind, survey_id %in% giftsvar_surveys)
 
 #' There are this many surveys which are suitable
 length(unique(ind$survey_id))
@@ -129,12 +128,12 @@ df <- df %>%
 df <- df %>%
   left_join(
     cfsw_ever %>%
-      select(country = Country, csfwever = EverPaidSex),
+      select(country = Country, cfswever = EverPaidSex),
     by = "country"
   ) %>%
   left_join(
     cfsw_recent %>%
-      select(country = Country, csfwrecent = PaidSexLast12Months),
+      select(country = Country, cfswrecent = PaidSexLast12Months),
     by = "country"
   )
 
@@ -145,12 +144,11 @@ df <- mutate(df, survey_id = replace_na(survey_id, "Missing"))
 #'  * age (age_idx)
 #'  * survey (sur_idx)
 #'  * observation (obs_idx)
-df <- df %>%
-  mutate(
+df <- mutate(df,
     #' Doing this because want Y015_024 to have ID 4 rather than 2 as it would be otherwise
     age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
-    sur_idx = to_int(survey_id),
-    obs_idx = to_int(interaction(age_idx, area_idx, sur_idx)),
+    sur_idx = multi.utils::to_int(survey_id),
+    obs_idx = multi.utils::to_int(interaction(age_idx, area_idx, sur_idx)),
   )
 
 #' The proportion of (sexnonreg + sexpaid12m) who are sexpaid12m should have:
@@ -186,7 +184,7 @@ dev.off()
 
 #' Check for larger observations than sample size
 #' This shouldn't trigger in normal cases!
-if(sum(df$n_eff_kish < df$x_eff) > 0) {
+if(sum(df$n_eff_kish < df$x_eff, na.rm = TRUE) > 0) {
   message(
     paste0(
       "There are ", sum(df$n_eff_kish < df$x_eff), " rows when x_eff > n_eff_kish!",
@@ -196,8 +194,7 @@ if(sum(df$n_eff_kish < df$x_eff) > 0) {
     )
   )
 
-  df <- df %>%
-    mutate(
+  df <- mutate(df,
       x_eff = ifelse(n_eff_kish < x_eff, 0, x_eff),
       n_eff_kish = ifelse(n_eff_kish < x_eff, 0, n_eff_kish)
     )
@@ -205,15 +202,13 @@ if(sum(df$n_eff_kish < df$x_eff) > 0) {
 
 #' x_eff = 0 and n_eff_kish = 0 is causing INLA to crash (could be investigated further)
 #' Take the approach of setting both to NA in this case (no information either way)
-df <- df %>%
-  mutate(
+df <- mutate(df,
     x_eff = ifelse(n_eff_kish == 0 & x_eff == 0, NA, x_eff),
     n_eff_kish = ifelse(n_eff_kish == 0 & x_eff == 0, NA, n_eff_kish)
   )
 
 #' The rows of df to be included in the model
-df_model <- df %>%
-  filter(age_group != "Y015_024", !(area_id %in% toupper(iso3)))
+df_model <- filter(df, age_group != "Y015_024", !(area_id %in% toupper(iso3)))
 
 pdf("covariate-correlation-check.pdf", h = 5, w = 6.25)
 
@@ -228,22 +223,40 @@ ggplot(df_model, aes(x = csfwrecent, y = csfwever)) +
 
 dev.off()
 
-#' Model 1: intercept, covariates, age random effects (IID)
-formula1 <- x_eff ~ 1 + csfwever + csfwrecent +
-  f(age_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+#' Model 1: intercept, age random effects (IID)
+formula1 <- x_eff ~ 1 +
+  f(age_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
-#' Model 2: intercept, covariates, age random effects (IID), space random effects (IID)
-formula2 <- x_eff ~ 1 + csfwever + csfwrecent +
-  f(age_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-  f(area_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+#' Model 2: intercept, age random effects (IID), space random effects (IID)
+formula2 <- update(formula1,
+  . ~ . + f(area_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
 
-#' Model 3: intercept, covariates, age random effects (IID), space random effects (Besag)
-formula3 <- x_eff ~ 1 + csfwever + csfwrecent +
-  f(age_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-  f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+#' Model 3: intercept, age random effects (IID), space random effects (Besag)
+formula3 <- update(formula1,
+  . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
 
-formulas <- list(formula1, formula2, formula3)
-models <- list("Model 1", "Model 2", "Model 3")
+#' Model 4: Model 1, cfswever
+formula4 <- update(formula1, ". ~ . + cfswever")
+
+#' Model 5: Model 2, cfswever
+formula5 <- update(formula2, ". ~ . + cfswever")
+
+#' Model 6: Model 3, cfswever
+formula6 <- update(formula3, ". ~ . + cfswever")
+
+#' Model 7: Model 1, cfswrecent
+formula7 <- update(formula1, ". ~ . + cfswrecent")
+
+#' Model 8: Model 2, cfswrecent
+formula8 <- update(formula2, ". ~ . + cfswrecent")
+
+#' Model 9: Model 3, cfswrecent
+formula9 <- update(formula3, ". ~ . + cfswrecent")
+
+formulas <- parse(text = paste0("list(", paste0("formula", 1:9, collapse = ", "), ")")) %>% eval()
+models <- paste0("Model ", 1:9) %>% as.list()
 
 #' Fit the models
 res <- purrr::pmap(
@@ -307,8 +320,8 @@ res_plot %>%
             "25-29" = "Y025_029",
             "15-24" = "Y015_024"
           ),
-        source = fct_relevel(source, "raw", "smoothed", "aggregate") %>%
-          fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed", "Admin 1 aggregate" = "aggr")
+        source = fct_relevel(source, "raw", "smoothed") %>%
+          fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed")
       ) %>%
       ggplot(aes(fill = estimate)) +
       geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
@@ -354,10 +367,10 @@ ic_df <- sapply(res_fit, function(fit) {
 write_csv(ic_df, "information-criteria.csv", na = "")
 
 #' Calculate average FSW proportion (temporarily useful for changing the RR for sexnonregplus)
-#' Approximately 9%
+#' Approximately 10%
 res_df %>%
   filter(
-    model == "Model 2",
+    model == "Model 5",
     area_level != 1
   ) %>%
   summarise(
