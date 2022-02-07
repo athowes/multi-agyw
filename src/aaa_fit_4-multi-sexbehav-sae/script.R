@@ -277,7 +277,7 @@ dev.off()
 #' Artefact: Smoothed district indicator estimates for multinomial models
 res_df <- res_df %>%
   #' Remove superfluous INLA indicator columns
-  select(-area_idx, -cat_idx, -age_idx, -obs_idx, -age_cat_idx, -area_cat_idx) %>%
+  select(-ends_with("idx"), -ends_with("idx_copy")) %>%
   #' Make it clear which of the estimates are raw and which are from the model (smoothed)
   rename(
     estimate_raw = estimate,
