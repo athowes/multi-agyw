@@ -17,3 +17,6 @@ depends/
 backup/
 metadata/
 README.html
+
+src/fit_fsw-logit-sae/everpaidforsex-bycountry.csv
+src/fit_fsw-logit-sae/recentpaidforsex-bycountry.csv
