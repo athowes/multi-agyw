@@ -2,6 +2,10 @@
 # orderly::orderly_develop_start("process_variance-proportions")
 # setwd("src/process_variance-proportions")
 
+#' This type of analysis falls under "Variance-based sensitivity analysis"
+#' See also "Sobol method" or "Sobol indices"
+#' Perhaps I should look into other interpretability measures e.g. Shapley values
+
 iso3 <- multi.utils::priority_iso3()
 
 #' The single survey estimates
