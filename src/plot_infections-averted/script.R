@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("analyze_infections-averted")
-# setwd("src/analyze_infections-averted")
+# orderly::orderly_develop_start("plot_infections-averted")
+# setwd("src/plot_infections-averted")
 
 df <- read_csv("depends/incidence-district-sexbehav.csv")
 
@@ -91,7 +91,7 @@ ggplot(inc, aes(x = population_cumulative, y = infections_averted_cumulative_imp
   scale_x_continuous(labels = label_number(scale = 1e-6)) +
   labs(
     x = "Total population reached (10E6)",
-    y = "Improvement in total infections reached (10E3)",
+    y = "Additional infections reached (10E3)",
     title = "Population stratification targetting comparison",
     col = "Stratification"
   )
@@ -162,7 +162,7 @@ ggplot(inc_country, aes(x = population_cumulative, y = infections_averted_cumula
   scale_x_continuous(labels = label_number(scale = 1e-6)) +
   labs(
     x = "Total population reached (10E6)",
-    y = "Improvement in total infections reached (10E3)",
+    y = "Additional infections reached (10E3)",
     title = "Population stratification targetting comparison",
     col = "Stratification"
   ) +
