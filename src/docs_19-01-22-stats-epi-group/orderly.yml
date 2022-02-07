@@ -4,10 +4,10 @@ artefacts:
   - data:
       description: Slides
       filenames:
-        - 19-01-22-seth-sam.pdf
+        - 19-01-22-stats-epi-group.pdf
 
 resources:
-  - 19-01-22-seth-sam.Rmd
+  - 19-01-22-stats-epi-group.Rmd
   - preamble.tex
   - citations.bib
 
