@@ -2,42 +2,16 @@
 # orderly::orderly_develop_start("fit_3-multi-sexbehav-sae", parameters = list(include_interactions = TRUE))
 # setwd("src/fit_3-multi-sexbehav-sae")
 
-analysis_level <- c("BWA" = 2,
-                    "CMR" = 2,
-                    "KEN" = 2,
-                    "LSO" = 1,
-                    "MOZ" = 2,
-                    "MWI" = 5,
-                    "NAM" = 2,
-                    "SWZ" = 1,
-                    "TZA" = 3,
-                    "UGA" = 3,
-                    "ZAF" = 2,
-                    "ZMB" = 2,
-                    "ZWE" = 2)
-
-admin1_level <- c("BWA" = 1,
-                  "CMR" = 1,
-                  "KEN" = 1,
-                  "LSO" = 1,
-                  "MOZ" = 1,
-                  "MWI" = 1,
-                  "NAM" = 1,
-                  "SWZ" = 1,
-                  "TZA" = 2,
-                  "UGA" = 1,
-                  "ZAF" = 1,
-                  "ZMB" = 1,
-                  "ZWE" = 1)
-
-iso3 <- names(analysis_level)
+analysis_level <- multi.utils::analysis_level()
+admin1_level <- multi.utils::admin1_level()
+iso3 <- multi.utils::priority_iso3()
 
 areas <- readRDS("depends/areas.rds")
 ind <- read_csv("depends/survey_indicators_sexbehav.csv")
 pop <- read_csv("depends/interpolated_population.csv")
 
 #' Set ind$estimate > 1 to 1, as well as ind$estimate < 0 to 0
-ind$estimate <- constrain_interval(ind$estimate, lower = 0, upper = 1)
+ind$estimate <- multi.utils::constrain_interval(ind$estimate, lower = 0, upper = 1)
 
 areas <- areas %>%
   select(
@@ -115,10 +89,6 @@ df <- df %>%
 #' Merge age-stratified population total sizes into df
 #' This is required for aggregating the estimates e.g. using 15-19 and 20-24 to create 15-24
 df <- df %>%
-  mutate(
-    #' Assuming the survey_id is structured as ISO2000DHS
-    year = as.numeric(substr(survey_id, 4, 7))
-  ) %>%
   left_join(
     pop %>%
       filter(sex == "female") %>%
@@ -136,17 +106,16 @@ df <- df %>%
 #'  * age x category (age_cat_idx)
 #'  * space x category (area_cat_idx)
 #'  * space x year (area_year_idx)
-df <- df %>%
-  mutate(
-    year_idx = to_int(year),
+df <- mutate(df,
+    year_idx = multi.utils::to_int(year),
     #' Doing this because want Y015_024 to have ID 4 rather than 2 as it would be otherwise
     age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
-    cat_idx = to_int(indicator),
-    year_cat_idx = to_int(interaction(year_idx, cat_idx)),
-    age_cat_idx = to_int(interaction(age_idx, cat_idx)),
-    area_cat_idx = to_int(interaction(area_idx, cat_idx)),
-    area_year_idx = to_int(interaction(area_idx, year_idx)),
-    obs_idx = to_int(interaction(age_idx, area_idx, year_idx)),
+    cat_idx = multi.utils::to_int(indicator),
+    year_cat_idx = multi.utils::to_int(interaction(year_idx, cat_idx)),
+    age_cat_idx = multi.utils::to_int(interaction(age_idx, cat_idx)),
+    area_cat_idx = multi.utils::to_int(interaction(area_idx, cat_idx)),
+    area_year_idx = multi.utils::to_int(interaction(area_idx, year_idx)),
+    obs_idx = multi.utils::to_int(interaction(age_idx, area_idx, year_idx)),
     area_idx_copy = area_idx,
     year_idx_copy = year_idx
   ) %>%
@@ -154,21 +123,14 @@ df <- df %>%
 
 #' Data for the model (df) doesn't include the aggregates (since this is using data twice)
 #' So we save them off separately
-df_agg <- df %>%
-  filter(age_group == "Y015_024" | area_id %in% iso3)
+df_agg <- filter(df, age_group == "Y015_024" | area_id %in% iso3)
 
 #' The rows of df to be included in the model
 #' Note that setdiff behaving strangely here
-df_model <- df %>%
-  filter(
-    age_group != "Y015_024",
-    !(area_id %in% iso3)
-  )
+df_model <- filter(df, age_group != "Y015_024", !(area_id %in% iso3))
 
 #' Check that the rows in the full is a sum of that in the model and aggregate
-stopifnot(
-  nrow(df) == nrow(df_model) + nrow(df_agg)
-)
+stopifnot(nrow(df) == nrow(df_model) + nrow(df_agg))
 
 #' Model 1:
 #' * category random effects (IID)
@@ -183,7 +145,6 @@ formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) 
 #' Number of Monte Carlo samples
 S <- 100
 
-models <- "Model 1"
 res <- multinomial_model(formula1, model_name = "Model 1", S = S)
 
 res <- list(res)
