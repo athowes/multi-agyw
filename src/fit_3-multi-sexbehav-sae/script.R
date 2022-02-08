@@ -99,19 +99,23 @@ df <- df %>%
 
 #' Add indicies for:
 #'  * year (year_idx)
+#'  * country (iso3_idx)
 #'  * age (age_idx)
-#'  * category (cat_idx)s
+#'  * category (cat_idx)
 #'  * observation (obs_idx)
 #'  * year x category (year_cat_idx)
+#'  * country x category (iso3_cat_idx)
 #'  * age x category (age_cat_idx)
 #'  * space x category (area_cat_idx)
 #'  * space x year (area_year_idx)
 df <- mutate(df,
     year_idx = multi.utils::to_int(year),
+    iso3_idx = multi.utils::to_int(substr(area_id, 1, 3)),
     #' Doing this because want Y015_024 to have ID 4 rather than 2 as it would be otherwise
     age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
     cat_idx = multi.utils::to_int(indicator),
     year_cat_idx = multi.utils::to_int(interaction(year_idx, cat_idx)),
+    iso3_cat_idx = multi.utils::to_int(interaction(iso3_idx, cat_idx)),
     age_cat_idx = multi.utils::to_int(interaction(age_idx, cat_idx)),
     area_cat_idx = multi.utils::to_int(interaction(area_idx, cat_idx)),
     area_year_idx = multi.utils::to_int(interaction(area_idx, year_idx)),
@@ -138,17 +142,42 @@ stopifnot(nrow(df) == nrow(df_model) + nrow(df_agg))
 formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(age_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-    constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+    constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+
+#' Model 2:
+#' * Model 1
+#' * space x category random effects (IID)
+formula2 <- update(formula1,
+  . ~ . + f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
+
+#' Model 3:
+#' * Model 1
+#' * space x category random effects (Besag)
+formula3 <- update(formula1,
+  . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
+            control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
+
+#' Same structure as aaa_fit_3-multi-sexbehav-sae
+#' But year_idx rather than sur_idx
+#' Add iso3_idx (IID)
+
+formulas <- list(formula1, formula2, formula3)
+models <- list("Model 1", "Model 2", "Model 3")
 
 #' Fit the models
 
 #' Number of Monte Carlo samples
 S <- 100
-formulas <- list(formula1)
-models <- list("Model 1")
+
+# res <- purrr::pmap(
+#   list(formula = formulas, model_name = models, S = S),
+#   multinomial_model
+# )
 
 res <- multinomial_model(formula1, model_name = "Model 1", S = S)
-
 res <- list(res)
 
 #' Extract the df and the full fitted models
@@ -216,3 +245,22 @@ variance_df <- map(res_fit, function(fit)
   )
 
 write_csv(variance_df, "variance-proportions.csv", na = "")
+
+#' Artefact: Smoothed district indicator estimates for multinomial models
+res_df <- res_df %>%
+  #' Remove superfluous INLA indicator columns
+  select(-ends_with("idx"), -ends_with("idx_copy")) %>%
+  #' Make it clear which of the estimates are raw and which are from the model (smoothed)
+  rename(
+    estimate_raw = estimate,
+    ci_lower_raw = ci_lower,
+    ci_upper_raw = ci_upper,
+    estimate_smoothed = prob_mean,
+    median_smoothed = prob_median,
+    ci_lower_smoothed = prob_lower,
+    ci_upper_smoothed = prob_upper
+  ) %>%
+  mutate(iso3 = iso3, .before = indicator) %>%
+  relocate(model, .before = estimate_smoothed)
+
+write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
