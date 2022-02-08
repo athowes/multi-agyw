@@ -8,10 +8,8 @@ national_areas <- readRDS("depends/national_areas.rds")
 
 df <- df %>%
   filter(age_group != "15-24") %>%
-  mutate(
-    #' Assuming the survey_id is structured as ISO2000DHS
-    year = substr(survey_id, 4, 7)
-  ) %>%
+  #' Assuming the survey_id is structured as ISO2000DHS
+  mutate(year = substr(survey_id, 4, 7)) %>%
   #' Only the most recent survey in each year
   group_by(iso3) %>%
   filter(year == max(year)) %>%
@@ -24,26 +22,21 @@ df <- df %>%
 
 priority_iso3 <- multi.utils::priority_iso3()
 
-df_subnational <- df %>%
-  filter(!(area_id %in% priority_iso3))
-
+df_subnational <- filter(df, !(area_id %in% priority_iso3))
 df_national <- setdiff(df, df_subnational)
 
 #' Using these just to show missing data for the countries we don't consider in the analysis
 national_areas <- national_areas %>%
-  filter(
-    !(GID_0 %in% priority_iso3),
-    #' These are just chosen manually by looking at countries between CMR and the rest on a map
-    GID_0 %in% c("AGO", "DRC", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
+  #' These are just chosen manually by looking at countries between CMR and the rest on a map
+  filter(GID_0 %in% c("AGO", "DRC", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
   ) %>%
-  rename(
-    iso3 = NAME_0, #' Weird but OK
-  ) %>%
+  #' Weird but OK
+  rename(iso3 = NAME_0) %>%
   select(-GID_0)
 
 df_national_areas <- crossing(
-  indicator = as.factor(c("No sex (past 12 months)" , "Cohabiting partner", "Nonregular partner(s)")),
-  age_group = c("15-19", "20-24", "25-29"),
+  indicator = unique(df_national$indicator),
+  age_group = unique(df_national$age_group),
   iso3 = unique(national_areas$iso3)
 ) %>%
   left_join(national_areas, by = "iso3")
@@ -56,7 +49,7 @@ df_subnational <- bind_rows(
 pdf("continental-map.pdf", h = 8, w = 6.25)
 
 ggplot(df_subnational, aes(fill = estimate_smoothed)) +
-  geom_sf(size = 0.1) +
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
   scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
   facet_grid(age_group ~ indicator) +
   labs(fill = "Estimated proportion") +
@@ -68,7 +61,9 @@ ggplot(df_subnational, aes(fill = estimate_smoothed)) +
     strip.text = element_text(face = "bold"),
     plot.title = element_text(face = "bold"),
     legend.position = "bottom",
-    legend.key.width = unit(4, "lines")
+    legend.key.width = unit(4, "lines"),
+    legend.title = element_text(size = 9),
+    legend.text = element_text(size = 9)
   )
 
 dev.off()
