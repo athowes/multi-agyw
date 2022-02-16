@@ -10,6 +10,10 @@ resources:
   - 30-11-21-coverage.Rmd
   - preamble.tex
   - citations.bib
+  - twitter1.png
+  - twitter2.png
+  - twitter_new1.png
+  - twitter_new2.png
 
 packages:
   - rmarkdown
