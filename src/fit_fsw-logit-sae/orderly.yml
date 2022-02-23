@@ -38,8 +38,8 @@ packages:
   - multi.utils
 
 resources:
-  - everpaidforsex-byregion.csv
-  - recentpaidforsex-byregion.csv
+  - everpaidforsex-bycountry.csv
+  - recentpaidforsex-bycountry.csv
 
 depends:
   plot_available-surveys:

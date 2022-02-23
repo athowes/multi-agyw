@@ -79,7 +79,8 @@ areas_model <- areas %>%
 pdf("areas-check.pdf", h = 5, w = 8)
 
 ggplot(areas_model, aes(fill = iso3)) +
-  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25))
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+  theme_minimal()
 
 dev.off()
 
@@ -178,7 +179,8 @@ df %>%
   mutate(est = x_eff / n_eff_kish) %>%
   st_as_sf() %>%
   ggplot(aes(fill = est)) +
-  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25))
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+  theme_minimal()
 
 dev.off()
 
@@ -212,13 +214,13 @@ df_model <- filter(df, age_group != "Y015_024", !(area_id %in% toupper(iso3)))
 
 pdf("covariate-correlation-check.pdf", h = 5, w = 6.25)
 
-ggplot(df_model, aes(x = csfwrecent)) +
+ggplot(df_model, aes(x = cfswrecent)) +
   geom_histogram()
 
-ggplot(df_model, aes(x = csfwever)) +
+ggplot(df_model, aes(x = cfswever)) +
   geom_histogram()
 
-ggplot(df_model, aes(x = csfwrecent, y = csfwever)) +
+ggplot(df_model, aes(x = cfswrecent, y = cfswever)) +
   geom_point()
 
 dev.off()
@@ -270,7 +272,7 @@ res_fit <- lapply(res, "[[", 2)
 res_samples <- lapply(res, "[[", 3)
 
 #' Artefact: Samples from all models
-saveRDS(res_samples, "fsw-logit-smoothed-district-sexbehav.rds")
+saveRDS(res_samples, "fsw-logit-smoothed-district-sexbehav-samples.rds")
 
 #' Artefact: Smoothed district indicator estimates for logistic regression models
 res_df <- res_df %>%
@@ -363,6 +365,14 @@ ic_df <- sapply(res_fit, function(fit) {
     model = unlist(models),
     .before = dic
   )
+
+#' Which model has the lowest DIC?
+which.min(ic_df$dic)
+
+#' And WAIC?
+which.min(ic_df$waic)
+
+#' Both Model 5 at the moment!
 
 write_csv(ic_df, "information-criteria.csv", na = "")
 
