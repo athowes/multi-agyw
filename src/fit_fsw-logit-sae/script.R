@@ -373,6 +373,7 @@ which.min(ic_df$dic)
 which.min(ic_df$waic)
 
 #' Both Model 5 at the moment!
+write_csv(filter(res_df, model == "Model 5"), "best-fsw-logit-smoothed-district-sexbehav.csv", na = "")
 
 write_csv(ic_df, "information-criteria.csv", na = "")
 
