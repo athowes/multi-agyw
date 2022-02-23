@@ -97,7 +97,7 @@ df_subnational %>%
     scale_color_manual(values = multi.utils::cbpalette()) +
     scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
     coord_flip() +
-    labs(x = "", y = "Proportion", col = "UN geoscheme region") +
+    labs(x = "", y = "Proportion", col = "Regions of sub-Saharan Africa") +
     guides(colour = guide_legend(override.aes = list(alpha = 0.9, size = 5))) +
     theme_minimal() +
     theme(
