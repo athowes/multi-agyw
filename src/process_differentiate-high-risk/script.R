@@ -1,0 +1,45 @@
+#' Uncomment and run the two line below to resume development of this script
+# orderly::orderly_develop_start("process_differentiate-high-risk")
+# setwd("src/process_differentiate-high-risk")
+
+df <- read_csv("depends/best-3-multinomial-smoothed-district-sexbehav.csv")
+
+#' Just the most recent surveys (this isn't a good solution)
+prop <- read_csv("depends/best-fsw-logit-smoothed-district-sexbehav.csv") %>%
+  filter(!(survey_id %in% c("MWI2015DHS", "ZMB2016PHIA", "ZWE2015DHS")))
+
+z <- df %>%
+  filter(indicator == "sexnonregplus") %>%
+  left_join(
+    prop %>%
+      select(age_group, area_id, estimate_smoothed_prop = estimate_smoothed),
+    by = c("age_group", "area_id")
+  )
+
+df_sexnonreg <- z %>%
+  mutate(
+    inicator = "sexnonreg",
+    estimate_smoothed = estimate_smoothed * (1 - estimate_smoothed_prop)
+    ) %>%
+  select(-estimate_smoothed_prop)
+
+df_sexpaid12m <- z %>%
+  mutate(
+    inicator = "sexpaid12m",
+    estimate_smoothed = estimate_smoothed * estimate_smoothed_prop
+  ) %>%
+  select(-estimate_smoothed_prop)
+
+#' Check that each of the categories have the same number of rows
+stopifnot(nrow(df_sexnonreg) == nrow(df_sexpaid12m))
+stopifnot(nrow(df_sexpaid12m) == nrow(filter(df, indicator != "sexnonregplus")) / 2)
+
+write_csv(
+  bind_rows(
+    filter(df, indicator != "sexnonregplus"),
+    df_sexnonreg,
+    df_sexpaid12m
+  ),
+  "4-multinomial-smoothed-district-sexbehav.csv",
+  na = ""
+)
