@@ -1,0 +1,26 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Comparison of raw estimates from DHS and PHIA surveys
+      filenames:
+        - dhs-phia.pdf
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - readxl
+
+depends:
+  process_all-data:
+    id: latest
+    use:
+      depends/survey_indicators_sexbehav.csv: survey_indicators_sexbehav.csv
