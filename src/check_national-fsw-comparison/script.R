@@ -11,16 +11,16 @@ names(johnston) <- c("region", "country", "size_15-19", "size_20-24", "size_15-2
 
 #' iso3 codes from https://gist.github.com/tadast/8827699
 country_codes <- read_csv("countries_codes_and_coordinates.csv") %>%
-  select(Country, `Alpha-3 code`) %>%
-  rename(country = Country,
-         iso3 = `Alpha-3 code`)
+  select(country = Country, iso3 = `Alpha-3 code`)
 
 johnston <- johnston %>%
   left_join(country_codes) %>%
   pivot_longer(cols = contains("size"), names_prefix = "size_", names_to = "age_group", values_to = "est_total_johnston") %>%
-  filter(region %in% c("ESA", "WCA"),
-         iso3 %in% priority_iso3,
-         age_group %in% c("15-19", "20-24", "25-29")) %>%
+  filter(
+    region %in% c("ESA", "WCA"),
+    iso3 %in% priority_iso3,
+    age_group %in% c("15-19", "20-24", "25-29")
+  ) %>%
   select(-region)
 
 #' Johnston is missing estimates for SWZ
@@ -38,16 +38,11 @@ laga <- laga %>%
   select(-X, -ref_pop, -Uncertainty, -Upper, -Lower, -Prev, -Percent, -Predictor_only, -Predictor_only_rank)
 
 #' These are the proportion estimates from the sexpaid12m category of our model
-ind <- read_csv("depends/every-4-multinomial-smoothed-district-sexbehav.csv")
+ind <- read_csv("depends/human-best-3p1-multinomial-smoothed-district-sexbehav.csv") %>%
+  mutate(iso3 = substr(survey_id, 1, 3))
 
 ind <- ind %>%
-  filter(indicator == "sexpaid12m",
-         #' Using the smoothed estimates from Model 3
-         model == "Model 3") %>%
-  #' Rename to match the population data, allowing join
-  mutate(age_group = fct_recode(age_group,
-    "15-24" = "Y015_024", "15-19" = "Y015_019", "20-24" = "Y020_024", "25-29" = "Y025_029")
-  ) %>%
+  filter(indicator == "YWKP") %>%
   filter(age_group %in% c("15-19", "20-24", "25-29"))
 
 #' Get age-stratified population total sizes from Naomi model outputs
@@ -57,13 +52,15 @@ path <- sharepoint$download(URLencode(url))
 naomi3 <- readRDS(path)
 
 naomi3 <- naomi3 %>%
-  filter(indicator_label == "Population",
-         #' The most recent estimates
-         calendar_quarter == max(calendar_quarter),
-         #' These are the age groups we are considering,
-         age_group_label %in% c("15-19", "20-24", "25-29"),
-         #' Only female
-         sex == "female") %>%
+  filter(
+    indicator_label == "Population",
+    #' The most recent estimates
+    calendar_quarter == max(calendar_quarter),
+    #' These are the age groups we are considering,
+    age_group_label %in% c("15-19", "20-24", "25-29"),
+    #' Only female
+    sex == "female"
+  ) %>%
   split(.$iso3) %>%
   #' Filtering each country to the relevant analysis level
   #' Maybe this can be done with map2
@@ -73,9 +70,11 @@ naomi3 <- naomi3 %>%
   ) %>%
   bind_rows() %>%
   #' For merging with model data
-  rename(population_mean = mean,
-         population_lower = lower,
-         population_upper = upper) %>%
+  rename(
+    population_mean = mean,
+    population_lower = lower,
+    population_upper = upper
+  ) %>%
   select(-indicator_label)
 
 #' Calculate estimates of FSW populations by age and area using proportions from ind and PSE from naomi3
@@ -90,14 +89,41 @@ df <- ind %>%
   ) %>%
   group_by(iso3, age_group) %>%
   summarise(
-    est_total_raw = sum(est_raw),
-    est_total_smoothed = sum(est_smoothed)
+    est_total_raw = sum(est_raw, na.rm = TRUE),
+    est_total_smoothed = sum(est_smoothed, na.rm = TRUE)
   )
 
 #' Comparison to Johnston
 johnston_comparison <- df %>%
   inner_join(johnston, by = c("iso3", "age_group")) %>%
   relocate(country, .before = iso3)
+
+write_csv(johnston_comparison, "johnston-fsw-comparison.csv", na = "")
+
+pdf("johnston-fsw-comparison.pdf", h = 7, w = 6.25)
+
+johnston_comparison %>%
+  pivot_longer(
+    cols = starts_with("est_total"),
+    names_to = "method",
+    names_prefix = "est_total_",
+    values_to = "est_total"
+  ) %>%
+  mutate(method = fct_recode(method, "Raw" = "raw", "Johnston" = "johnston", "Smoothed" = "smoothed")) %>%
+  ggplot(aes(x = method, y = est_total, fill = method)) +
+  geom_col() +
+  facet_wrap(iso3 ~ age_group, scales = "free") +
+  scale_fill_manual(values = multi.utils::cbpalette()) +
+  labs(x = "", y = "", fill = "") +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    axis.title.x=element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank()
+  )
+
+dev.off()
 
 #' Comparison to Laga
 laga_comparison <- df %>%
@@ -109,12 +135,7 @@ laga_comparison <- df %>%
   inner_join(laga, by = c("iso3")) %>%
   relocate(country, .before = iso3)
 
-write_csv(johnston_comparison, "johnston-fsw-comparison.csv", na = "")
 write_csv(laga_comparison, "laga-fsw-comparison.csv", na = "")
-
-contains_giftsvar <- sexpaid_survey_question %>%
-  filter(giftsvar == 1) %>%
-  select(iso3)
 
 laga_comparison %>%
   select(-est_total_raw) %>%
@@ -125,4 +146,29 @@ laga_comparison %>%
     values_to = "est_total"
   ) %>%
   ggplot(aes(x = iso3, y = est_total, col = method)) +
-    geom_point()
+  geom_point()
+
+pdf("laga-fsw-comparison.pdf", h = 7, w = 6.25)
+
+laga_comparison %>%
+  pivot_longer(
+    cols = starts_with("est_total"),
+    names_to = "method",
+    names_prefix = "est_total_",
+    values_to = "est_total"
+  ) %>%
+  mutate(method = fct_recode(method, "Raw" = "raw", "Laga" = "laga", "Smoothed" = "smoothed")) %>%
+  ggplot(aes(x = method, y = est_total, fill = method)) +
+  geom_col() +
+  facet_wrap(~iso3, scales = "free") +
+  scale_fill_manual(values = multi.utils::cbpalette()) +
+  labs(x = "", y = "", fill = "") +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    axis.title.x=element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank()
+  )
+
+dev.off()
