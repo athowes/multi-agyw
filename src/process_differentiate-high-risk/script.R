@@ -18,14 +18,14 @@ z <- df %>%
 
 df_sexnonreg <- z %>%
   mutate(
-    inicator = "sexnonreg",
+    indicator = "sexnonreg",
     estimate_smoothed = estimate_smoothed * (1 - estimate_smoothed_prop)
     ) %>%
   select(-estimate_smoothed_prop)
 
 df_sexpaid12m <- z %>%
   mutate(
-    inicator = "sexpaid12m",
+    indicator = "sexpaid12m",
     estimate_smoothed = estimate_smoothed * estimate_smoothed_prop
   ) %>%
   select(-estimate_smoothed_prop)
@@ -34,12 +34,11 @@ df_sexpaid12m <- z %>%
 stopifnot(nrow(df_sexnonreg) == nrow(df_sexpaid12m))
 stopifnot(nrow(df_sexpaid12m) == nrow(filter(df, indicator != "sexnonregplus")) / 2)
 
-write_csv(
-  bind_rows(
-    filter(df, indicator != "sexnonregplus"),
-    df_sexnonreg,
-    df_sexpaid12m
-  ),
-  "4-multinomial-smoothed-district-sexbehav.csv",
-  na = ""
+df <- bind_rows(
+  filter(df, indicator != "sexnonregplus"),
+  df_sexnonreg,
+  df_sexpaid12m
 )
+
+write_csv(df, "best-3p1-multinomial-smoothed-district-sexbehav.csv", na = "")
+write_csv(update_naming(df), "human-best-3p1-multinomial-smoothed-district-sexbehav.csv", na = "")
