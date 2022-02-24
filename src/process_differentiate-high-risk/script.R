@@ -12,23 +12,25 @@ z <- df %>%
   filter(indicator == "sexnonregplus") %>%
   left_join(
     prop %>%
-      select(age_group, area_id, estimate_smoothed_prop = estimate_smoothed),
+      select(age_group, area_id, estimate_smoothed_prop = estimate_smoothed, estimate_raw_prop = estimate_raw),
     by = c("age_group", "area_id")
   )
 
 df_sexnonreg <- z %>%
   mutate(
     indicator = "sexnonreg",
-    estimate_smoothed = estimate_smoothed * (1 - estimate_smoothed_prop)
-    ) %>%
-  select(-estimate_smoothed_prop)
+    estimate_smoothed = estimate_smoothed * (1 - estimate_smoothed_prop),
+    estimate_raw = estimate_raw * (1 - estimate_raw_prop)
+  ) %>%
+  select(-estimate_smoothed_prop, -estimate_raw_prop)
 
 df_sexpaid12m <- z %>%
   mutate(
     indicator = "sexpaid12m",
-    estimate_smoothed = estimate_smoothed * estimate_smoothed_prop
+    estimate_smoothed = estimate_smoothed * estimate_smoothed_prop,
+    estimate_raw = estimate_raw * estimate_raw_prop
   ) %>%
-  select(-estimate_smoothed_prop)
+  select(-estimate_smoothed_prop, -estimate_raw_prop)
 
 #' Check that each of the categories have the same number of rows
 stopifnot(nrow(df_sexnonreg) == nrow(df_sexpaid12m))
