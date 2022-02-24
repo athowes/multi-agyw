@@ -1,10 +1,14 @@
 script: script.R
 
+sources:
+  - functions.R
+
 artefacts:
   - data:
       description: Cloropleth of smoothed estimates at a continental level
       filenames:
-        - continental-map.pdf
+        - 3-continental-map.pdf
+        - 3p1-continental-map.pdf
 
 packages:
   - dplyr
@@ -33,3 +37,7 @@ depends:
       id: latest
       use:
         depends/national_areas.rds: national_areas.rds
+  - process_differentiate-high-risk:
+      id: latest
+      use:
+        depends/human-best-3p1-multinomial-smoothed-district-sexbehav.csv: human-best-3p1-multinomial-smoothed-district-sexbehav.csv
