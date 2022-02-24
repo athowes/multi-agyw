@@ -21,6 +21,11 @@ artefacts:
       description: Model selection information criteria for logistic regression models
       filenames:
         - information-criteria.csv
+  - data:
+      description: Modelling checks
+      filenames:
+        - constant-smoothed-vs-raw.pdf
+        - best-smoothed-vs-raw.pdf
 
 packages:
   - dplyr

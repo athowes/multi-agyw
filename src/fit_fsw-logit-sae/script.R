@@ -227,16 +227,18 @@ dev.off()
 
 #' Model 1: intercept, age random effects (IID)
 formula1 <- x_eff ~ 1 +
-  f(age_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+  f(age_idx, model = "iid", constr = TRUE)
+
+#' hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)
 
 #' Model 2: intercept, age random effects (IID), space random effects (IID)
 formula2 <- update(formula1,
-  . ~ . + f(area_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+  . ~ . + f(area_idx, model = "iid", constr = TRUE)
 )
 
 #' Model 3: intercept, age random effects (IID), space random effects (Besag)
 formula3 <- update(formula1,
-  . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+  . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, constr = TRUE)
 )
 
 #' Model 4: Model 1, cfswever
@@ -373,7 +375,8 @@ which.min(ic_df$dic)
 which.min(ic_df$waic)
 
 #' Both Model 5 at the moment!
-write_csv(filter(res_df, model == "Model 5"), "best-fsw-logit-smoothed-district-sexbehav.csv", na = "")
+res_df_best <- filter(res_df, model == "Model 5")
+write_csv(res_df_best, "best-fsw-logit-smoothed-district-sexbehav.csv", na = "")
 
 write_csv(ic_df, "information-criteria.csv", na = "")
 
@@ -387,3 +390,37 @@ res_df %>%
   summarise(
     propsexpaid12m = mean(estimate_smoothed, na.rm = TRUE)
   )
+
+#' Plot smoothed versus raw (best model)
+pdf("best-smoothed-vs-raw.pdf", h = 5, w = 6.25)
+
+ggplot(res_df_best, aes(x = estimate_raw, y = estimate_smoothed)) +
+  geom_point(alpha = 0.5) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  labs(x = "Raw", y = "Smoothed", title = "Model 5 (IID and csfwever)") +
+  lims(x = c(0, 1), y = c(0, 1)) +
+  theme_minimal()
+
+dev.off()
+
+#' Plot smoothed versus raw (constant model)
+pdf("constant-smoothed-vs-raw.pdf", h = 5, 6.25)
+
+constant_age <- res_df %>%
+  group_by(age_group) %>%
+  summarise(estimate_raw = mean(estimate_raw, na.rm = TRUE)) %>%
+  pull(estimate_raw)
+
+res_df %>%
+  filter(model == "Model 1") %>%
+  ggplot(aes(x = estimate_raw, y = estimate_smoothed)) +
+  geom_point(alpha = 0.5) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  geom_abline(intercept = constant_age[1], slope = 0) +
+  geom_abline(intercept = constant_age[2], slope = 0) +
+  geom_abline(intercept = constant_age[3], slope = 0) +
+  labs(x = "Raw", y = "Smoothed", title = "Model 1 (Constant by age)") +
+  lims(x = c(0, 1), y = c(0, 1)) +
+  theme_minimal()
+
+dev.off()
