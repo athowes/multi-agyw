@@ -1,0 +1,21 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Poster
+      filenames:
+        - amazon-poster.pdf
+
+resources:
+  - amazon-poster.Rmd
+  - citations.bib
+
+packages:
+  - rmarkdown
+
+depends:
+  plot_aids-abstract:
+    id: latest
+    use:
+      depends/aids-abstract-A.pdf: aids-abstract-A.pdf
+      depends/aids-abstract-B.pdf: aids-abstract-B.pdf
