@@ -2,10 +2,10 @@ script: script.R
 
 artefacts:
   - data:
-      description: Aiming to show the extent of temporal variability in the estimates
+      description: Time series style plots
       filenames:
-        - temporal-variation.pdf
-        - temporal-variation-alt.pdf
+        - 3-temporal-interpolation.pdf
+        - 3p1-temporal-interpolation.pdf
 
 packages:
   - dplyr
@@ -24,3 +24,7 @@ depends:
       id: latest
       use:
         depends/human-best-3-multinomial-smoothed-district-sexbehav.csv: human-best-3-multinomial-smoothed-district-sexbehav.csv
+  - process_differentiate-high-risk:
+      id: latest
+      use:
+        depends/human-best-3p1-multinomial-smoothed-district-sexbehav.csv: human-best-3p1-multinomial-smoothed-district-sexbehav.csv
