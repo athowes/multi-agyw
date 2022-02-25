@@ -402,7 +402,75 @@ ggplot(res_df_best, aes(x = estimate_raw, y = estimate_smoothed)) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
   labs(x = "Raw", y = "Smoothed", title = "Model 5 (IID and csfwever)") +
   lims(x = c(0, 1), y = c(0, 1)) +
+  facet_wrap(~iso3) +
   theme_minimal()
+
+dev.off()
+
+pdf("best-smoothed-vs-raw-country.pdf", h = 5, w = 6.25)
+
+res_df_best %>%
+  group_by(iso3) %>%
+  summarise(
+    estimate_raw = mean(estimate_raw, na.rm = TRUE),
+    estimate_smoothed = mean(estimate_smoothed, na.rm = TRUE)
+  ) %>%
+  ggplot(aes(x = estimate_raw, y = estimate_smoothed, col = iso3)) +
+  geom_point(alpha = 0.5) +
+  theme_minimal() +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  lims(x = c(0, 0.2), y = c(0, 0.2)) +
+  labs(x = "Raw", y = "Smoothed", col = "Country", title = "Proportion of `sexnonregplus` in `sexpaid12m`")
+
+dev.off()
+
+#' Plot chloropleth by country (with best model)
+pdf("best-fsw-logit-smoothed-district-sexbehav.pdf", h = 11, w = 8.25)
+
+res_df_best %>%
+  filter(!(area_id %in% iso3)) %>%
+  pivot_longer(
+    cols = c(starts_with("estimate")),
+    names_to = c(".value", "source"),
+    names_pattern = "(.*)\\_(.*)"
+  ) %>%
+  left_join( #' Use this to make it an sf again
+    select(areas, area_id),
+    by = "area_id"
+  ) %>%
+  st_as_sf() %>%
+  split(~iso3) %>%
+  lapply(function(x)
+    x %>%
+      mutate(
+        age_group = fct_relevel(age_group, "Y015_024") %>%
+          fct_recode(
+            "15-19" = "Y015_019",
+            "20-24" = "Y020_024",
+            "25-29" = "Y025_029",
+            "15-24" = "Y015_024"
+          ),
+        source = fct_relevel(source, "raw", "smoothed") %>%
+          fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed")
+      ) %>%
+      ggplot(aes(fill = estimate)) +
+      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+      scale_fill_viridis_c(option = "C", label = label_percent(), limits = c(0, 0.6)) +
+      facet_grid(source ~ age_group) +
+      theme_minimal() +
+      labs(
+        title = paste0(x$iso3[1])
+      ) +
+      theme(
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        strip.text = element_text(face = "bold"),
+        plot.title = element_text(face = "bold"),
+        legend.position = "bottom",
+        legend.key.width = unit(4, "lines")
+      )
+  )
 
 dev.off()
 

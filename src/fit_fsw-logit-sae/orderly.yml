@@ -16,6 +16,7 @@ artefacts:
         - fsw-logit-smoothed-district-sexbehav.csv
         - best-fsw-logit-smoothed-district-sexbehav.csv
         - fsw-logit-smoothed-district-sexbehav.pdf
+        - best-fsw-logit-smoothed-district-sexbehav.pdf
         - fsw-logit-smoothed-district-sexbehav-samples.rds
   - data:
       description: Model selection information criteria for logistic regression models
