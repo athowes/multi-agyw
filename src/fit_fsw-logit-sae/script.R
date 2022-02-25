@@ -155,17 +155,25 @@ df <- mutate(df,
 #' The proportion of (sexnonreg + sexpaid12m) who are sexpaid12m should have:
 #' * sample size x_eff from (sexnonreg + sexpaid12m),
 #' * and observations x_eff from sexpaid12m
-#' This is a very slow way of doing this: perhaps after this project I should learn datatable or try dtplyr
+#' This is a slow way of doing this: perhaps after this project I should learn datatable or try dtplyr
 df <- df %>%
+  #' For each observation...
   split(.$obs_idx) %>%
   lapply(function(x)
     x %>%
-      #' n_eff_kish is sum of x_eff from sexnonreg and sexpaid12m
+      #' ... n_eff_kish is sum of x_eff from sexnonreg and sexpaid12m
       mutate(n_eff_kish = sum(x$x_eff)) %>%
-      #' We just want to keep the row for sexpaid12m
+      #' and we just want to keep the row for sexpaid12m (such that x_eff corresponds to sexpaid12m)
       filter(indicator == "sexpaid12m") %>%
-      #' And rename it to propsexpaid12m
-      mutate(indicator = "propsexpaid12m")
+      #' Rename to propsexpaid12m, update estimate, and remove columns that don't make sense anymore
+      mutate(
+        indicator = "propsexpaid12m",
+        estimate = x_eff / n_eff_kish
+      ) %>%
+      #' How would you calculate the ci_lower and ci_upper? Can't just do the worst possible case in both
+      #' e.g. ci_lower[sexpaid12m] / (ci_upper[sexpaid12m] + ci_upper[sexnonreg]) as this would be more than
+      #' a 95% quantile outcome. Just going to delete them for now
+      select(-ci_lower, -ci_upper)
   ) %>%
   bind_rows()
 
@@ -176,9 +184,8 @@ df %>%
     select(areas, area_id),
     by = "area_id"
   ) %>%
-  mutate(est = x_eff / n_eff_kish) %>%
   st_as_sf() %>%
-  ggplot(aes(fill = est)) +
+  ggplot(aes(fill = estimate)) +
   geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
   theme_minimal()
 
@@ -227,18 +234,16 @@ dev.off()
 
 #' Model 1: intercept, age random effects (IID)
 formula1 <- x_eff ~ 1 +
-  f(age_idx, model = "iid", constr = TRUE)
-
-#' hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)
+  f(age_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 2: intercept, age random effects (IID), space random effects (IID)
 formula2 <- update(formula1,
-  . ~ . + f(area_idx, model = "iid", constr = TRUE)
+  . ~ . + f(area_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
 #' Model 3: intercept, age random effects (IID), space random effects (Besag)
 formula3 <- update(formula1,
-  . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, constr = TRUE)
+  . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
 #' Model 4: Model 1, cfswever
@@ -283,8 +288,6 @@ res_df <- res_df %>%
   #' Make it clear which of the estimates are raw and which are from the model (smoothed)
   rename(
     estimate_raw = estimate,
-    ci_lower_raw = ci_lower,
-    ci_upper_raw = ci_upper,
     estimate_smoothed = prob_mean,
     median_smoothed = prob_median,
     ci_lower_smoothed = prob_lower,
