@@ -2,12 +2,15 @@ script: script.R
 
 artefacts:
   - data:
-      description: Comparison of Sabin FSW total population estimates to estimates from model
+      description: Comparison of Johnston, Sabin et al. FSW total population estimates to estimates from model
       filenames:
-        - johnston-fsw-comparison.csv
-        - johnston-fsw-comparison.pdf
-        - laga-fsw-comparison.csv
-        - laga-fsw-comparison.pdf
+        - johnston-data.pdf
+        - johnston-comparison.pdf
+        - johnston-comparison-xy.pdf
+        # - johnston-fsw-comparison.csv
+        # - johnston-fsw-comparison.pdf
+        # - laga-fsw-comparison.csv
+        # - laga-fsw-comparison.pdf
 
 packages:
   - dplyr
@@ -37,3 +40,7 @@ depends:
     id: latest
     use:
       depends/human-best-3p1-multinomial-smoothed-district-sexbehav.csv: human-best-3p1-multinomial-smoothed-district-sexbehav.csv
+  national_data_areas:
+    id: latest
+    use:
+      depends/national_areas.rds: national_areas.rds

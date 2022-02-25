@@ -5,46 +5,6 @@
 analysis_level <- multi.utils::analysis_level()
 priority_iso3 <- multi.utils::priority_iso3()
 
-#' Read in the population size estimates (PSEs) for AYKP
-johnston <- read_excel("aykp_pse_july17.xlsx", sheet = "FSW", range = "A3:F187")
-names(johnston) <- c("region", "country", "size_15-19", "size_20-24", "size_15-24", "size_25-49")
-
-#' iso3 codes from https://gist.github.com/tadast/8827699
-country_codes <- read_csv("countries_codes_and_coordinates.csv") %>%
-  select(country = Country, iso3 = `Alpha-3 code`)
-
-johnston <- johnston %>%
-  left_join(country_codes) %>%
-  pivot_longer(cols = contains("size"), names_prefix = "size_", names_to = "age_group", values_to = "est_total_johnston") %>%
-  filter(
-    region %in% c("ESA", "WCA"),
-    iso3 %in% priority_iso3,
-    age_group %in% c("15-19", "20-24", "25-29")
-  ) %>%
-  select(-region)
-
-#' Johnston is missing estimates for SWZ
-priority_iso3[!(priority_iso3 %in% johnston$iso3)]
-
-#' Look at the Laga estimates
-laga <- read_csv("final_country_est_laga.csv")
-
-laga <- laga %>%
-  rename(
-    iso3 = ISO,
-    country = NAME_0,
-    est_total_laga = Fitted_FSW
-  ) %>%
-  select(-X, -ref_pop, -Uncertainty, -Upper, -Lower, -Prev, -Percent, -Predictor_only, -Predictor_only_rank)
-
-#' These are the proportion estimates from the sexpaid12m category of our model
-ind <- read_csv("depends/human-best-3p1-multinomial-smoothed-district-sexbehav.csv") %>%
-  mutate(iso3 = substr(survey_id, 1, 3))
-
-ind <- ind %>%
-  filter(indicator == "YWKP") %>%
-  filter(age_group %in% c("15-19", "20-24", "25-29"))
-
 #' Get age-stratified population total sizes from Naomi model outputs
 sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
 url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2021 naomi/Naomi datasets in R/naomi3.rds"
@@ -54,21 +14,15 @@ naomi3 <- readRDS(path)
 naomi3 <- naomi3 %>%
   filter(
     indicator_label == "Population",
-    #' The most recent estimates
-    calendar_quarter == max(calendar_quarter),
     #' These are the age groups we are considering,
     age_group_label %in% c("15-19", "20-24", "25-29"),
     #' Only female
     sex == "female"
   ) %>%
-  split(.$iso3) %>%
-  #' Filtering each country to the relevant analysis level
-  #' Maybe this can be done with map2
-  lapply(function(x)
-    x %>%
-      filter(area_level == analysis_level[x$iso3[1]])
-  ) %>%
-  bind_rows() %>%
+  #' The most recent estimates
+  group_by(iso3) %>%
+  filter(calendar_quarter == max(calendar_quarter)) %>%
+  ungroup() %>%
   #' For merging with model data
   rename(
     population_mean = mean,
@@ -77,40 +31,129 @@ naomi3 <- naomi3 %>%
   ) %>%
   select(-indicator_label)
 
+naomi3_national <- naomi3 %>%
+  group_by(area_level, iso3, age_group_label) %>%
+  summarise(population_mean = sum(population_mean)) %>%
+  rename("age_group" = "age_group_label")
+
+naomi3 %>% pull(iso3) %>% unique()
+
+#' Read in the population size estimates (PSEs) for AYKP
+johnston <- read_excel("aykp_pse_july17.xlsx", sheet = "FSW", range = "A3:F187")
+names(johnston) <- c("region", "country", "size_15-19", "size_20-24", "size_15-24", "size_25-49")
+
+johnston$region %>% unique()
+
+africa <- johnston %>%
+  filter(region %in% c("ESA", "MENA", "WCA"))
+
+#' iso3 codes from https://gist.github.com/tadast/8827699
+country_codes <- read_csv("countries_codes_and_coordinates.csv") %>%
+  select(country = Country, iso3 = `Alpha-3 code`)
+
+national_areas <- readRDS("depends/national_areas.rds")
+
+johnston <- johnston %>%
+  left_join(country_codes) %>%
+  pivot_longer(cols = contains("size"), names_prefix = "size_", names_to = "age_group", values_to = "est_total_johnston") %>%
+  filter(
+    region %in% c("ESA", "WCA"),
+    iso3 %in% priority_iso3,
+    age_group %in% c("15-19", "20-24", "25-29")
+  ) %>%
+  select(-region) %>%
+  filter(iso3 %in% priority_iso3) %>%
+  left_join(
+    naomi3_national,
+    by = c("age_group", "iso3")
+  ) %>%
+  mutate(est_proportion_johnston = est_total_johnston / population_mean)
+
+#' Check that all of the priority ISO3 are in there
+stopifnot(unique(johnston$iso3) %>% length() == 13)
+
+pdf("johnston-data.pdf", h = 8, w = 6.25)
+
+johnston_sf <- johnston %>%
+  left_join(
+    select(national_areas, "iso3" = "GID_0"),
+    by = "iso3"
+  ) %>%
+  st_as_sf()
+
+plotA <- johnston_sf %>%
+  ggplot(aes(fill = est_total_johnston)) +
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+  scale_fill_viridis_c(option = "C", na.value = "#E6E6E6") +
+  facet_grid(~age_group) +
+  labs(fill = "Total") +
+  theme_minimal()
+
+plotB <- johnston_sf %>%
+  ggplot(aes(fill = est_proportion_johnston)) +
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+  scale_fill_viridis_c(option = "C",  label = label_percent(), na.value = "#E6E6E6") +
+  facet_grid(~age_group) +
+  labs(fill = "Proportion") +
+  theme_minimal()
+
+cowplot::plot_grid(plotA, plotB, ncol = 1)
+
+dev.off()
+
+#' The proportion estimates from the sexpaid12m category of our model
+est <- read_csv("depends/human-best-3p1-multinomial-smoothed-district-sexbehav.csv") %>%
+  filter(
+    indicator == "YWKP",
+    age_group %in% c("15-19", "20-24", "25-29")
+  ) %>%
+  #' Assuming the survey_id is structured as ISO2000DHS
+  mutate(year = substr(survey_id, 4, 7)) %>%
+  #' Only the most recent survey in each year
+  group_by(iso3) %>%
+  filter(year == max(year)) %>%
+  select(iso3, indicator, survey_id, age_group, area_id, estimate_raw, estimate_smoothed)
+
 #' Calculate estimates of FSW populations by age and area using proportions from ind and PSE from naomi3
-df <- ind %>%
-  select(-population_mean) %>%
-  inner_join(naomi3, by = c("age_group" = "age_group_label", "area_name" = "area_name", "iso3" = "iso3")) %>%
-  #' Note that the names of estimate and mean will change once data is rerun!
-  #' Making an iso3 variable will also not be required
+df <- est %>%
+  filter(!(area_id %in% multi.utils::priority_iso3())) %>%
+  left_join(
+    select(naomi3, age_group_label, area_id, population_mean),
+    by = c("age_group" = "age_group_label", "area_id" = "area_id")
+  ) %>%
   mutate(
-    est_raw = round(estimate_raw * population_mean, digits = 3),
-    est_smoothed = round(estimate_smoothed * population_mean, digits = 3)
+    iso3 = substr(survey_id, 1, 3),
+    est_raw = estimate_raw * population_mean,
+    est_smoothed = estimate_smoothed * population_mean
   ) %>%
   group_by(iso3, age_group) %>%
   summarise(
     est_total_raw = sum(est_raw, na.rm = TRUE),
-    est_total_smoothed = sum(est_smoothed, na.rm = TRUE)
+    est_total_smoothed = sum(est_smoothed, na.rm = TRUE),
+    population_mean = sum(population_mean, na.rm = TRUE)
+  ) %>%
+  mutate(
+    est_proportion_raw = est_total_raw / population_mean,
+    est_proportion_smoothed = est_total_smoothed / population_mean
   )
 
-#' Comparison to Johnston
-johnston_comparison <- df %>%
-  inner_join(johnston, by = c("iso3", "age_group")) %>%
-  relocate(country, .before = iso3)
+pdf("johnston-comparison.pdf", h = 11.25, w = 8.75)
 
-write_csv(johnston_comparison, "johnston-fsw-comparison.csv", na = "")
-
-pdf("johnston-fsw-comparison.pdf", h = 7, w = 6.25)
+johnston_comparison <- johnston %>%
+  left_join(
+    select(df, iso3, age_group, est_proportion_raw, est_proportion_smoothed),
+    by = c("iso3", "age_group")
+  ) %>%
+  pivot_longer(
+    cols = starts_with("est_proportion"),
+    names_to = "method",
+    names_prefix = "est_proportion_",
+    values_to = "est_proportion"
+  ) %>%
+  mutate(method = fct_recode(method, "Raw" = "raw", "Johnston" = "johnston", "Smoothed" = "smoothed"))
 
 johnston_comparison %>%
-  pivot_longer(
-    cols = starts_with("est_total"),
-    names_to = "method",
-    names_prefix = "est_total_",
-    values_to = "est_total"
-  ) %>%
-  mutate(method = fct_recode(method, "Raw" = "raw", "Johnston" = "johnston", "Smoothed" = "smoothed")) %>%
-  ggplot(aes(x = method, y = est_total, fill = method)) +
+  ggplot(aes(x = method, y = est_proportion, fill = method)) +
   geom_col() +
   facet_wrap(iso3 ~ age_group, scales = "free") +
   scale_fill_manual(values = multi.utils::cbpalette()) +
@@ -123,52 +166,128 @@ johnston_comparison %>%
     axis.ticks.x=element_blank()
   )
 
+johnston_comparison %>%
+  left_join(
+    select(national_areas, "iso3" = "GID_0"),
+    by = "iso3"
+  ) %>%
+  st_as_sf() %>%
+  ggplot(aes(fill = est_proportion)) +
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+  scale_fill_viridis_c(option = "C",  label = label_percent(), na.value = "#E6E6E6") +
+  facet_grid(method ~ age_group) +
+  labs(fill = "Proportion") +
+  theme_minimal()
+
 dev.off()
 
-#' Comparison to Laga
-laga_comparison <- df %>%
-  group_by(iso3) %>%
-  summarise(
-    est_total_raw = sum(est_total_raw),
-    est_total_smoothed = sum(est_total_smoothed)
+pdf("johnston-comparison-xy.pdf", h = 5, w = 6.25)
+
+johnston %>%
+  left_join(
+    select(df, iso3, age_group, est_proportion_raw, est_proportion_smoothed),
+    by = c("iso3", "age_group")
   ) %>%
-  inner_join(laga, by = c("iso3")) %>%
-  relocate(country, .before = iso3)
-
-write_csv(laga_comparison, "laga-fsw-comparison.csv", na = "")
-
-laga_comparison %>%
-  select(-est_total_raw) %>%
-  pivot_longer(
-    cols = c(est_total_smoothed, est_total_laga),
-    names_to = "method",
-    names_prefix = "est_total_",
-    values_to = "est_total"
-  ) %>%
-  ggplot(aes(x = iso3, y = est_total, col = method)) +
-  geom_point()
-
-pdf("laga-fsw-comparison.pdf", h = 7, w = 6.25)
-
-laga_comparison %>%
-  pivot_longer(
-    cols = starts_with("est_total"),
-    names_to = "method",
-    names_prefix = "est_total_",
-    values_to = "est_total"
-  ) %>%
-  mutate(method = fct_recode(method, "Raw" = "raw", "Laga" = "laga", "Smoothed" = "smoothed")) %>%
-  ggplot(aes(x = method, y = est_total, fill = method)) +
-  geom_col() +
-  facet_wrap(~iso3, scales = "free") +
-  scale_fill_manual(values = multi.utils::cbpalette()) +
-  labs(x = "", y = "", fill = "") +
+  ggplot(aes(x = est_proportion_johnston, y = est_proportion_smoothed, col = iso3)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  facet_grid(age_group ~ .) +
+  lims(x = c(0, 0.1), y = c(0, 0.1)) +
+  labs(x = "Johnston estimate", y = "Smoothed estimate", col = "ISO3") +
   theme_minimal() +
   theme(
-    legend.position = "bottom",
-    axis.title.x=element_blank(),
-    axis.text.x=element_blank(),
-    axis.ticks.x=element_blank()
+    legend.position = "bottom"
   )
 
 dev.off()
+
+#' #' Look at the Laga estimates
+#' laga <- read_csv("final_country_est_laga.csv")
+#'
+#' laga <- laga %>%
+#'   rename(
+#'     iso3 = ISO,
+#'     country = NAME_0,
+#'     est_total_laga = Fitted_FSW
+#'   ) %>%
+#'   select(-X, -ref_pop, -Uncertainty, -Upper, -Lower, -Prev, -Percent, -Predictor_only, -Predictor_only_rank)
+#'
+#' #' Comparison to Johnston
+#' johnston_comparison <- df %>%
+#'   inner_join(johnston, by = c("iso3", "age_group")) %>%
+#'   relocate(country, .before = iso3)
+#'
+#' write_csv(johnston_comparison, "johnston-fsw-comparison.csv", na = "")
+#'
+#' pdf("johnston-fsw-comparison.pdf", h = 7, w = 6.25)
+#'
+#' johnston_comparison %>%
+#'   pivot_longer(
+#'     cols = starts_with("est_total"),
+#'     names_to = "method",
+#'     names_prefix = "est_total_",
+#'     values_to = "est_total"
+#'   ) %>%
+#'   mutate(method = fct_recode(method, "Raw" = "raw", "Johnston" = "johnston", "Smoothed" = "smoothed")) %>%
+#'   ggplot(aes(x = method, y = est_total, fill = method)) +
+#'   geom_col() +
+#'   facet_wrap(iso3 ~ age_group, scales = "free") +
+#'   scale_fill_manual(values = multi.utils::cbpalette()) +
+#'   labs(x = "", y = "", fill = "") +
+#'   theme_minimal() +
+#'   theme(
+#'     legend.position = "bottom",
+#'     axis.title.x=element_blank(),
+#'     axis.text.x=element_blank(),
+#'     axis.ticks.x=element_blank()
+#'   )
+#'
+#' dev.off()
+#'
+#' #' Comparison to Laga
+#' laga_comparison <- df %>%
+#'   group_by(iso3) %>%
+#'   summarise(
+#'     est_total_raw = sum(est_total_raw),
+#'     est_total_smoothed = sum(est_total_smoothed)
+#'   ) %>%
+#'   inner_join(laga, by = c("iso3")) %>%
+#'   relocate(country, .before = iso3)
+#'
+#' write_csv(laga_comparison, "laga-fsw-comparison.csv", na = "")
+#'
+#' laga_comparison %>%
+#'   select(-est_total_raw) %>%
+#'   pivot_longer(
+#'     cols = c(est_total_smoothed, est_total_laga),
+#'     names_to = "method",
+#'     names_prefix = "est_total_",
+#'     values_to = "est_total"
+#'   ) %>%
+#'   ggplot(aes(x = iso3, y = est_total, col = method)) +
+#'   geom_point()
+#'
+#' pdf("laga-fsw-comparison.pdf", h = 7, w = 6.25)
+#'
+#' laga_comparison %>%
+#'   pivot_longer(
+#'     cols = starts_with("est_total"),
+#'     names_to = "method",
+#'     names_prefix = "est_total_",
+#'     values_to = "est_total"
+#'   ) %>%
+#'   mutate(method = fct_recode(method, "Raw" = "raw", "Laga" = "laga", "Smoothed" = "smoothed")) %>%
+#'   ggplot(aes(x = method, y = est_total, fill = method)) +
+#'   geom_col() +
+#'   facet_wrap(~iso3, scales = "free") +
+#'   scale_fill_manual(values = multi.utils::cbpalette()) +
+#'   labs(x = "", y = "", fill = "") +
+#'   theme_minimal() +
+#'   theme(
+#'     legend.position = "bottom",
+#'     axis.title.x=element_blank(),
+#'     axis.text.x=element_blank(),
+#'     axis.ticks.x=element_blank()
+#'   )
+#'
+#' dev.off()
