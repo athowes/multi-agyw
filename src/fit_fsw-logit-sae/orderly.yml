@@ -27,6 +27,7 @@ artefacts:
       filenames:
         - constant-smoothed-vs-raw.pdf
         - best-smoothed-vs-raw.pdf
+        - best-smoothed-vs-raw-country.pdf
 
 packages:
   - dplyr

@@ -80,6 +80,7 @@ pdf("areas-check.pdf", h = 5, w = 8)
 
 ggplot(areas_model, aes(fill = iso3)) +
   geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+  labs(fill = "ISO3") +
   theme_minimal()
 
 dev.off()
@@ -177,7 +178,18 @@ df <- df %>%
   ) %>%
   bind_rows()
 
-pdf("data-check.pdf", h = 5, w = 8)
+#' For the DHS surveys, specific sex paid question not asked to 25-29
+#' Three-partner loop used instead, so set these to NA because not comparable
+df <- df %>%
+  mutate(
+    condition = (substr(survey_id, 8, 11) == "DHS") & (age_group == "Y025_029"),
+    x_eff = ifelse(condition, NA, x_eff),
+    n_eff_kish = ifelse(condition, NA, n_eff_kish),
+    estimate = ifelse(condition, NA, estimate)
+  ) %>%
+  select(-condition)
+
+pdf("data-check.pdf", h = 11, w = 8.75)
 
 df %>%
   left_join( #' Use this to make it an sf again
@@ -185,14 +197,20 @@ df %>%
     by = "area_id"
   ) %>%
   st_as_sf() %>%
-  ggplot(aes(fill = estimate)) +
-  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
-  theme_minimal()
+  split(.$survey_id) %>%
+  lapply(function(x) {
+  x %>%
+    ggplot(aes(fill = estimate)) +
+    geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+    scale_fill_viridis_c(option = "C", label = label_percent(), limits = c(0, 1)) +
+    facet_wrap(~age_group) +
+    labs(title = paste0(x$survey_id[1])) +
+    theme_minimal()
+  })
 
 dev.off()
 
-#' Check for larger observations than sample size
-#' This shouldn't trigger in normal cases!
+#' Check for larger observations than sample size: this shouldn't trigger!
 if(sum(df$n_eff_kish < df$x_eff, na.rm = TRUE) > 0) {
   message(
     paste0(
