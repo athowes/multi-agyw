@@ -2,15 +2,15 @@ script: script.R
 
 artefacts:
   - data:
-      description: Comparison of Johnston, Sabin et al. FSW total population estimates to estimates from model
+      description: Comparison of Johnston, Sabin et al. and Laga et al. FSW PSE to estimates from model
       filenames:
         - johnston-data.pdf
         - johnston-comparison.pdf
+        - johnston-compariosn.csv
         - johnston-comparison-xy.pdf
-        # - johnston-fsw-comparison.csv
-        # - johnston-fsw-comparison.pdf
-        # - laga-fsw-comparison.csv
-        # - laga-fsw-comparison.pdf
+        - laga-comparison.pdf
+        - laga-comparison.csv
+        - laga-comparison-xy.pdf
 
 packages:
   - dplyr

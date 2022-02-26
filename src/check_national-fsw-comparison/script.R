@@ -44,7 +44,7 @@ names(johnston) <- c("region", "country", "size_15-19", "size_20-24", "size_15-2
 
 johnston$region %>% unique()
 
-africa <- johnston %>%
+johnston %>%
   filter(region %in% c("ESA", "MENA", "WCA"))
 
 #' iso3 codes from https://gist.github.com/tadast/8827699
@@ -177,7 +177,13 @@ johnston_comparison %>%
   scale_fill_viridis_c(option = "C",  label = label_percent(), na.value = "#E6E6E6") +
   facet_grid(method ~ age_group) +
   labs(fill = "Proportion") +
-  theme_minimal()
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    axis.title.x=element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank()
+  )
 
 dev.off()
 
@@ -201,93 +207,107 @@ johnston %>%
 
 dev.off()
 
-#' #' Look at the Laga estimates
-#' laga <- read_csv("final_country_est_laga.csv")
-#'
-#' laga <- laga %>%
-#'   rename(
-#'     iso3 = ISO,
-#'     country = NAME_0,
-#'     est_total_laga = Fitted_FSW
-#'   ) %>%
-#'   select(-X, -ref_pop, -Uncertainty, -Upper, -Lower, -Prev, -Percent, -Predictor_only, -Predictor_only_rank)
-#'
-#' #' Comparison to Johnston
-#' johnston_comparison <- df %>%
-#'   inner_join(johnston, by = c("iso3", "age_group")) %>%
-#'   relocate(country, .before = iso3)
-#'
-#' write_csv(johnston_comparison, "johnston-fsw-comparison.csv", na = "")
-#'
-#' pdf("johnston-fsw-comparison.pdf", h = 7, w = 6.25)
-#'
-#' johnston_comparison %>%
-#'   pivot_longer(
-#'     cols = starts_with("est_total"),
-#'     names_to = "method",
-#'     names_prefix = "est_total_",
-#'     values_to = "est_total"
-#'   ) %>%
-#'   mutate(method = fct_recode(method, "Raw" = "raw", "Johnston" = "johnston", "Smoothed" = "smoothed")) %>%
-#'   ggplot(aes(x = method, y = est_total, fill = method)) +
-#'   geom_col() +
-#'   facet_wrap(iso3 ~ age_group, scales = "free") +
-#'   scale_fill_manual(values = multi.utils::cbpalette()) +
-#'   labs(x = "", y = "", fill = "") +
-#'   theme_minimal() +
-#'   theme(
-#'     legend.position = "bottom",
-#'     axis.title.x=element_blank(),
-#'     axis.text.x=element_blank(),
-#'     axis.ticks.x=element_blank()
-#'   )
-#'
-#' dev.off()
-#'
-#' #' Comparison to Laga
-#' laga_comparison <- df %>%
-#'   group_by(iso3) %>%
-#'   summarise(
-#'     est_total_raw = sum(est_total_raw),
-#'     est_total_smoothed = sum(est_total_smoothed)
-#'   ) %>%
-#'   inner_join(laga, by = c("iso3")) %>%
-#'   relocate(country, .before = iso3)
-#'
-#' write_csv(laga_comparison, "laga-fsw-comparison.csv", na = "")
-#'
-#' laga_comparison %>%
-#'   select(-est_total_raw) %>%
-#'   pivot_longer(
-#'     cols = c(est_total_smoothed, est_total_laga),
-#'     names_to = "method",
-#'     names_prefix = "est_total_",
-#'     values_to = "est_total"
-#'   ) %>%
-#'   ggplot(aes(x = iso3, y = est_total, col = method)) +
-#'   geom_point()
-#'
-#' pdf("laga-fsw-comparison.pdf", h = 7, w = 6.25)
-#'
-#' laga_comparison %>%
-#'   pivot_longer(
-#'     cols = starts_with("est_total"),
-#'     names_to = "method",
-#'     names_prefix = "est_total_",
-#'     values_to = "est_total"
-#'   ) %>%
-#'   mutate(method = fct_recode(method, "Raw" = "raw", "Laga" = "laga", "Smoothed" = "smoothed")) %>%
-#'   ggplot(aes(x = method, y = est_total, fill = method)) +
-#'   geom_col() +
-#'   facet_wrap(~iso3, scales = "free") +
-#'   scale_fill_manual(values = multi.utils::cbpalette()) +
-#'   labs(x = "", y = "", fill = "") +
-#'   theme_minimal() +
-#'   theme(
-#'     legend.position = "bottom",
-#'     axis.title.x=element_blank(),
-#'     axis.text.x=element_blank(),
-#'     axis.ticks.x=element_blank()
-#'   )
-#'
-#' dev.off()
+write_csv(johnston_comparison, "johnston-fsw-comparison.csv", na = "")
+
+#' Look at the Laga estimates
+laga <- read_csv("final_country_est_laga.csv")
+
+laga <- laga %>%
+  rename(
+    iso3 = ISO,
+    country = NAME_0,
+    est_total_laga = Fitted_FSW
+  ) %>%
+  select(-X, -ref_pop, -Uncertainty, -Upper, -Lower, -Prev, -Percent, -Predictor_only, -Predictor_only_rank) %>%
+  left_join(
+    naomi3_national %>%
+      group_by(iso3) %>%
+      summarise(population_mean = sum(population_mean)),
+    by = "iso3"
+  )
+
+laga_comparison <- df %>%
+  group_by(iso3) %>%
+  summarise(
+    est_total_raw = sum(est_total_raw),
+    est_total_smoothed = sum(est_total_smoothed)
+  ) %>%
+  left_join(select(laga, iso3, est_total_laga, population_mean), by = "iso3") %>%
+  mutate(
+    est_proportion_raw = est_total_raw / population_mean,
+    est_proportion_smoothed = est_total_smoothed / population_mean,
+    est_proportion_laga = est_total_laga / population_mean
+  ) %>%
+  pivot_longer(
+    cols = starts_with("est_proportion"),
+    names_to = "method",
+    names_prefix = "est_proportion_",
+    values_to = "est_proportion"
+  ) %>%
+  mutate(method = fct_recode(method, "Raw" = "raw", "Laga" = "laga", "Smoothed" = "smoothed"))
+
+write_csv(laga_comparison, "laga-fsw-comparison.csv", na = "")
+
+pdf("laga-comparison.pdf", h = 8, w = 8.75)
+
+laga_comparison %>%
+  ggplot(aes(x = method, y = est_proportion, fill = method)) +
+  geom_col() +
+  facet_wrap(iso3 ~ ., scales = "free") +
+  scale_fill_manual(values = multi.utils::cbpalette()) +
+  labs(x = "", y = "", fill = "") +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    axis.title.x=element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank()
+  )
+
+laga_comparison %>%
+  left_join(
+    select(national_areas, "iso3" = "GID_0"),
+    by = "iso3"
+  ) %>%
+  st_as_sf() %>%
+  ggplot(aes(fill = est_proportion)) +
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+  scale_fill_viridis_c(option = "C",  label = label_percent(), na.value = "#E6E6E6") +
+  facet_grid(~ method) +
+  labs(fill = "Proportion") +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.key.width = unit(4, "lines"),
+    axis.title.x=element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank()
+  )
+
+dev.off()
+
+pdf("laga-comparison-xy.pdf", h = 5, w = 6.25)
+
+df %>%
+  group_by(iso3) %>%
+  summarise(
+    est_total_raw = sum(est_total_raw),
+    est_total_smoothed = sum(est_total_smoothed)
+  ) %>%
+  left_join(select(laga, iso3, est_total_laga, population_mean), by = "iso3") %>%
+  mutate(
+    est_proportion_raw = est_total_raw / population_mean,
+    est_proportion_smoothed = est_total_smoothed / population_mean,
+    est_proportion_laga = est_total_laga / population_mean
+  ) %>%
+  ggplot(aes(x = est_proportion_laga, y = est_proportion_smoothed, col = iso3)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  lims(x = c(0, 0.1), y = c(0, 0.1)) +
+  labs(x = "Laga estimate", y = "Smoothed estimate", col = "ISO3") +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  )
+
+dev.off()
