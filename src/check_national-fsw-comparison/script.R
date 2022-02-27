@@ -15,7 +15,7 @@ naomi3 <- naomi3 %>%
   filter(
     indicator_label == "Population",
     #' These are the age groups we are considering,
-    age_group_label %in% c("15-19", "20-24", "25-29"),
+    age_group_label %in% c("15-19", "20-24", "25-29", "15-24"),
     #' Only female
     sex == "female"
   ) %>%
@@ -59,7 +59,7 @@ johnston <- johnston %>%
   filter(
     region %in% c("ESA", "WCA"),
     iso3 %in% priority_iso3,
-    age_group %in% c("15-19", "20-24", "25-29")
+    age_group %in% c("15-19", "20-24", "25-29", "15-24")
   ) %>%
   select(-region) %>%
   filter(iso3 %in% priority_iso3) %>%
@@ -105,7 +105,7 @@ dev.off()
 est <- read_csv("depends/human-best-3p1-multinomial-smoothed-district-sexbehav.csv") %>%
   filter(
     indicator == "YWKP",
-    age_group %in% c("15-19", "20-24", "25-29")
+    age_group %in% c("15-19", "20-24", "25-29", "15-24")
   ) %>%
   #' Assuming the survey_id is structured as ISO2000DHS
   mutate(year = substr(survey_id, 4, 7)) %>%
