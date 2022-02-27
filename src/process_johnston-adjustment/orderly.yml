@@ -1,0 +1,32 @@
+script: script.R
+
+sources:
+  - functions.R
+
+artefacts:
+  - data:
+      description: Multinomial smoothed district estimate results (four categories) adjusted to match Johnston FSW estimates
+      filenames:
+        - adjust-best-3p1-multinomial-smoothed-district-sexbehav.csv
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+
+depends:
+  - process_differentiate-high-risk:
+      id: latest
+      use:
+        depends/best-3p1-multinomial-smoothed-district-sexbehav.csv: best-3p1-multinomial-smoothed-district-sexbehav.csv
+  - check_national-fsw-comparison:
+      id: latest
+      use:
+        depends/johnston-fsw-comparison.csv: johnston-fsw-comparison.csv
