@@ -72,7 +72,7 @@ johnston <- johnston %>%
 #' Check that all of the priority ISO3 are in there
 stopifnot(unique(johnston$iso3) %>% length() == 13)
 
-pdf("johnston-data.pdf", h = 8, w = 6.25)
+pdf("johnston-fsw-data.pdf", h = 8, w = 6.25)
 
 johnston_sf <- johnston %>%
   left_join(
@@ -137,7 +137,7 @@ df <- est %>%
     est_proportion_smoothed = est_total_smoothed / population_mean
   )
 
-pdf("johnston-comparison.pdf", h = 11.25, w = 8.75)
+pdf("johnston-fsw-comparison.pdf", h = 11.25, w = 8.75)
 
 johnston_comparison <- johnston %>%
   left_join(
@@ -187,7 +187,7 @@ johnston_comparison %>%
 
 dev.off()
 
-pdf("johnston-comparison-xy.pdf", h = 5, w = 6.25)
+pdf("johnston-fsw-comparison-xy.pdf", h = 5, w = 6.25)
 
 johnston %>%
   left_join(
@@ -248,7 +248,7 @@ laga_comparison <- df %>%
 
 write_csv(laga_comparison, "laga-fsw-comparison.csv", na = "")
 
-pdf("laga-comparison.pdf", h = 8, w = 8.75)
+pdf("laga-fsw-comparison.pdf", h = 8, w = 8.75)
 
 laga_comparison %>%
   ggplot(aes(x = method, y = est_proportion, fill = method)) +
@@ -286,7 +286,7 @@ laga_comparison %>%
 
 dev.off()
 
-pdf("laga-comparison-xy.pdf", h = 5, w = 6.25)
+pdf("laga-fsw-comparison-xy.pdf", h = 5, w = 6.25)
 
 df %>%
   group_by(iso3) %>%

@@ -4,13 +4,13 @@ artefacts:
   - data:
       description: Comparison of Johnston, Sabin et al. and Laga et al. FSW PSE to estimates from model
       filenames:
-        - johnston-data.pdf
-        - johnston-comparison.pdf
-        - johnston-compariosn.csv
-        - johnston-comparison-xy.pdf
-        - laga-comparison.pdf
-        - laga-comparison.csv
-        - laga-comparison-xy.pdf
+        - johnston-fsw-data.pdf
+        - johnston-fsw-comparison.pdf
+        - johnston-fsw-comparison.csv
+        - johnston-fsw-comparison-xy.pdf
+        - laga-fsw-comparison.pdf
+        - laga-fsw-comparison.csv
+        - laga-fsw-comparison-xy.pdf
 
 packages:
   - dplyr
