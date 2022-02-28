@@ -203,7 +203,7 @@ models <- append(models, paste0("Model ", 1:9) %>% as.list())
 cluster <- FALSE
 
 #' Number of Monte Carlo samples
-S <- 100
+S <- 1000
 
 if(cluster) {
   res <- purrr::pmap(
