@@ -30,107 +30,107 @@ packages:
   - multi.utils
 
 depends:
-  - aaa_fit_4-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "BWA")
-      use:
-        depends/bwa_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_4-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "CMR")
-      use:
-        depends/cmr_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_4-multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "KEN")
+  # - aaa_fit_multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "BWA" && parameter:three_category == FALSE)
+  #     use:
+  #       depends/bwa_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  # - aaa_fit_multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "CMR" && parameter:three_category == FALSE)
+  #     use:
+  #       depends/cmr_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  # - aaa_fit_multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "KEN" && parameter:three_category == FALSE)
   #     use:
   #       depends/ken_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_4-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "LSO")
-      use:
-        depends/lso_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_4-multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "MOZ")
+  # - aaa_fit_multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "LSO" && parameter:three_category == FALSE)
+  #     use:
+  #       depends/lso_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  # - aaa_fit_multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "MOZ" && parameter:three_category == FALSE)
   #     use:
   #       depends/moz_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_4-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "MWI")
-      use:
-        depends/mwi_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_4-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "NAM")
-      use:
-        depends/nam_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_4-multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "SWZ")
+  # - aaa_fit_multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "MWI" && parameter:three_category == FALSE)
+  #     use:
+  #       depends/mwi_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  # - aaa_fit_multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "NAM" && parameter:three_category == FALSE)
+  #     use:
+  #       depends/nam_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  # - aaa_fit_multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "SWZ" && parameter:three_category == FALSE)
   #     use:
   #       depends/swz_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_4-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "TZA")
-      use:
-        depends/tza_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_4-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "UGA")
-      use:
-        depends/uga_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_4-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "ZAF")
-      use:
-        depends/zaf_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_4-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "ZMB")
-      use:
-        depends/zmb_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_4-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "ZWE")
-      use:
-        depends/zwe_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "BWA")
+  # - aaa_fit_multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "TZA" && parameter:three_category == FALSE)
+  #     use:
+  #       depends/tza_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  # - aaa_fit_multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "UGA" && parameter:three_category == FALSE)
+  #     use:
+  #       depends/uga_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  # - aaa_fit_multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "ZAF" && parameter:three_category == FALSE)
+  #     use:
+  #       depends/zaf_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  # - aaa_fit_multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "ZMB" && parameter:three_category == FALSE)
+  #     use:
+  #       depends/zmb_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  # - aaa_fit_multi-sexbehav-sae:
+  #     id: latest(parameter:iso3 == "ZWE" && parameter:three_category == FALSE)
+  #     use:
+  #       depends/zwe_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "BWA" && parameter:three_category == TRUE)
       use:
         depends/bwa_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "CMR")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "CMR" && parameter:three_category == TRUE)
       use:
         depends/cmr_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "KEN")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "KEN" && parameter:three_category == TRUE)
       use:
         depends/ken_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "LSO")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "LSO" && parameter:three_category == TRUE)
       use:
         depends/lso_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "MOZ")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "MOZ" && parameter:three_category == TRUE)
       use:
         depends/moz_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "MWI")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "MWI" && parameter:three_category == TRUE)
       use:
         depends/mwi_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "NAM")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "NAM" && parameter:three_category == TRUE)
       use:
         depends/nam_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "SWZ")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "SWZ" && parameter:three_category == TRUE)
       use:
         depends/swz_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "TZA")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "TZA" && parameter:three_category == TRUE)
       use:
         depends/tza_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "UGA")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "UGA" && parameter:three_category == TRUE)
       use:
         depends/uga_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "ZAF")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "ZAF" && parameter:three_category == TRUE)
       use:
         depends/zaf_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "ZMB")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "ZMB" && parameter:three_category == TRUE)
       use:
         depends/zmb_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "ZWE")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "ZWE" && parameter:three_category == TRUE)
       use:
         depends/zwe_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv

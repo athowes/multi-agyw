@@ -2,20 +2,20 @@
 # orderly::orderly_develop_start("process_multi-sexbehav-sae")
 # setwd("src/process_multi-sexbehav-sae")
 
-iso3 <- c("BWA", "CMR", "LSO", "MWI", "NAM", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
-
-#' The four category survey estimates
-files <- paste0("depends/", tolower(iso3), "_4-multi-sexbehav-sae.csv")
-df <- bind_rows(lapply(files, function(file) read_csv(file)))
-
-write_csv(df, "every-4-multi-sexbehav-sae.csv", na = "")
-write_csv(multi.utils::update_naming(df), "human-every-4-multi-sexbehav-sae.csv", na = "")
-
-#' Best four category models
-df <- filter(df, model == "Model 3")
-
-write_csv(df, "best-4-multi-sexbehav-sae.csv", na = "")
-write_csv(multi.utils::update_naming(df), "human-best-4-multi-sexbehav-sae.csv", na = "")
+#' iso3 <- c("BWA", "CMR", "LSO", "MWI", "NAM", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+#'
+#' #' The four category survey estimates
+#' files <- paste0("depends/", tolower(iso3), "_4-multi-sexbehav-sae.csv")
+#' df <- bind_rows(lapply(files, function(file) read_csv(file)))
+#'
+#' write_csv(df, "every-4-multi-sexbehav-sae.csv", na = "")
+#' write_csv(multi.utils::update_naming(df), "human-every-4-multi-sexbehav-sae.csv", na = "")
+#'
+#' #' Best four category models
+#' df <- filter(df, model == "Model 3")
+#'
+#' write_csv(df, "best-4-multi-sexbehav-sae.csv", na = "")
+#' write_csv(multi.utils::update_naming(df), "human-best-4-multi-sexbehav-sae.csv", na = "")
 
 iso3 <- multi.utils::priority_iso3()
 
@@ -39,7 +39,7 @@ single_survey <- df %>%
 #' Is there a way to automate this based on model comparison output?
 model_selector <- function(iso3, model) {
   case_when(
-    iso3 %in% single_survey$iso3 ~ model == "Model 3",
+    # iso3 %in% single_survey$iso3 ~ model == "Model 3",
     T ~ model == "Model 6"
   )
 }
