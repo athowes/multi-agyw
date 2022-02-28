@@ -7,8 +7,8 @@ artefacts:
   - data:
       description: Smoothed district indicator estimates for multinomial models
       filenames:
-        - multinomial-smoothed-district-sexbehav.csv
-        - multinomial-smoothed-district-sexbehav.pdf
+        - multi-sexbehav-sae.csv
+        - multi-sexbehav-sae.pdf
   - data:
       description: Stacked proportion barplots
       filenames:

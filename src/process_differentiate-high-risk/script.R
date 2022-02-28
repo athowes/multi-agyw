@@ -2,7 +2,7 @@
 # orderly::orderly_develop_start("process_differentiate-high-risk")
 # setwd("src/process_differentiate-high-risk")
 
-df <- read_csv("depends/best-3-multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/best-3-multi-sexbehav-sae.csv")
 
 #' Just the most recent surveys (this isn't a good solution)
 prop <- read_csv("depends/best-fsw-logit-smoothed-district-sexbehav.csv") %>%
@@ -42,5 +42,5 @@ df <- bind_rows(
   df_sexpaid12m
 )
 
-write_csv(df, "best-3p1-multinomial-smoothed-district-sexbehav.csv", na = "")
-write_csv(multi.utils::update_naming(df), "human-best-3p1-multinomial-smoothed-district-sexbehav.csv", na = "")
+write_csv(df, "best-3p1-multi-sexbehav-sae.csv", na = "")
+write_csv(multi.utils::update_naming(df), "human-best-3p1-multi-sexbehav-sae.csv", na = "")

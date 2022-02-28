@@ -7,7 +7,7 @@ artefacts:
   - data:
       description: Multinomial smoothed district estimate results (four categories) adjusted to match Johnston FSW estimates
       filenames:
-        - adjust-best-3p1-multinomial-smoothed-district-sexbehav.csv
+        - adjust-best-3p1-multi-sexbehav-sae.csv
 
 packages:
   - dplyr
@@ -25,7 +25,7 @@ depends:
   - process_differentiate-high-risk:
       id: latest
       use:
-        depends/best-3p1-multinomial-smoothed-district-sexbehav.csv: best-3p1-multinomial-smoothed-district-sexbehav.csv
+        depends/best-3p1-multi-sexbehav-sae.csv: best-3p1-multi-sexbehav-sae.csv
   - check_national-fsw-comparison:
       id: latest
       use:

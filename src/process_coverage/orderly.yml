@@ -20,8 +20,8 @@ packages:
   - multi.utils
 
 depends:
-  - process_multinomial-smoothed-district-sexbehav:
+  - process_multi-sexbehav-sae:
       id: latest
       use:
-        depends/best-3-multinomial-smoothed-district-sexbehav.csv: best-3-multinomial-smoothed-district-sexbehav.csv
+        depends/best-3-multi-sexbehav-sae.csv: best-3-multi-sexbehav-sae.csv
 

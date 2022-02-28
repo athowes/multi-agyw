@@ -2,7 +2,7 @@
 # orderly::orderly_develop_start("plot_aids-abstract")
 # setwd("src/plot_plot_aids-abstract")
 
-df <- read_csv("depends/human-best-3-multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/human-best-3-multi-sexbehav-sae.csv")
 
 #' The following section is copied mostly from plot_within-between-country-variation
 

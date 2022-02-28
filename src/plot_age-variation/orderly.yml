@@ -20,8 +20,8 @@ packages:
   - ggridges
 
 depends:
-  - process_multinomial-smoothed-district-sexbehav:
+  - process_multi-sexbehav-sae:
       id: latest
       use:
-        depends/human-best-3-multinomial-smoothed-district-sexbehav.csv: human-best-3-multinomial-smoothed-district-sexbehav.csv
+        depends/human-best-3-multi-sexbehav-sae.csv: human-best-3-multi-sexbehav-sae.csv
 

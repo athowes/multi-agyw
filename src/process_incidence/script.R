@@ -4,7 +4,7 @@
 
 analysis_level <- multi.utils::analysis_level()
 
-df <- read_csv("depends/best-3p1-multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/best-3p1-multi-sexbehav-sae.csv")
 areas <- readRDS("depends/areas.rds")
 
 #' Confusing file names here, but I believe they are all the same thing

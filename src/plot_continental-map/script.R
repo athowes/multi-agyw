@@ -2,8 +2,8 @@
 # orderly::orderly_develop_start("plot_continental-map")
 # setwd("src/plot_continental-map")
 
-df_3 <- read_csv("depends/human-best-3-multinomial-smoothed-district-sexbehav.csv")
-df_3p1 <- read_csv("depends/human-best-3p1-multinomial-smoothed-district-sexbehav.csv")
+df_3 <- read_csv("depends/human-best-3-multi-sexbehav-sae.csv")
+df_3p1 <- read_csv("depends/human-best-3p1-multi-sexbehav-sae.csv")
 areas <- readRDS("depends/areas.rds")
 national_areas <- readRDS("depends/national_areas.rds")
 

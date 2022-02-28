@@ -27,7 +27,7 @@ depends:
   - process_differentiate-high-risk:
       id: latest
       use:
-        depends/best-3p1-multinomial-smoothed-district-sexbehav.csv: best-3p1-multinomial-smoothed-district-sexbehav.csv
+        depends/best-3p1-multi-sexbehav-sae.csv: best-3p1-multi-sexbehav-sae.csv
   - process_all-data:
       id: latest
       use:

@@ -1,6 +1,6 @@
-#' Run aaa_fit_4-multi-sexbehav-sae in bulk
+#' Run aaa_fit_4-multinomial-smoothed-district-sexbehav in bulk
 
-report <- "aaa_fit_4-multi-sexbehav-sae"
+report <- "aaa_fit_4-multinomial-smoothed-district-sexbehav"
 
 #' Only those countries which have any surveys with a dedicated sex paid question
 recent <- orderly::orderly_latest(name = "plot_available-surveys")

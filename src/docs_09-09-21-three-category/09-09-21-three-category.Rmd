@@ -256,7 +256,7 @@ $$
 ::: column
 
 ```{r echo=FALSE}
-knitr::include_graphics("page-multinomial-smoothed-district-sexbehav.pdf")
+knitr::include_graphics("page-multi-sexbehav-sae.pdf")
 ```
 
 :::

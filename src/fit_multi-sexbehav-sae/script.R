@@ -313,4 +313,4 @@ res_df <- res_df %>%
   mutate(iso3 = iso3, .before = indicator) %>%
   relocate(model, .before = estimate_smoothed)
 
-write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
+write_csv(res_df, "multi-sexbehav-sae.csv", na = "")

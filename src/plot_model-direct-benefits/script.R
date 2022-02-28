@@ -2,7 +2,7 @@
 # orderly::orderly_develop_start("plot_model-direct-benefits")
 # setwd("src/plot_model-direct-benefits")
 
-df <- read_csv("depends/tza_multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/tza_multi-sexbehav-sae.csv")
 areas <- read_sf(paste0("depends/tza_areas.geojson"))
 
 df <- df %>%

@@ -5,10 +5,10 @@
 #' Want to create .pdf files containing only the results from particular models
 #' (Probably the final model chosen)
 iso3 <- multi.utils::priority_iso3()
-pdfs <- paste0("depends/", tolower(iso3), "_all-dhs-multinomial-smoothed-district-sexbehav.pdf")
+pdfs <- paste0("depends/", tolower(iso3), "_all-dhs-multi-sexbehav-sae.pdf")
 
 if (!dir.exists("tmp")) dir.create("tmp")
-pdfs_output <- paste0("tmp/", tolower(iso3), "_all-dhs-multinomial-smoothed-district-sexbehav.pdf")
+pdfs_output <- paste0("tmp/", tolower(iso3), "_all-dhs-multi-sexbehav-sae.pdf")
 
 #' Get the page numbers of all maps corresponding the chosen model
 pages <- map(pdfs,
@@ -24,7 +24,7 @@ pmap(
 )
 
 #' Combine them into one output artefact
-pdftools::pdf_combine(input = pdfs_output, output = paste0("all-dhs-multinomial-smoothed-district-sexbehav.pdf"))
+pdftools::pdf_combine(input = pdfs_output, output = paste0("all-dhs-multi-sexbehav-sae.pdf"))
 
 #' Delete the temporary directory
 unlink("tmp", recursive = TRUE)

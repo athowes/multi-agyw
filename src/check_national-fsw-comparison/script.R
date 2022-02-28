@@ -102,7 +102,7 @@ cowplot::plot_grid(plotA, plotB, ncol = 1)
 dev.off()
 
 #' The proportion estimates from the sexpaid12m category of our model
-est <- read_csv("depends/human-best-3p1-multinomial-smoothed-district-sexbehav.csv") %>%
+est <- read_csv("depends/human-best-3p1-multi-sexbehav-sae.csv") %>%
   filter(
     indicator == "YWKP",
     age_group %in% c("15-19", "20-24", "25-29", "15-24")

@@ -432,7 +432,7 @@ res_df <- res_df %>%
   mutate(iso3 = iso3, .before = indicator) %>%
   relocate(model, .before = estimate_smoothed)
 
-write_csv(res_df, "multinomial-smoothed-district-sexbehav.csv", na = "")
+write_csv(res_df, "multi-sexbehav-sae.csv", na = "")
 
 #' Create plotting data
 res_plot <- res_df %>%
@@ -450,7 +450,7 @@ res_plot <- res_df %>%
 
 #' Artefact: Cloropleths
 
-pdf("multinomial-smoothed-district-sexbehav.pdf", h = 8.25, w = 11.75)
+pdf("multi-sexbehav-sae.pdf", h = 8.25, w = 11.75)
 
 res_plot %>%
   split(~indicator + model) %>%

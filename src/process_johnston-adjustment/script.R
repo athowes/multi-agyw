@@ -2,7 +2,7 @@
 # orderly::orderly_develop_start("process_johnston-adjustment")
 # setwd("src/process_johnston-adjustment")
 
-df <- read_csv("depends/best-3p1-multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/best-3p1-multi-sexbehav-sae.csv")
 johnston <- read_csv("depends/johnston-fsw-comparison.csv")
 
 #' Some NAs in here: sad reacts
@@ -47,4 +47,4 @@ df <- df %>%
     values_to = "estimate_smoothed"
   )
 
-write_csv(df, "adjust-best-3p1-multinomial-smoothed-district-sexbehav.csv")
+write_csv(df, "adjust-best-3p1-multi-sexbehav-sae.csv")

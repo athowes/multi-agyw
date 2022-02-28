@@ -8,10 +8,10 @@ src("make/pull_oli_population.R")
 src("make/run_data_prep.R")
 
 #' 4. Run the four category models for applicable countries
-src("make/run_aaa_fit_4-multi-sexbehav-sae.R")
+src("make/run_aaa_fit_4-multinomial-smoothed-district-sexbehav.R")
 
 #' 5. Run the three category models for all countries
-src("make/run_aaa_fit_3-multi-sexbehav-sae.R")
+src("make/run_aaa_fit_3-multinomial-smoothed-district-sexbehav.R")
 
 #' TODO: Run the three category models for all countries jointly
 # src("make/run_fit_3-multisexbehav-sae.R")

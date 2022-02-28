@@ -2,7 +2,7 @@
 # orderly::orderly_develop_start("process_coverage")
 # setwd("src/process_coverage")
 
-df <- read_csv("depends/best-3-multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/best-3-multi-sexbehav-sae.csv")
 
 df <- df %>%
   filter(

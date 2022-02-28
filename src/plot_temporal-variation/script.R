@@ -2,8 +2,8 @@
 # orderly::orderly_develop_start("plot_temporal-variation")
 # setwd("src/plot_temporal-variation")
 
-df_3 <- read_csv("depends/human-best-3-multinomial-smoothed-district-sexbehav.csv")
-df_3p1 <- read_csv("depends/human-best-3p1-multinomial-smoothed-district-sexbehav.csv")
+df_3 <- read_csv("depends/human-best-3-multi-sexbehav-sae.csv")
+df_3p1 <- read_csv("depends/human-best-3p1-multi-sexbehav-sae.csv")
 
 pdf("3-temporal-interpolation.pdf", h = 4, w = 6.25)
 

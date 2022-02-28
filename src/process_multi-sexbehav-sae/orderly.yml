@@ -4,17 +4,17 @@ artefacts:
   - data:
       description: Multinomial smoothed district estimate results (four categories)
       filenames:
-        - every-4-multinomial-smoothed-district-sexbehav.csv
-        - human-every-4-multinomial-smoothed-district-sexbehav.csv
-        - best-4-multinomial-smoothed-district-sexbehav.csv
-        - human-best-4-multinomial-smoothed-district-sexbehav.csv
+        - every-4-multi-sexbehav-sae.csv
+        - human-every-4-multi-sexbehav-sae.csv
+        - best-4-multi-sexbehav-sae.csv
+        - human-best-4-multi-sexbehav-sae.csv
   - data:
       description: Multinomial smoothed district estimate results (three categories)
       filenames:
-        - every-3-multinomial-smoothed-district-sexbehav.csv
-        - human-every-3-multinomial-smoothed-district-sexbehav.csv
-        - best-3-multinomial-smoothed-district-sexbehav.csv
-        - human-best-3-multinomial-smoothed-district-sexbehav.csv
+        - every-3-multi-sexbehav-sae.csv
+        - human-every-3-multi-sexbehav-sae.csv
+        - best-3-multi-sexbehav-sae.csv
+        - human-best-3-multi-sexbehav-sae.csv
 
 packages:
   - dplyr
@@ -33,104 +33,104 @@ depends:
   - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "BWA")
       use:
-        depends/bwa_4-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/bwa_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "CMR")
       use:
-        depends/cmr_4-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/cmr_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   # - aaa_fit_4-multi-sexbehav-sae:
   #     id: latest(parameter:iso3 == "KEN")
   #     use:
-  #       depends/ken_4-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+  #       depends/ken_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "LSO")
       use:
-        depends/lso_4-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/lso_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   # - aaa_fit_4-multi-sexbehav-sae:
   #     id: latest(parameter:iso3 == "MOZ")
   #     use:
-  #       depends/moz_4-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+  #       depends/moz_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MWI")
       use:
-        depends/mwi_4-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/mwi_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "NAM")
       use:
-        depends/nam_4-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/nam_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   # - aaa_fit_4-multi-sexbehav-sae:
   #     id: latest(parameter:iso3 == "SWZ")
   #     use:
-  #       depends/swz_4-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+  #       depends/swz_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "TZA")
       use:
-        depends/tza_4-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/tza_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "UGA")
       use:
-        depends/uga_4-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/uga_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZAF")
       use:
-        depends/zaf_4-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/zaf_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZMB")
       use:
-        depends/zmb_4-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/zmb_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_4-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZWE")
       use:
-        depends/zwe_4-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/zwe_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "BWA")
       use:
-        depends/bwa_3-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/bwa_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "CMR")
       use:
-        depends/cmr_3-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/cmr_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "KEN")
       use:
-        depends/ken_3-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/ken_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "LSO")
       use:
-        depends/lso_3-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/lso_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MOZ")
       use:
-        depends/moz_3-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/moz_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MWI")
       use:
-        depends/mwi_3-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/mwi_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "NAM")
       use:
-        depends/nam_3-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/nam_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "SWZ")
       use:
-        depends/swz_3-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/swz_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "TZA")
       use:
-        depends/tza_3-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/tza_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "UGA")
       use:
-        depends/uga_3-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/uga_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZAF")
       use:
-        depends/zaf_3-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/zaf_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZMB")
       use:
-        depends/zmb_3-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/zmb_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_3-multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZWE")
       use:
-        depends/zwe_3-multinomial-smoothed-district-sexbehav.csv: multinomial-smoothed-district-sexbehav.csv
+        depends/zwe_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
