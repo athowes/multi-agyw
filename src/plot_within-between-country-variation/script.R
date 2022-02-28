@@ -2,7 +2,7 @@
 # orderly::orderly_develop_start("plot_within-between-country-variation")
 # setwd("src/plot_within-between-country-variation")
 
-df <- read_csv("depends/human-best-3-multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/human-best-3p1-multinomial-smoothed-district-sexbehav.csv")
 
 df <- df %>%
   filter(age_group != "15-24") %>%
@@ -83,7 +83,7 @@ df_subnational <- df_subnational %>%
     by = "iso3"
   )
 
-pdf("within-between-country-variation.pdf", h = 7, w = 6.25)
+pdf("within-between-country-variation.pdf", h = 7, w = 8)
 
 df_subnational %>%
   mutate(

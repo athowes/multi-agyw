@@ -20,7 +20,7 @@ packages:
   - tibble
 
 depends:
-  - process_multinomial-smoothed-district-sexbehav:
+  - process_differentiate-high-risk:
       id: latest
       use:
-        depends/human-best-3-multinomial-smoothed-district-sexbehav.csv: human-best-3-multinomial-smoothed-district-sexbehav.csv
+        depends/human-best-3p1-multinomial-smoothed-district-sexbehav.csv: human-best-3p1-multinomial-smoothed-district-sexbehav.csv
