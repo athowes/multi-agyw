@@ -31,6 +31,9 @@ artefacts:
         - coverage-histograms.pdf
 
 parameters:
+  #' Should we be used three categories or four
+  three_category:
+    default: TRUE
   #' If the interaction models currently under development should be fit too
   include_interactions:
     default: FALSE

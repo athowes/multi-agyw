@@ -57,10 +57,17 @@ adjM <- spdep::poly2nb(areas_model)
 adjM <- spdep::nb2mat(adjM, style = "B", zero.policy = TRUE)
 colnames(adjM) <- rownames(adjM)
 
+#' Three or four category version?
+if(three_category) {
+  indicators <- c("nosex12m", "sexcohab", "sexnonregplus")
+} else {
+  indicators <- c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")
+}
+
 #' Create the scaffolding for the estimates
 df <- crossing(
   #' In this model we are using three risk categories (rather than four)
-  indicator = c("nosex12m", "sexcohab", "sexnonregplus"),
+  indicator = indicators,
   #' All of the difference surveys
   survey_id = unique(ind$survey_id),
   #' Three age groups, plus aggregate category
