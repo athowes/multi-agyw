@@ -297,7 +297,7 @@ res_fit <- lapply(res, "[[", 2)
 res_samples <- lapply(res, "[[", 3)
 
 #' Artefact: Samples from all models
-saveRDS(res_samples, "fsw-logit-smoothed-district-sexbehav-samples.rds")
+saveRDS(res_samples, "fsw-logit-sae-samples.rds")
 
 #' Artefact: Smoothed district indicator estimates for logistic regression models
 res_df <- res_df %>%
@@ -313,7 +313,7 @@ res_df <- res_df %>%
   ) %>%
   relocate(model, .before = estimate_smoothed)
 
-write_csv(res_df, "fsw-logit-smoothed-district-sexbehav.csv", na = "")
+write_csv(res_df, "fsw-logit-sae.csv", na = "")
 
 #' Create plotting data
 res_plot <- res_df %>%
@@ -331,7 +331,7 @@ res_plot <- res_df %>%
 
 #' Artefact: Cloropleths
 
-pdf("fsw-logit-smoothed-district-sexbehav.pdf", h = 11, w = 8.25)
+pdf("fsw-logit-sae.pdf", h = 11, w = 8.25)
 
 res_plot %>%
   split(~model) %>%
@@ -397,7 +397,7 @@ which.min(ic_df$waic)
 
 #' Both Model 5 at the moment!
 res_df_best <- filter(res_df, model == "Model 5")
-write_csv(res_df_best, "best-fsw-logit-smoothed-district-sexbehav.csv", na = "")
+write_csv(res_df_best, "best-fsw-logit-sae.csv", na = "")
 
 write_csv(ic_df, "information-criteria.csv", na = "")
 
@@ -443,7 +443,7 @@ res_df_best %>%
 dev.off()
 
 #' Plot chloropleth by country (with best model)
-pdf("best-fsw-logit-smoothed-district-sexbehav.pdf", h = 11, w = 8.25)
+pdf("best-fsw-logit-sae.pdf", h = 11, w = 8.25)
 
 res_df_best %>%
   filter(!(area_id %in% iso3)) %>%

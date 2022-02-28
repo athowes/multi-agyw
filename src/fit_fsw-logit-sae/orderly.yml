@@ -13,11 +13,11 @@ artefacts:
   - data:
       description: Smoothed district indicator estimates for the proportion of women with non-regular partners who are FSW
       filenames:
-        - fsw-logit-smoothed-district-sexbehav.csv
-        - best-fsw-logit-smoothed-district-sexbehav.csv
-        - fsw-logit-smoothed-district-sexbehav.pdf
-        - best-fsw-logit-smoothed-district-sexbehav.pdf
-        - fsw-logit-smoothed-district-sexbehav-samples.rds
+        - fsw-logit-sae.csv
+        - best-fsw-logit-sae.csv
+        - fsw-logit-sae.pdf
+        - best-fsw-logit-sae.pdf
+        - fsw-logit-sae-samples.rds
   - data:
       description: Model selection information criteria for logistic regression models
       filenames:
