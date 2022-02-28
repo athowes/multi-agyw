@@ -37,6 +37,9 @@ parameters:
   #' Should we be used three categories or four
   three_category:
     default: TRUE
+  #' Fit only a guess at the best model rather than all models
+  lightweight:
+    default: FALSE
   #' If the interaction models currently under development should be fit too
   include_interactions:
     default: FALSE

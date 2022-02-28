@@ -314,8 +314,14 @@ if(include_interactions & include_temporal) {
 #' Number of Monte Carlo samples
 S <- 1000
 
-formulas <- list(formula1)
-models <- list("Model 1")
+#' If low on computational resources
+#' Just fit the model which is best performing (in preliminary versions of this work)
+if(lightweight) {
+  formulas <- list(formula1)
+  models <- list("Model 6")
+
+  S <- 100
+}
 
 res <- purrr::pmap(
   list(formula = formulas, model_name = models, S = S),
