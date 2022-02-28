@@ -114,9 +114,9 @@ df_subnational %>%
   select(iso3, indicator, age_group, estimate_smoothed) %>%
   group_by(indicator, age_group) %>%
   summarise(
-    lower = 100 * quantile(estimate_smoothed, probs = 0.025),
-    median = 100 * median(estimate_smoothed),
-    upper = 100 * quantile(estimate_smoothed, probs = 0.975)
+    lower = 100 * quantile(estimate_smoothed, probs = 0.025, na.rm = TRUE),
+    median = 100 * median(estimate_smoothed, na.rm = TRUE),
+    upper = 100 * quantile(estimate_smoothed, probs = 0.975, na.rm = TRUE)
   )
 
 #' District level quantile information aggregated by age (population weighted)
