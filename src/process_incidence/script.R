@@ -1,10 +1,10 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("process_katies-spreadsheet")
-# setwd("src/process_katies-spreadsheet")
+# orderly::orderly_develop_start("process_incidence")
+# setwd("src/process_incidence")
 
 analysis_level <- multi.utils::analysis_level()
 
-df <- read_csv("depends/best-3-multinomial-smoothed-district-sexbehav.csv")
+df <- read_csv("depends/best-3p1-multinomial-smoothed-district-sexbehav.csv")
 areas <- readRDS("depends/areas.rds")
 
 #' Confusing file names here, but I believe they are all the same thing
@@ -34,7 +34,7 @@ naomi <- naomi %>%
   ) %>%
   filter(
     area_level == analysis_level,
-    age_group %in% c("Y015_019", "Y020_024", "Y025_029", "Y015_024"),
+    age_group %in% c("Y015_019", "Y020_024", "Y025_029"),
     indicator %in% c("infections", "plhiv", "population"),
     sex == "female",
     case_when(
@@ -80,22 +80,26 @@ df <- naomi %>%
     by = c("area_id", "age_group")
   )
 
+#' TODO: Get distributions on these and using a sampling method to get uncertainty in economic analysis
 rr_sexcohab <- 1
 rr_sexnonreg <- 1.72
 rr_sexpaid12m <- 13
-rr_sexnonregplus <- rr_sexnonreg * 0.91 + rr_sexpaid12m * 0.09
+rr_sexnonregplus <- rr_sexnonreg * 0.91 + rr_sexpaid12m * 0.09 #' This is an approximate value
 
 df <- df %>%
   mutate(
     population_nosex12m = population * nosex12m,
     population_sexcohab = population * sexcohab,
-    population_sexnonregplus = population * sexnonregplus,
+    population_sexnonreg = population * sexnonreg,
+    population_sexpaid12m = population * sexpaid12m,
     incidence_nosex12m = 0,
-    incidence_sexcohab = infections / (population_sexcohab + rr_sexnonregplus * population_sexnonregplus),
-    incidence_sexnonregplus = incidence_sexcohab * rr_sexnonregplus,
+    incidence_sexcohab = infections / (population_sexcohab + rr_sexnonreg * population_sexnonreg + rr_sexpaid12m * population_sexpaid12m),
+    incidence_sexnonreg = incidence_sexcohab * rr_sexnonreg,
+    incidence_sexpaid12m = incidence_sexcohab * rr_sexpaid12m,
     infections_nosex12m = 0,
     infections_sexcohab = population_sexcohab * incidence_sexcohab,
-    infections_sexnonregplus = population_sexnonregplus * incidence_sexnonregplus
+    infections_sexnonreg = population_sexnonreg * incidence_sexnonreg,
+    infections_sexpaid12m = population_sexpaid12m * incidence_sexpaid12m
   )
 
 write_csv(df, "incidence-district-sexbehav.csv")
@@ -123,12 +127,10 @@ df_plot %>%
   lapply(function(x)
     x %>%
       mutate(
-        age_group = fct_relevel(age_group, "Y015_024") %>%
-          fct_recode(
+        age_group = fct_recode(age_group,
             "15-19" = "Y015_019",
             "20-24" = "Y020_024",
-            "25-29" = "Y025_029",
-            "15-24" = "Y015_024"
+            "25-29" = "Y025_029"
           )
       ) %>%
       ggplot(aes(fill = incidence)) +

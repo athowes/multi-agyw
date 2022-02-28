@@ -24,10 +24,10 @@ resources:
  - naomi-output
 
 depends:
-  - process_multinomial-smoothed-district-sexbehav:
+  - process_differentiate-high-risk:
       id: latest
       use:
-        depends/best-3-multinomial-smoothed-district-sexbehav.csv: best-3-multinomial-smoothed-district-sexbehav.csv
+        depends/best-3p1-multinomial-smoothed-district-sexbehav.csv: best-3p1-multinomial-smoothed-district-sexbehav.csv
   - process_all-data:
       id: latest
       use:
