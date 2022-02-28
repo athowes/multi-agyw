@@ -85,28 +85,28 @@ df <- df %>%
   )
 
 #' Add indicies for:
-#'  * year (year_idx)
-#'  * country (iso3_idx)
-#'  * age (age_idx)
-#'  * category (cat_idx)
-#'  * observation (obs_idx)
-#'  * year x category (year_cat_idx)
-#'  * country x category (iso3_cat_idx)
-#'  * age x category (age_cat_idx)
-#'  * space x category (area_cat_idx)
-#'  * space x year (area_year_idx)
 df <- mutate(df,
+    #' year
     year_idx = multi.utils::to_int(year),
+    #' country
     iso3_idx = multi.utils::to_int(substr(area_id, 1, 3)),
-    #' Doing this because want Y015_024 to have ID 4 rather than 2 as it would be otherwise
-    age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
+    #' age
+    age_idx = multi.utils::to_int(age_group),
+    #' category
     cat_idx = multi.utils::to_int(indicator),
+    #' year x category
     year_cat_idx = multi.utils::to_int(interaction(year_idx, cat_idx)),
+    #' country x category
     iso3_cat_idx = multi.utils::to_int(interaction(iso3_idx, cat_idx)),
+    #' age x category
     age_cat_idx = multi.utils::to_int(interaction(age_idx, cat_idx)),
+    #' space x category
     area_cat_idx = multi.utils::to_int(interaction(area_idx, cat_idx)),
+    #' space x year
     area_year_idx = multi.utils::to_int(interaction(area_idx, year_idx)),
+    #' observation
     obs_idx = multi.utils::to_int(interaction(age_idx, area_idx, year_idx)),
+    #' copies
     area_idx_copy = area_idx,
     year_idx_copy = year_idx
   ) %>%
@@ -136,25 +136,85 @@ formula3 <- update(formula1,
             control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
-#' Same structure as aaa_fit_3-multi-sexbehav-sae
-#' But year_idx rather than sur_idx
-#' Add iso3_idx (IID)
+#' Model 4:
+#' * Model 1
+#' * time x category random effects (IID)
+formula4 <- update(formula1,
+  . ~ . + f(year_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
 
-formulas <- list(formula1, formula2, formula3)
-models <- list("Model 1", "Model 2", "Model 3")
+#' Model 5:
+#' * Model 2
+#' * time x category random effects (IID)
+formula5 <- update(formula2,
+  . ~ . + f(year_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
+
+#' Model 6:
+#' * Model 3
+#' * time x category random effects (IID)
+formula6 <- update(formula3,
+  . ~ . + f(year_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
+
+#' Prior for the correlation parameter of the AR1 model together with the grouped precision parameter
+#' For the correlation parameter, we choose a base model of correlation one with P(rho > 0 = 0.75)
+ar1_group_prior <- list(
+  rho = list(rho = "pc.cor1", param = c(0, 0.75)),
+  prec = list(prec = "pc.prec", param = c(2.5, 0.01), initial = log(0.001))
+)
+
+#' Model 7:
+#' * Model 1
+#' * time x category random effects (AR1)
+formula7 <- update(formula1,
+  . ~ . + f(year_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
+            constr = TRUE, hyper = ar1_group_prior)
+)
+
+#' Model 8:
+#' * Model 2
+#' * time x category random effects (AR1)
+formula8 <- update(formula2,
+  . ~ . + f(year_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
+            constr = TRUE, hyper = ar1_group_prior)
+)
+
+#' Model 9:
+#' * Model 3
+#' * time x category random effects (AR1)
+formula9 <- update(formula3,
+  . ~ . + f(year_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
+            constr = TRUE, hyper = ar1_group_prior)
+)
+
+#' To consider adding:
+#' * iso3_idx (IID or Besag)
+#' * sur_idx to allow survey bias
+
+formulas <- append(formulas, parse(text = paste0("list(", paste0("formula", 1:9, collapse = ", "), ")")) %>% eval())
+models <- append(models, paste0("Model ", 1:9) %>% as.list())
 
 #' Fit the models
+
+cluster <- FALSE
 
 #' Number of Monte Carlo samples
 S <- 100
 
-# res <- purrr::pmap(
-#   list(formula = formulas, model_name = models, S = S),
-#   multinomial_model
-# )
-
-res <- multinomial_model(formula1, model_name = "Model 1", S = S)
-res <- list(res)
+if(cluster) {
+  res <- purrr::pmap(
+    list(formula = formulas, model_name = models, S = S),
+    multinomial_model
+  )
+} else {
+  #' I suspect that Model 9 is best
+  res <- multinomial_model(formula1, model_name = "Model 9", S = S)
+  res <- list(res)
+}
 
 #' Extract the df and the full fitted models
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
