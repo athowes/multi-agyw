@@ -43,4 +43,4 @@ df <- bind_rows(
 )
 
 write_csv(df, "best-3p1-multinomial-smoothed-district-sexbehav.csv", na = "")
-write_csv(update_naming(df), "human-best-3p1-multinomial-smoothed-district-sexbehav.csv", na = "")
+write_csv(multi.utils::update_naming(df), "human-best-3p1-multinomial-smoothed-district-sexbehav.csv", na = "")

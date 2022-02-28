@@ -1,8 +1,5 @@
 script: script.R
 
-sources:
-  - functions.R
-
 artefacts:
   - data:
       description: Multinomial smoothed district estimate results (four categories)
@@ -30,6 +27,7 @@ packages:
   - sf
   - spdep
   - tidyr
+  - multi.utils
 
 depends:
   - aaa_fit_4-multi-sexbehav-sae:
