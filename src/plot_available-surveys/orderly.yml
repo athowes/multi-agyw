@@ -7,6 +7,10 @@ artefacts:
         - available-surveys.pdf
         - available-surveys.csv
         - available-surveys.txt
+  - data:
+      description: Comparison of surveys listed on STATcompiler versus those we have
+      filenames:
+        - surveys-stat-compiler.txt
 
 packages:
   - dplyr
@@ -23,6 +27,10 @@ packages:
   - naomi.utils
   - ggstance
   - gt
+
+resources:
+  - STATcompilerExport2021127_12313.xlsx
+  - countries_codes_and_coordinates.csv
 
 depends:
   bwa_survey_behav:

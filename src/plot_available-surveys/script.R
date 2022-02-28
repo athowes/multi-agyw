@@ -2,8 +2,8 @@
 # orderly::orderly_develop_start("plot_available-surveys")
 # setwd("src/plot_available-surveys/")
 
-iso3 <- multi.utils::priority_iso3()
-files <- paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.csv")
+priority_iso3 <- multi.utils::priority_iso3()
+files <- paste0("depends/", tolower(priority_iso3), "_survey_indicators_sexbehav.csv")
 
 df <- lapply(files, function(file) {
   #' indicators as produced by fitting reports
@@ -145,3 +145,42 @@ lapply(files, function(file) {
     mean = 100 * mean(estimate),
     median = 100 * median(estimate)
   )
+
+#' The surveys that https://www.statcompiler.com/en/ thinks we should have
+#' Does not include PHIA surveys
+stat_compiler <- read_xlsx("STATcompilerExport2021127_12313.xlsx", range = "A4:E110") %>%
+  select(country = Country, survey =  Survey)
+
+#' iso3 codes from https://gist.github.com/tadast/8827699
+country_codes <- read_csv("countries_codes_and_coordinates.csv") %>%
+  select(country = Country, iso3 = `Alpha-3 code`)
+
+stat_compiler <- stat_compiler %>%
+  left_join(country_codes)  %>%
+  filter(iso3 %in% priority_iso3) %>%
+  separate(survey, c("year", "type"), " ")
+
+#' How many surveys of each type?
+types_stat_compiler <- stat_compiler %>%
+  group_by(country, type) %>%
+  summarise(count = n())
+
+types_available_surveys <- df %>%
+  select(country, year, type) %>%
+  filter(!(type %in% c("BAIS", "PHIA"))) %>%
+  group_by(country, type) %>%
+  summarise(count = n())
+
+disputed_countries <- setdiff(types_stat_compiler, types_available_surveys)$country
+disputed_countries <- c(disputed_countries, setdiff(types_available_surveys, types_stat_compiler)$country)
+
+sink("surveys-stat-compiler.txt")
+
+#' Note on multiple years that Naomi uses the calendar quarter for the survey midpoint
+cat("The surveys in the disputed countries which we have are:")
+filter(df, country %in% disputed_countries)
+
+cat("The surveys that STATcomplier thinks that we should have are:")
+filter(stat_compiler, country %in% disputed_countries)
+
+sink()
