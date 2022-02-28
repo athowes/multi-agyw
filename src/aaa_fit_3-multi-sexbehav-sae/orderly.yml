@@ -62,10 +62,10 @@ packages:
   - multi.utils
 
 depends:
-  aaa_scale_pop:
-    id: latest(parameter:iso3 == iso3)
+  plot_available-surveys:
+    id: latest
     use:
-      depends/interpolated-population.csv: interpolated_population.csv
+      depends/available-surveys.csv: available-surveys.csv
   bwa_data_areas:
     id: latest
     use:

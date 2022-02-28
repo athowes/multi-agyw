@@ -58,6 +58,10 @@ packages:
   - multi.utils
 
 depends:
+  plot_available-surveys:
+    id: latest
+    use:
+      depends/available-surveys.csv: available-surveys.csv
   process_all-data:
     id: latest
     use:

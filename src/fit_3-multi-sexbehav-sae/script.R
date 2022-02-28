@@ -60,6 +60,17 @@ if(three_category) {
   indicators <- c("nosex12m", "sexcohab", "sexnonregplus")
 } else {
   indicators <- c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")
+
+  #' And use only the surveys which contain a specific paid sex question
+  available_surveys <- read_csv("depends/available-surveys.csv")
+
+  giftsvar_surveys <- available_surveys %>%
+    filter(giftsvar == 1) %>%
+    pull(survey_id) %>%
+    unique()
+
+  ind <- ind %>%
+    filter(survey_id %in% giftsvar_surveys)
 }
 
 #' Create the scaffolding for the estimates
