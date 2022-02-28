@@ -28,4 +28,4 @@ depends:
   - fit_fsw-logit-sae:
       id: latest
       use:
-        depends/best-fsw-logit-smoothed-district-sexbehav.csv: best-fsw-logit-smoothed-district-sexbehav.csv
+        depends/best-fsw-logit-sae.csv: best-fsw-logit-sae.csv

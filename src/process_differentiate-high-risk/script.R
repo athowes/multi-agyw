@@ -5,7 +5,7 @@
 df <- read_csv("depends/best-3-multi-sexbehav-sae.csv")
 
 #' Just the most recent surveys (this isn't a good solution)
-prop <- read_csv("depends/best-fsw-logit-smoothed-district-sexbehav.csv") %>%
+prop <- read_csv("depends/best-fsw-logit-sae.csv") %>%
   filter(!(survey_id %in% c("MWI2015DHS", "ZMB2016PHIA", "ZWE2015DHS")))
 
 z <- df %>%
