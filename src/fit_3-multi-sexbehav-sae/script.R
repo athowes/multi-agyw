@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("fit_3-multi-sexbehav-sae", parameters = list(include_interactions = TRUE))
+# orderly::orderly_develop_start("fit_3-multi-sexbehav-sae")
 # setwd("src/fit_3-multi-sexbehav-sae")
 
 analysis_level <- multi.utils::analysis_level()
@@ -51,14 +51,6 @@ areas_model <- areas %>%
   arrange(area_sort_order) %>%
   mutate(area_idx = row_number())
 
-#' Country level area (not to be included in model)
-country <- areas %>%
-  filter(area_level == 0) %>%
-  mutate(
-    area_idx = NA,
-    area_id_aggr = NA
-  )
-
 #' Create adjacency matrix for INLA
 adjM <- spdep::poly2nb(areas_model)
 adjM <- spdep::nb2mat(adjM, style = "B", zero.policy = TRUE)
@@ -70,10 +62,10 @@ df <- crossing(
   indicator = c("nosex12m", "sexcohab", "sexnonregplus"),
   #' All of the different years
   year = 1999:2020,
-  #' Three age groups, plus aggregate category
-  age_group = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"),
-  #' Both the areas in the model and the aggregate country
-  bind_rows(areas_model, country) %>%
+  #' Three age groups
+  age_group = c("Y015_019", "Y020_024", "Y025_029"),
+  #' The areas in the model
+  areas_model %>%
     st_drop_geometry() %>%
     select(area_id, area_name, area_idx, area_id_aggr,
            area_sort_order, center_x, center_y)
@@ -92,17 +84,6 @@ df <- df %>%
              x_eff, estimate, ci_lower, ci_upper),
     by = c("indicator", "year", "age_group", "area_id")
   )
-
-#' Merge age-stratified population total sizes into df
-#' This is required for aggregating the estimates e.g. using 15-19 and 20-24 to create 15-24
-df <- df %>%
-  left_join(
-    pop %>%
-      filter(sex == "female") %>%
-      select(area_id, year, age_group, population),
-    by = c("area_id", "year", "age_group")
-  ) %>%
-  rename(population_mean = population)
 
 #' Add indicies for:
 #'  * year (year_idx)
@@ -131,17 +112,6 @@ df <- mutate(df,
     year_idx_copy = year_idx
   ) %>%
   arrange(obs_idx)
-
-#' Data for the model (df) doesn't include the aggregates (since this is using data twice)
-#' So we save them off separately
-df_agg <- filter(df, age_group == "Y015_024" | area_id %in% iso3)
-
-#' The rows of df to be included in the model
-#' Note that setdiff behaving strangely here
-df_model <- filter(df, age_group != "Y015_024", !(area_id %in% iso3))
-
-#' Check that the rows in the full is a sum of that in the model and aggregate
-stopifnot(nrow(df) == nrow(df_model) + nrow(df_agg))
 
 #' Model 1:
 #' * category random effects (IID)
@@ -200,10 +170,7 @@ ic <- lapply(res_fit, function(fit) {
     local_dic = fit$dic$local.dic,
     local_waic = fit$waic$local.waic,
     local_cpo = fit$cpo$cpo
-  ) %>%
-    bind_rows(
-      setNames(as.data.frame(matrix(data = NA, nrow = nrow(df_agg), ncol = 3)), c("local_dic", "local_waic", "local_cpo"))
-    )
+  )
 }) %>%
   bind_rows()
 
