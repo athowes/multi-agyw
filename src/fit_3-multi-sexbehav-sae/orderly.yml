@@ -34,6 +34,9 @@ parameters:
   #' If the interaction models currently under development should be fit too
   include_interactions:
     default: FALSE
+  #' If data from PHIA surveys should be included
+  include_phia:
+    default: FALSE
 
 packages:
   - dplyr

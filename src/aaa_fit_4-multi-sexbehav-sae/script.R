@@ -15,6 +15,13 @@ areas <- read_sf(paste0("depends/", tolower(iso3), "_areas.geojson"))
 ind <- read_csv(paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.csv"))
 pop <- read_csv("depends/interpolated-population.csv")
 
+#' If PHIA surveys excluded then filter them out of the raw data
+if(!include_phia) {
+  ind <- ind %>%
+    mutate(type = substr(survey_id, 8, 11)) %>%
+    filter(type != "PHIA")
+}
+
 #' Use only the surveys which contain a specific paid sex question
 available_surveys <- read_csv("depends/available-surveys.csv")
 

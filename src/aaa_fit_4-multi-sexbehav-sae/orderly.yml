@@ -29,6 +29,9 @@ artefacts:
 parameters:
   iso3:
     default: ~
+  #' If data from PHIA surveys should be included
+  include_phia:
+    default: FALSE
 
 packages:
   - dplyr

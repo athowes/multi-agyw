@@ -10,6 +10,13 @@ areas <- readRDS("depends/areas.rds")
 ind <- read_csv("depends/survey_indicators_sexbehav.csv")
 pop <- read_csv("depends/interpolated_population.csv")
 
+#' If PHIA surveys excluded then filter them out of the raw data
+if(!include_phia) {
+  ind <- ind %>%
+    mutate(type = substr(survey_id, 8, 11)) %>%
+    filter(type != "PHIA")
+}
+
 #' Set ind$estimate > 1 to 1, as well as ind$estimate < 0 to 0
 ind$estimate <- multi.utils::constrain_interval(ind$estimate, lower = 0, upper = 1)
 
