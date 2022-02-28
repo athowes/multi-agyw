@@ -1,0 +1,50 @@
+#' Uncomment and run the two line below to resume development of this script
+# orderly::orderly_develop_start("process_multi-sexbehav-sae")
+# setwd("src/process_multi-sexbehav-sae")
+
+iso3 <- c("BWA", "CMR", "LSO", "MWI", "NAM", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
+
+#' The four category survey estimates
+files <- paste0("depends/", tolower(iso3), "_4-multi-sexbehav-sae.csv")
+df <- bind_rows(lapply(files, function(file) read_csv(file)))
+
+write_csv(df, "every-4-multi-sexbehav-sae.csv", na = "")
+write_csv(multi.utils::update_naming(df), "human-every-4-multi-sexbehav-sae.csv", na = "")
+
+#' Best four category models
+df <- filter(df, model == "Model 3")
+
+write_csv(df, "best-4-multi-sexbehav-sae.csv", na = "")
+write_csv(multi.utils::update_naming(df), "human-best-4-multi-sexbehav-sae.csv", na = "")
+
+iso3 <- multi.utils::priority_iso3()
+
+#' The three category estimates
+files <- paste0("depends/", tolower(iso3), "_3-multi-sexbehav-sae.csv")
+df <- bind_rows(lapply(files, function(file) read_csv(file)))
+
+write_csv(df, "every-3-multi-sexbehav-sae.csv", na = "")
+write_csv(multi.utils::update_naming(df), "human-every-3-multi-sexbehav-sae.csv", na = "")
+
+#' Best three category models
+
+#' When there is only one survey, we want to select Model 3, and when there are multiple, we want to select Model 6
+single_survey <- df %>%
+  group_by(iso3) %>%
+  select(survey_id) %>%
+  unique() %>%
+  count() %>%
+  filter(n == 1)
+
+#' Is there a way to automate this based on model comparison output?
+model_selector <- function(iso3, model) {
+  case_when(
+    iso3 %in% single_survey$iso3 ~ model == "Model 3",
+    T ~ model == "Model 6"
+  )
+}
+
+df <- filter(df, model_selector(iso3, model))
+
+write_csv(df, "best-3-multi-sexbehav-sae.csv", na = "")
+write_csv(multi.utils::update_naming(df), "human-best-3-multi-sexbehav-sae.csv", na = "")
