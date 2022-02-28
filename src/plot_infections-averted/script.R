@@ -157,7 +157,7 @@ ggplot(inc_country, aes(x = population_cumulative, y = infections_averted_cumula
   geom_line(alpha = 0.8, size = 0.7) +
   facet_wrap(~iso3, scales = "free") +
   theme_minimal() +
-  scale_color_manual(values = cbpalette[-c(4, 5)]) +
+  scale_color_manual(values = multi.utils::cbpalette()[-c(4, 5)]) +
   scale_y_continuous(labels = label_number(scale = 1e-3)) +
   scale_x_continuous(labels = label_number(scale = 1e-6)) +
   labs(
