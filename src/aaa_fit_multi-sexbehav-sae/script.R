@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "MWI", include_interactions = TRUE))
+# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "MWI"))
 # setwd("src/aaa_fit_multi-sexbehav-sae")
 
 analysis_level <- multi.utils::analysis_level()
@@ -13,7 +13,6 @@ admin1_level <- admin1_level[iso3]
 
 areas <- read_sf(paste0("depends/", tolower(iso3), "_areas.geojson"))
 ind <- read_csv(paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.csv"))
-pop <- read_csv("depends/interpolated-population.csv")
 
 #' If PHIA surveys excluded then filter them out of the raw data
 if(!include_phia) {
@@ -43,14 +42,6 @@ areas_model <- areas %>%
   #' Add an integer index for INLA
   arrange(area_sort_order) %>%
   mutate(area_idx = row_number())
-
-#' Country level area (not to be included in model)
-country <- areas %>%
-  filter(area_level == 0) %>%
-  mutate(
-    area_idx = NA,
-    area_id_aggr = NA
-  )
 
 #' Create adjacency matrix for INLA
 adjM <- spdep::poly2nb(areas_model)
@@ -86,12 +77,12 @@ if(three_category) {
 df <- crossing(
   #' In this model we are using three risk categories (rather than four)
   indicator = indicators,
-  #' All of the difference surveys
+  #' All of the different surveys
   survey_id = unique(ind$survey_id),
-  #' Three age groups, plus aggregate category
-  age_group = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"),
-  #' Both the areas in the model and the aggregate country
-  bind_rows(areas_model, country) %>%
+  #' Three age groups
+  age_group = c("Y015_019", "Y020_024", "Y025_029"),
+  #' The areas in the model
+  areas_model %>%
     st_drop_geometry() %>%
     select(area_id, area_name, area_idx, area_id_aggr,
            area_sort_order, center_x, center_y)
@@ -110,29 +101,13 @@ df <- df %>%
     by = c("indicator", "survey_id", "age_group", "area_id")
   )
 
-#' Merge age-stratified population total sizes into df
-#' This is required for aggregating the estimates e.g. using 15-19 and 20-24 to create 15-24
-df <- df %>%
-  mutate(
-    #' Assuming the survey_id is structured as ISO2000DHS
-    year = as.numeric(substr(survey_id, 4, 7))
-  ) %>%
-  left_join(
-    pop %>%
-      filter(sex == "female") %>%
-      select(area_id, year, age_group, population),
-    by = c("area_id", "year", "age_group")
-  ) %>%
-  rename(population_mean = population)
-
 #' Add indicies for:
 df <- df %>%
   mutate(
     #' survey
     sur_idx = multi.utils::to_int(survey_id),
     #' age
-    #' (want Y015_024 to have ID 4 rather than 2 as it would be otherwise)
-    age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
+    age_idx = multi.utils::to_int(age_group),
     #' category
     cat_idx = multi.utils::to_int(indicator),
     #' survey x category
@@ -150,16 +125,6 @@ df <- df %>%
     sur_idx_copy = sur_idx
   ) %>%
   arrange(obs_idx)
-
-#' Data for the model (df) doesn't include the aggregates (since this is using data twice)
-#' So we save them off separately
-df_agg <- filter(df, age_group == "Y015_024" | area_id == toupper(iso3))
-
-#' The rows of df to be included in the model
-df_model <- filter(df, age_group != "Y015_024", area_id != toupper(iso3))
-
-#' Check that the rows in the full is a sum of that in the model and aggregate
-stopifnot(nrow(df) == nrow(df_model) + nrow(df_agg))
 
 #' Specify the models to be fit
 
@@ -242,7 +207,7 @@ formulas <- list(formula1, formula2, formula3)
 models <- list("Model 1", "Model 2", "Model 3")
 
 #' If there is more than one survey, then add temporal random effect models
-include_temporal <- (length(unique(df_model$survey_id)) > 1)
+include_temporal <- (length(unique(df$survey_id)) > 1)
 
 if(include_temporal) {
 
@@ -349,6 +314,9 @@ if(include_interactions & include_temporal) {
 #' Number of Monte Carlo samples
 S <- 1000
 
+formulas <- list(formula1)
+models <- list("Model 1")
+
 res <- purrr::pmap(
   list(formula = formulas, model_name = models, S = S),
   multinomial_model
@@ -359,16 +327,12 @@ res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
 
 #' Add columns for local DIC, WAIC, CPO
-#' res_df has the 15-24 category too
 ic <- lapply(res_fit, function(fit) {
   data.frame(
     local_dic = fit$dic$local.dic,
     local_waic = fit$waic$local.waic,
     local_cpo = fit$cpo$cpo
-  ) %>%
-    bind_rows(
-      setNames(as.data.frame(matrix(data = NA, nrow = nrow(df_agg), ncol = 3)), c("local_dic", "local_waic", "local_cpo"))
-    )
+  )
 }) %>%
   bind_rows()
 
@@ -445,8 +409,9 @@ res_df %>%
   facet_grid(survey_id ~ model) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", col = "#802D5B") +
   labs(x = "Kish ESS", y = "Sum of Poisson intensities",
-       title = paste0(substr(res_df$survey_id[1], 1, 3), ": are the sample sizes accurately recovered?"),
-       subtitle = "Dashed line is x = y. Upper limit is cut off at 100 greater than median")
+       title = paste0("Are the sample sizes accurately recovered in ", substr(res_df$survey_id[1], 1, 3), "?"),
+       subtitle = "Dashed line is x = y. Upper limit is cut off at 100 greater than median") +
+  theme_minimal()
 
 dev.off()
 
@@ -492,12 +457,10 @@ res_plot %>%
   lapply(function(x)
   x %>%
     mutate(
-      age_group = fct_relevel(age_group, "Y015_024") %>%
-        fct_recode(
+      age_group = fct_recode(age_group,
           "15-19" = "Y015_019",
           "20-24" = "Y020_024",
-          "25-29" = "Y025_029",
-          "15-24" = "Y015_024"
+          "25-29" = "Y025_029"
         ),
       source = fct_relevel(source, "raw", "smoothed") %>%
         fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed")
@@ -527,13 +490,11 @@ dev.off()
 
 res_df <- res_df %>%
   mutate(
-    age_group = fct_relevel(age_group, "Y015_024", after = 3) %>%
-      fct_recode(
-        "15-19" = "Y015_019",
-        "20-24" = "Y020_024",
-        "25-29" = "Y025_029",
-        "15-24" = "Y015_024"
-      ),
+    age_group = fct_recode(age_group,
+      "15-19" = "Y015_019",
+      "20-24" = "Y020_024",
+      "25-29" = "Y025_029"
+    ),
     indicator = fct_recode(indicator,
       "No sex" = "nosex12m",
       "Cohabiting partner" = "sexcohab",
@@ -549,7 +510,9 @@ res_df %>%
     model = fct_recode(model,
       "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
       "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
-      "7" = "Model 7", "8" = "Model 8", "9" = "Model 9"
+      "7" = "Model 7", "8" = "Model 8", "9" = "Model 9",
+      "5x" = "Model 5x", "6x" = "Model 6x",
+      "8x" = "Model 8x", "9x" = "Model 9x"
     )
   ) %>%
   split(.$survey_id) %>%
@@ -593,10 +556,6 @@ polygon_data <- data.frame(
 )
 
 res_df %>%
-  filter(
-    area_id != iso3,
-    age_group != "15-24"
-  ) %>%
   split(.$model) %>%
   lapply(function(x) {
   ggplot(x, aes(x = prob_quantile)) +
