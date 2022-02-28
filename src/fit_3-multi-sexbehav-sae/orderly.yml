@@ -60,4 +60,3 @@ depends:
     use:
       depends/areas.rds: areas.rds
       depends/survey_indicators_sexbehav.csv: survey_indicators_sexbehav.csv
-      depends/interpolated_population.csv: interpolated_population.csv
