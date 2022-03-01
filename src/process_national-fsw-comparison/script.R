@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("check_national-fsw-comparison")
-# setwd("src/check_national-fsw-comparison/")
+# orderly::orderly_develop_start("process_national-fsw-comparison")
+# setwd("src/process_national-fsw-comparison/")
 
 analysis_level <- multi.utils::analysis_level()
 priority_iso3 <- multi.utils::priority_iso3()

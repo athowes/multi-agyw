@@ -26,7 +26,7 @@ depends:
       id: latest
       use:
         depends/best-3p1-multi-sexbehav-sae.csv: best-3p1-multi-sexbehav-sae.csv
-  - check_national-fsw-comparison:
+  - process_national-fsw-comparison:
       id: latest
       use:
         depends/johnston-fsw-comparison.csv: johnston-fsw-comparison.csv
