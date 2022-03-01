@@ -317,10 +317,15 @@ S <- 1000
 #' If low on computational resources
 #' Just fit the model which is best performing (in preliminary versions of this work)
 if(lightweight) {
-  formulas <- list(formula6)
-  models <- list("Model 6")
-
   S <- 100
+
+  if(!include_temporal) {
+    formulas <- list(formula3)
+    models <- list("Model 3")
+  } else {
+    formulas <- list(formula6)
+    models <- list("Model 6")
+  }
 }
 
 res <- purrr::pmap(
