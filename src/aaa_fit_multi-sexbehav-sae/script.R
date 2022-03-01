@@ -317,7 +317,7 @@ S <- 1000
 #' If low on computational resources
 #' Just fit the model which is best performing (in preliminary versions of this work)
 if(lightweight) {
-  formulas <- list(formula1)
+  formulas <- list(formula6)
   models <- list("Model 6")
 
   S <- 100
