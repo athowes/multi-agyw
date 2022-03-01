@@ -32,10 +32,6 @@ resources:
   - countries_codes_and_coordinates.csv
 
 depends:
-  process_multi-sexbehav-sae:
-    id: latest
-    use:
-      depends/human-best-4-multi-sexbehav-sae.csv: human-best-4-multi-sexbehav-sae.csv
   process_differentiate-high-risk:
     id: latest
     use:

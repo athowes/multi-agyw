@@ -7,15 +7,23 @@ priority_iso3 <- multi.utils::priority_iso3()
 
 #' Get age-stratified population total sizes from Naomi model outputs
 sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+
 url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2021 naomi/Naomi datasets in R/naomi3.rds"
 path <- sharepoint$download(URLencode(url))
 naomi3 <- readRDS(path)
+naomi4 <- naomi3
+naomi3 <- naomi4
+
+url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2021 naomi/areas-extract/naomi-2021-results_pooled-area-hierarchy.csv"
+path <- sharepoint$download(URLencode(url))
+area_hierarchy <- read_csv(path)
 
 naomi3 <- naomi3 %>%
   filter(
+    iso3 %in% priority_iso3,
     indicator_label == "Population",
     #' These are the age groups we are considering,
-    age_group_label %in% c("15-19", "20-24", "25-29", "15-24"),
+    age_group_label %in% c("15-19", "20-24", "25-29"),
     #' Only female
     sex == "female"
   ) %>%
@@ -23,18 +31,36 @@ naomi3 <- naomi3 %>%
   group_by(iso3) %>%
   filter(calendar_quarter == max(calendar_quarter)) %>%
   ungroup() %>%
-  #' For merging with model data
-  rename(
-    population_mean = mean,
-    population_lower = lower,
-    population_upper = upper
+  #' Merge with area hierarchy data
+  left_join(
+    select(area_hierarchy, area_id, parent_area_id),
+    by = "area_id"
   ) %>%
-  select(-indicator_label)
+  select(iso3, area_id, area_level, age_group = age_group_label, population_mean = mean, parent_area_id)
+
+#' The BWA and CMR population are at one level too low
+naomi3_aggregates <- naomi3 %>%
+  filter(iso3 %in% c("BWA", "CMR")) %>%
+  group_by(parent_area_id) %>%
+  summarise(
+    iso3 = iso3,
+    age_group = age_group,
+    population_mean = sum(population_mean)
+  ) %>%
+  rename(area_id = parent_area_id) %>%
+  mutate(area_level = as.numeric(substr(area_id, 5, 5)))
+
+naomi3 <- bind_rows(naomi3, naomi3_aggregates) %>%
+  split(.$iso3) %>%
+  lapply(function(x) {
+    filter(x, area_level == analysis_level[x$iso3[1]])
+  }) %>%
+  bind_rows() %>%
+  select(-parent_area_id)
 
 naomi3_national <- naomi3 %>%
-  group_by(area_level, iso3, age_group_label) %>%
-  summarise(population_mean = sum(population_mean)) %>%
-  rename("age_group" = "age_group_label")
+  group_by(iso3, age_group) %>%
+  summarise(population_mean = sum(population_mean))
 
 naomi3 %>% pull(iso3) %>% unique()
 
@@ -44,8 +70,7 @@ names(johnston) <- c("region", "country", "size_15-19", "size_20-24", "size_15-2
 
 johnston$region %>% unique()
 
-johnston %>%
-  filter(region %in% c("ESA", "MENA", "WCA"))
+johnston %>% filter(region %in% c("ESA", "MENA", "WCA"))
 
 #' iso3 codes from https://gist.github.com/tadast/8827699
 country_codes <- read_csv("countries_codes_and_coordinates.csv") %>%
@@ -59,7 +84,7 @@ johnston <- johnston %>%
   filter(
     region %in% c("ESA", "WCA"),
     iso3 %in% priority_iso3,
-    age_group %in% c("15-19", "20-24", "25-29", "15-24")
+    age_group %in% c("15-19", "20-24", "25-29")
   ) %>%
   select(-region) %>%
   filter(iso3 %in% priority_iso3) %>%
@@ -105,7 +130,7 @@ dev.off()
 est <- read_csv("depends/human-best-3p1-multi-sexbehav-sae.csv") %>%
   filter(
     indicator == "YWKP",
-    age_group %in% c("15-19", "20-24", "25-29", "15-24")
+    age_group %in% c("15-19", "20-24", "25-29")
   ) %>%
   #' Assuming the survey_id is structured as ISO2000DHS
   mutate(year = substr(survey_id, 4, 7)) %>%
@@ -116,10 +141,12 @@ est <- read_csv("depends/human-best-3p1-multi-sexbehav-sae.csv") %>%
 
 #' Calculate estimates of FSW populations by age and area using proportions from ind and PSE from naomi3
 df <- est %>%
-  filter(!(area_id %in% multi.utils::priority_iso3())) %>%
+  filter(!(area_id %in% priority_iso3)) %>%
   left_join(
-    select(naomi3, age_group_label, area_id, population_mean),
-    by = c("age_group" = "age_group_label", "area_id" = "area_id")
+    naomi3 %>%
+      filter(iso3 %in% priority_iso3) %>%
+      select(age_group, area_id, population_mean),
+    by = c("age_group", "area_id")
   ) %>%
   mutate(
     iso3 = substr(survey_id, 1, 3),
