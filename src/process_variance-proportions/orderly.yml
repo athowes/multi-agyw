@@ -21,57 +21,62 @@ packages:
   - spdep
   - tidyr
   - gt
+  - multi.utils
 
 depends:
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "BWA")
+  - plot_available-surveys:
+      id: latest
+      use:
+        depends/available-surveys.csv: available-surveys.csv
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "BWA" && parameter:three_category == TRUE)
       use:
         depends/bwa_variance-proportions.csv: variance-proportions.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "CMR")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "CMR" && parameter:three_category == TRUE)
       use:
         depends/cmr_variance-proportions.csv: variance-proportions.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "KEN")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "KEN" && parameter:three_category == TRUE)
       use:
         depends/ken_variance-proportions.csv: variance-proportions.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "LSO")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "LSO" && parameter:three_category == TRUE)
       use:
         depends/lso_variance-proportions.csv: variance-proportions.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "MOZ")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "MOZ" && parameter:three_category == TRUE)
       use:
         depends/moz_variance-proportions.csv: variance-proportions.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "MWI")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "MWI" && parameter:three_category == TRUE)
       use:
         depends/mwi_variance-proportions.csv: variance-proportions.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "NAM")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "NAM" && parameter:three_category == TRUE)
       use:
         depends/nam_variance-proportions.csv: variance-proportions.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "SWZ")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "SWZ" && parameter:three_category == TRUE)
       use:
         depends/swz_variance-proportions.csv: variance-proportions.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "TZA")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "TZA" && parameter:three_category == TRUE)
       use:
         depends/tza_variance-proportions.csv: variance-proportions.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "UGA")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "UGA" && parameter:three_category == TRUE)
       use:
         depends/uga_variance-proportions.csv: variance-proportions.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "ZAF")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "ZAF" && parameter:three_category == TRUE)
       use:
         depends/zaf_variance-proportions.csv: variance-proportions.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "ZMB")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "ZMB" && parameter:three_category == TRUE)
       use:
         depends/zmb_variance-proportions.csv: variance-proportions.csv
-  - aaa_fit_3-multi-sexbehav-sae:
-      id: latest(parameter:iso3 == "ZWE")
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "ZWE" && parameter:three_category == TRUE)
       use:
         depends/zwe_variance-proportions.csv: variance-proportions.csv

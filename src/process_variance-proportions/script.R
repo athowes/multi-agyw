@@ -19,6 +19,13 @@ variance_effects <- c(
 )
 
 df <- df %>%
+  #' Defensive programming
+  mutate(
+    variance_area_sur_idx = ifelse("variance_area_sur_idx" %in% names(.), variance_area_sur_idx, NA),
+    percentage_variance_area_sur_idx = ifelse("percentage_variance_area_sur_idx" %in% names(.), percentage_variance_area_sur_idx, NA),
+    variance_area_idx_copy = ifelse("variance_area_idx_copy" %in% names(.), variance_area_idx_copy, NA),
+    percentage_variance_area_idx_copy = ifelse("percentage_variance_area_idx_copy" %in% names(.), percentage_variance_area_idx_copy, NA),
+  ) %>%
   mutate(
     variance_area_sur_idx = case_when(
       is.na(variance_area_sur_idx) & !is.na(variance_area_idx_copy) ~ variance_area_idx_copy,
@@ -58,18 +65,17 @@ fct_reorg <- function(fac, ...) {
   fct_recode(fct_relevel(fac, ...), ...)
 }
 
-#' Don't have access to the surveys, going to use workaround whereby select Model 3 if there are only three models
 #' When there is only one survey, we want to select Model 3, and when there are multiple, we want to select Model 6
 single_survey <- df %>%
   group_by(iso3) %>%
-  select(model) %>%
-  unique() %>%
-  count() %>%
-  filter(n == 3)
+  summarise(max = max(model)) %>%
+  select(iso3, max) %>%
+  filter(max == "Model 3") %>%
+  pull(iso3)
 
 model_selector <- function(iso3, model) {
   case_when(
-    iso3 %in% single_survey$iso3 ~ model == "Model 3",
+    iso3 %in% single_survey ~ model == "Model 3",
     T ~ model == "Model 6"
   )
 }
