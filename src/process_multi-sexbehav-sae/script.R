@@ -34,12 +34,13 @@ single_survey <- df %>%
   select(survey_id) %>%
   unique() %>%
   count() %>%
-  filter(n == 1)
+  filter(n == 1) %>%
+  pull(iso3)
 
 #' Is there a way to automate this based on model comparison output?
 model_selector <- function(iso3, model) {
   case_when(
-    # iso3 %in% single_survey$iso3 ~ model == "Model 3",
+    iso3 %in% single_survey ~ model == "Model 3",
     T ~ model == "Model 6"
   )
 }

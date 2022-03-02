@@ -1,13 +1,13 @@
 script: script.R
 
 artefacts:
-  - data:
-      description: Multinomial smoothed district estimate results (four categories)
-      filenames:
-        - every-4-multi-sexbehav-sae.csv
-        - human-every-4-multi-sexbehav-sae.csv
-        - best-4-multi-sexbehav-sae.csv
-        - human-best-4-multi-sexbehav-sae.csv
+  # - data:
+  #     description: Multinomial smoothed district estimate results (four categories)
+  #     filenames:
+  #       - every-4-multi-sexbehav-sae.csv
+  #       - human-every-4-multi-sexbehav-sae.csv
+  #       - best-4-multi-sexbehav-sae.csv
+  #       - human-best-4-multi-sexbehav-sae.csv
   - data:
       description: Multinomial smoothed district estimate results (three categories)
       filenames:
