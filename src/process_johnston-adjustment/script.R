@@ -48,3 +48,4 @@ df <- df %>%
   )
 
 write_csv(df, "adjust-best-3p1-multi-sexbehav-sae.csv")
+write_csv(update_naming(df), "human-adjust-best-3p1-multi-sexbehav-sae.csv")

@@ -8,6 +8,7 @@ artefacts:
       description: Multinomial smoothed district estimate results (four categories) adjusted to match Johnston FSW estimates
       filenames:
         - adjust-best-3p1-multi-sexbehav-sae.csv
+        - human-adjust-best-3p1-multi-sexbehav-sae.csv
 
 packages:
   - dplyr
@@ -20,6 +21,7 @@ packages:
   - sf
   - spdep
   - tidyr
+  - multi.utils
 
 depends:
   - process_differentiate-high-risk:
