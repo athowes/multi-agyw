@@ -1,10 +1,14 @@
 script: script.R
 
+sources:
+  - functions.R
+
 artefacts:
   - data:
       description: Aiming to show the extent of within and between country variability in the estimates
       filenames:
         - within-between-country-variation.pdf
+        - within-between-country-variation-fsw.pdf
 
 packages:
   - dplyr
@@ -20,7 +24,11 @@ packages:
   - tibble
 
 depends:
+  - process_johnston-adjustment:
+      id: latest
+      use:
+        depends/adjust-best-3p1-multi-sexbehav-sae.csv: adjust-best-3p1-multi-sexbehav-sae.csv
   - process_differentiate-high-risk:
       id: latest
       use:
-        depends/human-best-3p1-multi-sexbehav-sae.csv: human-best-3p1-multi-sexbehav-sae.csv
+        depends/best-3p1-multi-sexbehav-sae.csv: best-3p1-multi-sexbehav-sae.csv
