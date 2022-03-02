@@ -9,6 +9,7 @@ artefacts:
       filenames:
         - adjust-best-3p1-multi-sexbehav-sae.csv
         - human-adjust-best-3p1-multi-sexbehav-sae.csv
+        - quick-adjustment-comparison.pdf
 
 packages:
   - dplyr

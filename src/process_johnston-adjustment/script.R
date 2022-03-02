@@ -5,9 +5,7 @@
 df <- read_csv("depends/best-3p1-multi-sexbehav-sae.csv")
 johnston <- read_csv("depends/johnston-fsw-comparison.csv")
 
-#' Some NAs in here: sad reacts
 johnston <- johnston %>%
-  mutate(age_group = fct_relevel(age_group, "Y015_019" = "15-19", "Y020_024" = "20-24")) %>%
   select(iso3, age_group, method, est_proportion) %>%
   filter(method %in% c("Smoothed", "Johnston")) %>%
   pivot_wider(
@@ -19,13 +17,14 @@ johnston <- johnston %>%
   select(-Johnston, - Smoothed)
 
 #' Johnston doesn't include 25-29, so let's just assume it's the same ratio as in 20-24 for now
-johnston_Y025_029 <- johnston %>%
-  filter(age_group == "20-24") %>%
-  mutate(age_group = "25-29")
+  johnston_Y025_029 <- johnston %>%
+    filter(age_group == "20-24") %>%
+    mutate(age_group = "25-29")
 
-johnston <- bind_rows(johnston, johnston_Y025_029)
+johnston <- bind_rows(johnston, johnston_Y025_029) %>%
+  mutate(age_group = fct_recode(age_group, "Y015_019" = "15-19", "Y020_024" = "20-24", "Y025_029" = "25-29"))
 
-df <- df %>%
+df_adjusted <- df %>%
   left_join(
     johnston,
     by = c("iso3", "age_group")
@@ -47,5 +46,19 @@ df <- df %>%
     values_to = "estimate_smoothed"
   )
 
-write_csv(df, "adjust-best-3p1-multi-sexbehav-sae.csv")
-write_csv(update_naming(df), "human-adjust-best-3p1-multi-sexbehav-sae.csv")
+pdf("quick-adjustment-comparison.pdf", h = 5, w = 6.25)
+
+df %>%
+  filter(indicator == "sexpaid12m") %>%
+  pull(estimate_smoothed) %>%
+  plot(main = "No adjustment")
+
+df_adjusted %>%
+  filter(indicator == "sexpaid12m") %>%
+  pull(estimate_smoothed) %>%
+  plot(main = "Johnston adjustment")
+
+dev.off()
+
+write_csv(df_adjusted, "adjust-best-3p1-multi-sexbehav-sae.csv")
+write_csv(multi.utils::update_naming(df_adjusted), "human-adjust-best-3p1-multi-sexbehav-sae.csv")
