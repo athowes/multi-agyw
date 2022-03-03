@@ -11,16 +11,11 @@ df <- df %>%
     age_group == "Y020_024",
     model == "Model 6",
     area_id != "TZA",
+    indicator == "sexcohab"
   ) %>%
   mutate(
-    age_group = fct_recode(age_group,
-      "20-24" = "Y020_024",
-    ),
-    indicator = fct_recode(indicator,
-      "No sex (past 12 months)" = "nosex12m",
-      "Cohabiting partner" = "sexcohab",
-      "Nonregular partner(s)" = "sexnonregplus",
-    )
+    age_group = fct_recode(age_group, "20-24" = "Y020_024"),
+    indicator = fct_recode(indicator, "Cohabiting partner" = "sexcohab")
   ) %>%
   pivot_longer(
     cols = c(starts_with("estimate")),
@@ -39,10 +34,9 @@ df <- df %>%
   ) %>%
   st_as_sf()
 
-#' Which of the Zambian districts are missing the raw survey estimate?
+#' Which of the districts are missing the raw survey estimate?
 missing_districts <- df %>%
   filter(
-    indicator == "No sex (past 12 months)",
     source == "Raw",
     is.na(n_clusters)
   ) %>%
@@ -50,7 +44,7 @@ missing_districts <- df %>%
 
 missing_districts$area_name %>% sort()
 
-pdf("model-direct-benefits-v.pdf", h = 8, w = 6.25)
+pdf("model-direct-benefits.pdf", h = 4, w = 6.25)
 
 ggplot(df, aes(fill = estimate)) +
   geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
@@ -62,34 +56,12 @@ ggplot(df, aes(fill = estimate)) +
     axis.text = element_blank(),
     axis.ticks = element_blank(),
     panel.grid = element_blank(),
-    strip.text = element_text(face = "bold", size = rel(0.85)),
-    legend.title = element_text(size = rel(0.7)),
-    legend.text = element_text(size = rel(0.7)),
+    strip.text = element_text(face = "bold", size = 9),
+    legend.title = element_text(size = 9),
+    legend.text = element_text(size = 9),
     plot.title = element_text(face = "bold"),
     legend.position = "bottom",
-    legend.key.width = unit(4, "lines"),
-  )
-
-dev.off()
-
-pdf("model-direct-benefits-h.pdf", h = 6.25, w = 8)
-
-ggplot(df, aes(fill = estimate)) +
-  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
-  scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
-  facet_grid(source ~ indicator) +
-  labs(fill = "Estimated proportion") +
-  theme_minimal() +
-  theme(
-    axis.text = element_blank(),
-    axis.ticks = element_blank(),
-    panel.grid = element_blank(),
-    strip.text = element_text(face = "bold", size = rel(0.85)),
-    legend.title = element_text(size = rel(0.7)),
-    legend.text = element_text(size = rel(0.7)),
-    plot.title = element_text(face = "bold"),
-    legend.position = "bottom",
-    legend.key.width = unit(4, "lines"),
+    legend.key.width = unit(4, "lines")
   )
 
 dev.off()

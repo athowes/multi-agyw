@@ -2,10 +2,9 @@ script: script.R
 
 artefacts:
   - data:
-      description: Aiming to show the three benefits of using modelled estimates over direct (vertical and horizontal versions)
+      description: Aiming to show the three benefits of using modelled estimates over direct
       filenames:
-        - model-direct-benefits-v.pdf
-        - model-direct-benefits-h.pdf
+        - model-direct-benefits.pdf
 
 packages:
   - dplyr
@@ -21,8 +20,8 @@ packages:
   - cowplot
 
 depends:
-  aaa_fit_3-multi-sexbehav-sae:
-    id: latest(parameter:iso3 == "TZA")
+  aaa_fit_multi-sexbehav-sae:
+    id: latest(parameter:iso3 == "TZA" && parameter:three_category == TRUE)
     use:
       depends/tza_multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   tza_data_areas:
