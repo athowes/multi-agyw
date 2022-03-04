@@ -1,4 +1,4 @@
-#' Run aaa_fit_multi-sexbehav-sae in bulk
+ #' Run aaa_fit_multi-sexbehav-sae in bulk
 
 report <- "aaa_fit_multi-sexbehav-sae"
 
@@ -12,14 +12,16 @@ ids <- orderly::orderly_batch(report, params)
 #' Get the most recent archived or drafted version of each of the reports
 #' Could also use ids from orderly_batch here: if you've just run it then they should be the same
 recent_ids <- sapply(priority_iso3, function(iso3) {
-    orderly::orderly_search(query = paste0("latest(parameter:iso3 == '", iso3, "')"), report, draft = TRUE)
+    orderly::orderly_search(
+      query = paste0("latest(parameter:iso3 == '", iso3, "' && parameter:lightweight == TRUE)"),
+      report,
+      draft = TRUE
+    )
 })
 
 #' Commit them and push to remote
 sapply(na.omit(recent_ids), function(id) orderly::orderly_commit(id))
 sapply(na.omit(recent_ids), function(id) orderly::orderly_push_archive(name = report, id = id))
-
-report <- "aaa_fit_4-multi-sexbehav-sae"
 
 #' Four categories, for only those countries which have any surveys with a dedicated sex paid question
 recent <- orderly::orderly_latest(name = "plot_available-surveys")
@@ -30,11 +32,15 @@ giftsvar_iso3 <- available_surveys %>%
   pull(iso3) %>%
   unique()
 
-params <- data.frame(iso3 = giftsvar_iso3, lightweight = TRUE)
+params <- data.frame(iso3 = giftsvar_iso3, lightweight = TRUE, three_category = FALSE, include_phia = TRUE)
 ids <- orderly::orderly_batch(report, params)
 
-recent_ids <- sapply(priority_iso3, function(iso3) {
-  orderly::orderly_search(query = paste0("latest(parameter:iso3 == '", iso3, "')"), report, draft = TRUE)
+recent_ids <- sapply(giftsvar_iso3, function(iso3) {
+  orderly::orderly_search(
+    query = paste0("latest(parameter:iso3 == '", iso3, "' && parameter:lightweight == TRUE && parameter:three_category == FALSE && parameter:include_phia == TRUE)"),
+    report,
+    draft = TRUE
+  )
 })
 
 sapply(na.omit(recent_ids), function(id) orderly::orderly_commit(id))
