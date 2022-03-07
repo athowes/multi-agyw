@@ -21,6 +21,24 @@ ind <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_survey
 
 write_csv(ind, "survey_indicators_sexbehav.csv")
 
+pdf("survey_indicators_sexbehav.pdf", h = 10, w = 6.25)
+
+ind %>%
+  filter(indicator %in% c("nosex12m", "sexcohab", "sexnonregplus")) %>%
+  group_by(indicator, survey_id) %>%
+  summarise(estimate = mean(estimate)) %>%
+  mutate(
+    iso3 = substr(survey_id, 1, 3),
+    year = as.numeric(substr(survey_id, 4, 7)),
+    type = substr(survey_id, 8, 11)
+  ) %>%
+  ggplot(aes(x = year, y = estimate, col = type)) +
+  geom_point() +
+  facet_grid(iso3 ~ indicator)
+
+dev.off()
+
+
 #' Merge all of the population datasets
 pop <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_interpolated-population.csv"))) %>%
   bind_rows()

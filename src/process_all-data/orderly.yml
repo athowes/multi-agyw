@@ -10,6 +10,7 @@ artefacts:
       description: All survey indicator datasets
       filenames:
         - survey_indicators_sexbehav.csv
+        - survey_indicators_sexbehav.pdf
   - data:
       description: All population datasets
       filenames:
