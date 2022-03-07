@@ -49,7 +49,8 @@ multinomial_model <- function(formula, model_name, S = 1000) {
       filter(substr(rowname, 1, 10) == "Predictor:") %>%
       bind_cols(
         df %>%
-          select(age_idx, area_idx, sur_idx, obs_idx, cat_idx, n_eff_kish)
+          #' c(obs_idx, cat_idx) is sufficient to identify
+          select(obs_idx, cat_idx, n_eff_kish)
       ) %>%
       split(.$obs_idx) %>%
       lapply(function(x)
