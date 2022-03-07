@@ -17,10 +17,10 @@ df <- filter(df, model == "Model 3")
 write_csv(df, "best-4-multi-sexbehav-sae.csv", na = "")
 write_csv(multi.utils::update_naming(df), "human-best-4-multi-sexbehav-sae.csv", na = "")
 
-iso3 <- multi.utils::priority_iso3()
+priority_iso3 <- multi.utils::priority_iso3()
 
 #' The three category estimates
-files <- paste0("depends/", tolower(iso3), "_3-multi-sexbehav-sae.csv")
+files <- paste0("depends/", tolower(priority_iso3), "_3-multi-sexbehav-sae.csv")
 df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
 write_csv(df, "every-3-multi-sexbehav-sae.csv", na = "")
@@ -50,7 +50,10 @@ df <- filter(df, model_selector(iso3, model))
 write_csv(df, "best-3-multi-sexbehav-sae.csv", na = "")
 write_csv(multi.utils::update_naming(df), "human-best-3-multi-sexbehav-sae.csv", na = "")
 
-#' Three category sample testing
-df <- read_csv("depends/bwa_3-multi-sexbehav-sae.csv")
-samples <- readRDS("depends/bwa_3-multi-sexbehav-sae-samples.rds")
+#' Three category samples
+files <- paste0("depends/", tolower(priority_iso3), "_3-multi-sexbehav-sae-samples.rds")
+samples <- lapply(files, function(file) readRDS(file))
 
+saveRDS(samples, "every-3-multi-sexbehav-sae-samples.rds")
+
+#' TODO create best-3-multi-sexbehav-sae-samples.rds
