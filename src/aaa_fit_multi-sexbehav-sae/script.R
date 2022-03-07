@@ -333,9 +333,13 @@ res <- purrr::pmap(
   multinomial_model
 )
 
-#' Extract the df and the full fitted models
+#' Extract the df, full fitted models and samples
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
+res_samples <- lapply(res, "[[", 3)
+
+#' Artefact: Full samples
+saveRDS(res_samples, "multi-sexbehav-sae-samples.rds")
 
 #' Add columns for local DIC, WAIC, CPO
 ic <- lapply(res_fit, function(fit) {
@@ -460,7 +464,6 @@ res_plot <- res_df %>%
   st_as_sf()
 
 #' Artefact: Cloropleths
-
 pdf("multi-sexbehav-sae.pdf", h = 8.25, w = 11.75)
 
 res_plot %>%
@@ -498,7 +501,6 @@ res_plot %>%
 dev.off()
 
 #' Artefact: Stacked proportion barplots
-
 res_df <- res_df %>%
   mutate(
     age_group = fct_recode(age_group,
@@ -549,7 +551,6 @@ res_df %>%
 dev.off()
 
 #' Artefact: Posterior predictive checks of coverage
-
 pdf("coverage-histograms.pdf", h = 8.25, w = 11.75)
 
 bins <- 20
