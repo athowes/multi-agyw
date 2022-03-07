@@ -73,7 +73,9 @@ multinomial_model <- function(formula, model_name, S = 1000) {
         lambda = exp(eta),
         #' Sample number / identifier
         sample = i
-      )
+      ) %>%
+      #' Add model identifier
+      mutate(model = model_name)
   ) %>%
     bind_rows()
 
