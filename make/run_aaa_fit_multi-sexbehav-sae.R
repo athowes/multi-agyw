@@ -32,12 +32,12 @@ giftsvar_iso3 <- available_surveys %>%
   pull(iso3) %>%
   unique()
 
-params <- data.frame(iso3 = giftsvar_iso3, lightweight = TRUE, three_category = FALSE, include_phia = TRUE)
+params <- data.frame(iso3 = giftsvar_iso3, lightweight = TRUE, three_category = FALSE)
 ids <- orderly::orderly_batch(report, params)
 
 recent_ids <- sapply(giftsvar_iso3, function(iso3) {
   orderly::orderly_search(
-    query = paste0("latest(parameter:iso3 == '", iso3, "' && parameter:lightweight == TRUE && parameter:three_category == FALSE && parameter:include_phia == TRUE)"),
+    query = paste0("latest(parameter:iso3 == '", iso3, "' && parameter:lightweight == TRUE && parameter:three_category == FALSE)"),
     report,
     draft = TRUE
   )
