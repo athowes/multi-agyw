@@ -30,90 +30,86 @@ packages:
   - multi.utils
 
 depends:
-  # - aaa_fit_multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "BWA" && parameter:three_category == FALSE)
-  #     use:
-  #       depends/bwa_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "CMR" && parameter:three_category == FALSE)
-  #     use:
-  #       depends/cmr_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "KEN" && parameter:three_category == FALSE)
-  #     use:
-  #       depends/ken_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "LSO" && parameter:three_category == FALSE)
-  #     use:
-  #       depends/lso_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "MOZ" && parameter:three_category == FALSE)
-  #     use:
-  #       depends/moz_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "MWI" && parameter:three_category == FALSE)
-  #     use:
-  #       depends/mwi_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "NAM" && parameter:three_category == FALSE)
-  #     use:
-  #       depends/nam_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "SWZ" && parameter:three_category == FALSE)
-  #     use:
-  #       depends/swz_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "TZA" && parameter:three_category == FALSE)
-  #     use:
-  #       depends/tza_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "UGA" && parameter:three_category == FALSE)
-  #     use:
-  #       depends/uga_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "ZAF" && parameter:three_category == FALSE)
-  #     use:
-  #       depends/zaf_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "ZMB" && parameter:three_category == FALSE)
-  #     use:
-  #       depends/zmb_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-  # - aaa_fit_multi-sexbehav-sae:
-  #     id: latest(parameter:iso3 == "ZWE" && parameter:three_category == FALSE)
-  #     use:
-  #       depends/zwe_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "BWA" && parameter:three_category == FALSE)
+      use:
+        depends/bwa_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "CMR" && parameter:three_category == FALSE)
+      use:
+        depends/cmr_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "LSO" && parameter:three_category == FALSE)
+      use:
+        depends/lso_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "MWI" && parameter:three_category == FALSE)
+      use:
+        depends/mwi_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "NAM" && parameter:three_category == FALSE)
+      use:
+        depends/nam_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "TZA" && parameter:three_category == FALSE)
+      use:
+        depends/tza_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "UGA" && parameter:three_category == FALSE)
+      use:
+        depends/uga_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "ZAF" && parameter:three_category == FALSE)
+      use:
+        depends/zaf_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "ZMB" && parameter:three_category == FALSE)
+      use:
+        depends/zmb_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+  - aaa_fit_multi-sexbehav-sae:
+      id: latest(parameter:iso3 == "ZWE" && parameter:three_category == FALSE)
+      use:
+        depends/zwe_4-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "BWA" && parameter:three_category == TRUE)
       use:
         depends/bwa_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+        depends/bwa_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "CMR" && parameter:three_category == TRUE)
       use:
         depends/cmr_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+        depends/cmr_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "KEN" && parameter:three_category == TRUE)
       use:
         depends/ken_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+        depends/ken_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "LSO" && parameter:three_category == TRUE)
       use:
         depends/lso_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+        depends/lso_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MOZ" && parameter:three_category == TRUE)
       use:
         depends/moz_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+        depends/moz_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MWI" && parameter:three_category == TRUE)
       use:
         depends/mwi_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+        depends/mwi_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "NAM" && parameter:three_category == TRUE)
       use:
         depends/nam_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+        depends/nam_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "SWZ" && parameter:three_category == TRUE)
       use:
         depends/swz_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+        depends/swz_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "TZA" && parameter:three_category == TRUE)
       use:
@@ -122,15 +118,19 @@ depends:
       id: latest(parameter:iso3 == "UGA" && parameter:three_category == TRUE)
       use:
         depends/uga_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+        depends/uga_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZAF" && parameter:three_category == TRUE)
       use:
-        depends/zaf_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+         depends/zaf_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+         depends/zaf_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZMB" && parameter:three_category == TRUE)
       use:
         depends/zmb_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+        depends/zmb_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZWE" && parameter:three_category == TRUE)
       use:
         depends/zwe_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+        depends/zwe_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
