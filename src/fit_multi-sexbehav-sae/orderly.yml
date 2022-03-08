@@ -5,6 +5,11 @@ sources:
 
 artefacts:
   - data:
+      description: Checks that the data is as intended
+      filenames:
+        - areas-check.pdf
+        - data-check.pdf
+  - data:
       description: Smoothed district indicator estimates for multinomial models
       filenames:
         - multi-sexbehav-sae.csv
@@ -34,12 +39,16 @@ parameters:
   #' Should we be used three categories or four
   three_category:
     default: TRUE
+  #' Fit only one model rather than all models
+  lightweight:
+    default: FALSE
   #' If the interaction models currently under development should be fit too
   include_interactions:
     default: FALSE
   #' If data from PHIA surveys should be included
   include_phia:
     default: TRUE
+  #' If a subset of the countries should be considered
   fewer_countries:
     default: FALSE
 

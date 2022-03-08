@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("fit_multi-sexbehav-sae")
+# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE, fewer_countries = TRUE))
 # setwd("src/fit_multi-sexbehav-sae")
 
 analysis_level <- multi.utils::analysis_level()
@@ -13,16 +13,6 @@ if(!include_phia) {
   ind <- ind %>%
     mutate(type = substr(survey_id, 8, 11)) %>%
     filter(type != "PHIA")
-}
-
-#' If working with a subset of the countries for model development and testing, also filter out of the data
-if(fewer_countries) {
-  ind <- ind %>%
-    mutate(iso3 = substr(survey_id, 1, 3)) %>%
-    #' Mostly arbitrary which countries included in the subset
-    #' I've gone for something spatially contiguous and across cultural boundaries
-    filter(iso3 %in% c("BWA", "MOZ", "ZWE")) %>%
-    select(-iso3)
 }
 
 #' Set ind$estimate > 1 to 1, as well as ind$estimate < 0 to 0
@@ -43,6 +33,20 @@ areas <- areas %>%
     by = "iso3"
   )
 
+#' If working with a subset of the countries for model development and testing, also filter out of the data
+if(fewer_countries) {
+  subset_iso3 <- c("BWA", "MOZ", "ZWE")
+
+  ind <- ind %>%
+    mutate(iso3 = substr(survey_id, 1, 3)) %>%
+    #' Mostly arbitrary which countries included in the subset
+    #' I've gone for something spatially contiguous and across cultural boundaries
+    filter(iso3 %in% subset_iso3) %>%
+    select(-iso3)
+
+  areas <- filter(areas, iso3 %in% subset_iso3)
+}
+
 #' Areas at the level of analysis
 areas_model <- areas %>%
   filter(area_level == analysis_level) %>%
@@ -58,6 +62,15 @@ areas_model <- areas %>%
   #' Add an integer index for INLA
   arrange(area_sort_order) %>%
   mutate(area_idx = row_number())
+
+pdf("areas-check.pdf", h = 5, w = 8)
+
+ggplot(areas_model, aes(fill = iso3)) +
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+  labs(fill = "ISO3") +
+  theme_minimal()
+
+dev.off()
 
 #' Create adjacency matrix for INLA
 adjM <- spdep::poly2nb(areas_model)
@@ -108,6 +121,27 @@ df <- df %>%
              x_eff, estimate, ci_lower, ci_upper),
     by = c("indicator", "year", "age_group", "area_id")
   )
+
+pdf("data-check.pdf", h = 11, w = 8.75)
+
+df %>%
+  left_join( #' Use this to make it an sf again
+    select(areas, area_id),
+    by = "area_id"
+  ) %>%
+  st_as_sf() %>%
+  split(.$survey_id) %>%
+  lapply(function(x) {
+    x %>%
+      ggplot(aes(fill = estimate)) +
+      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+      scale_fill_viridis_c(option = "C", label = label_percent(), limits = c(0, 1)) +
+      facet_grid(indicator ~ age_group) +
+      labs(title = paste0(x$survey_id[1])) +
+      theme_minimal()
+  })
+
+dev.off()
 
 #' Add indicies for:
 df <- mutate(df,
@@ -225,21 +259,27 @@ models <- append(models, paste0("Model ", 1:9) %>% as.list())
 
 #' Fit the models
 
-cluster <- FALSE
-
 #' Number of Monte Carlo samples
 S <- 1000
 
-if(cluster) {
-  res <- purrr::pmap(
-    list(formula = formulas, model_name = models, S = S),
-    multinomial_model
-  )
-} else {
-  #' I suspect that Model 9 is best
-  res <- multinomial_model(formula1, model_name = "Model 9", S = S)
-  res <- list(res)
+#' If low on computational resources i.e. not on the cluster
+#' Just fit one model
+if(lightweight) {
+  S <- 100
+
+  if(!include_temporal) {
+    formulas <- list(formula3)
+    models <- list("Model 1")
+  } else {
+    formulas <- list(formula6)
+    models <- list("Model 1")
+  }
 }
+
+res <- purrr::pmap(
+  list(formula = formulas, model_name = models, S = S),
+  multinomial_model
+)
 
 #' Extract the df and the full fitted models
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
