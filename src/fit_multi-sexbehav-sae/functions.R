@@ -14,11 +14,24 @@ multinomial_model <- function(formula, model_name, S = 1000) {
                                      cpo = TRUE, config = TRUE),
               inla.mode = "experimental")
 
-  message("Completed fitting ", model_name, "."))
+  message(paste0("Completed fitting ", model_name, "."))
 
   message("Begin post-processing")
 
   df <- df %>%
+    mutate(
+      #' Add mean of linear predictor
+      eta = fit$summary.linear.predictor$mean
+    ) %>%
+    #' Split by observation indicator and lapply softmax
+    split(.$obs_idx) %>%
+    lapply(function(x)
+      x %>%
+        mutate(prob_mean = stable_softmax(eta))
+    ) %>%
+    bind_rows() %>%
+    #' Remove eta
+    select(-eta) %>%
     #' Add model identifier
     mutate(model = model_name)
 
@@ -44,17 +57,16 @@ multinomial_model <- function(formula, model_name, S = 1000) {
       split(.$obs_idx) %>%
       lapply(function(x)
         x %>%
+          #' Use stable_softmax(eta) here as the probability with additional multinomial sampling variability
+          #' Would like to sample from multinomial with non-integer counts for n_eff_kish but can't
+          #' Instead use the floor, which the size argument automatically does but written here for clarity
+          #' Sometimes n_eff_kish is NA (missing data). In these cases we use 100 (around the average)
+          #' This is a little makeshift but probably sufficient for our purposes
           mutate(
-            #' Use stable_softmax(eta) here as the probability with additional multinomial sampling variability
-            #' Would like to sample from multinomial with non-integer counts for n_eff_kish but can't
-            #' Instead use the floor, which the size argument automatically does but written here for clarity
-            #' Sometimes n_eff_kish is NA (missing data). In these cases we use 100 (around the average)
-            #' This is a little makeshift but probably sufficient for our purposes
-            prob = ifelse(!is.na(n_eff_kish),
-                          stats::rmultinom(n = 1, size = floor(n_eff_kish), prob = stable_softmax(eta)) / n_eff_kish,
-                          stats::rmultinom(n = 1, size = 100, prob = stable_softmax(eta)) / 100
-            )
-          )
+            n_eff_kish_new = ifelse(is.na(n_eff_kish), 100, n_eff_kish),
+            prob = stats::rmultinom(n = 1, size = floor(n_eff_kish_new), prob = stable_softmax(eta)) / n_eff_kish_new
+          ) %>%
+          select(-n_eff_kish_new)
       ) %>%
       bind_rows() %>%
       mutate(
