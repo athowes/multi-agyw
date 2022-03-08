@@ -35,73 +35,75 @@ multinomial_model <- function(formula, model_name, S = 1000) {
     #' Add model identifier
     mutate(model = model_name)
 
-  #' Number of samples from the posterior, keep it low to begin with
-  full_samples <- inla.posterior.sample(n = S, result = fit)
+  #' #' Number of samples from the posterior, keep it low to begin with
+  #' full_samples <- inla.posterior.sample(n = S, result = fit)
+  #'
+  #' #' Calculate the probabilities for each sample from the posterior
+  #' x <- lapply(
+  #'   seq_along(full_samples),
+  #'   function(i)
+  #'     full_samples[[i]]$latent %>%
+  #'     data.frame() %>%
+  #'     tibble::rownames_to_column() %>%
+  #'     #' eta = 2 is the second column, which usually is called
+  #'     #' paste0("sample.", i) but I have experienced some inconsistency
+  #'     #' from this within INLA so avoiding
+  #'     rename(eta = 2) %>%
+  #'     filter(substr(rowname, 1, 10) == "Predictor:") %>%
+  #'     bind_cols(
+  #'       df %>%
+  #'         select(age_idx, area_idx, year_idx, obs_idx, cat_idx, n_eff_kish)
+  #'     ) %>%
+  #'     split(.$obs_idx) %>%
+  #'     lapply(function(x)
+  #'       x %>%
+  #'         #' Use stable_softmax(eta) here as the probability with additional multinomial sampling variability
+  #'         #' Would like to sample from multinomial with non-integer counts for n_eff_kish but can't
+  #'         #' Instead use the floor, which the size argument automatically does but written here for clarity
+  #'         #' Sometimes n_eff_kish is NA (missing data). In these cases we use 100 (around the average)
+  #'         #' This is a little makeshift but probably sufficient for our purposes
+  #'         mutate(
+  #'           n_eff_kish_new = ifelse(is.na(n_eff_kish), 100, n_eff_kish),
+  #'           prob = stats::rmultinom(n = 1, size = floor(n_eff_kish_new), prob = stable_softmax(eta)) / n_eff_kish_new
+  #'         ) %>%
+  #'         select(-n_eff_kish_new)
+  #'     ) %>%
+  #'     bind_rows() %>%
+  #'     mutate(
+  #'       #' Sample of the intensity
+  #'       lambda = exp(eta),
+  #'       #' Sample number / identifier
+  #'       sample = i
+  #'     )
+  #' ) %>%
+  #'   bind_rows()
 
-  #' Calculate the probabilities for each sample from the posterior
-  x <- lapply(
-    seq_along(full_samples),
-    function(i)
-      full_samples[[i]]$latent %>%
-      data.frame() %>%
-      tibble::rownames_to_column() %>%
-      #' eta = 2 is the second column, which usually is called
-      #' paste0("sample.", i) but I have experienced some inconsistency
-      #' from this within INLA so avoiding
-      rename(eta = 2) %>%
-      filter(substr(rowname, 1, 10) == "Predictor:") %>%
-      bind_cols(
-        df %>%
-          select(age_idx, area_idx, year_idx, obs_idx, cat_idx, n_eff_kish)
-      ) %>%
-      split(.$obs_idx) %>%
-      lapply(function(x)
-        x %>%
-          #' Use stable_softmax(eta) here as the probability with additional multinomial sampling variability
-          #' Would like to sample from multinomial with non-integer counts for n_eff_kish but can't
-          #' Instead use the floor, which the size argument automatically does but written here for clarity
-          #' Sometimes n_eff_kish is NA (missing data). In these cases we use 100 (around the average)
-          #' This is a little makeshift but probably sufficient for our purposes
-          mutate(
-            n_eff_kish_new = ifelse(is.na(n_eff_kish), 100, n_eff_kish),
-            prob = stats::rmultinom(n = 1, size = floor(n_eff_kish_new), prob = stable_softmax(eta)) / n_eff_kish_new
-          ) %>%
-          select(-n_eff_kish_new)
-      ) %>%
-      bind_rows() %>%
-      mutate(
-        #' Sample of the intensity
-        lambda = exp(eta),
-        #' Sample number / identifier
-        sample = i
-      )
-  ) %>%
-    bind_rows()
+  #' #' Obtain quantiles from the inla.posterior.sample and join them into df
+  #' df <- df %>%
+  #'   left_join(
+  #'     left_join(x, df, by = c("obs_idx", "cat_idx")) %>%
+  #'       group_by(obs_idx, cat_idx) %>%
+  #'       summarise(
+  #'         #' The quantile of the raw estimate
+  #'         estimate = mean(estimate), #' These should all be identical anyway
+  #'         prob_quantile = ecdf(prob)(estimate),
+  #'         #' Quantiles of the proportion
+  #'         prob_mean = mean(prob, na.rm = TRUE),
+  #'         prob_median = quantile(prob, 0.5, na.rm = TRUE),
+  #'         prob_lower = quantile(prob, 0.025, na.rm = TRUE),
+  #'         prob_upper = quantile(prob, 0.975, na.rm = TRUE),
+  #'         #' Quantiles of the intensity, used to calculate sample size recovery later
+  #'         lambda_mean = mean(lambda, na.rm = TRUE),
+  #'         lambda_median = quantile(lambda, 0.5, na.rm = TRUE),
+  #'         lambda_lower = quantile(lambda, 0.025, na.rm = TRUE),
+  #'         lambda_upper = quantile(lambda, 0.975, na.rm = TRUE),
+  #'         .groups = "drop"
+  #'       ) %>%
+  #'       select(-estimate),
+  #'     by = c("obs_idx", "cat_idx")
+  #'   )
 
-  #' Obtain quantiles from the inla.posterior.sample and join them into df
-  df <- df %>%
-    left_join(
-      left_join(x, df, by = c("obs_idx", "cat_idx")) %>%
-        group_by(obs_idx, cat_idx) %>%
-        summarise(
-          #' The quantile of the raw estimate
-          estimate = mean(estimate), #' These should all be identical anyway
-          prob_quantile = ecdf(prob)(estimate),
-          #' Quantiles of the proportion
-          prob_mean = mean(prob, na.rm = TRUE),
-          prob_median = quantile(prob, 0.5, na.rm = TRUE),
-          prob_lower = quantile(prob, 0.025, na.rm = TRUE),
-          prob_upper = quantile(prob, 0.975, na.rm = TRUE),
-          #' Quantiles of the intensity, used to calculate sample size recovery later
-          lambda_mean = mean(lambda, na.rm = TRUE),
-          lambda_median = quantile(lambda, 0.5, na.rm = TRUE),
-          lambda_lower = quantile(lambda, 0.025, na.rm = TRUE),
-          lambda_upper = quantile(lambda, 0.975, na.rm = TRUE),
-          .groups = "drop"
-        ) %>%
-        select(-estimate),
-      by = c("obs_idx", "cat_idx")
-    )
+  x <- list("Empty!")
 
   message("Completed post-processing")
 
