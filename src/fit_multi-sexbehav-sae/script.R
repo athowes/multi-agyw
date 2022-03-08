@@ -254,8 +254,8 @@ formula9 <- update(formula3,
 #' * iso3_idx (IID or Besag)
 #' * sur_idx to allow survey bias
 
-formulas <- append(formulas, parse(text = paste0("list(", paste0("formula", 1:9, collapse = ", "), ")")) %>% eval())
-models <- append(models, paste0("Model ", 1:9) %>% as.list())
+formulas <- parse(text = paste0("list(", paste0("formula", 1:9, collapse = ", "), ")") %>% eval())
+models <- paste0("Model ", 1:9) %>% as.list()
 
 #' Fit the models
 
@@ -269,6 +269,10 @@ if(lightweight) {
   formulas <- list(formula1)
   models <- list("Model 1")
 }
+
+max_model <- 3
+formulas <- parse(text = paste0("list(", paste0("formula", 1:max_model, collapse = ", "), ")")) %>% eval()
+models <- paste0("Model ", 1:max_model) %>% as.list()
 
 res <- purrr::pmap(
   list(formula = formulas, model_name = models, S = S),
