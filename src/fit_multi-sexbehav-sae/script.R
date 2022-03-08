@@ -360,3 +360,53 @@ res_df <- res_df %>%
   relocate(model, .before = estimate_smoothed)
 
 write_csv(res_df, "multi-sexbehav-sae.csv", na = "")
+
+#' Create plotting data
+res_plot <- res_df %>%
+  pivot_longer(
+    cols = c(starts_with("estimate")),
+    names_to = c(".value", "source"),
+    names_pattern = "(.*)\\_(.*)"
+  ) %>%
+  left_join( #' Use this to make it an sf again
+    select(areas, area_id),
+    by = "area_id"
+  ) %>%
+  st_as_sf()
+
+#' Artefact: Cloropleths
+pdf("multi-sexbehav-sae.pdf", h = 40, w = 6.25)
+
+res_plot %>%
+  split(~indicator + model) %>%
+  lapply(function(x)
+    x %>%
+      mutate(
+        age_group = fct_recode(age_group,
+                               "15-19" = "Y015_019",
+                               "20-24" = "Y020_024",
+                               "25-29" = "Y025_029"
+        ),
+        source = fct_relevel(source, "raw", "smoothed") %>%
+          fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed")
+      ) %>%
+      ggplot(aes(fill = estimate)) +
+      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+      scale_fill_viridis_c(option = "C", label = label_percent()) +
+      facet_grid(year + source ~ age_group) +
+      theme_minimal() +
+      labs(
+        title = paste0(substr(x$year[1], 1, 4), ": ", x$indicator[1], " (", x$model[1], ")")
+      ) +
+      theme(
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        strip.text = element_text(face = "bold"),
+        plot.title = element_text(face = "bold"),
+        legend.position = "bottom",
+        legend.key.width = unit(4, "lines")
+      )
+  )
+
+dev.off()
