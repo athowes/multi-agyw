@@ -326,13 +326,11 @@ res_plot %>%
   lapply(function(x)
     x %>%
       mutate(
-        age_group = fct_relevel(age_group, "Y015_024") %>%
-          fct_recode(
+        age_group = fct_recode(age_group,
             "15-19" = "Y015_019",
             "20-24" = "Y020_024",
-            "25-29" = "Y025_029",
-            "15-24" = "Y015_024"
-          ),
+            "25-29" = "Y025_029"
+        ),
         source = fct_relevel(source, "raw", "smoothed") %>%
           fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed")
       ) %>%
