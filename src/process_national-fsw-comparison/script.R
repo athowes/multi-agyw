@@ -21,7 +21,7 @@ naomi3 <- naomi3 %>%
     iso3 %in% priority_iso3,
     indicator_label == "Population",
     #' These are the age groups we are considering,
-    age_group_label %in% c("15-19", "20-24", "25-29"),
+    age_group_label %in% c("15-19", "20-24", "25-29", "15-49"),
     #' Only female
     sex == "female"
   ) %>%
@@ -334,5 +334,40 @@ df %>%
   theme(
     legend.position = "bottom"
   )
+
+dev.off()
+
+#' Look at the Oli's estimates
+oli <- read_csv("pse_estimates.csv") %>%
+  select(-"...1") %>%
+  filter(
+    kp == "FSW",
+    iso3 %in% priority_iso3
+  )
+
+pdf("oli-fsw-data.pdf", h = 8, w = 6.25)
+
+oli_sf <- oli %>%
+  left_join(
+    select(national_areas, "iso3" = "GID_0"),
+    by = "iso3"
+  ) %>%
+  st_as_sf()
+
+plotA <- oli_sf %>%
+  ggplot(aes(fill = median)) +
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+  scale_fill_viridis_c(option = "C", na.value = "#E6E6E6") +
+  labs(fill = "Median proportion") +
+  theme_minimal()
+
+plotB <- oli_sf %>%
+  ggplot(aes(fill = median)) +
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+  scale_fill_viridis_c(option = "C",  label = label_percent(), na.value = "#E6E6E6") +
+  labs(fill = "Median proportion") +
+  theme_minimal()
+
+cowplot::plot_grid(plotA, plotB, ncol = 1)
 
 dev.off()

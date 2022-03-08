@@ -2,7 +2,7 @@ script: script.R
 
 artefacts:
   - data:
-      description: Comparison of Johnston, Sabin et al. and Laga et al. FSW PSE to estimates from model
+      description: Comparison of Johnston, Laga and Oli's FSW PSE to estimates from model
       filenames:
         - johnston-fsw-data.pdf
         - johnston-fsw-comparison.pdf
@@ -11,6 +11,7 @@ artefacts:
         - laga-fsw-comparison.pdf
         - laga-fsw-comparison.csv
         - laga-fsw-comparison-xy.pdf
+        - oli-fsw-data.pdf
 
 packages:
   - dplyr
@@ -29,6 +30,7 @@ packages:
 resources:
   - aykp_pse_july17.xlsx
   - final_country_est_laga.csv
+  - pse_estimates.csv
   - countries_codes_and_coordinates.csv
 
 depends:
