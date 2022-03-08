@@ -250,12 +250,21 @@ formula9 <- update(formula3,
             constr = TRUE, hyper = ar1_group_prior)
 )
 
-#' To consider adding:
-#' * iso3_idx (IID or Besag)
-#' * sur_idx to allow survey bias
+#' Models 10-18:
+for(i in 1:9) {
+  assign(
+    paste0("formula", i + 9),
+    update(
+      get(paste0("formula", i)),
+      . ~ . + f(iso3_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+                constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+    )
+  )
+}
 
-formulas <- parse(text = paste0("list(", paste0("formula", 1:9, collapse = ", "), ")") %>% eval())
-models <- paste0("Model ", 1:9) %>% as.list()
+max_model <- 18
+formulas <- parse(text = paste0("list(", paste0("formula", 1:max_model, collapse = ", "), ")")) %>% eval()
+models <- paste0("Model ", 1:max_model) %>% as.list()
 
 #' Fit the models
 
@@ -269,10 +278,6 @@ if(lightweight) {
   formulas <- list(formula1)
   models <- list("Model 1")
 }
-
-max_model <- 3
-formulas <- parse(text = paste0("list(", paste0("formula", 1:max_model, collapse = ", "), ")")) %>% eval()
-models <- paste0("Model ", 1:max_model) %>% as.list()
 
 res <- purrr::pmap(
   list(formula = formulas, model_name = models, S = S),
@@ -318,6 +323,8 @@ ic_df <- res_df %>%
 
 write_csv(ic_df, "information-criteria.csv", na = "")
 
+ic_df %>% knitr::kable("pipe", digits = -1)
+
 #' Artefact: Random effect variance parameter posterior means
 variance_df <- map(res_fit, function(fit)
   fit$marginals.hyperpar %>%
@@ -356,10 +363,10 @@ res_df <- res_df %>%
     estimate_raw = estimate,
     ci_lower_raw = ci_lower,
     ci_upper_raw = ci_upper,
-    estimate_smoothed = prob_mean,
-    median_smoothed = prob_median,
-    ci_lower_smoothed = prob_lower,
-    ci_upper_smoothed = prob_upper
+    estimate_smoothed = prob_mean
+    # median_smoothed = prob_median,
+    # ci_lower_smoothed = prob_lower,
+    # ci_upper_smoothed = prob_upper
   ) %>%
   relocate(model, .before = estimate_smoothed)
 
