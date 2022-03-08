@@ -14,6 +14,10 @@ multinomial_model <- function(formula, model_name, S = 1000) {
                                      cpo = TRUE, config = TRUE),
               inla.mode = "experimental")
 
+  message("Completed fitting ", model_name, "."))
+
+  message("Begin post-processing")
+
   df <- df %>%
     #' Add model identifier
     mutate(model = model_name)
@@ -87,7 +91,7 @@ multinomial_model <- function(formula, model_name, S = 1000) {
       by = c("obs_idx", "cat_idx")
     )
 
-  message(paste0("Completed fitting ", model_name, "."))
+  message("Completed post-processing")
 
   #' df goes back to including the aggregate group here, perhaps it's confusing to do this!
   return(list(df = df, fit = fit))

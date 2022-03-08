@@ -17,6 +17,10 @@ logistic_model <- function(formula, model_name, S = 1000) {
     inla.mode = "experimental"
   )
 
+  message(paste0("Completed fitting ", model_name, "."))
+
+  message("Begin post-processing")
+
   df <- df %>%
     mutate(
       prob_mean = fit$summary.fitted.values$mean,
@@ -28,7 +32,7 @@ logistic_model <- function(formula, model_name, S = 1000) {
 
   full_samples <- inla.posterior.sample(n = S, result = fit)
 
-  message(paste0("Completed fitting ", model_name, "."))
+  message("Completed post-processing")
 
   return(list(df = df, fit = fit, samples = full_samples))
 }

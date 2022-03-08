@@ -15,6 +15,10 @@ multinomial_model <- function(formula, model_name, S = 1000) {
                                      cpo = TRUE, config = TRUE),
               inla.mode = "experimental")
 
+  message(paste0("Completed fitting ", model_name, "."))
+
+  message("Begin post-processing")
+
   df <- df %>%
     mutate(
       #' Add mean of linear predictor
@@ -102,7 +106,7 @@ multinomial_model <- function(formula, model_name, S = 1000) {
       by = c("obs_idx", "cat_idx")
     )
 
-  message(paste0("Completed fitting ", model_name, "."))
+  message("Completed post-processing")
 
   return(list(df = df, fit = fit, samples = x))
 }
