@@ -4,7 +4,6 @@
 
 analysis_level <- multi.utils::analysis_level()
 admin1_level <- multi.utils::admin1_level()
-iso3 <- multi.utils::priority_iso3()
 
 areas <- readRDS("depends/areas.rds")
 ind <- read_csv("depends/survey_indicators_sexbehav.csv")
@@ -14,6 +13,16 @@ if(!include_phia) {
   ind <- ind %>%
     mutate(type = substr(survey_id, 8, 11)) %>%
     filter(type != "PHIA")
+}
+
+#' If working with a subset of the countries for model development and testing, also filter out of the data
+if(fewer_countries) {
+  ind <- ind %>%
+    mutate(iso3 = substr(survey_id, 1, 3)) %>%
+    #' Mostly arbitrary which countries included in the subset
+    #' I've gone for something spatially contiguous and across cultural boundaries
+    filter(iso3 %in% c("BWA", "MOZ", "ZWE")) %>%
+    select(-iso3)
 }
 
 #' Set ind$estimate > 1 to 1, as well as ind$estimate < 0 to 0
@@ -83,8 +92,7 @@ df <- crossing(
   #' The areas in the model
   areas_model %>%
     st_drop_geometry() %>%
-    select(area_id, area_name, area_idx, area_id_aggr,
-           area_sort_order, center_x, center_y)
+    select(area_id, area_name, area_idx, area_sort_order, center_x, center_y)
 )
 
 #' Merge district observations into df

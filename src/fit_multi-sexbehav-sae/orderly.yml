@@ -39,6 +39,8 @@ parameters:
     default: FALSE
   #' If data from PHIA surveys should be included
   include_phia:
+    default: TRUE
+  fewer_countries:
     default: FALSE
 
 packages:
