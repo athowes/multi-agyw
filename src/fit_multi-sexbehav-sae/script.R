@@ -278,6 +278,11 @@ res <- purrr::pmap(
 #' Extract the df and the full fitted models
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
+res_samples <- lapply(res, "[[", 3)
+names(res_samples) <- unlist(models)
+
+#' Artefact: Samples from all models
+saveRDS(res_samples, "every-multi-sexbehav-sae-samples.rds")
 
 #' Add columns for local DIC, WAIC, CPO and PIT
 #' res_df has the 15-24 category too
@@ -352,7 +357,6 @@ res_df <- res_df %>%
     ci_lower_smoothed = prob_lower,
     ci_upper_smoothed = prob_upper
   ) %>%
-  mutate(iso3 = iso3, .before = indicator) %>%
   relocate(model, .before = estimate_smoothed)
 
 write_csv(res_df, "multi-sexbehav-sae.csv", na = "")

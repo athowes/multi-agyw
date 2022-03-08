@@ -94,5 +94,5 @@ multinomial_model <- function(formula, model_name, S = 1000) {
   message("Completed post-processing")
 
   #' df goes back to including the aggregate group here, perhaps it's confusing to do this!
-  return(list(df = df, fit = fit))
+  return(list(df = df, fit = fit, samples = x))
 }
