@@ -5,18 +5,16 @@
 df <- read_csv("depends/best-3-multi-sexbehav-sae.csv")
 
 #' Just want one set of estimates for each country
-prop <- read_csv("depends/best-fsw-logit-sae.csv") %>%
+df_prop <- read_csv("depends/best-fsw-logit-sae.csv") %>%
   filter(!(survey_id %in% c("MWI2015DHS", "ZMB2016PHIA", "ZWE2015DHS")))
 
-z <- df %>%
+df_sexnonreg <- df %>%
   filter(indicator == "sexnonregplus") %>%
   left_join(
-    prop %>%
+    df_prop %>%
       select(age_group, area_id, estimate_smoothed_prop = estimate_smoothed, estimate_raw_prop = estimate_raw),
     by = c("age_group", "area_id")
-  )
-
-df_sexnonreg <- z %>%
+  ) %>%
   mutate(
     indicator = "sexnonreg",
     estimate_smoothed = estimate_smoothed * (1 - estimate_smoothed_prop),
@@ -24,7 +22,13 @@ df_sexnonreg <- z %>%
   ) %>%
   select(-estimate_smoothed_prop, -estimate_raw_prop)
 
-df_sexpaid12m <- z %>%
+df_sexpaid12m <- df %>%
+  filter(indicator == "sexnonregplus") %>%
+  left_join(
+    df_prop %>%
+      select(age_group, area_id, estimate_smoothed_prop = estimate_smoothed, estimate_raw_prop = estimate_raw),
+    by = c("age_group", "area_id")
+  ) %>%
   mutate(
     indicator = "sexpaid12m",
     estimate_smoothed = estimate_smoothed * estimate_smoothed_prop,
@@ -44,3 +48,7 @@ df <- bind_rows(
 
 write_csv(df, "best-3p1-multi-sexbehav-sae.csv", na = "")
 write_csv(multi.utils::update_naming(df), "human-best-3p1-multi-sexbehav-sae.csv", na = "")
+
+#' And now on the samples
+samples <- readRDS("depends/every-3-multi-sexbehav-sae-samples.rds")
+samples_prop <- readRDS("depends/best-fsw-logit-sae-samples.rds")
