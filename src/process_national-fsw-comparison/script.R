@@ -11,8 +11,6 @@ sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
 url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2021 naomi/Naomi datasets in R/naomi3.rds"
 path <- sharepoint$download(URLencode(url))
 naomi3 <- readRDS(path)
-naomi4 <- naomi3
-naomi3 <- naomi4
 
 url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2021 naomi/areas-extract/naomi-2021-results_pooled-area-hierarchy.csv"
 path <- sharepoint$download(URLencode(url))
