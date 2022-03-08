@@ -266,14 +266,8 @@ S <- 1000
 #' Just fit one model
 if(lightweight) {
   S <- 100
-
-  if(!include_temporal) {
-    formulas <- list(formula3)
-    models <- list("Model 1")
-  } else {
-    formulas <- list(formula6)
-    models <- list("Model 1")
-  }
+  formulas <- list(formula1)
+  models <- list("Model 1")
 }
 
 res <- purrr::pmap(
