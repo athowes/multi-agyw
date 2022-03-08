@@ -3,9 +3,12 @@
 #' @param formula A formula object passed to `R-INLA`.
 #' @return A fitted model object.
 logistic_model <- function(formula, model_name, S = 1000) {
+
+  message(paste0("Begin fitting ", model_name, "."))
+
   fit <- inla(
     formula,
-    data = df_model,
+    data = df,
     family = 'xbinomial',
     Ntrials = n_eff_kish,
     control.family = list(control.link = list(model = "logit")),
@@ -14,7 +17,7 @@ logistic_model <- function(formula, model_name, S = 1000) {
     inla.mode = "experimental"
   )
 
-  df_model <- df_model %>%
+  df <- df %>%
     mutate(
       prob_mean = fit$summary.fitted.values$mean,
       prob_median = fit$summary.fitted.values$`0.5quant`,
@@ -25,5 +28,7 @@ logistic_model <- function(formula, model_name, S = 1000) {
 
   full_samples <- inla.posterior.sample(n = S, result = fit)
 
-  return(list(df = df_model, fit = fit, samples = full_samples))
+  message(paste0("Completed fitting ", model_name, "."))
+
+  return(list(df = df, fit = fit, samples = full_samples))
 }

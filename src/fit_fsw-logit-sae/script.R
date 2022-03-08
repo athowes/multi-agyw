@@ -18,14 +18,14 @@ ind$estimate <- constrain_interval(ind$estimate, lower = 0, upper = 1)
 #' Use only the surveys which contain a specific paid sex question
 available_surveys <- read_csv("depends/available-surveys.csv")
 
-giftsvar_surveys <- available_surveys %>%
+(giftsvar_surveys <- available_surveys %>%
   filter(giftsvar == 1) %>%
-  pull(survey_id)
-
-ind <- filter(ind, survey_id %in% giftsvar_surveys)
+  pull(survey_id))
 
 #' There are this many surveys which are suitable
 length(unique(ind$survey_id))
+
+ind <- filter(ind, survey_id %in% giftsvar_surveys)
 
 areas <- areas %>%
   select(
@@ -85,14 +85,6 @@ ggplot(areas_model, aes(fill = iso3)) +
 
 dev.off()
 
-#' Country level area (not to be included in model)
-country <- areas %>%
-  filter(area_level == 0) %>%
-  mutate(
-    area_idx = NA,
-    area_id_aggr = NA
-  )
-
 #' Create adjacency matrix for INLA
 adjM <- spdep::poly2nb(areas_model)
 adjM <- spdep::nb2mat(adjM, style = "B", zero.policy = TRUE)
@@ -103,12 +95,12 @@ df <- crossing(
   #' Only the high and very high risk groups (sexnonregplus includes both)
   indicator = c("sexnonreg", "sexpaid12m"),
   #' Three age groups, plus aggregate category
-  age_group = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"),
+  age_group = c("Y015_019", "Y020_024", "Y025_029"),
   #' Both the areas in the model and the aggregate country
-  bind_rows(areas_model, country) %>%
+  areas_model %>%
     st_drop_geometry() %>%
     select(country, iso3, area_id, area_name, area_level,
-           area_idx, area_id_aggr, area_sort_order, center_x, center_y)
+           area_idx, area_sort_order, center_x, center_y)
 )
 
 #' Merge district observations into df
@@ -143,13 +135,12 @@ df <- df %>%
 df <- mutate(df, survey_id = replace_na(survey_id, "Missing"))
 
 #' Add indicies for:
-#'  * age (age_idx)
-#'  * survey (sur_idx)
-#'  * observation (obs_idx)
 df <- mutate(df,
-    #' Doing this because want Y015_024 to have ID 4 rather than 2 as it would be otherwise
-    age_idx = as.integer(factor(age_group, levels = c("Y015_019", "Y020_024", "Y025_029", "Y015_024"))),
+    #' age
+    age_idx = multi.utils::to_int(age_group),
+    #' survey
     sur_idx = multi.utils::to_int(survey_id),
+    #' observation
     obs_idx = multi.utils::to_int(interaction(age_idx, area_idx, sur_idx)),
   )
 
@@ -234,18 +225,15 @@ df <- mutate(df,
     n_eff_kish = ifelse(n_eff_kish == 0 & x_eff == 0, NA, n_eff_kish)
   )
 
-#' The rows of df to be included in the model
-df_model <- filter(df, age_group != "Y015_024", !(area_id %in% toupper(iso3)))
-
 pdf("covariate-correlation-check.pdf", h = 5, w = 6.25)
 
-ggplot(df_model, aes(x = cfswrecent)) +
+ggplot(df, aes(x = cfswrecent)) +
   geom_histogram()
 
-ggplot(df_model, aes(x = cfswever)) +
+ggplot(df, aes(x = cfswever)) +
   geom_histogram()
 
-ggplot(df_model, aes(x = cfswrecent, y = cfswever)) +
+ggplot(df, aes(x = cfswrecent, y = cfswever)) +
   geom_point()
 
 dev.off()
@@ -295,14 +283,15 @@ res <- purrr::pmap(
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
 res_samples <- lapply(res, "[[", 3)
+names(res_samples) <- unlist(models)
 
 #' Artefact: Samples from all models
-saveRDS(res_samples, "fsw-logit-sae-samples.rds")
+saveRDS(res_samples, "every-fsw-logit-sae-samples.rds")
 
 #' Artefact: Smoothed district indicator estimates for logistic regression models
 res_df <- res_df %>%
   #' Remove superfluous INLA indicator columns
-  select(-area_idx, -age_idx, -obs_idx, -sur_idx) %>%
+  select(-area_idx, -age_idx, -sur_idx) %>%
   #' Make it clear which of the estimates are raw and which are from the model (smoothed)
   rename(
     estimate_raw = estimate,
@@ -330,7 +319,6 @@ res_plot <- res_df %>%
   st_as_sf()
 
 #' Artefact: Cloropleths
-
 pdf("fsw-logit-sae.pdf", h = 11, w = 8.25)
 
 res_plot %>%
@@ -389,15 +377,15 @@ ic_df <- sapply(res_fit, function(fit) {
     .before = dic
   )
 
-#' Which model has the lowest DIC?
-which.min(ic_df$dic)
+#' Which model has the lowest CPO?
+which.min(ic_df$cpo)
 
-#' And WAIC?
-which.min(ic_df$waic)
-
-#' Both Model 5 at the moment!
+#' Model 5 at the moment! (Model 8 wins on DIC and WAIC)
 res_df_best <- filter(res_df, model == "Model 5")
 write_csv(res_df_best, "best-fsw-logit-sae.csv", na = "")
+
+res_samples_best <- res_samples[["Model 5"]]
+saveRDS(res_samples_best, "best-fsw-logit-sae-samples.rds")
 
 write_csv(ic_df, "information-criteria.csv", na = "")
 
@@ -438,7 +426,7 @@ res_df_best %>%
   theme_minimal() +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
   lims(x = c(0, 0.2), y = c(0, 0.2)) +
-  labs(x = "Raw", y = "Smoothed", col = "Country", title = "Proportion of `sexnonregplus` in `sexpaid12m`")
+  labs(x = "Raw", y = "Smoothed", col = "ISO3", title = "Proportion of `sexnonregplus` in `sexpaid12m`")
 
 dev.off()
 
