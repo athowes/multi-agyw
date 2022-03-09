@@ -174,9 +174,12 @@ df <- mutate(df,
 #' Model 1:
 #' * category random effects (IID)
 #' * age x category random effects (IID)
+#' * country x category random effects (IID)
 formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(age_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+    constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(iso3_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 2:
@@ -250,19 +253,7 @@ formula9 <- update(formula3,
             constr = TRUE, hyper = ar1_group_prior)
 )
 
-#' Models 10-18:
-for(i in 1:9) {
-  assign(
-    paste0("formula", i + 9),
-    update(
-      get(paste0("formula", i)),
-      . ~ . + f(iso3_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-                constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
-    )
-  )
-}
-
-max_model <- 18
+max_model <- 9
 formulas <- parse(text = paste0("list(", paste0("formula", 1:max_model, collapse = ", "), ")")) %>% eval()
 models <- paste0("Model ", 1:max_model) %>% as.list()
 
