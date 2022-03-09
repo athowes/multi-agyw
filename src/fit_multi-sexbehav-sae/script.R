@@ -171,54 +171,34 @@ df <- mutate(df,
   ) %>%
   arrange(obs_idx)
 
-#' Model 1:
+#' Baseline model:
 #' * category random effects (IID)
 #' * age x category random effects (IID)
 #' * country x category random effects (IID)
-formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
+formula_baseline <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(age_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(iso3_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
-#' Model 2:
-#' * Model 1
+#' Model 1:
 #' * space x category random effects (IID)
-formula2 <- update(formula1,
+#' * year x category random effects (IID)
+formula1 <- update(formula_baseline,
   . ~ . + f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+          f(year_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
             constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
-#' Model 3:
-#' * Model 1
+#' Model 2:
 #' * space x category random effects (Besag)
-formula3 <- update(formula1,
+#' * year x category random effects (IID)
+formula2 <- update(formula_baseline,
   . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
-            control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
-)
-
-#' Model 4:
-#' * Model 1
-#' * time x category random effects (IID)
-formula4 <- update(formula1,
-  . ~ . + f(year_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
-)
-
-#' Model 5:
-#' * Model 2
-#' * time x category random effects (IID)
-formula5 <- update(formula2,
-  . ~ . + f(year_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
-)
-
-#' Model 6:
-#' * Model 3
-#' * time x category random effects (IID)
-formula6 <- update(formula3,
-  . ~ . + f(year_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+            control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+          f(year_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
             constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
@@ -229,31 +209,27 @@ ar1_group_prior <- list(
   prec = list(prec = "pc.prec", param = c(2.5, 0.01), initial = log(0.001))
 )
 
-#' Model 7:
-#' * Model 1
-#' * time x category random effects (AR1)
-formula7 <- update(formula1,
-  . ~ . + f(year_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
+#' Model 3:
+#' * space x category random effects (IID)
+#' * year x category random effects (AR1)
+formula3 <- update(formula_baseline,
+  . ~ . + f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+          f(year_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
             constr = TRUE, hyper = ar1_group_prior)
 )
 
-#' Model 8:
-#' * Model 2
-#' * time x category random effects (AR1)
-formula8 <- update(formula2,
-  . ~ . + f(year_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
+#' Model 4:
+#' * space x category random effects (Besag)
+#' * year x category random effects (AR1)
+formula3 <- update(formula_baseline,
+  . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
+            control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+          f(year_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
             constr = TRUE, hyper = ar1_group_prior)
 )
 
-#' Model 9:
-#' * Model 3
-#' * time x category random effects (AR1)
-formula9 <- update(formula3,
-  . ~ . + f(year_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
-            constr = TRUE, hyper = ar1_group_prior)
-)
-
-max_model <- 9
+max_model <- 4
 formulas <- parse(text = paste0("list(", paste0("formula", 1:max_model, collapse = ", "), ")")) %>% eval()
 models <- paste0("Model ", 1:max_model) %>% as.list()
 
@@ -266,8 +242,8 @@ S <- 1000
 #' Just fit one model
 if(lightweight) {
   S <- 100
-  formulas <- list(formula9)
-  models <- list("Model 9")
+  formulas <- list(formula4)
+  models <- list("Model 4")
 }
 
 res <- purrr::pmap(
