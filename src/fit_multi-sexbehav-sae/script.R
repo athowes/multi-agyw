@@ -266,8 +266,8 @@ S <- 1000
 #' Just fit one model
 if(lightweight) {
   S <- 100
-  formulas <- list(formula1)
-  models <- list("Model 1")
+  formulas <- list(formula9)
+  models <- list("Model 9")
 }
 
 res <- purrr::pmap(
