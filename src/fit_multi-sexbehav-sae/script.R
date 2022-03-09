@@ -212,12 +212,12 @@ ar1_group_prior <- list(
 #' Model 3:
 #' * space x category random effects (IID)
 #' * year x category random effects (AR1)
-formula3 <- update(formula_baseline,
-  . ~ . + f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-          f(year_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
-            constr = TRUE, hyper = ar1_group_prior)
-)
+# formula3 <- update(formula_baseline,
+#   . ~ . + f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+#             constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+#           f(year_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
+#             constr = TRUE, hyper = ar1_group_prior)
+# )
 
 #' Model 4:
 #' * space x category random effects (Besag)
@@ -229,9 +229,8 @@ formula4 <- update(formula_baseline,
             constr = TRUE, hyper = ar1_group_prior)
 )
 
-max_model <- 4
-formulas <- parse(text = paste0("list(", paste0("formula", 1:max_model, collapse = ", "), ")")) %>% eval()
-models <- paste0("Model ", 1:max_model) %>% as.list()
+formulas <- list(formula1, formula2, formula4)
+models <- list("Model 1", "Model 2", "Model 4")
 
 #' Fit the models
 
