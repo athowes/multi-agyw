@@ -222,7 +222,7 @@ formula3 <- update(formula_baseline,
 #' Model 4:
 #' * space x category random effects (Besag)
 #' * year x category random effects (AR1)
-formula3 <- update(formula_baseline,
+formula4 <- update(formula_baseline,
   . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
             control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
           f(year_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
