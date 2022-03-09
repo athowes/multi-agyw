@@ -83,7 +83,9 @@ df <- naomi %>%
 #' TODO: Get distributions on these and using a sampling method to get uncertainty in economic analysis
 rr_sexcohab <- 1
 rr_sexnonreg <- 1.72
+rr_sexnonreg_se <- 0.2
 rr_sexpaid12m <- 13
+rr_sexnonreg_se <- 1
 rr_sexnonregplus <- rr_sexnonreg * 0.91 + rr_sexpaid12m * 0.09 #' This is an approximate value
 
 df <- df %>%
