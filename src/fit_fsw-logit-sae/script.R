@@ -379,11 +379,11 @@ ic_df <- sapply(res_fit, function(fit) {
 #' Which model has the highest CPO?
 which.max(ic_df$cpo)
 
-#' Model 5 at the moment! (Model 8 wins on DIC and WAIC)
-res_df_best <- filter(res_df, model == "Model 5")
+#' Model 6 at the moment!
+res_df_best <- filter(res_df, model == "Model 6")
 write_csv(res_df_best, "best-fsw-logit-sae.csv", na = "")
 
-res_samples_best <- res_samples[["Model 5"]]
+res_samples_best <- res_samples[["Model 6"]]
 saveRDS(res_samples_best, "best-fsw-logit-sae-samples.rds")
 
 write_csv(ic_df, "information-criteria.csv", na = "")
@@ -392,7 +392,7 @@ write_csv(ic_df, "information-criteria.csv", na = "")
 #' Approximately 10%
 res_df %>%
   filter(
-    model == "Model 5",
+    model == "Model 6",
     area_level != 1
   ) %>%
   summarise(
