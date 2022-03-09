@@ -4,4 +4,5 @@ source("make/utils.R")
 run_commit_push("process_all-data", push = FALSE)
 
 #' Run model for all countries
-#' TODO!
+id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE, fewer_countries = TRUE))
+orderly::orderly_commit(id)
