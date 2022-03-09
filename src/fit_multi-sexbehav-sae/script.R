@@ -35,7 +35,7 @@ areas <- areas %>%
 
 #' If working with a subset of the countries for model development and testing, also filter out of the data
 if(fewer_countries) {
-  subset_iso3 <- c("BWA", "MOZ", "ZWE")
+  subset_iso3 <- c("BWA", "MOZ", "MWI", "ZMB", "ZWE")
 
   ind <- ind %>%
     mutate(iso3 = substr(survey_id, 1, 3)) %>%
