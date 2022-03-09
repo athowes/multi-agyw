@@ -22,10 +22,10 @@ available_surveys <- read_csv("depends/available-surveys.csv")
   filter(giftsvar == 1) %>%
   pull(survey_id))
 
+ind <- filter(ind, survey_id %in% giftsvar_surveys)
+
 #' There are this many surveys which are suitable
 length(unique(ind$survey_id))
-
-ind <- filter(ind, survey_id %in% giftsvar_surveys)
 
 areas <- areas %>%
   select(
@@ -140,6 +140,8 @@ df <- mutate(df,
     age_idx = multi.utils::to_int(age_group),
     #' survey
     sur_idx = multi.utils::to_int(survey_id),
+    #' country
+    iso3_idx = multi.utils::to_int(iso3),
     #' observation
     obs_idx = multi.utils::to_int(interaction(age_idx, area_idx, sur_idx)),
   )
@@ -238,40 +240,39 @@ ggplot(df, aes(x = cfswrecent, y = cfswever)) +
 
 dev.off()
 
-#' Model 1: intercept, age random effects (IID)
-formula1 <- x_eff ~ 1 +
-  f(age_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+#' Baseline model:
+#' * intercept
+#' * age random effects (IID)
+formula_baseline <- x_eff ~ 1 +
+  f(age_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(iso3_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
-#' Model 2: intercept, age random effects (IID), space random effects (IID)
-formula2 <- update(formula1,
+#' Model 1:
+#' * space random effects (IID)
+formula1 <- update(formula_baseline,
   . ~ . + f(area_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
-#' Model 3: intercept, age random effects (IID), space random effects (Besag)
-formula3 <- update(formula1,
+#' Model 2:
+#' * space random effects (Besag)
+formula2 <- update(formula_baseline,
   . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
-#' Model 4: Model 1, cfswever
-formula4 <- update(formula1, ". ~ . + cfswever")
+#' Model 3: Model 1, cfswrecent
+formula3 <- update(formula1, ". ~ . + cfswrecent")
+
+#' Model 4: Model 1, cfswrecent
+formula4 <- update(formula2, ". ~ . + cfswrecent")
 
 #' Model 5: Model 2, cfswever
-formula5 <- update(formula2, ". ~ . + cfswever")
+formula5 <- update(formula1, ". ~ . + cfswever")
 
 #' Model 6: Model 3, cfswever
-formula6 <- update(formula3, ". ~ . + cfswever")
+formula6 <- update(formula2, ". ~ . + cfswever")
 
-#' Model 7: Model 1, cfswrecent
-formula7 <- update(formula1, ". ~ . + cfswrecent")
-
-#' Model 8: Model 2, cfswrecent
-formula8 <- update(formula2, ". ~ . + cfswrecent")
-
-#' Model 9: Model 3, cfswrecent
-formula9 <- update(formula3, ". ~ . + cfswrecent")
-
-formulas <- parse(text = paste0("list(", paste0("formula", 1:9, collapse = ", "), ")")) %>% eval()
-models <- paste0("Model ", 1:9) %>% as.list()
+formulas <- parse(text = paste0("list(", paste0("formula", 1:6, collapse = ", "), ")")) %>% eval()
+models <- paste0("Model ", 1:6) %>% as.list()
 
 #' Fit the models
 res <- purrr::pmap(
@@ -375,8 +376,8 @@ ic_df <- sapply(res_fit, function(fit) {
     .before = dic
   )
 
-#' Which model has the lowest CPO?
-which.min(ic_df$cpo)
+#' Which model has the highest CPO?
+which.max(ic_df$cpo)
 
 #' Model 5 at the moment! (Model 8 wins on DIC and WAIC)
 res_df_best <- filter(res_df, model == "Model 5")
