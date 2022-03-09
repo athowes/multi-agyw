@@ -13,6 +13,7 @@ artefacts:
       description: Smoothed district indicator estimates for multinomial models
       filenames:
         - multi-sexbehav-sae.csv
+        - human-multi-sexbehav-sae.csv
         - multi-sexbehav-sae.pdf
         - every-multi-sexbehav-sae-samples.rds
   # - data:
