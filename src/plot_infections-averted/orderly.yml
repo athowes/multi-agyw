@@ -24,7 +24,7 @@ packages:
   - tibble
 
 depends:
-  - process_katies-spreadsheet:
+  - process_incidence:
       id: latest
       use:
         depends/incidence-district-sexbehav.csv: incidence-district-sexbehav.csv
