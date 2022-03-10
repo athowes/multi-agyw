@@ -84,8 +84,7 @@ inc <- inc %>%
     )
   )
 
-
-pdf("infections-averted.pdf", h = 4, w = 6.25)
+pdf("infections-averted.pdf", h = 5, w = 6.25)
 
 ggplot(inc, aes(x = population_cumulative, y = infections_averted_cumulative_improvement, col = stratification)) +
   geom_line(alpha = 0.8, size = 0.7) +
