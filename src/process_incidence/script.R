@@ -125,6 +125,7 @@ df_plot <- df %>%
 pdf("incidence-district-sexbehav.pdf", h = 8.25, w = 11.75)
 
 df_plot %>%
+  filter(iso3 != "TZA") %>%
   split(.$iso3) %>%
   lapply(function(x)
     x %>%
@@ -137,6 +138,7 @@ df_plot %>%
       ) %>%
       ggplot(aes(fill = incidence)) +
       geom_sf(size = 0.1) +
+      coord_sf(lims_method = "geometry_bbox") +
       scale_fill_viridis_c(option = "C", label = label_percent()) +
       facet_grid(category ~ age_group) +
       theme_minimal() +
