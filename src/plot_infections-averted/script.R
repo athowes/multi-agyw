@@ -77,22 +77,29 @@ infections_averted_per_population_baseline <- inc %>%
 inc <- inc %>%
   mutate(
     infections_averted_cumulative_baseline = population_cumulative * infections_averted_per_population_baseline,
-    infections_averted_cumulative_improvement = infections_averted_cumulative - infections_averted_cumulative_baseline
+    infections_averted_cumulative_improvement = infections_averted_cumulative - infections_averted_cumulative_baseline,
+    stratification = factor(
+      stratification,
+      levels = c("Area, age, behaviour", "Area, age", "Area, behaviour", "Age, behaviour", "Area", "Age", "Behaviour", "None")
+    )
   )
+
 
 pdf("infections-averted.pdf", h = 4, w = 6.25)
 
 ggplot(inc, aes(x = population_cumulative, y = infections_averted_cumulative_improvement, col = stratification)) +
   geom_line(alpha = 0.8, size = 0.7) +
-  theme_minimal() +
   scale_color_manual(values = multi.utils::cbpalette()) +
   scale_y_continuous(labels = label_number(scale = 1e-3)) +
   scale_x_continuous(labels = label_number(scale = 1e-6)) +
   labs(
     x = "Total population reached (10E6)",
     y = "Additional infections reached (10E3)",
-    title = "Population stratification targetting comparison",
-    col = "Stratification"
+    col = "Risk stratification"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
   )
 
 dev.off()
