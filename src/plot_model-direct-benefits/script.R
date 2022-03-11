@@ -24,8 +24,8 @@ df <- df %>%
   ) %>%
   mutate(
     source = fct_recode(source,
-      "Raw" = "raw",
-      "Smoothed" = "smoothed"
+      "Direct" = "raw",
+      "Modeled" = "smoothed"
     )
   ) %>%
   left_join( #' Use this to make it an sf again
@@ -44,13 +44,13 @@ missing_districts <- df %>%
 
 missing_districts$area_name %>% sort()
 
-pdf("model-direct-benefits.pdf", h = 4, w = 6.25)
+pdf("model-direct-benefits.pdf", h = 3, w = 6.25)
 
 ggplot(df, aes(fill = estimate)) +
   geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
   scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
   facet_grid(indicator ~ source) +
-  labs(fill = "Estimated proportion") +
+  labs(fill = "Proportion\nof women\n20-24\ncohabiting\n(2010)\n") +
   theme_minimal() +
   theme(
     axis.text = element_blank(),
@@ -60,8 +60,9 @@ ggplot(df, aes(fill = estimate)) +
     legend.title = element_text(size = 9),
     legend.text = element_text(size = 9),
     plot.title = element_text(face = "bold"),
-    legend.position = "bottom",
-    legend.key.width = unit(4, "lines")
+    legend.key.width = unit(1, "lines"),
+    legend.position = "left",
+    strip.text.y = element_blank()
   )
 
 dev.off()
