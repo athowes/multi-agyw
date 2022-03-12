@@ -12,10 +12,12 @@ resources:
 
 packages:
   - rmarkdown
+  - dplyr
+  - ggplot2
+  - forcats
 
-depends:
-  plot_aids-abstract:
-    id: latest
-    use:
-      depends/aids-abstract-A.pdf: aids-abstract-A.pdf
-      depends/aids-abstract-B.pdf: aids-abstract-B.pdf
+# depends:
+#   plot_available-surveys:
+#     id: latest
+#     use:
+#       depends/available-surveys.pdf: available-surveys.pdf
