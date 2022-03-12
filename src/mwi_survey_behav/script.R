@@ -146,13 +146,13 @@ sex <- c("female")
 #' Remaining NA are all in eversex and sti12m
 survey_sexbehav %>% is.na() %>% colSums()
 
-#' Verify no overlap
-stopifnot(
-  survey_sexbehav %>%
-    mutate(r_sum = (1 - sex12m) + sexcohab + sexnonreg + sexpaid12m) %>%
-    filter(r_sum != 1) %>%
-    nrow() == 0
-)
+#' #' Verify no overlap
+#' stopifnot(
+#'   survey_sexbehav %>%
+#'     mutate(r_sum = (1 - sex12m) + sexcohab + sexnonreg + sexpaid12m) %>%
+#'     filter(r_sum != 1) %>%
+#'     nrow() == 0
+#' )
 
 #' Survey indicator dataset
 survey_indicators <- calc_survey_indicators(
