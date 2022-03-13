@@ -1,6 +1,6 @@
 ---
 main_topsize: 0.2
-main_bottomsize: 0.1
+main_bottomsize: 0.05
 poster_height: "48in"
 poster_width: "36in"
 font_family: "Open Sans"
@@ -12,18 +12,52 @@ author:
     main: true
     twitter: adamhowes
     email: ath19@ic.ac.uk
+  - name: "Kathryn A. Risher"
+    affil: 3
+  - name: "Van Kinh Nguyen"
+    affil: 3
+  - name: "Oliver Stevens"
+    affil: 3
+  - name: "Katherine M. Jia"
+    affil: 4
+  - name: "Tim M. Wolock"
+    affil: 1
+  - name: "Lycias Zembe"
+    affil: 5
+  - name: "Ian Wanyeki"
+    affil: 5
+  - name: "Mary Mahy"
+    affil: 5
+  - name: "Clemens Benedikt"
+    affil: 5
+  - name: "Seth R. Flaxman"
+    affil: 6
+  - name: "Jeffrey W. Eaton"
+    affil: 2
 affiliation:
   - num: 1
     address: Department of Mathematics, Imperial College London
+  - num: 2
+    address: MRC Centre for Global Infectious Disease Analysis, School of Public Health, Imperial College London
+  - num: 3
+    address: Department of Medical Social Sciences, Feinberg School of Medicine, Northwestern University
+  - num: 4
+    address: Harvard T. H. Chan School of Public Health, Harvard University
+  - num: 5
+    address: Joint United Nations Programme on HIV/AIDS, Geneva, Switzerland
+  - num: 6
+    address: Department of Computer Science, University of Oxford
 main_findings:
-  - "**Large efficiency gains** possible by targeting HIV programming using **risk behaviour**."
+  - "Targeting HIV programming based on risk behaviour would **greatly increase** resource allocation efficiency."
+logoleft_name: "IMP_ML_W_N.png"
+logoright_name: "UNAIDS-reverse-EN.gif"
 # Style & formatting
-title_textsize: "60pt"
+title_textsize: "60px"
 author_textsize: "1.17em"
 authorextra_textsize: "35px"
 affiliation_textsize: "25px"
 affiliation_textcol: '#00000080'
-caption_fontsize: "20pt"
+caption_fontsize: "20px"
 # Main
 main_fontfamily: "Open Sans"
 # Poster body options
@@ -31,26 +65,36 @@ primary_colour: '#38761C'
 secondary_colour: '#3b77D8'
 accent_colour: "#5d19c4"
 body_bgcol: "#ffffff"
-body_textsize: "45px"
+body_textsize: "40px"
 body_textcol: "#000000"
-reference_textsize: "23px"
+reference_textsize: "20px"
 # Standard options
 output: 
   posterdown::posterdown_betterport:
     self_contained: false
     pandoc_args: --mathjax
     highlight: espresso
-    number_sections: true
+    number_sections: false
 ---
 
 # Introduction
 
-* Adolescent girls and young women (15-29) face higher risk of HIV, and have been identified as a priority population for prevention efforts
-* The UNAIDS Global AIDS Strategy recommends differentiating services based on local HIV incidence and individual risk behaviours
+* Adolescent girls and young women (AGYW) 15-29 continue to **face higher risk** of HIV, and have been identified as a **priority population** for prevention efforts
+* The UNAIDS Global AIDS Strategy **recommends differentiating services** for AGYW geographically based on individual risk behaviours
+* We used a spatio-temporal model to estimate the proportion of AGYW in **four behavioural risk categories** in 13 priority countries at a district level in the years 1999-2020
 
 # Methods
 
-1. Fit multinomial model to $k = 1, 2, 3^{+}$
-2. Fit logistic regression model $k = 3, 4$
-3. Differentiate $k = 3^{+}$ into $k = 3$ and $k = 4$
-4. Adjust national-level FSW estimates
+* We used 48 household surveys (including AIS, BAIS, DHS and PHIA) but only 13 included a specific question about paid sex
+* For the categories $k \in \{1, 2, 3^{+}\}$ we specified a multinomial logistic regression via the multinomial-Poisson transformation
+\begin{align}
+    &y_{itak}^\star \sim \text{xPoisson}(\kappa_{itak}), \\
+    &\log(\kappa_{itak}) = \theta_{ita} + \beta_k + \alpha_{ak} + \zeta_{ck} + \phi_{ik} + \gamma_{tk},
+\end{align}
+where $p_{itak} = \text{softmax}(\kappa_{ita})_k$.
+
+* To differentiate $3^{+}$ we used a logistic regression
+\begin{align}
+    &y_{ia4}^\star \sim \text{xBinomial} \left( y_{ia3} + y_{ia4}, p_{ia4} / (p_{ia3} + p_{ia4}) \right), \\
+    &\text{logit}(p_{ia4} / (p_{ia3} + p_{ia4})) = \beta_0 + \alpha_a + \zeta_c + \phi_i + \beta_\texttt{cfswever}.  
+\end{align}
