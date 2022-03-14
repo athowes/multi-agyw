@@ -68,8 +68,9 @@ accent_colour: "#5d19c4"
 body_bgcol: "#ffffff"
 body_textsize: "40px"
 body_textcol: "#000000"
-reference_textsize: "20px"
+reference_textsize: "25px"
 # Standard options
+bibliography: citations.bib
 output: 
   posterdown::posterdown_betterport:
     self_contained: false
@@ -84,28 +85,40 @@ output:
 * The UNAIDS Global AIDS Strategy **recommends differentiating services** for AGYW geographically based on individual risk behaviour
 * We used a spatio-temporal model to estimate the proportion of AGYW in **four behavioural risk categories** $k = 1:4$ in 13 priority countries at a district level in the years 1999-2020
 
-|$k$|Category               | Risk ratio|
-|:--|:----------------------|----------:|
-|  1|Not sexually active    |          0|
-|  2|One cohabiting partner |          1|
-|  3|Non-regular partner(s) |       1.72|
-|  4|Female sex workers     |         13|
+|$k$|Category                 | Risk ratio|
+|:--|:------------------------|----------:|
+|  1|Not sexually active      |          0|
+|  2|One cohabiting partner   |          1|
+|  3|Non-regular partner(s)   |       1.72|
+|  4|Female sex workers (FSW) |         13|
 
 # Methods
 
 * We used 48 household surveys (AIS, BAIS, DHS, PHIA)
-* For the categories $k \in \{1, 2, 3^{+}\}$ we used all the data to fits a multinomial logistic regression via the multinomial-Poisson transformation
+* For the categories $k \in \{1, 2, 3^{+}\}$ we used all the data to fit a survey-weighted multinomial logistic regression via the multinomial-Poisson transformation
 \begin{align}
     &y_{itak}^\star \sim \text{xPoisson}(\kappa_{itak}), \\
-    &\log(\kappa_{itak}) = \theta_{ita} + \beta_k + \alpha_{ak} + \zeta_{ck} + \phi_{ik} + \gamma_{tk},
+    &\log(\kappa_{itak}) 
+    = \underbrace{\theta_{ita}}_{\text{Observation (IID)}}
+    + \underbrace{\beta_k}_{\text{Category (IID)}}
+    + \underbrace{\alpha_{ak}}_{\text{Age (IID)}} \\
+    &+ \underbrace{\zeta_{ck}}_{\text{Country (IID)}} 
+    + \underbrace{\phi_{ik}}_{\text{Spatial (Besag)}} 
+    + \underbrace{\gamma_{tk}}_{\text{Temporal (AR1)}}
 \end{align}
-where $p_{itak} = \text{softmax}(\kappa_{ita})_k$.
-
-* To differentiate $3^{+}$ we used only the 13 surveys with a specific paid sex question to fit a logistic regression
+where $p_{itak} = \text{softmax}(\kappa_{ita})_k$
+* To differentiate $3^{+}$ we used the 13 surveys with a paid sex question to fit a survey-weighted logistic regression
 \begin{align}
     &y_{ia4}^\star \sim \text{xBinomial} \left( y_{ia3} + y_{ia4}, p_{ia4} / (p_{ia3} + p_{ia4}) \right), \\
-    &\text{logit}(p_{ia4} / (p_{ia3} + p_{ia4})) = \beta_0 + \alpha_a + \zeta_c + \phi_i + \beta_\texttt{cfswever}.  
+    &\text{logit}(p_{ia4} / (p_{ia3} + p_{ia4}))
+    = \beta_0
+    + \beta_\texttt{cfswever} x_c \\
+    &+ \underbrace{\alpha_a}_{\text{Age (IID)}}
+    + \underbrace{\zeta_c}_{\text{Country (IID)}}
+    + \underbrace{\phi_i}_{\text{Spatial (Besag)}}
 \end{align}
+where $x_c$ is the proportion of men in each country who are clients of FSW [@hodgins2021cfsw]
+* We align our estimates for FSW to the UNAIDS Key Populations Atlas at the national-level [@johnston2022deriving]
 
 # Results
 
@@ -116,11 +129,11 @@ knitr::include_graphics("depends/infections-averted.png")
 # Discussion
 
 * Our model uses a **modular approach** to integrate all relevant data and **spatio-temporal smoothing** to overcome small-area sample sizes
-* Individual behaviour is a key determinant of HIV risk and providing prevention services according to behavior would allow many more new infections to be reached, especially among female sex workers
+* Individual behaviour is a **key determinant** of risk and providing prevention services on the basis of behavior would allow many more new infections to be reached, **especially among FSW**
 
 ## Limitations
 
-* No assessment **practical difficulties and costs** of strategies
+* No assessment **practicalities or costs** of strategies
 * No adjustment for **reporting bias**
 * **Risk category definitions** could be disputed
 
@@ -129,3 +142,6 @@ knitr::include_graphics("depends/infections-averted.png")
 * Inclusion of **more surveys** e.g. VACS
 * Extension to **general population** of adults 15-49
 
+# References
+
+<div id="refs" class="references"></div>
