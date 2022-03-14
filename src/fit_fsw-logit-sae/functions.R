@@ -6,6 +6,13 @@ logistic_model <- function(formula, model_name, S = 1000) {
 
   message(paste0("Begin fitting ", model_name, "."))
 
+  prior_fixed <- list(
+    mean.intercept = -2,
+    prec.intercept = 1,
+    mean = 0,
+    prec = 0.16
+  )
+
   fit <- inla(
     formula,
     data = df,
@@ -14,6 +21,7 @@ logistic_model <- function(formula, model_name, S = 1000) {
     control.family = list(control.link = list(model = "logit")),
     control.predictor = list(compute = TRUE, link = 1),
     control.compute = list(dic = TRUE, waic = TRUE, cpo = TRUE, config = TRUE),
+    control.fixed = prior_fixed,
     inla.mode = "experimental"
   )
 

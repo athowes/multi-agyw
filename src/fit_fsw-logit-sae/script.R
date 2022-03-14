@@ -261,13 +261,13 @@ formula2 <- update(formula_baseline,
 #' Model 3: Model 1, cfswrecent
 formula3 <- update(formula1, ". ~ . + cfswrecent")
 
-#' Model 4: Model 1, cfswrecent
+#' Model 4: Model 2, cfswrecent
 formula4 <- update(formula2, ". ~ . + cfswrecent")
 
-#' Model 5: Model 2, cfswever
+#' Model 5: Model 1, cfswever
 formula5 <- update(formula1, ". ~ . + cfswever")
 
-#' Model 6: Model 3, cfswever
+#' Model 6: Model 2, cfswever
 formula6 <- update(formula2, ". ~ . + cfswever")
 
 formulas <- parse(text = paste0("list(", paste0("formula", 1:6, collapse = ", "), ")")) %>% eval()
