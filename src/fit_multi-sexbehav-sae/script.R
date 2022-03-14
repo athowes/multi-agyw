@@ -245,9 +245,17 @@ if(lightweight) {
   models <- list("Model 4")
 }
 
+#' tryCatch version for safety
+try_multinomial_model <- function(...) {
+  return(tryCatch(multinomial_model(...), error = function(e) {
+    message("Error!")
+    return(NULL)
+  }))
+}
+
 res <- purrr::pmap(
   list(formula = formulas, model_name = models, S = S),
-  multinomial_model
+  try_multinomial_model
 )
 
 #' Extract the df and the full fitted models

@@ -273,10 +273,18 @@ formula6 <- update(formula2, ". ~ . + cfswever")
 formulas <- parse(text = paste0("list(", paste0("formula", 1:6, collapse = ", "), ")")) %>% eval()
 models <- paste0("Model ", 1:6) %>% as.list()
 
+#' tryCatch version for safety
+try_logistic_model <- function(...) {
+  return(tryCatch(logistic_model(...), error = function(e) {
+    message("Error!")
+    return(NULL)
+  }))
+}
+
 #' Fit the models
 res <- purrr::pmap(
   list(formula = formulas, model_name = models),
-  logistic_model
+  try_logistic_model
 )
 
 #' Extract the df and the full fitted models
