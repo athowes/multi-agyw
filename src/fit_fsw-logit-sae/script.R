@@ -8,7 +8,6 @@ iso3 <- names(analysis_level)
 
 areas <- readRDS("depends/areas.rds")
 ind <- read_csv("depends/survey_indicators_sexbehav.csv")
-pop <- read_csv("depends/interpolated_population.csv")
 cfsw_ever <- read_csv("everpaidforsex-bycountry.csv")
 cfsw_recent <- read_csv("recentpaidforsex-bycountry.csv")
 
