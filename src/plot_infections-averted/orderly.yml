@@ -8,6 +8,7 @@ artefacts:
       description: Plot showing the number of infections averted by using our estimates
       filenames:
         - infections-averted.pdf
+        - infections-averted.png
         - infections-averted-country.pdf
 
 packages:

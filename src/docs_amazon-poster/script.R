@@ -2,3 +2,4 @@
 # setwd("src/docs_amazon-poster")
 
 rmarkdown::render("amazon-poster.Rmd")
+pagedown::chrome_print("amazon-poster.html")

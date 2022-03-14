@@ -4,6 +4,7 @@ artefacts:
   - data:
       description: Poster
       filenames:
+        - amazon-poster.html
         - amazon-poster.pdf
 
 resources:
@@ -19,7 +20,7 @@ packages:
   - forcats
 
 depends:
-  plot_available-surveys:
+  plot_infections-averted:
     id: latest
     use:
-      depends/available-surveys.png: available-surveys.png
+      depends/infections-averted.png: infections-averted.png

@@ -53,7 +53,7 @@ inc_age_behav <- compute_infections_averted(df_age_behav, stratification_name = 
 inc_area <- compute_infections_averted(df_area, stratification_name = "Area")
 inc_age <- compute_infections_averted(df_age, stratification_name = "Age")
 inc_behav <- compute_infections_averted(df_behav, stratification_name = "Behaviour")
-inc_none <- compute_infections_averted(df_none, stratification_name = "Baseline (no targeting)")
+inc_none <- compute_infections_averted(df_none, stratification_name = "Baseline")
 
 inc <- bind_rows(
   inc_area_age_behav,
@@ -68,7 +68,7 @@ inc <- bind_rows(
 
 #' Add "improvement over no targetting" column
 infections_averted_per_population_baseline <- inc %>%
-  filter(stratification == "Baseline (no targeting)") %>%
+  filter(stratification == "Baseline") %>%
   #' Just the end of the line
   filter(population_cumulative == max(population_cumulative)) %>%
   mutate(infections_averted_per_population_baseline = infections_averted_cumulative / population_cumulative) %>%
@@ -84,35 +84,44 @@ inc <- inc %>%
     prop_population_cumulative = population_cumulative / max(population_cumulative, na.rm = TRUE),
     stratification = factor(
       stratification,
-      levels = c("Area, age, behaviour", "Area, age", "Area, behaviour", "Age, behaviour", "Area", "Age", "Behaviour", "Baseline (no targeting)")
+      levels = c("Area, age, behaviour", "Area, age", "Area, behaviour", "Age, behaviour", "Area", "Age", "Behaviour", "Baseline")
     )
   )
 
 pdf("infections-averted.pdf", h = 3, w = 6.25)
 
-ggplot(inc, aes(x = prop_population_cumulative, y = prop_infections_averted_cumulative_improvement, col = stratification)) +
-  geom_line(alpha = 0.8, size = 0.7) +
+plotA <- ggplot(inc, aes(x = prop_population_cumulative, y = prop_infections_averted_cumulative_improvement, col = stratification)) +
+  geom_line(alpha = 0.8, size = 1) +
   scale_color_manual(values = multi.utils::cbpalette()) +
   scale_x_continuous(labels = scales::percent) +
   scale_y_continuous(labels = scales::label_percent(accuracy = 1L)) +
   labs(
-    x = "Percentage of at risk population reached",
-    y = "Percentage of new infections \nreached beyond baseline",
-    col = "Risk stratification",
-    caption = paste0(
-      "Total at risk population is ~", signif(max(inc$population_cumulative, na.rm = TRUE), 3) / 1000, "k ",
-      "and the total number of new infections is ~", signif(max(inc$infections_averted_cumulative, na.rm = TRUE), 3) / 1000, "k."
-    )
+    x = paste0("Percent of at risk population (", signif(max(inc$population_cumulative, na.rm = TRUE), 3) / 10^6, "M) reached"),
+    y = paste0("Percent of new infections (", signif(max(inc$infections_averted_cumulative, na.rm = TRUE), 2) / 10^6, "M)\nreached beyond baseline"),
+    col = "Risk stratification"
   ) +
   theme_minimal() +
   theme(
-    legend.position = "right",
     plot.caption.position = "plot",
     legend.title = element_text(size = 9),
     legend.text = element_text(size = 9)
   )
 
+plotA
+
 dev.off()
+
+ggsave(
+  "infections-averted.png",
+  plotA +
+    theme(
+      legend.position = "bottom"
+    ),
+  width = 6,
+  height = 4,
+  units = "in",
+  dpi = 300
+)
 
 #' Separate analysis with each country separate
 
