@@ -22,11 +22,11 @@ artefacts:
   - data:
       description: Model selection information criteria for logistic regression models
       filenames:
-        - information-criteria.csv
+        - fsw-logit-information-criteria.csv
+        - fsw-logit-information-criteria.pdf
   - data:
       description: Modelling checks
       filenames:
-        - constant-smoothed-vs-raw.pdf
         - best-smoothed-vs-raw.pdf
         - best-smoothed-vs-raw-country.pdf
 
