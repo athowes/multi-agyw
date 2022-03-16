@@ -22,11 +22,12 @@ df <- lapply(files, function(file) {
       #' Suppose that this is a representative survey question
       indicator == "sexcohab"
     ) %>%
-    group_by(survey_id) %>%
+    group_by(survey_id, age_group) %>%
     summarise(sample_size = sum(n_observations)) %>%
     left_join(giftsvar, by = "survey_id")
 }) %>%
-  bind_rows()
+  bind_rows() %>%
+  ungroup()
 
 fct_case_when <- function(...) {
   args <- as.list(match.call())
@@ -36,7 +37,13 @@ fct_case_when <- function(...) {
 }
 
 df <- df %>%
+  pivot_wider(
+    names_from = age_group,
+    values_from = sample_size
+  ) %>%
+  select(-Y015_024) %>%
   mutate(
+    Y015_029 = Y015_019 + Y020_024 + Y025_029,
     iso3 = substr(survey_id, 1, 3),
     country = fct_recode(iso3,
       "Botswana" = "BWA",
@@ -54,13 +61,12 @@ df <- df %>%
       "Zimbabwe" = "ZWE"
     ),
     year = as.numeric(substr(survey_id, 4, 7)),
-    type = substr(survey_id, 8, length(survey_id)),
+    type = substr(survey_id, 8, 13),
     sample_size_factor = fct_case_when(
-      sample_size < 5000 ~ "<5k",
-      sample_size < 10000 ~ "5k-10k",
-      sample_size < 15000 ~ "10k-15k",
-      sample_size < 20000 ~ "15k-20k",
-      20000 <= sample_size ~ ">20k"
+      Y015_029 < 2500 ~ "<2.5k",
+      Y015_029 < 5000 ~ "2.5k-5k",
+      Y015_029 < 10000 ~ "5k-10k",
+      Y015_029 < 15000 ~ "10k-15k"
     )
   )
 
@@ -102,7 +108,7 @@ df %>%
 dev.off()
 
 df %>%
-  select(country, type, year, giftsvar, sample_size) %>%
+  select(country, type, year, giftsvar, Y015_019, Y020_024, Y025_029, Y015_029) %>%
   mutate(
     giftsvar = case_when(
       giftsvar == 1 ~ "[/]cmark",
@@ -114,11 +120,30 @@ df %>%
     "Type" = "type",
     "Year" = "year",
     "Paid sex question" = "giftsvar",
-    "Sample size" = "sample_size"
+    "15-19" = "Y015_019",
+    "20-24" = "Y020_024",
+    "25-29" = "Y025_029",
+    "Total" = "Y015_029",
   ) %>%
-  gt() %>%
-  cols_align(
-    align = c("left")
+  gt(groupname_col = "Country") %>%
+  tab_spanner(
+    label = "Sample size",
+    columns = c("15-19", "20-24", "25-29", "Total")
+  ) %>%
+  summary_rows(
+    groups = TRUE,
+    columns = c("15-19", "20-24", "25-29", "Total"),
+    fns = list("Total" = ~sum(., na.rm = TRUE)),
+    drop_trailing_zeros = TRUE,
+    missing_text = "",
+    sep_mark = ""
+  ) %>%
+  grand_summary_rows(
+    columns = c("15-19", "20-24", "25-29", "Total"),
+    fns = list("Total" = ~sum(., na.rm = TRUE)),
+    drop_trailing_zeros = TRUE,
+    missing_text = "",
+    sep_mark = ""
   ) %>%
   as_latex() %>%
   as.character() %>%
@@ -132,7 +157,7 @@ df %>%
 
 #' How many AGYW, in total, were surveyed?
 df %>%
-  pull(sample_size) %>%
+  pull(Y015_029) %>%
   sum()
 
 #' What was the total number of surveys including a paid sex question?
@@ -145,7 +170,7 @@ length(giftsvar_surveys)
 #' How many AGYW were sampled in these surveys?
 df %>%
   filter(survey_id %in% giftsvar_surveys) %>%
-  pull(sample_size) %>%
+  pull(Y015_029) %>%
   sum()
 
 #' What was the median number of surveys by country, and the range?
