@@ -24,3 +24,7 @@ depends:
     id: latest
     use:
       depends/infections-reached.png: infections-reached.png
+  plot_aids-abstract:
+    id: latest
+    use:
+      depends/aids-abstract.png: aids-abstract.png

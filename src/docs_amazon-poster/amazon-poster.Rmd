@@ -48,7 +48,7 @@ affiliation:
   - num: 6
     address: Department of Computer Science, University of Oxford
 main_findings:
-  - "Successfully **targeting** HIV programming using **risk behaviour** would **greatly increase** new infections reached."
+  - "Successfully **targeting** HIV programs using **risk behaviour** would **greatly increase** new infections reached."
 logoleft_name: "IMP_ML_W_N.png"
 logoright_name: "UNAIDS-reverse-EN.gif"
 # Style & formatting
@@ -122,6 +122,10 @@ where $x_c$ is the proportion of men in each country who are clients of FSW [@ho
 * Inference performed with integrated nested Laplace approximation [@rue2009approximate] via `R-INLA`
 
 # Results
+
+```{r echo=FALSE, fig.align='center', out.width='100%', fig.cap='Results for two of the risk categories'}
+knitr::include_graphics("depends/aids-abstract.png")
+```
 
 ```{r echo=FALSE, fig.align='center', out.width='100%', fig.cap='Comparison of targeting strategies'}
 knitr::include_graphics("depends/infections-reached.png")
