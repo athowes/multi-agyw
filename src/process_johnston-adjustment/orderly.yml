@@ -9,6 +9,8 @@ artefacts:
       filenames:
         - adjust-best-3p1-multi-sexbehav-sae.csv
         - human-adjust-best-3p1-multi-sexbehav-sae.csv
+        - adjust-best-3p1-aaa-multi-sexbehav-sae.csv
+        - human-adjust-best-3p1-aaa-multi-sexbehav-sae.csv
         - quick-adjustment-comparison.pdf
 
 packages:
@@ -29,6 +31,7 @@ depends:
       id: latest
       use:
         depends/best-3p1-multi-sexbehav-sae.csv: best-3p1-multi-sexbehav-sae.csv
+        depends/best-3p1-aaa-multi-sexbehav-sae.csv: best-3p1-aaa-multi-sexbehav-sae.csv
   - process_national-fsw-comparison:
       id: latest
       use:
