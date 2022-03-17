@@ -5,11 +5,14 @@ sources:
 
 artefacts:
   - data:
-      description: Plot showing the number of infections averted by using our estimates
+      description: Plot showing the number of infections reached using our estimates
       filenames:
-        - infections-averted.pdf
-        - infections-averted.png
-        - infections-averted-country.pdf
+        - infections-reached.pdf
+        - infections-reached.png
+        - infections-reached-country.pdf
+        - infections-reached-above-baseline.pdf
+        - infections-reached-above-baseline.png
+        - infections-reached-above-baseline-country.pdf
 
 packages:
   - dplyr

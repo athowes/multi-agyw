@@ -20,7 +20,7 @@ packages:
   - forcats
 
 depends:
-  plot_infections-averted:
+  plot_infections-reached:
     id: latest
     use:
       depends/infections-averted.png: infections-averted.png
