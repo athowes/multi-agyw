@@ -2,7 +2,17 @@
 # orderly::orderly_develop_start("plot_aids-abstract")
 # setwd("src/plot_plot_aids-abstract")
 
-df <- read_csv("depends/human-best-3-multi-sexbehav-sae.csv")
+df <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
+pop <- read_csv("depends/interpolated_population.csv")
+
+#' Add population and updating naming
+df <- df %>%
+  left_join(
+    filter(pop, sex == "female"),
+    by = c("area_id", "year", "age_group")
+  ) %>%
+  rename(population_mean = population) %>%
+  multi.utils::update_naming()
 
 #' The following section is copied mostly from plot_within-between-country-variation
 
@@ -28,15 +38,10 @@ region_key <- c(
   tibble::rownames_to_column("iso3")
 
 df <- df %>%
-  filter(age_group %in% c("20-24", "25-29")) %>%
-  mutate(
-    #' Assuming the survey_id is structured as ISO2000DHS
-    year = substr(survey_id, 4, 7),
+  filter(
+    age_group %in% c("20-24", "25-29"),
+    year == "2020"
   ) %>%
-  #' Only the most recent survey in each year
-  group_by(iso3) %>%
-  filter(year == max(year)) %>%
-  ungroup() %>%
   #' Aggregate up to 20-29
   group_by(iso3, area_id, indicator) %>%
   mutate(population_mean = ifelse(is.na(population_mean), 1, population_mean)) %>%
@@ -53,25 +58,25 @@ df_subnational <- df %>%
 
 df_national <- setdiff(df, df_subnational)
 
-#' Countries that are missing a national level aggregate
-#' This is a temporary solution and we should go back over and get these aggregates in properly
-missing_national <- df_national %>%
-  filter(is.na(estimate_smoothed)) %>%
-  pull(iso3) %>%
-  unique()
-
-#' Overwriting NAs left_join (there must be a better way to do this, looks a lot simpler in data.table)
-df_national <- left_join(
-  df_national,
-  df_subnational %>%
-    filter(iso3 %in% missing_national) %>%
-    group_by(iso3, indicator) %>%
-    summarise(estimate_smoothed = mean(estimate_smoothed, na.rm = TRUE)),
-  by = c("iso3", "indicator")
-) %>%
-  within(., estimate_smoothed.x <- ifelse(!is.na(estimate_smoothed.y), estimate_smoothed.y, estimate_smoothed.x)) %>%
-  select(-estimate_smoothed.y) %>%
-  rename(estimate_smoothed = estimate_smoothed.x)
+#' #' Countries that are missing a national level aggregate
+#' #' This is a temporary solution and we should go back over and get these aggregates in properly
+#' missing_national <- df_national %>%
+#'   filter(is.na(estimate_smoothed)) %>%
+#'   pull(iso3) %>%
+#'   unique()
+#'
+#' #' Overwriting NAs left_join (there must be a better way to do this, looks a lot simpler in data.table)
+#' df_national <- left_join(
+#'   df_national,
+#'   df_subnational %>%
+#'     filter(iso3 %in% missing_national) %>%
+#'     group_by(iso3, indicator) %>%
+#'     summarise(estimate_smoothed = mean(estimate_smoothed, na.rm = TRUE)),
+#'   by = c("iso3", "indicator")
+#' ) %>%
+#'   within(., estimate_smoothed.x <- ifelse(!is.na(estimate_smoothed.y), estimate_smoothed.y, estimate_smoothed.x)) %>%
+#'   select(-estimate_smoothed.y) %>%
+#'   rename(estimate_smoothed = estimate_smoothed.x)
 
 df_national_sort <- df_national %>%
   select(iso3, region) %>%
@@ -89,7 +94,6 @@ df_subnational <- df_subnational %>%
   )
 
 #' For the AIDS abstract, filter down to only 20-29 and cohabiting or non-regular partners
-
 plotB <- df_subnational %>%
   filter(
     indicator %in% c("Cohabiting partner", "Nonregular partner(s)")
@@ -119,7 +123,10 @@ plotB <- df_subnational %>%
     x = "", y = "", col = "Regions of sub-Saharan Africa",
     caption =
       expression(
-        paste(bold("Not sexually active"), " (not shown) + ", bold("Cohabiting partner"), " + ", bold("Nonregular partner(s)"), " = 100%")
+        paste(bold("Not sexually active"), " (not shown) + ",
+              bold("Cohabiting partner"), " + ",
+              bold("Nonregular partner(s)"), " + ",
+              bold("FSW"), " (not shown) = 100%")
       )
   ) +
   guides(colour = guide_legend(override.aes = list(alpha = 0.9, size = 5))) +
@@ -195,8 +202,14 @@ cowplot::plot_grid(plotA, plotB, ncol = 1, rel_heights = c(1, 1.1), align = "v")
 
 dev.off()
 
-#' Separate versions are useful for presentations
+#' Save version for poster
+ggsave(
+  "aids-abstract.png",
+  cowplot::plot_grid(plotA, plotB, ncol = 1, rel_heights = c(1, 1.1), align = "v"),
+  width = 6, height = 6, units = "in", dpi = 300
+)
 
+#' Separate versions are useful for presentations
 pdf("aids-abstract-A.pdf", h = 3.5, w = 6.25)
 
 plotA

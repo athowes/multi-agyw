@@ -5,6 +5,7 @@ artefacts:
       description: Plot for AIDS 2022 abstract, combining the dot-plot and cloropleth
       filenames:
         - aids-abstract.pdf
+        - aids-abstract.png
         - aids-abstract-A.pdf
         - aids-abstract-B.pdf
 
@@ -22,14 +23,15 @@ packages:
   - tibble
 
 depends:
-  - process_multi-sexbehav-sae:
+  - process_johnston-adjustment:
       id: latest
       use:
-        depends/human-best-3-multi-sexbehav-sae.csv: human-best-3-multi-sexbehav-sae.csv
+        depends/adjust-best-3p1-multi-sexbehav-sae.csv: adjust-best-3p1-multi-sexbehav-sae.csv
   - process_all-data:
       id: latest
       use:
         depends/areas.rds: areas.rds
+        depends/interpolated_population.csv: interpolated_population.csv
   - national_data_areas:
       id: latest
       use:
