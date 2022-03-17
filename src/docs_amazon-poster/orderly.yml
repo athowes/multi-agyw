@@ -23,4 +23,4 @@ depends:
   plot_infections-reached:
     id: latest
     use:
-      depends/infections-averted.png: infections-averted.png
+      depends/infections-reached.png: infections-reached.png
