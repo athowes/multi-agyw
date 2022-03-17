@@ -3,7 +3,7 @@ continental_map <- function(df, areas, national_areas) {
   df <- df %>%
     filter(age_group != "15-24") %>%
     #' Assuming the survey_id is structured as ISO2000DHS
-    mutate(year = substr(survey_id, 4, 7)) %>%
+    mutate(year = {if("year" %in% names(.)) year else substr(survey_id, 4, 7)}) %>%
     #' Only the most recent survey in each year
     group_by(iso3) %>%
     filter(year == max(year)) %>%

@@ -7,8 +7,10 @@ artefacts:
   - data:
       description: Cloropleth of smoothed estimates at a continental level
       filenames:
+        - 3-aaa-continental-map.pdf
+        - 3p1-aaa-continental-map.pdf
         - 3-continental-map.pdf
-        - 3p1-continental-map.pdf
+        # - 3p1-aaa-continental-map.pdf
 
 packages:
   - dplyr
@@ -24,11 +26,6 @@ packages:
   - tibble
 
 depends:
-  - process_multi-sexbehav-sae:
-      id: latest
-      use:
-        depends/human-best-3-multi-sexbehav-sae.csv: human-best-3-multi-sexbehav-sae.csv
-        depends/human-best-4-multi-sexbehav-sae.csv: human-best-4-multi-sexbehav-sae.csv
   - process_all-data:
       id: latest
       use:
@@ -37,6 +34,14 @@ depends:
       id: latest
       use:
         depends/national_areas.rds: national_areas.rds
+  - process_multi-sexbehav-sae:
+      id: latest
+      use:
+        depends/human-best-3-multi-sexbehav-sae.csv: human-best-3-multi-sexbehav-sae.csv
+  - fit_multi-sexbehav-sae:
+      id: latest
+      use:
+        depends/multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
   - process_differentiate-high-risk:
       id: latest
       use:
