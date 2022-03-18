@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE, fewer_countries = TRUE))
+# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE))
 # setwd("src/fit_multi-sexbehav-sae")
 
 analysis_level <- multi.utils::analysis_level()
@@ -121,6 +121,10 @@ df <- df %>%
              x_eff, estimate, ci_lower, ci_upper),
     by = c("indicator", "year", "age_group", "area_id")
   )
+
+#' Check that all the surveys are into df
+#' (The +1 is for the NA that's included in df but not ind)
+length(unique(df$survey_id)) == length(unique(ind$survey_id)) + 1
 
 pdf("data-check.pdf", h = 11, w = 8.75)
 
