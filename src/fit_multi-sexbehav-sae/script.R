@@ -99,7 +99,7 @@ if(three_category) {
 df <- crossing(
   indicator = indicators,
   #' All of the different years
-  year = 1999:2020,
+  year = 1999:2018,
   #' Three age groups
   age_group = c("Y015_019", "Y020_024", "Y025_029"),
   #' The areas in the model
