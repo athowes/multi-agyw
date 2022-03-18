@@ -10,7 +10,11 @@ areas <- read_sf("depends/moz_areas.geojson")
 areas_wide <- naomi::spread_areas(areas)
 
 surveys <- create_surveys_dhs(iso3, survey_characteristics = 24) %>%
-  filter(as.numeric(SurveyYear) > 1998)
+  filter(
+    as.numeric(SurveyYear) > 1998,
+    #'No GPS coordinates available (clusters could be assigned to admin1 areas using survey region name)
+    SurveyId != "MZ2003DHS"
+  )
 
 survey_meta <- create_survey_meta_dhs(surveys)
 
