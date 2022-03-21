@@ -57,7 +57,6 @@ df_3p1_aaa_adjusted <- perform_johnston_adjustment(df_3p1_aaa, johnston)
 write_csv(df_3p1_aaa_adjusted, "adjust-best-3p1-aaa-multi-sexbehav-sae.csv")
 write_csv(multi.utils::update_naming(df_3p1_aaa_adjusted), "human-adjust-best-3p1-aaa-multi-sexbehav-sae.csv")
 
-
 pdf("quick-adjustment-comparison.pdf", h = 5, w = 6.25)
 
 df_3p1 %>%
