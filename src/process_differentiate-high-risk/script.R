@@ -12,13 +12,11 @@ df_prop <- read_csv("depends/best-fsw-logit-sae.csv") %>%
 
 df_3p1_aaa <- differentiate_high_risk(df_3_aaa, df_prop)
 write_csv(df_3p1_aaa, "best-3p1-aaa-multi-sexbehav-sae.csv", na = "")
-write_csv(multi.utils::update_naming(df_3p1_aaa), "human-best-3p1-aaa-multi-sexbehav-sae.csv", na = "")
 
 df_3p1 <- differentiate_high_risk(df_3, df_prop)
 write_csv(df_3p1, "best-3p1-multi-sexbehav-sae.csv", na = "")
-write_csv(multi.utils::update_naming(df_3p1), "human-best-3p1-multi-sexbehav-sae.csv", na = "")
 
 #' And now on the samples
 #' TODO
-samples <- readRDS("depends/every-3-multi-sexbehav-sae-samples.rds")
-samples_prop <- readRDS("depends/best-fsw-logit-sae-samples.rds")
+# samples <- readRDS("depends/every-3-multi-sexbehav-sae-samples.rds")
+# samples_prop <- readRDS("depends/best-fsw-logit-sae-samples.rds")
