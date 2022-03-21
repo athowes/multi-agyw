@@ -2,14 +2,19 @@
 # orderly::orderly_develop_start("plot_continental-map")
 # setwd("src/plot_continental-map")
 
-df_3_aaa <- read_csv("depends/human-best-3-aaa-multi-sexbehav-sae.csv")
-df_3p1_aaa <- read_csv("depends/human-adjust-best-3p1-aaa-multi-sexbehav-sae.csv")
+df_3_aaa <- read_csv("depends/best-3-aaa-multi-sexbehav-sae.csv") %>%
+  multi.utils::update_naming()
+
+df_3p1_aaa <- read_csv("depends/adjust-best-3p1-aaa-multi-sexbehav-sae.csv") %>%
+  multi.utils::update_naming()
 
 df_3 <- read_csv("depends/best-3-multi-sexbehav-sae.csv") %>%
   mutate(iso3 = substr(area_id, 1, 3)) %>%
   multi.utils::update_naming() %>%
   filter(year == 2018)
-df_3p1 <- read_csv("depends/human-adjust-best-3p1-multi-sexbehav-sae.csv")
+
+df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv") %>%
+  multi.utils::update_naming()
 
 areas <- readRDS("depends/areas.rds")
 national_areas <- readRDS("depends/national_areas.rds")

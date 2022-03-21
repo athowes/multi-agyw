@@ -354,7 +354,6 @@ res_df <- res_df %>%
   relocate(model, .before = estimate_smoothed)
 
 write_csv(res_df, "multi-sexbehav-sae.csv", na = "")
-write_csv(update_naming(res_df), "human-multi-sexbehav-sae.csv", na = "")
 
 #' Create plotting data
 res_plot <- res_df %>%

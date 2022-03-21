@@ -6,6 +6,8 @@
 #' See also "Sobol method" or "Sobol indices"
 #' Perhaps I should look into other interpretability measures e.g. Shapley values
 
+#' Separate country fitting
+
 iso3 <- multi.utils::priority_iso3()
 
 #' The single survey estimates
@@ -157,3 +159,6 @@ df %>%
   select(iso3, percentage_variance_area_idx) %>%
   arrange(desc(percentage_variance_area_idx)) %>%
   mutate(percentage_variance_area_idx = signif(100 * percentage_variance_area_idx, 3))
+
+#' Joint country fitting
+#' TODO

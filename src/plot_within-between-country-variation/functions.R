@@ -1,14 +1,9 @@
 prepare_estimates <- function(df) {
   df <- df %>%
-    filter(age_group != "15-24") %>%
-    mutate(
-      #' Assuming the survey_id is structured as ISO2000DHS
-      year = substr(survey_id, 4, 7),
-    ) %>%
-    #' Only the most recent survey in each year
-    group_by(iso3) %>%
-    filter(year == max(year)) %>%
-    ungroup()
+    filter(
+      age_group != "15-24",
+      year == 2018
+    )
 
   df_subnational <- df %>%
     filter(!(area_id %in% multi.utils::priority_iso3()))

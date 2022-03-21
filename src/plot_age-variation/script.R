@@ -2,7 +2,8 @@
 # orderly::orderly_develop_start("plot_age-variation")
 # setwd("src/plot_age-variation")
 
-df <- read_csv("depends/human-best-3-multi-sexbehav-sae.csv") %>%
+df <- read_csv("depends/best-3-multi-sexbehav-sae.csv") %>%
+  multi.utils::update_naming() %>%
   filter(age_group != "15-24")
 
 df_age_country <- df %>%

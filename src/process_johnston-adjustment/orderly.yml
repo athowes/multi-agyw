@@ -1,16 +1,11 @@
 script: script.R
 
-sources:
-  - functions.R
-
 artefacts:
   - data:
       description: Multinomial smoothed district estimate results (four categories) adjusted to match Johnston FSW estimates
       filenames:
         - adjust-best-3p1-multi-sexbehav-sae.csv
-        - human-adjust-best-3p1-multi-sexbehav-sae.csv
         - adjust-best-3p1-aaa-multi-sexbehav-sae.csv
-        - human-adjust-best-3p1-aaa-multi-sexbehav-sae.csv
         - quick-adjustment-comparison.pdf
 
 packages:

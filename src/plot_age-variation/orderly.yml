@@ -23,5 +23,5 @@ depends:
   - process_multi-sexbehav-sae:
       id: latest
       use:
-        depends/human-best-3-multi-sexbehav-sae.csv: human-best-3-multi-sexbehav-sae.csv
+        depends/best-3-multi-sexbehav-sae.csv: best-3-multi-sexbehav-sae.csv
 

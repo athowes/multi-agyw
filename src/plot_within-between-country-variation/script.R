@@ -50,7 +50,7 @@ df_national <- bind_rows(
 pdf("within-between-country-variation-fsw.pdf", h = 6, w = 6.25)
 
 df_subnational %>%
-  filter(indicator == "YWKP") %>%
+  filter(indicator == "FSW") %>%
   mutate(iso3 = reorder(iso3, iso3_sort_order)) %>%
   ggplot(aes(x = fct_rev(iso3), y = estimate_smoothed, col = region)) +
   geom_jitter(width = 0.1, alpha = 0.6, shape = 20) +
@@ -71,17 +71,17 @@ df_subnational %>%
 
 dev.off()
 
-#' #' Quantification of points discussed
-#' #' District level quantile information (age disaggregated)
-#' df_subnational %>%
-#'   select(iso3, indicator, age_group, estimate_smoothed) %>%
-#'   group_by(indicator, age_group) %>%
-#'   summarise(
-#'     lower = 100 * quantile(estimate_smoothed, probs = 0.025, na.rm = TRUE),
-#'     median = 100 * median(estimate_smoothed, na.rm = TRUE),
-#'     upper = 100 * quantile(estimate_smoothed, probs = 0.975, na.rm = TRUE)
-#'   )
-#'
+#' Quantification of points discussed
+#' District level quantile information (age disaggregated)
+df_subnational %>%
+  select(iso3, indicator, age_group, estimate_smoothed) %>%
+  group_by(indicator, age_group) %>%
+  summarise(
+    lower = 100 * quantile(estimate_smoothed, probs = 0.025, na.rm = TRUE),
+    median = 100 * median(estimate_smoothed, na.rm = TRUE),
+    upper = 100 * quantile(estimate_smoothed, probs = 0.975, na.rm = TRUE)
+  )
+
 #' #' District level quantile information aggregated by age (population weighted)
 #' df_subnational %>%
 #'   select(iso3, area_id, indicator, age_group, estimate_smoothed, population_mean) %>%
