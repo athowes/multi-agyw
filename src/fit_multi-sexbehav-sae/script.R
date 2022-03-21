@@ -302,31 +302,37 @@ ic_df <- res_df %>%
 write_csv(ic_df, "information-criteria.csv", na = "")
 
 #' Artefact: Random effect variance parameter posterior means
-variance_df <- map(res_fit, function(fit)
-  fit$marginals.hyperpar %>%
-    #' Calculate the expectation of the variance
-    map_df(function(x) inla.emarginal(fun = function(y) 1/y, x)) %>%
-    #' Rename Precision to variance
-    rename_all(list(~ str_replace(., "Precision for ", "variance_")))
+variance_df <- tryCatch(
+  map(res_fit, function(fit)
+    fit$marginals.hyperpar %>%
+      #' Calculate the expectation of the variance
+      map_df(function(x) inla.emarginal(fun = function(y) 1/y, x)) %>%
+      #' Rename Precision to variance
+      rename_all(list(~ str_replace(., "Precision for ", "variance_")))
   ) %>%
-  bind_rows() %>%
-  #' Some of the models have other hyperparameters (e.g. rho)
-  select(starts_with("Variance")) %>%
-  #' Sum of variance means
-  mutate(total_variance = rowSums(., na.rm = TRUE)) %>%
-  #' Create new columns with the percentage variance
-  mutate(
-    across(
-      .cols = starts_with("Variance"),
-      .fns = list(percentage = ~ . / total_variance),
-      .names = "{fn}_{col}"
-    )
-  ) %>%
-  #' Add model identifier column
-  mutate(
-    model = unlist(models),
-    .before = everything()
-  )
+    bind_rows() %>%
+    #' Some of the models have other hyperparameters (e.g. rho)
+    select(starts_with("Variance")) %>%
+    #' Sum of variance means
+    mutate(total_variance = rowSums(., na.rm = TRUE)) %>%
+    #' Create new columns with the percentage variance
+    mutate(
+      across(
+        .cols = starts_with("Variance"),
+        .fns = list(percentage = ~ . / total_variance),
+        .names = "{fn}_{col}"
+      )
+    ) %>%
+    #' Add model identifier column
+    mutate(
+      model = unlist(models),
+      .before = everything()
+    ),
+  error = function(e) {
+    message("Error!")
+    return(NULL)
+  }
+)
 
 write_csv(variance_df, "variance-proportions.csv", na = "")
 
