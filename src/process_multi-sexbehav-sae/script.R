@@ -8,12 +8,12 @@ iso3 <- c("BWA", "CMR", "LSO", "MWI", "NAM", "TZA", "UGA", "ZAF", "ZMB", "ZWE")
 files <- paste0("depends/", tolower(iso3), "_4-multi-sexbehav-sae.csv")
 df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
-write_csv(df, "every-4-multi-sexbehav-sae.csv", na = "")
+write_csv(df, "every-4-aaa-multi-sexbehav-sae.csv", na = "")
 
 #' Best four category models
 df <- filter(df, model == "Model 3")
 
-write_csv(df, "best-4-multi-sexbehav-sae.csv", na = "")
+write_csv(df, "best-4-aaa-multi-sexbehav-sae.csv", na = "")
 
 priority_iso3 <- multi.utils::priority_iso3()
 
@@ -21,7 +21,7 @@ priority_iso3 <- multi.utils::priority_iso3()
 files <- paste0("depends/", tolower(priority_iso3), "_3-multi-sexbehav-sae.csv")
 df <- bind_rows(lapply(files, function(file) read_csv(file)))
 
-write_csv(df, "every-3-multi-sexbehav-sae.csv", na = "")
+write_csv(df, "every-3-aaa-multi-sexbehav-sae.csv", na = "")
 
 #' Best three category models
 
@@ -44,12 +44,12 @@ model_selector <- function(iso3, model) {
 
 df <- filter(df, model_selector(iso3, model))
 
-write_csv(df, "best-3-multi-sexbehav-sae.csv", na = "")
+write_csv(df, "best-3-aaa-multi-sexbehav-sae.csv", na = "")
 
 #' Three category samples
 files <- paste0("depends/", tolower(priority_iso3), "_3-multi-sexbehav-sae-samples.rds")
 samples <- lapply(files, function(file) readRDS(file))
 
-saveRDS(samples, "every-3-multi-sexbehav-sae-samples.rds")
+saveRDS(samples, "every-3-aaa-multi-sexbehav-sae-samples.rds")
 
-#' TODO create best-3-multi-sexbehav-sae-samples.rds
+#' TODO create best-3-aaa-multi-sexbehav-sae-samples.rds

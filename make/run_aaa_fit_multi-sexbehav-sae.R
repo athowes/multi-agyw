@@ -45,3 +45,5 @@ recent_ids <- sapply(giftsvar_iso3, function(iso3) {
 
 sapply(na.omit(recent_ids), function(id) orderly::orderly_commit(id))
 sapply(na.omit(recent_ids), function(id) orderly::orderly_push_archive(name = report, id = id))
+
+run_commit_push("process_multi-sexbehav-sae")
