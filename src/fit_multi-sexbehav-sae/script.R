@@ -357,7 +357,7 @@ res_df <- res_df %>%
 write_csv(res_df, "multi-sexbehav-sae.csv", na = "")
 
 #' Create plotting data for years with surveys
-unique_surveys <- res_plot %>%
+unique_surveys <- res_df %>%
   pull(survey_id) %>%
   unique()
 
