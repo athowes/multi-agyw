@@ -13,12 +13,9 @@ artefacts:
       description: Smoothed district indicator estimates for multinomial models
       filenames:
         - multi-sexbehav-sae.csv
+        - multi-sexbehav-sae-fits.rds
         - multi-sexbehav-sae.pdf
         - every-multi-sexbehav-sae-samples.rds
-  # - data:
-  #     description: Stacked proportion barplots
-  #     filenames:
-  #       - stacked-proportions.pdf
   - data:
       description: Model selection information criteria for multinomial models
       filenames:
@@ -37,7 +34,7 @@ artefacts:
   #       - coverage-histograms.pdf
 
 parameters:
-  #' Should we be used three categories or four
+  #' Should we be using three categories or four
   three_category:
     default: TRUE
   #' Fit only one model rather than all models

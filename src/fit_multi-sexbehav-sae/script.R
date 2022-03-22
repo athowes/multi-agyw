@@ -268,6 +268,9 @@ res_fit <- lapply(res, "[[", 2)
 res_samples <- lapply(res, "[[", 3)
 names(res_samples) <- unlist(models)
 
+#' Artefact: Fitted model objects
+saveRDS(res_fit, "multi-sexbehav-sae-fits.rds")
+
 #' Artefact: Samples from all models
 saveRDS(res_samples, "every-multi-sexbehav-sae-samples.rds")
 
