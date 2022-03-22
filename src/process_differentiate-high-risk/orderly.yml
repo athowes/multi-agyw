@@ -27,9 +27,9 @@ depends:
   - process_multi-sexbehav-sae:
       id: latest
       use:
-        depends/best-3-multi-sexbehav-sae.csv: best-3-multi-sexbehav-sae.csv
+        depends/best-3-aaa-multi-sexbehav-sae.csv: best-3-aaa-multi-sexbehav-sae.csv
         #' Current "every" corresponds to "best" because I've got a lightweight run
-        depends/every-3-multi-sexbehav-sae-samples.rds: every-3-multi-sexbehav-sae-samples.rds
+        depends/every-3-aaa-multi-sexbehav-sae-samples.rds: every-3-aaa-multi-sexbehav-sae-samples.rds
   - fit_multi-sexbehav-sae:
       id: latest
       use:
