@@ -342,8 +342,6 @@ write_csv(variance_df, "variance-proportions.csv", na = "")
 #' Artefact: Smoothed district indicator estimates for multinomial models
 res_df <- res_df %>%
   mutate(iso3 = substr(area_id, 1, 3), .before = year) %>%
-  #' Remove superfluous INLA indicator columns
-  select(-ends_with("idx"), -ends_with("idx_copy")) %>%
   #' Make it clear which of the estimates are raw and which are from the model (smoothed)
   rename(
     estimate_raw = estimate,
