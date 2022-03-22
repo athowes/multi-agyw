@@ -65,7 +65,6 @@ df_3p1_ribbon %>%
       labs(title = paste0(x$iso3[1]), x = "Year", y = "Estimate", col = "Type") +
       theme_minimal() +
       theme(
-        plot.title = element_text(face = "bold"),
         strip.text = element_text(face = "bold"),
         legend.position = "bottom",
         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
