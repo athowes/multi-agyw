@@ -1,9 +1,5 @@
 plot_temporal_interpolation <- function(df) {
   df %>%
-    filter(
-      !(area_id %in% multi.utils::priority_iso3()),
-      age_group != "15-24"
-    ) %>%
     pivot_longer(
       cols = c(starts_with("estimate")),
       names_to = c(".value", "source"),
@@ -22,7 +18,7 @@ plot_temporal_interpolation <- function(df) {
     geom_point(alpha = 0.5) +
     facet_grid(age_group ~ indicator) +
     labs(x = "Year of survey", y = "Estimate", col = "Country") +
-    lims(x = c(2000L, 2022L)) +
+    lims(x = c(2000L, 2018L)) +
     scale_color_manual(values = multi.utils::cbpalette()) +
     theme_minimal() +
     theme(

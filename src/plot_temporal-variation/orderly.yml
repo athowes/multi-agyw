@@ -1,12 +1,15 @@
 script: script.R
 
+sources:
+  - functions.R
+
 artefacts:
   - data:
       description: Time series style plots
       filenames:
-        - 3-temporal-interpolation.pdf
+        - 3p1-aaa-temporal-interpolation.pdf
         - 3p1-temporal-interpolation.pdf
-        - temporal-interpolation.pdf
+        - 3p1-temporal-interpolation-ribbon.pdf
 
 packages:
   - dplyr
@@ -21,15 +24,8 @@ packages:
   - tidyr
 
 depends:
-  - process_multi-sexbehav-sae:
-      id: latest
-      use:
-        depends/best-3-multi-sexbehav-sae.csv: best-3-multi-sexbehav-sae.csv
   - process_differentiate-high-risk:
       id: latest
       use:
         depends/best-3p1-multi-sexbehav-sae.csv: best-3p1-multi-sexbehav-sae.csv
-  - fit_multi-sexbehav-sae:
-      id: latest
-      use:
-        depends/multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+        depends/best-3p1-aaa-multi-sexbehav-sae.csv: best-3p1-aaa-multi-sexbehav-sae.csv
