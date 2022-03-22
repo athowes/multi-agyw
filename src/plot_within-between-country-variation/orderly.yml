@@ -7,8 +7,8 @@ artefacts:
   - data:
       description: Aiming to show the extent of within and between country variability in the estimates
       filenames:
-        - within-between-country-variation.pdf
-        - within-between-country-variation-fsw.pdf
+        - 3p1-within-between-country-variation.pdf
+        - fsw-within-between-country-variation.pdf
 
 packages:
   - dplyr
@@ -24,6 +24,10 @@ packages:
   - tibble
 
 depends:
+  - process_all-data:
+      id: latest
+      use:
+        depends/interpolated_population.csv: interpolated_population.csv
   - process_johnston-adjustment:
       id: latest
       use:

@@ -5,30 +5,22 @@ prepare_estimates <- function(df) {
       year == 2018
     )
 
-  df_subnational <- df %>%
-    filter(!(area_id %in% multi.utils::priority_iso3()))
+  df_subnational <- df
 
-  df_national <- setdiff(df, df_subnational)
+  df_national <- df %>%
+    group_by(iso3, age_group, indicator) %>%
+    summarise(
+      estimate_smoothed = sum(estimate_smoothed * population_mean, na.rm = TRUE) / sum(population_mean, na.rm = TRUE)
+    )
 
   #' Countries that are missing a national level aggregate
-  #' This is a temporary solution and we should go back over and get these aggregates in properly
   missing_national <- df_national %>%
     filter(is.na(estimate_smoothed)) %>%
     pull(iso3) %>%
-    unique()
+    unique() %>%
+    length()
 
-  #' Overwriting NAs left_join (there must be a better way to do this, looks a lot simpler in data.table)
-  df_national <- left_join(
-    df_national,
-    df_subnational %>%
-      filter(iso3 %in% missing_national) %>%
-      group_by(iso3, age_group, indicator) %>%
-      summarise(estimate_smoothed = mean(estimate_smoothed)),
-    by = c("iso3", "age_group", "indicator")
-  ) %>%
-    within(., estimate_smoothed.x <- ifelse(!is.na(estimate_smoothed.y), estimate_smoothed.y, estimate_smoothed.x)) %>%
-    select(-estimate_smoothed.y) %>%
-    rename(estimate_smoothed = estimate_smoothed.x)
+  missing_national == 0
 
   #' Add region column
   #' Defined based on the UN geoscheme for Africa
