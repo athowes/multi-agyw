@@ -355,8 +355,13 @@ res_df <- res_df %>%
 
 write_csv(res_df, "multi-sexbehav-sae.csv", na = "")
 
-#' Create plotting data
+#' Create plotting data for years with surveys
+unique_surveys <- res_plot %>%
+  pull(survey_id) %>%
+  unique()
+
 res_plot <- res_df %>%
+  filter(paste0(iso3, year) %in% substr(unique_surveys, 1, 7)) %>%
   pivot_longer(
     cols = c(starts_with("estimate")),
     names_to = c(".value", "source"),
@@ -369,28 +374,23 @@ res_plot <- res_df %>%
   st_as_sf()
 
 #' Artefact: Cloropleths
-pdf("multi-sexbehav-sae.pdf", h = 40, w = 6.25)
+pdf("multi-sexbehav-sae.pdf", h = 6, w = 12)
 
 res_plot %>%
-  split(~indicator + model) %>%
+  filter(paste0(iso3, year) %in% substr(unique_surveys, 1, 7)) %>%
+  #' Can't split on survey_id because missing entries have missing survey_id
+  split(~iso3 + year + model) %>%
   lapply(function(x)
+    #' For country years with no survey
+    if(nrow(x) != 0) {
     x %>%
-      mutate(
-        age_group = fct_recode(age_group,
-                               "15-19" = "Y015_019",
-                               "20-24" = "Y020_024",
-                               "25-29" = "Y025_029"
-        ),
-        source = fct_relevel(source, "raw", "smoothed") %>%
-          fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed")
-      ) %>%
       ggplot(aes(fill = estimate)) +
       geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
       scale_fill_viridis_c(option = "C", label = label_percent()) +
-      facet_grid(year + source ~ age_group) +
+      facet_grid(source ~ indicator + age_group) +
       theme_minimal() +
       labs(
-        title = paste0(substr(x$year[1], 1, 4), ": ", x$indicator[1], " (", x$model[1], ")")
+        title = paste0(x$survey_id[1], " (", x$model[1], ")")
       ) +
       theme(
         axis.text = element_blank(),
@@ -401,6 +401,7 @@ res_plot %>%
         legend.position = "bottom",
         legend.key.width = unit(4, "lines")
       )
+    }
   )
 
 dev.off()
