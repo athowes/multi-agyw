@@ -18,7 +18,7 @@ temp_3p1 <- prepare_estimates(df_3p1)
 df_3p1_subnational <- temp_3p1$df_subnational
 df_3p1_national <- temp_3p1$df_national
 
-pdf("3p1-within-between-country-variation.pdf", h = 7, w = 8)
+pdf("3p1-within-between-country-variation.pdf", h = 7, w = 6.25)
 
 df_3p1_subnational %>%
   mutate(iso3 = reorder(iso3, iso3_sort_order)) %>%
@@ -26,7 +26,7 @@ df_3p1_subnational %>%
     geom_jitter(width = 0.1, alpha = 0.6, shape = 20) +
     geom_point(data = df_3p1_national, aes(x = fct_rev(iso3), y = estimate_smoothed),
                shape = 21, size = 2, fill = "white", col = "black", alpha = 0.9) +
-    facet_grid(age_group ~  indicator) +
+    facet_grid(age_group ~  indicator, labeller = labeller(indicator = label_wrap_gen(10))) +
     scale_color_manual(values = multi.utils::cbpalette()) +
     scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
     coord_flip() +
@@ -34,9 +34,11 @@ df_3p1_subnational %>%
     guides(colour = guide_legend(override.aes = list(alpha = 0.9, size = 5))) +
     theme_minimal() +
     theme(
-      panel.spacing = unit(1.5, "lines"),
+      panel.spacing = unit(0.5, "lines"),
       legend.position = "bottom",
-      strip.text = element_text(face = "bold")
+      strip.text = element_text(face = "bold"),
+      legend.title = element_text(size = 9),
+      legend.text = element_text(size = 9),
     )
 
 dev.off()
@@ -82,9 +84,12 @@ df_subnational_fsw %>%
   guides(colour = guide_legend(override.aes = list(alpha = 0.9, size = 5))) +
   theme_minimal() +
   theme(
-    panel.spacing = unit(1.5, "lines"),
+    panel.spacing = unit(1, "lines"),
     legend.position = "bottom",
-    strip.text = element_text(face = "bold")
+    strip.text = element_text(face = "bold"),
+    legend.title = element_text(size = 9),
+    legend.text = element_text(size = 9),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
   )
 
 dev.off()
