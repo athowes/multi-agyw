@@ -8,6 +8,7 @@ artefacts:
       description: Aiming to show the extent of within and between country variability in the estimates
       filenames:
         - 3p1-within-between-country-variation.pdf
+        - 3p1-within-between-country-variation.png
         - fsw-within-between-country-variation.pdf
 
 packages:

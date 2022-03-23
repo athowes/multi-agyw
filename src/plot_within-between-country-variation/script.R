@@ -20,7 +20,7 @@ df_3p1_national <- temp_3p1$df_national
 
 pdf("3p1-within-between-country-variation.pdf", h = 7, w = 6.25)
 
-df_3p1_subnational %>%
+plotA <- df_3p1_subnational %>%
   mutate(iso3 = reorder(iso3, iso3_sort_order)) %>%
   ggplot(aes(x = fct_rev(iso3), y = estimate_smoothed, col = region)) +
     geom_jitter(width = 0.1, alpha = 0.6, shape = 20) +
@@ -41,7 +41,16 @@ df_3p1_subnational %>%
       legend.text = element_text(size = 9),
     )
 
+plotA
+
 dev.off()
+
+#' Save version for poster
+ggsave(
+  "3p1-within-between-country-variation.png",
+  plotA,
+  width = 6.25, height = 7, units = "in", dpi = 300
+)
 
 #' Have a closer look at the FSW estimates and check that the Johnston adjustment has worked
 df_3p1_unadjusted <- read_csv("depends/best-3p1-multi-sexbehav-sae.csv")

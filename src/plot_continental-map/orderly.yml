@@ -11,6 +11,7 @@ artefacts:
         - 3p1-aaa-continental-map.pdf
         - 3-continental-map.pdf
         - 3p1-continental-map.pdf
+        - 3p1-continental-map.png
 
 packages:
   - dplyr

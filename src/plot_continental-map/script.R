@@ -19,13 +19,13 @@ df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv") %>%
 areas <- readRDS("depends/areas.rds")
 national_areas <- readRDS("depends/national_areas.rds")
 
-pdf("3-aaa-continental-map.pdf", h = 8, w = 6.25)
+pdf("3-aaa-continental-map.pdf", h = 7, w = 6.25)
 
 continental_map(df_3_aaa, areas, national_areas)
 
 dev.off()
 
-pdf("3p1-aaa-continental-map.pdf", h = 8, w = 6.75)
+pdf("3p1-aaa-continental-map.pdf", h = 7, w = 6.25)
 
 df_3p1_aaa %>%
   mutate(iso3 = substr(survey_id, 1, 3)) %>%
@@ -33,17 +33,25 @@ df_3p1_aaa %>%
 
 dev.off()
 
-pdf("3-continental-map.pdf", h = 8, w = 6.75)
+pdf("3-continental-map.pdf", h = 7, w = 6.25)
 
 df_3 %>%
   continental_map(areas, national_areas)
 
 dev.off()
 
-pdf("3p1-continental-map.pdf", h = 8, w = 6.75)
+pdf("3p1-continental-map.pdf", h = 7, w = 6.25)
 
-df_3p1 %>%
+plotA <- df_3p1 %>%
   mutate(iso3 = substr(survey_id, 1, 3)) %>%
   continental_map(areas, national_areas)
 
+plotA
+
 dev.off()
+
+ggsave(
+  "3p1-continental-map.png",
+  plotA,
+  width = 6.25, height = 7, units = "in", dpi = 300
+)

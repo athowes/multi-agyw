@@ -28,3 +28,11 @@ depends:
     id: latest
     use:
       depends/aids-abstract.png: aids-abstract.png
+  plot_within-between-country-variation:
+    id: latest
+    use:
+      depends/3p1-within-between-country-variation.png: 3p1-within-between-country-variation.png
+  plot_continental-map:
+    id: latest
+    use:
+      depends/3p1-continental-map.png: 3p1-continental-map.png
