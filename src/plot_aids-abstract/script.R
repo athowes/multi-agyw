@@ -2,11 +2,11 @@
 # orderly::orderly_develop_start("plot_aids-abstract")
 # setwd("src/plot_plot_aids-abstract")
 
-df <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
+df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
 pop <- read_csv("depends/interpolated_population.csv")
 
 #' Add population and updating naming
-df <- df %>%
+df_3p1 <- df_3p1 %>%
   left_join(
     filter(pop, sex == "female"),
     by = c("area_id", "year", "age_group")
@@ -37,48 +37,32 @@ region_key <- c(
   rename("region" = ".") %>%
   tibble::rownames_to_column("iso3")
 
-df <- df %>%
+df_3p1 <- df_3p1 %>%
   filter(
     age_group %in% c("20-24", "25-29"),
-    year == "2020"
+    year == "2018"
   ) %>%
   #' Aggregate up to 20-29
   group_by(iso3, area_id, indicator) %>%
   mutate(population_mean = ifelse(is.na(population_mean), 1, population_mean)) %>%
-  summarise(estimate_smoothed = sum(estimate_smoothed * population_mean) / sum(population_mean)) %>%
+  summarise(
+    estimate_smoothed = sum(estimate_smoothed * population_mean) / sum(population_mean),
+    population_mean = sum(population_mean)
+  ) %>%
   mutate(age_group = "20-29") %>%
   ungroup() %>%
   #' Add region column
   left_join(region_key, by = "iso3")
 
-priority_iso3 <- multi.utils::priority_iso3()
+df_3p1_subnational <- df_3p1
 
-df_subnational <- df %>%
-  filter(!(area_id %in% c(priority_iso3)))
+df_3p1_national <- df_3p1 %>%
+  group_by(iso3, age_group, indicator, region) %>%
+  summarise(
+    estimate_smoothed = sum(estimate_smoothed * population_mean, na.rm = TRUE) / sum(population_mean, na.rm = TRUE)
+  )
 
-df_national <- setdiff(df, df_subnational)
-
-#' #' Countries that are missing a national level aggregate
-#' #' This is a temporary solution and we should go back over and get these aggregates in properly
-#' missing_national <- df_national %>%
-#'   filter(is.na(estimate_smoothed)) %>%
-#'   pull(iso3) %>%
-#'   unique()
-#'
-#' #' Overwriting NAs left_join (there must be a better way to do this, looks a lot simpler in data.table)
-#' df_national <- left_join(
-#'   df_national,
-#'   df_subnational %>%
-#'     filter(iso3 %in% missing_national) %>%
-#'     group_by(iso3, indicator) %>%
-#'     summarise(estimate_smoothed = mean(estimate_smoothed, na.rm = TRUE)),
-#'   by = c("iso3", "indicator")
-#' ) %>%
-#'   within(., estimate_smoothed.x <- ifelse(!is.na(estimate_smoothed.y), estimate_smoothed.y, estimate_smoothed.x)) %>%
-#'   select(-estimate_smoothed.y) %>%
-#'   rename(estimate_smoothed = estimate_smoothed.x)
-
-df_national_sort <- df_national %>%
+df_3p1_national_sort <- df_3p1_national %>%
   select(iso3, region) %>%
   unique() %>%
   group_by(region) %>%
@@ -87,14 +71,14 @@ df_national_sort <- df_national %>%
   mutate(iso3_sort_order = row_number()) %>%
   select(iso3, iso3_sort_order)
 
-df_subnational <- df_subnational %>%
+df_3p1_subnational <- df_3p1_subnational %>%
   left_join(
-    df_national_sort,
+    df_3p1_national_sort,
     by = "iso3"
   )
 
 #' For the AIDS abstract, filter down to only 20-29 and cohabiting or non-regular partners
-plotB <- df_subnational %>%
+plotB <- df_3p1_subnational %>%
   filter(
     indicator %in% c("Cohabiting partner", "Nonregular partner(s)")
   ) %>%
@@ -104,7 +88,7 @@ plotB <- df_subnational %>%
   ggplot(aes(x = fct_rev(iso3), y = estimate_smoothed, col = region)) +
   geom_jitter(width = 0.1, alpha = 0.6, shape = 20) +
   geom_point(
-    data = df_national %>%
+    data = df_3p1_national %>%
       filter(
         indicator %in% c("Cohabiting partner", "Nonregular partner(s)")
       ),
@@ -135,7 +119,9 @@ plotB <- df_subnational %>%
     panel.spacing = unit(1, "lines"),
     legend.position = "top",
     strip.text = element_text(face = "bold"),
-    strip.text.y = element_blank()
+    strip.text.y = element_blank(),
+    legend.title = element_text(size = 9),
+    legend.text = element_text(size = 9)
   )
 
 #' The following section is copied from plot_continental-map
@@ -143,7 +129,7 @@ plotB <- df_subnational %>%
 areas <- readRDS("depends/areas.rds")
 national_areas <- readRDS("depends/national_areas.rds")
 
-df_subnational_sf <- df_subnational %>%
+df_3p1_subnational_sf <- df_3p1_subnational %>%
   left_join(
     select(areas, area_id, geometry),
     by = "area_id"
@@ -153,7 +139,7 @@ df_subnational_sf <- df_subnational %>%
 #' Using these just to show missing data for the countries we don't consider in the analysis
 national_areas <- national_areas %>%
   filter(
-    !(GID_0 %in% priority_iso3),
+    !(GID_0 %in% multi.utils::priority_iso3()),
     #' These are just chosen manually by looking at countries between CMR and the rest on a map
     GID_0 %in% c("AGO", "DRC", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
   ) %>%
@@ -162,19 +148,19 @@ national_areas <- national_areas %>%
   ) %>%
   select(-GID_0)
 
-df_national_areas <- crossing(
+df_3p1_national_areas <- crossing(
   indicator = as.factor(c("Cohabiting partner", "Nonregular partner(s)")),
   age_group = c("20-29"),
   iso3 = unique(national_areas$iso3)
 ) %>%
   left_join(national_areas, by = "iso3")
 
-df_subnational_sf <- bind_rows(
-  df_subnational_sf,
-  df_national_areas
+df_3p1_subnational_sf <- bind_rows(
+  df_3p1_subnational_sf,
+  df_3p1_national_areas
 )
 
-plotA <- df_subnational_sf %>%
+plotA <- df_3p1_subnational_sf %>%
   filter(indicator %in% c("Cohabiting partner", "Nonregular partner(s)")) %>%
   ggplot(aes(fill = estimate_smoothed)) +
     geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
@@ -193,7 +179,9 @@ plotA <- df_subnational_sf %>%
       legend.key.width = unit(1, "lines"),
       legend.position = "left",
       strip.text.y = element_blank(),
-      panel.spacing = unit(1.5, "lines")
+      panel.spacing = unit(1.5, "lines"),
+      legend.title = element_text(size = 9),
+      legend.text = element_text(size = 9)
     )
 
 pdf("aids-abstract.pdf", h = 7, w = 6.25)
