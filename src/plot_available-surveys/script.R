@@ -85,7 +85,7 @@ df %>%
   ) %>%
   ggplot(aes(x = year, y = fct_rev(country), col = type, size = sample_size_factor, shape = giftsvar)) +
   geom_point(alpha = 0.7) +
-  labs(x = "", y = "", col = "Type", shape = "Does the survey include\na specific paid sex question?", size = "Sample size") +
+  labs(x = "", y = "", col = "Type", shape = "Does the survey include\na specific transactional question?", size = "Sample size") +
   scale_color_manual(values = multi.utils::cbpalette()[c(3, 7, 1, 2)]) +
   scale_x_continuous(breaks = min(df$year):max(df$year)) +
   scale_size_discrete(range = c(2, 5)) +
@@ -119,7 +119,7 @@ df %>%
     "Country" = "country",
     "Type" = "type",
     "Year" = "year",
-    "Paid sex question" = "giftsvar",
+    "Transactional question" = "giftsvar",
     "15-19" = "Y015_019",
     "20-24" = "Y020_024",
     "25-29" = "Y025_029",
@@ -160,7 +160,7 @@ df %>%
   pull(Y015_029) %>%
   sum()
 
-#' What was the total number of surveys including a paid sex question?
+#' What was the total number of surveys including a transactional question?
 giftsvar_surveys <- df %>%
   filter(giftsvar == 1) %>%
   pull(survey_id)
@@ -198,7 +198,7 @@ number_of_surveys %>%
     max = max(count)
   )
 
-#' What was the raw FSW proportion in surveys with and without a specific paid sex question?
+#' What was the raw FSW proportion in surveys with and without a specific transactional question?
 lapply(files, function(file) {
   read_csv(file)
 }) %>%
