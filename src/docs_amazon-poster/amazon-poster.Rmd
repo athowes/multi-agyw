@@ -48,7 +48,7 @@ affiliation:
   - num: 6
     address: Department of Computer Science, University of Oxford
 main_findings:
-  - "Successfully **targeting** HIV programming using **risk behaviour** would **greatly increase** new infections reached."
+  - "Successful **targeting of HIV programming** using **risk behaviour** would **greatly increase** new infections reached."
 logoleft_name: "IMP_ML_W_N.png"
 logoright_name: "UNAIDS-reverse-EN.gif"
 # Style & formatting
@@ -69,6 +69,7 @@ body_bgcol: "#ffffff"
 body_textsize: "40px"
 body_textcol: "#000000"
 reference_textsize: "25px"
+sectitle_textsize: "40px"
 # Standard options
 bibliography: citations.bib
 output: 
@@ -79,11 +80,14 @@ output:
     number_sections: false
 ---
 
-# Introduction
+<!-- Using LaTeX to create spacing -->
+$$\\[0.2in]$$
 
-* Adolescent girls and young women (AGYW) 15-29 continue to **face higher risk** of HIV, and have been identified as a **priority population** for prevention
-* The UNAIDS Global AIDS Strategy **recommends differentiating services** for AGYW geographically based on individual risk behaviour
-* We used a spatio-temporal model to estimate the proportion of AGYW in **four behavioural risk categories** $k = 1:4$ in 13 priority countries at a district level in the years 1999-2020
+## Introduction
+
+* Adolescent girls and young women (AGYW) 15-29 continue to **face disproportionately high risk** of HIV, and have been identified as a **priority population** for prevention efforts
+* The UNAIDS Global AIDS Strategy 2021-2026 **recommends differentiating services** for AGYW geographically based both on individual risk behaviour and epidemic indicators
+* We used a spatio-temporal model to estimate the proportion of AGYW in **four behavioural risk categories** $k = 1:4$ in 13 priority countries at a district level in the years 1999-2018
 
 |$k$|Category                 | Risk ratio|
 |:--|:------------------------|----------:|
@@ -92,7 +96,9 @@ output:
 |3  |Non-regular partner(s)   |       1.72|
 |4  |Female sex workers (FSW) |         13|
 
-# Methods
+$$\\[0.2in]$$
+
+## Methods
 
 * We used 48 household surveys (AIS, BAIS, DHS, PHIA)
 * For the categories $k \in \{1, 2, 3^{+}\}$ we used all the data to fit a survey-weighted multinomial logistic regression via the multinomial-Poisson transformation
@@ -107,7 +113,7 @@ output:
     + \underbrace{\gamma_{tk}}_{\text{Temporal (AR1)}}
 \end{align}
 where $p_{itak} = \text{softmax}(\kappa_{ita})_k$
-* To differentiate $3^{+}$ we used the 13 surveys with a paid sex question to fit a survey-weighted logistic regression
+* To differentiate $3^{+}$ we used the 13 surveys with a transactional sex question to fit a survey-weighted logistic regression
 \begin{align}
     &y_{ia4}^\star \sim \text{xBinomial} \left( y_{ia3} + y_{ia4}, p_{ia4} / (p_{ia3} + p_{ia4}) \right), \\
     &\text{logit}(p_{ia4} / (p_{ia3} + p_{ia4}))
@@ -118,10 +124,13 @@ where $p_{itak} = \text{softmax}(\kappa_{ita})_k$
     + \underbrace{\phi_i}_{\text{Spatial (Besag)}}
 \end{align}
 where $x_c$ is the proportion of men in each country who are clients of FSW [@hodgins2021cfsw]
-* We align our estimates for FSW to the UNAIDS Key Populations Atlas at the national-level [@johnston2022deriving]
-* Inference performed with integrated nested Laplace approximation [@rue2009approximate] via `R-INLA`
+* We aligned our FSW estimates to the national-level UNAIDS Key Populations Atlas [@johnston2022deriving]
+* Using the Poisson formulation facilitated inference using integrated nested Laplace approximation [@rue2009approximate] via `R-INLA`
+* We estimated incidence and number of new infections by risk group using the risk ratios to disaggregate Naomi model [@eaton2021naomi] general population incidence estimates
 
-# Results
+$$\\[0.2in]$$
+
+## Results
 
 ```{r echo=FALSE, fig.align='center', out.width='100%', fig.cap='Dotplots showing the posterior mean of our district level estimates (in colour) and national estimates (in white) in 2018.'}
 knitr::include_graphics("depends/3p1-within-between-country-variation.png")
@@ -131,29 +140,37 @@ knitr::include_graphics("depends/3p1-within-between-country-variation.png")
 knitr::include_graphics("depends/3p1-continental-map.png")
 ```
 
+* There is **significant variation** in risk group proportions **within and between countries**, as well as **between age groups** (but close to no change over time)
+* We found a geographic delineation, with **cohabiting more common in the east** and **non-regular partner(s) more common in the south**
+* Large numbers of 15-19 in Mozambique have early sexual debut and are already cohabiting
+
 ```{r echo=FALSE, fig.align='center', out.width='100%', fig.cap='Comparison of targeting strategies'}
 knitr::include_graphics("depends/infections-reached.png")
 ```
 
-# Discussion
+* Using area, age and behavioural risk stratification **25% of new infections can be found by reaching 3% of the population**, as compared with 8% of the population when behaviour is excluded 
 
-* Using a **modular approach** allowed integration of all relevant data
-* **Spatio-temporal smoothing** overcame high variance from small sample sizes
+$$\\[0.2in]$$
+
+## Discussion
+
+* Using a **modular approach** allowed us to integrate all data from non-conformable surveys
+* **Spatio-temporal smoothing** can be used to overcome high variance from the small sample sizes that result when further stratifying districts
 * Individual behaviour is a **key determinant** of risk and providing prevention services on the basis of behavior would allow many more new infections to be reached, **especially among FSW**
-* Geographic delineation: cohabiting more common in the east and non-regular partner(s) more common in the south
-* Large numbers of 15-19 in Mozambique already cohabiting 
 
-## Limitations
+### Limitations
 
 * No adjustment for **reporting bias**
 * **Risk category definitions** could be disputed
-* No assessment **practicalities or costs** of strategies
+* No assessment of **practicalities or costs** of risk stratification approaches, or efficacy of available interventions
 
-## Future work
+### Future work
 
 * Inclusion of **more surveys** e.g. VACS
 * Extension to **general population** of adults 15-49
 
-# References
+$$\\[0.2in]$$
+
+## References
 
 <div id="refs" class="references"></div>
