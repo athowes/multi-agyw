@@ -100,7 +100,7 @@ $$\\[0.2in]$$
 
 ## Methods
 
-* We used 48 household surveys (AIS, BAIS, DHS, PHIA)
+* We used 47 household surveys (AIS, BAIS, DHS, PHIA)
 * For the categories $k \in \{1, 2, 3^{+}\}$ we used all the data to fit a survey-weighted multinomial logistic regression via the multinomial-Poisson transformation
 \begin{align}
     &y_{itak}^\star \sim \text{xPoisson}(\kappa_{itak}), \\
