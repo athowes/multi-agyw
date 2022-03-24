@@ -13,7 +13,7 @@ src("make/run_aaa_fit_multi-sexbehav-sae.R")
 #' 5. Run the three category models for all countries jointly
 src("make/run_fit_multi-sexbehav-sae.R")
 
-#' 6. Differentiate the highest risk cateogry using a logistic regression model
+#' 6. Differentiate the highest risk category using a logistic regression model
 src("make/high_risk_differentiation.R")
 
 #' 7. Post processing (including e.g. figures) of the modelling results
