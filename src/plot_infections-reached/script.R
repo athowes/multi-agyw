@@ -117,3 +117,18 @@ lapply(inf_country, function(x)
 )
 
 dev.off()
+
+#' Quantification of points discussed
+
+#' What is the minimum proportion of the population to reach in order to
+#' achieve reaching over q \in [0, 1] proportion of the new infections?
+min_pop_reached <- function(q) {
+  inf %>%
+    filter(prop_infections_averted_cumulative > q) %>%
+    group_by(stratification) %>%
+    filter(prop_population_cumulative == min(prop_population_cumulative)) %>%
+    select(stratification, prop_infections_averted_cumulative, prop_population_cumulative)
+}
+
+min_pop_reached(0.25)
+min_pop_reached(0.5)
