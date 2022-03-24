@@ -4,7 +4,7 @@
 
 analysis_level <- multi.utils::analysis_level()
 
-df <- read_csv("depends/best-3p1-multi-sexbehav-sae.csv")
+df_3p1 <- read_csv("depends/best-3p1-multi-sexbehav-sae.csv")
 areas <- readRDS("depends/areas.rds")
 
 #' Confusing file names here, but I believe they are all the same thing
@@ -61,12 +61,8 @@ naomi <- naomi %>%
   #' Only female, so don't need this column
   select(-sex)
 
-df <- df %>%
-  mutate(year = substr(survey_id, 4, 7)) %>%
-  #' Only the most recent survey in each year
-  group_by(iso3) %>%
-  filter(year == max(year)) %>%
-  ungroup() %>%
+df_3p1 <- df_3p1 %>%
+  filter(year == 2018) %>%
   select(area_id, age_group, indicator, estimate_smoothed) %>%
   pivot_wider(
     names_from = indicator,
@@ -74,9 +70,9 @@ df <- df %>%
     values_fn = mean
   )
 
-df <- naomi %>%
+df_3p1 <- naomi %>%
   left_join(
-    df,
+    df_3p1,
     by = c("area_id", "age_group")
   )
 
@@ -88,7 +84,7 @@ rr_sexpaid12m <- 13
 rr_sexnonreg_se <- 1
 rr_sexnonregplus <- rr_sexnonreg * 0.91 + rr_sexpaid12m * 0.09 #' This is an approximate value
 
-df <- df %>%
+df_3p1 <- df_3p1 %>%
   mutate(
     population_nosex12m = population * nosex12m,
     population_sexcohab = population * sexcohab,
@@ -104,13 +100,13 @@ df <- df %>%
     infections_sexpaid12m = population_sexpaid12m * incidence_sexpaid12m
   )
 
-write_csv(df, "incidence-district-sexbehav.csv")
+write_csv(df_3p1, "incidence-district-sexbehav.csv")
 
-df_plot <- df %>%
+df_3p1_plot <- df_3p1 %>%
   select(iso3, area_id, age_group, starts_with("incidence_sex")) %>%
   pivot_longer(
     cols = starts_with("incidence_sex"),
-    names_to = "category",
+    names_to = "indicator",
     names_prefix = "incidence_",
     values_to = "incidence",
   ) %>%
@@ -121,26 +117,19 @@ df_plot <- df %>%
   st_as_sf()
 
 #' Artefact: Cloropleths
+pdf("incidence-district-sexbehav.pdf", h = 7, w = 6.25)
 
-pdf("incidence-district-sexbehav.pdf", h = 8.25, w = 11.75)
-
-df_plot %>%
+df_3p1_plot %>%
   filter(iso3 != "TZA") %>%
+  multi.utils::update_naming() %>%
   split(.$iso3) %>%
   lapply(function(x)
     x %>%
-      mutate(
-        age_group = fct_recode(age_group,
-            "15-19" = "Y015_019",
-            "20-24" = "Y020_024",
-            "25-29" = "Y025_029"
-          )
-      ) %>%
       ggplot(aes(fill = incidence)) +
       geom_sf(size = 0.1) +
       coord_sf(lims_method = "geometry_bbox") +
       scale_fill_viridis_c(option = "C", label = label_percent()) +
-      facet_grid(category ~ age_group) +
+      facet_grid(age_group ~ indicator) +
       theme_minimal() +
       labs(
         title = paste0(x$iso3[1]),
@@ -151,7 +140,6 @@ df_plot %>%
         axis.ticks = element_blank(),
         panel.grid = element_blank(),
         strip.text = element_text(face = "bold"),
-        plot.title = element_text(face = "bold"),
         legend.position = "bottom",
         legend.key.width = unit(4, "lines")
       )
