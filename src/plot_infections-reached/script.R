@@ -69,7 +69,7 @@ plot_infections_reached <- function(df) {
     guides(col = guide_legend(ncol = 2)) +
     theme_minimal() +
     theme(
-      legend.position = c(0.75, 0.28),
+      legend.position = c(0.75, 0.3),
       legend.title = element_text(size = 9),
       legend.text = element_text(size = 9)
     )
@@ -90,8 +90,28 @@ ggsave(
 )
 
 #' Separate analysis for each country
+fct_reorg <- function(fac, ...) {
+  fct_recode(fct_relevel(fac, ...), ...)
+}
 
 inf_country <- df_area_age_behav %>%
+  mutate(
+    iso3 = fct_reorg(iso3,
+                     "Botswana" = "BWA",
+                     "Cameroon" = "CMR",
+                     "Kenya" = "KEN",
+                     "Lesotho" = "LSO",
+                     "Mozambique" = "MOZ",
+                     "Malawi" = "MWI",
+                     "Namibia" = "NAM",
+                     "Eswatini" = "SWZ",
+                     "Tanzania" = "TZA",
+                     "Uganda" = "UGA",
+                     "South Africa" = "ZAF",
+                     "Zambia" = "ZMB",
+                     "Zimbabwe" = "ZWE"
+    )
+  ) %>%
   split(.$iso3) %>%
   lapply(function(x)
     infections_reached_all_stratifications(x) %>%
