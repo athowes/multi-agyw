@@ -129,16 +129,23 @@ df_3p1_subnational %>%
     upper = 100 * quantile(estimate_smoothed, probs = 0.975, na.rm = TRUE)
   )
 
-#' What proportion of 15-19 year-olds are cohabiting in MOZ?
+#' What proportion of 15-19 year-olds are cohabiting (or other indicators) in MOZ?
 df_3p1_national %>%
   filter(
-    indicator == "Cohabiting partner",
     age_group == "15-19",
     iso3 == "Mozambique"
   ) %>%
+  mutate(estimate_smoothed = 100 * estimate_smoothed)
+
+#' In which countries are the majority of 15-19 year-olds not sexually active?
+#' Just MOZ!
+df_3p1_national %>%
+  filter(
+    age_group == "15-19",
+    indicator == "No sex"
+  ) %>%
   mutate(estimate_smoothed = 100 * estimate_smoothed) %>%
-  pull(estimate_smoothed) %>%
-  signif(digits = 3)
+  filter(estimate_smoothed < 50)
 
 #' District level quantile information aggregated by age (population weighted)
 #' What proportion of 20-29 year-olds are cohabiting versus with nonregular partner(s),
