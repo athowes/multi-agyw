@@ -122,7 +122,7 @@ dev.off()
 
 #' What is the minimum proportion of the population to reach in order to
 #' achieve reaching over q \in [0, 1] proportion of the new infections?
-min_pop_reached <- function(q) {
+min_pop_reached <- function(inf, q) {
   inf %>%
     filter(prop_infections_averted_cumulative > q) %>%
     group_by(stratification) %>%
@@ -130,5 +130,35 @@ min_pop_reached <- function(q) {
     select(stratification, prop_infections_averted_cumulative, prop_population_cumulative)
 }
 
-min_pop_reached(0.25)
-min_pop_reached(0.5)
+min_pop_reached(inf, 0.25)
+min_pop_reached(inf, 0.5)
+
+#' At a national level
+country_min_pop <- lapply(inf_country, function(x) min_pop_reached(x, q = 0.25)) %>%
+  bind_rows(.id = "country") %>%
+  filter(stratification %in% c("Area, age, behaviour", "Area, age"))
+
+country_min_pop %>%
+  group_by(stratification) %>%
+  summarise(
+    max_prop_population_cumulative = max(prop_population_cumulative),
+    median_prop_population_cumulative = median(prop_population_cumulative),
+    min_prop_population_cumulative = min(prop_population_cumulative)
+  )
+
+#' What proportion of new infections are among FSW as compared with the proportion the population that are FSW?
+inf %>%
+  filter(
+    stratification == "Behaviour",
+    category == "sexpaid12m"
+  ) %>%
+  select(prop_infections_averted_cumulative, prop_population_cumulative)
+
+#' What about by country?
+lapply(inf_country, function(x)
+  x %>%
+    filter(stratification == "Behaviour", category == "sexpaid12m") %>%
+    select(prop_infections_averted_cumulative, prop_population_cumulative)
+) %>%
+  bind_rows(.id = "country")
+
