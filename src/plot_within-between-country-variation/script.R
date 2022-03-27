@@ -172,3 +172,22 @@ df_3p1_subnational %>%
     upper = 100 * quantile(estimate_smoothed, probs = 0.975, na.rm = TRUE)
   ) %>%
   mutate(across(lower:upper, ~signif(.x, digits = 3)))
+
+#' What's the average FSW proportion by age?
+df_3p1_subnational %>%
+  filter(indicator == "FSW") %>%
+  group_by(iso3, age_group) %>%
+  summarise(estimate_smoothed = sum(estimate_smoothed * population_mean, na.rm = TRUE) / sum(population_mean, na.rm = TRUE)) %>%
+  group_by(age_group) %>%
+  summarise(
+    lower = 100 * quantile(estimate_smoothed, probs = 0.025, na.rm = TRUE),
+    median = 100 * median(estimate_smoothed, na.rm = TRUE),
+    upper = 100 * quantile(estimate_smoothed, probs = 0.975, na.rm = TRUE)
+  ) %>%
+  mutate(across(lower:upper, ~signif(.x, digits = 3)))
+
+#' What about by country?
+df_3p1_subnational %>%
+  filter(indicator == "FSW") %>%
+  group_by(iso3) %>%
+  summarise(estimate_smoothed = sum(estimate_smoothed * population_mean, na.rm = TRUE) / sum(population_mean, na.rm = TRUE))
