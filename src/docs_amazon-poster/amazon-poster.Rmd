@@ -5,23 +5,23 @@ poster_height: "48in"
 poster_width: "36in"
 font_family: "Open Sans"
 # Essentials
-title: Spatio-temporal estimates of risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa
+title: Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa
 author:
   - name: '**Adam Howes**'
-    affil: 1
+    affil: 1, 2
     main: true
     twitter: adamhowes
     email: ath19@ic.ac.uk
   - name: "Kathryn A. Risher"
-    affil: 3
+    affil: 2, 3
   - name: "Van Kinh Nguyen"
-    affil: 3
+    affil: 2
   - name: "Oliver Stevens"
-    affil: 3
+    affil: 2
   - name: "Katherine M. Jia"
     affil: 4
   - name: "Tim M. Wolock"
-    affil: 1
+    affil: 1, 2
   - name: "Lycias Zembe"
     affil: 5
   - name: "Ian Wanyeki"
@@ -48,9 +48,9 @@ affiliation:
   - num: 6
     address: Department of Computer Science, University of Oxford
 main_findings:
-  - "Successful **targeting of HIV programming** using **risk behaviour** would **greatly increase** new infections reached."
+  - "Successful **targeting of HIV prevention** using **risk behaviour** would **greatly increase** expected new infections preemptively reached."
 logoleft_name: "IMP_ML_W_N.png"
-logoright_name: "UNAIDS-reverse-EN.gif"
+# logoright_name: "UNAIDS-reverse-EN.gif"
 # Style & formatting
 column_numbers: 3
 title_textsize: "60px"
@@ -81,11 +81,11 @@ output:
 ---
 
 <!-- Using LaTeX to create spacing -->
-$$\\[0.2in]$$
+$$\\[0.15in]$$
 
 ## Introduction
 
-* Adolescent girls and young women (AGYW) 15-29 continue to **face disproportionately high risk** of HIV, and have been identified as a **priority population** for prevention efforts
+* Adolescent girls and young women (AGYW) 15-29 **face disproportionately high risk** of HIV infection, and have been identified as a **priority population** for prevention efforts
 * The UNAIDS Global AIDS Strategy 2021-2026 **recommends differentiating services** for AGYW geographically based both on individual risk behaviour and epidemic indicators
 * We used a spatio-temporal model to estimate the proportion of AGYW in **four behavioural risk categories** $k = 1:4$ in 13 priority countries at a district level in the years 1999-2018
 
@@ -96,14 +96,15 @@ $$\\[0.2in]$$
 |3  |Non-regular partner(s)   |       1.72|
 |4  |Female sex workers (FSW) |         13|
 
-$$\\[0.2in]$$
+<!-- Using LaTeX to create spacing -->
+$$\\[0.05in]$$
 
 ## Methods
 
-* We used 47 household surveys (AIS, BAIS, DHS, PHIA)
-* For the categories $k \in \{1, 2, 3^{+}\}$ we used all the data to fit a survey-weighted multinomial logistic regression via the multinomial-Poisson transformation
+* We analyzed 47 national household surveys (AIS, BAIS, DHS, PHIA)
+* For the categories $k \in \{1, 2, 3^{+}\}$ we fit a survey-weighted multinomial logistic regression via the multinomial-Poisson transformation
 \begin{align}
-    &y_{itak}^\star \sim \text{xPoisson}(\kappa_{itak}), \\
+    &y_{itak}^\star \sim \text{Poisson}(\kappa_{itak}), \\
     &\log(\kappa_{itak}) 
     = \underbrace{\theta_{ita}}_{\text{Observation (IID)}}
     + \underbrace{\beta_k}_{\text{Category (IID)}}
@@ -113,9 +114,10 @@ $$\\[0.2in]$$
     + \underbrace{\gamma_{tk}}_{\text{Temporal (AR1)}}
 \end{align}
 where $p_{itak} = \text{softmax}(\kappa_{ita})_k$
-* To differentiate $3^{+}$ we used the 13 surveys with a transactional sex question to fit a survey-weighted logistic regression
+* Using the Poisson formulation facilitated inference using integrated nested Laplace approximation [@rue2009approximate] via `R-INLA`
+* To estimate the FSW proportion we used the 13 surveys with a transactional sex question to fit a survey-weighted logistic regression
 \begin{align}
-    &y_{ia4}^\star \sim \text{xBinomial} \left( y_{ia3} + y_{ia4}, p_{ia4} / (p_{ia3} + p_{ia4}) \right), \\
+    &y_{ia4}^\star \sim \text{Binomial} \left( y_{ia3} + y_{ia4}, p_{ia4} / (p_{ia3} + p_{ia4}) \right), \\
     &\text{logit}(p_{ia4} / (p_{ia3} + p_{ia4}))
     = \beta_0
     + \beta_\texttt{cfswever} x_c \\
@@ -125,10 +127,7 @@ where $p_{itak} = \text{softmax}(\kappa_{ita})_k$
 \end{align}
 where $x_c$ is the proportion of men in each country who are clients of FSW [@hodgins2021cfsw]
 * We aligned our FSW estimates to the national-level UNAIDS Key Populations Atlas [@johnston2022deriving]
-* Using the Poisson formulation facilitated inference using integrated nested Laplace approximation [@rue2009approximate] via `R-INLA`
-* We estimated incidence and number of new infections by risk group using the risk ratios to disaggregate Naomi model [@eaton2021naomi] general population incidence estimates
-
-$$\\[0.2in]$$
+* We estimated incidence and number of expected new infections by risk group using the risk ratios to disaggregate Naomi model [@eaton2021naomi] general population incidence estimates
 
 ## Results
 
@@ -148,28 +147,29 @@ knitr::include_graphics("depends/3p1-continental-map.png")
 knitr::include_graphics("depends/infections-reached.png")
 ```
 
-* Using area, age and behavioural risk stratification **25% of new infections can be found by reaching 3% of the population**, as compared with 8% of the population when behaviour is excluded 
-
-$$\\[0.2in]$$
+* Using location, age and behavioral risk stratification, **25% of expected new infections can be found by reaching 3% of the population**, compared with 8% of the population when behaviour is excluded 
+* Majority of this benefit comes from reaching FSW, who are **3.5% of the at risk population but 21.0% of all expected new infections**
 
 ## Discussion
 
 * Using a **modular approach** allowed us to integrate all data from non-conformable surveys
 * **Spatio-temporal smoothing** can be used to overcome high variance from the small sample sizes that result when further stratifying districts
-* Individual behaviour is a **key determinant** of risk and providing prevention services on the basis of behavior would allow many more new infections to be reached, **especially among FSW**
+* Individual behaviour is a **key determinant** of risk and providing prevention services on the basis of behavior would allow many more expected new infections to be reached, **especially among FSW**
 
 ### Limitations
 
+* No assessment of **practicalities or costs** of risk stratification approaches, or efficacy of available interventions
 * No adjustment for **reporting bias**
 * **Risk category definitions** could be disputed
-* No assessment of **practicalities or costs** of risk stratification approaches, or efficacy of available interventions
+  * What constitutes sex work?
+  * Is within-group risk heterogeneity small enough?
 
 ### Future work
 
 * Inclusion of **more surveys** e.g. VACS
-* Extension to **general population** of adults 15-49
+* Extension to **general population**: men and women 15-49
 
-$$\\[0.2in]$$
+<font size="6"> **Funding** AH was supported by the EPSRC and Bill & Melinda Gates Foundation. This research was supported by the MRC Centre for Global Infectious Disease Analysis. </font>
 
 ## References
 
