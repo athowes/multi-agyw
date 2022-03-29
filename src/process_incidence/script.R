@@ -120,7 +120,6 @@ df_3p1_plot <- df_3p1 %>%
 pdf("incidence-district-sexbehav.pdf", h = 8, w = 6.25)
 
 df_3p1_plot %>%
-  filter(iso3 != "TZA") %>%
   multi.utils::update_naming() %>%
   split(.$iso3) %>%
   lapply(function(x)
