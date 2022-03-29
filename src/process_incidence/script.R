@@ -117,7 +117,7 @@ df_3p1_plot <- df_3p1 %>%
   st_as_sf()
 
 #' Artefact: Cloropleths
-pdf("incidence-district-sexbehav.pdf", h = 7, w = 6.25)
+pdf("incidence-district-sexbehav.pdf", h = 8, w = 6.25)
 
 df_3p1_plot %>%
   filter(iso3 != "TZA") %>%
@@ -126,10 +126,10 @@ df_3p1_plot %>%
   lapply(function(x)
     x %>%
       ggplot(aes(fill = incidence)) +
-      geom_sf(size = 0.1) +
+      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
       coord_sf(lims_method = "geometry_bbox") +
       scale_fill_viridis_c(option = "C", label = label_percent()) +
-      facet_grid(age_group ~ indicator) +
+      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(10))) +
       theme_minimal() +
       labs(
         title = paste0(x$iso3[1]),
