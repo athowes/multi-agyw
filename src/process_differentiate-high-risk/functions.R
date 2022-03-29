@@ -9,6 +9,7 @@ differentiate_high_risk <- function(df, df_prop) {
     mutate(
       indicator = "sexnonreg",
       estimate_smoothed = estimate_smoothed * (1 - estimate_smoothed_prop),
+      estimate_part_raw = estimate_raw * (1 - estimate_smoothed_prop),
       estimate_raw = estimate_raw * (1 - estimate_raw_prop)
     ) %>%
     select(-estimate_smoothed_prop, -estimate_raw_prop)
@@ -23,6 +24,7 @@ differentiate_high_risk <- function(df, df_prop) {
     mutate(
       indicator = "sexpaid12m",
       estimate_smoothed = estimate_smoothed * estimate_smoothed_prop,
+      estimate_part_raw = estimate_raw * estimate_smoothed_prop,
       estimate_raw = estimate_raw * estimate_raw_prop
     ) %>%
     select(-estimate_smoothed_prop, -estimate_raw_prop)
@@ -32,7 +34,9 @@ differentiate_high_risk <- function(df, df_prop) {
   stopifnot(nrow(df_sexpaid12m) == nrow(filter(df, indicator != "sexnonregplus")) / 2)
 
   bind_rows(
-    filter(df, indicator != "sexnonregplus"),
+    #' The part raw estimate here is just the same as the raw estimate
+    filter(df, indicator != "sexnonregplus") %>%
+      mutate(estimate_part_raw = estimate_raw),
     df_sexnonreg,
     df_sexpaid12m
   )

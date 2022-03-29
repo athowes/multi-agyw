@@ -40,10 +40,14 @@ df_3p1_ribbon <- df_3p1 %>%
     upper_smoothed = quantile(estimate_smoothed, probs = 0.95, na.rm = TRUE)
   )
 
+unique_surveys <- df_3p1 %>%
+  pull(survey_id) %>%
+  unique()
+
 df_3p1_raw <- df_3p1 %>%
-  filter(!is.na(estimate_raw)) %>%
+  filter(paste0(substr(area_id, 1, 3), year) %in% substr(unique_surveys, 1, 7)) %>%
   group_by(indicator, survey_id, iso3, year, age_group) %>%
-  summarise(mean_raw = mean(estimate_raw)) %>%
+  summarise(mean_part_raw = mean(estimate_part_raw, na.rm = TRUE)) %>%
   mutate(type = substr(survey_id, 8, 11))
 
 # scales::show_pal(multi.utils::cbpalette())
@@ -57,7 +61,7 @@ df_3p1_ribbon %>%
       geom_line() +
       geom_point(
         data = filter(df_3p1_raw, iso3 == x$iso3[1]),
-        aes(x = year, y = mean_raw, col = type)
+        aes(x = year, y = mean_part_raw, col = type)
       ) +
       facet_grid(age_group ~ indicator) +
       scale_color_manual(values = match_available_surveys_plot_palette) +

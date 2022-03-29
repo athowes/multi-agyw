@@ -338,7 +338,7 @@ df %>%
 
 dev.off()
 
-#' Look at the Oli's estimates
+#' Look at Oli's estimates
 oli <- read_csv("pse_estimates.csv") %>%
   select(-"...1") %>%
   filter(
