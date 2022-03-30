@@ -76,7 +76,6 @@ iso3_3_multi <- available_surveys %>%
   pull(iso3)
 
 #' Single survey and three categories
-
 df_3_single <- filter(df_3, iso3 %in% iso3_3_single)
 
 write_csv(df_3_single, "3-single-model-comparison.csv", na = "")
@@ -98,7 +97,6 @@ dev.off()
 create_latex_table(df_3, file_name = "3-single-model-comparison.txt")
 
 #' Multiple surveys and three categories
-
 df_3_multi <- filter(df_3, iso3 %in% iso3_3_multi)
 
 write_csv(df_3_multi, "3-multi-model-comparison.csv", na = "")
@@ -120,8 +118,6 @@ dev.off()
 create_latex_table(df_3_multi, file_name = "3-multi-model-comparison.txt")
 
 #' Together plots
-#' This is the one designed to be used in the manuscript
-
 pdf("3-rank-comparison.pdf", h = 5, w = 6.25)
 
 cowplot::plot_grid(
@@ -137,3 +133,36 @@ cowplot::plot_grid(
 )
 
 dev.off()
+
+#' Logistic regression model
+df_prop <- read_csv("depends/fsw-logit-information-criteria.csv")
+
+df_prop %>%
+  mutate(
+    dic = paste0(dic, " (", dic_se, ")"),
+    waic = paste0(waic, " (", waic_se, ")"),
+    cpo = paste0(cpo, " (", cpo_se, ")"),
+  ) %>%
+  select(-contains("se")) %>%
+  rename_with(~toupper(.), .cols = any_of(c("dic", "waic", "cpo"))) %>%
+  rename_with(~str_to_title(.), .cols = any_of(c("model", "country"))) %>%
+  select(-any_of(c("iso3"))) %>%
+  pivot_longer(
+    cols = c("DIC", "WAIC", "CPO"),
+    names_to = "Criteria"
+  ) %>%
+  pivot_wider(
+    names_from = "Model",
+    values_from = "value"
+  ) %>%
+  gt() %>%
+  fmt_missing(columns = everything(), rows = everything(), missing_text = "-") %>%
+  #' It's clear from context that these are the criteria
+  #' (such that the label is not required)
+  cols_label(
+    Criteria = "",
+  ) %>%
+  tab_stubhead(label = "") %>%
+  as_latex() %>%
+  as.character() %>%
+  cat(file = "fsw-logit-model-comparison.txt")

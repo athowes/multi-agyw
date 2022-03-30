@@ -132,15 +132,12 @@ create_latex_table <- function(df, file_name) {
     mutate(
       dic = paste0(dic, " (", dic_se, ")"),
       waic = paste0(waic, " (", waic_se, ")"),
-      cpo = paste0(cpo, " (", dic_se, ")"),
+      cpo = paste0(cpo, " (", cpo_se, ")"),
     ) %>%
     select(-contains("se")) %>%
-    rename_with(~toupper(.), 3:5) %>%
-    rename(
-      Model = model,
-      Country = country
-    ) %>%
-    select(-iso3) %>%
+    rename_with(~toupper(.), .cols = any_of(c("dic", "waic", "cpo"))) %>%
+    rename_with(~str_to_title(.), .cols = any_of(c("model", "country"))) %>%
+    select(-any_of(c("iso3"))) %>%
     pivot_longer(
       cols = c("DIC", "WAIC", "CPO"),
       names_to = "Criteria"
@@ -152,7 +149,7 @@ create_latex_table <- function(df, file_name) {
 
   #' The column(s) which have the minimum value of the criteria
   min_idx <- df %>%
-    select(-Country, -Criteria) %>%
+    select(-any_of(c("Country", "Criteria"))) %>%
     as.matrix() %>%
     #' Adding 2 because of the country and Criteria columns
     apply(1, FUN = function(x) {
@@ -163,7 +160,7 @@ create_latex_table <- function(df, file_name) {
 
   #' The column(s) which have the maximum value of the criteria
   max_idx <- df %>%
-    select(-Country, -Criteria) %>%
+    select(-any_of(c("Country", "Criteria"))) %>%
     as.matrix() %>%
     #' Adding 2 because of the country and Criteria columns
     apply(1, FUN = function(x) {

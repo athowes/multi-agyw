@@ -34,6 +34,8 @@ artefacts:
         - 3-multi-rank-comparison.pdf
         #' Joint single and multi plots
         - 3-rank-comparison.pdf
+        #' FSW logit model
+        - fsw-logit-model-comparison.txt
 
 packages:
   - dplyr
@@ -53,6 +55,10 @@ depends:
       id: latest
       use:
         depends/available-surveys.csv: available-surveys.csv
+  - fit_fsw-logit-sae:
+      id: latest
+      use:
+        depends/fsw-logit-information-criteria.csv: fsw-logit-information-criteria.csv
   # - aaa_fit_multi-sexbehav-sae:
   #     id: latest(parameter:iso3 == "BWA" && parameter:three_category == FALSE)
   #     use:
