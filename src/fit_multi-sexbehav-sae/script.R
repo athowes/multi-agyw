@@ -196,6 +196,14 @@ formula1 <- update(formula_baseline,
             constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
+#' Model 1x:
+#' * Model 1
+#' * space x year x category random effects (IID x IID)
+formula1x <- update(formula1,
+  . ~ . + f(area_year_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
+
 #' Model 2:
 #' * space x category random effects (Besag)
 #' * year x category random effects (IID)
@@ -204,6 +212,18 @@ formula2 <- update(formula_baseline,
             control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
           f(year_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
             constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
+
+#' Create Besag x IID interaction adjacency matrix
+#' Check the resulting matrix with image()
+interaction_adjM_2x <- multi.utils::repeat_matrix(adjM, n = length(unique(df$year_idx)))
+
+#' Model 2x:
+#' * Model 2
+#' * space x year x category random effects (Besag x IID)
+formula2x <- update(formula2,
+  . ~ . + f(area_year_idx, model = "besag", graph = interaction_adjM_6x, scale.model = TRUE, group = cat_idx,
+            control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
 #' Prior for the correlation parameter of the AR1 model together with the grouped precision parameter
@@ -223,6 +243,15 @@ formula3 <- update(formula_baseline,
             constr = TRUE, hyper = ar1_group_prior)
 )
 
+#' Model 3x:
+#' * Model 3
+#' * space x year x category random effects (IID x AR1)
+formula3x <- update(formula3,
+  . ~ . + f(area_idx_copy, model = "iid", group = year_idx, replicate = cat_idx,
+            control.group = list(model = "ar1", hyper = list(rho = list(prior = "pc.cor1", param = c(0, 0.75)))),
+            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
+
 #' Model 4:
 #' * space x category random effects (Besag)
 #' * year x category random effects (AR1)
@@ -233,8 +262,17 @@ formula4 <- update(formula_baseline,
             constr = TRUE, hyper = ar1_group_prior)
 )
 
-formulas <- list(formula1, formula2, formula3, formula4)
-models <- list("Model 1", "Model 2", "Model 3", "Model 4")
+#' Model 4x:
+#' * Model 4
+#' * space x year x category random effects (Besag x AR1)
+formula4x <- update(formula4,
+  . ~ . + f(area_idx_copy, model = "besag", graph = adjM, scale.model = TRUE, group = year_idx, replicate = cat_idx,
+            control.group = list(model = "ar1", hyper = list(rho = list(prior = "pc.cor1", param = c(0, 0.75)))),
+            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
+
+formulas <- list(formula1, formula1x, formula2, formula2x, formula3, formula3x, formula4, formula4x)
+models <- list("Model 1", "Model 1x", "Model 2", "Model 2x", "Model 3", "Model 3x", "Model 4", "Model 4x")
 
 #' Fit the models
 
