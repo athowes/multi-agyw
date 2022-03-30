@@ -30,7 +30,7 @@ df_3p1_aaa %>%
 
 dev.off()
 
-pdf("3p1-temporal-interpolation-ribbon.pdf", h = 4, w = 6.25)
+pdf("3p1-temporal-interpolation-ribbon.pdf", h = 4, w = 6.5)
 
 df_3p1_ribbon <- df_3p1 %>%
   group_by(indicator, iso3, year, age_group) %>%
@@ -47,8 +47,23 @@ unique_surveys <- df_3p1 %>%
 df_3p1_raw <- df_3p1 %>%
   filter(paste0(substr(area_id, 1, 3), year) %in% substr(unique_surveys, 1, 7)) %>%
   group_by(indicator, survey_id, iso3, year, age_group) %>%
-  summarise(mean_part_raw = mean(estimate_part_raw, na.rm = TRUE)) %>%
-  mutate(type = substr(survey_id, 8, 11))
+  summarise(
+    mean_raw = mean(estimate_raw, na.rm = TRUE),
+    mean_part_raw = mean(estimate_part_raw, na.rm = TRUE)
+  ) %>%
+  mutate(
+    type = substr(survey_id, 8, 11),
+    #' Replace any NA instance of mean_raw with mean_part_raw and add
+    #' an indicator as to if the repalcement happened
+    raw_replaced = is.na(mean_raw),
+    mean_raw = ifelse(raw_replaced, mean_part_raw, mean_raw)
+  ) %>%
+  mutate(
+    raw_replaced = case_when(
+      raw_replaced ~ "Partially direct",
+      !raw_replaced ~ "Direct",
+    )
+  )
 
 # scales::show_pal(multi.utils::cbpalette())
 match_available_surveys_plot_palette <- c("DHS" = "#56B4E9", "PHIA" = "#009E73", "AIS" = "#E69F00", "BAIS" = "#CC79A7")
@@ -61,17 +76,20 @@ df_3p1_ribbon %>%
       geom_line() +
       geom_point(
         data = filter(df_3p1_raw, iso3 == x$iso3[1]),
-        aes(x = year, y = mean_part_raw, col = type)
+        aes(x = year, y = mean_raw, col = type, shape = raw_replaced)
       ) +
       facet_grid(age_group ~ indicator) +
       scale_color_manual(values = match_available_surveys_plot_palette) +
+      scale_shape_manual(values = c(19, 1)) +
       lims(x = c(2000L, 2018L)) +
-      labs(title = paste0(x$iso3[1]), x = "Year", y = "Estimate", col = "Type") +
+      labs(title = paste0(x$iso3[1]), x = "Year", y = "Estimate", col = "Survey type", shape = "Estimate type") +
       theme_minimal() +
       theme(
         strip.text = element_text(face = "bold"),
         legend.position = "bottom",
-        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+        legend.title = element_text(size = 9),
+        legend.text = element_text(size = 9)
       )
   )
 

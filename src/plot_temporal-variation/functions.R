@@ -22,7 +22,7 @@ plot_temporal_interpolation <- function(df) {
     scale_color_manual(values = multi.utils::cbpalette()) +
     theme_minimal() +
     theme(
-      plot.title = element_text(face = "bold"),
+      strip.text = element_text(face = "bold"),
       legend.position = "bottom",
       legend.key.width = unit(4, "lines"),
       axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
