@@ -30,7 +30,7 @@ df_3p1_aaa %>%
 
 dev.off()
 
-pdf("3p1-temporal-interpolation-ribbon.pdf", h = 4, w = 6.5)
+pdf("3p1-temporal-interpolation-ribbon.pdf", h = 4, w = 6.25)
 
 df_3p1_ribbon <- df_3p1 %>%
   group_by(indicator, iso3, year, age_group) %>%
@@ -89,7 +89,8 @@ df_3p1_ribbon %>%
         legend.position = "bottom",
         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
         legend.title = element_text(size = 9),
-        legend.text = element_text(size = 9)
+        legend.text = element_text(size = 9),
+        legend.spacing.x = unit(0.1, "cm")
       )
   )
 
