@@ -95,3 +95,16 @@ df_3p1_ribbon %>%
   )
 
 dev.off()
+
+#' Checking that the UGA bumps in 2011 and 2016
+# df_3p1 %>%
+#   filter(iso3 == "Uganda", year %in% c(2011, 2016), indicator == "Cohabiting partner") %>%
+#   select(year, age_group, estimate_raw, estimate_smoothed) %>%
+#   pivot_longer(
+#     cols = starts_with("estimate"),
+#     names_to = "type",
+#     values_to = "estimate"
+#   ) %>%
+#   ggplot(aes(x = age_group, y = estimate, col = type)) +
+#     geom_jitter() +
+#     facet_wrap(~year)
