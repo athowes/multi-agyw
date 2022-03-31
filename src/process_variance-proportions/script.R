@@ -129,6 +129,7 @@ df %>%
     "sigma-gamma" = "percentage_variance_sur_idx",
     "sigma-delta" = "percentage_variance_area_sur_idx"
   ) %>%
+  select(-`sigma-delta`) %>%
   gt() %>%
   fmt_number(columns = -matches("Country"), rows = everything(), decimals = 3) %>%
   #' Replace NA with "-" as it looks better on a table
