@@ -20,8 +20,8 @@ packages:
   - ggridges
 
 depends:
-  - process_multi-sexbehav-sae:
+  - process_johnston-adjustment:
       id: latest
       use:
-        depends/best-3-multi-sexbehav-sae.csv: best-3-multi-sexbehav-sae.csv
-
+        depends/adjust-best-3p1-multi-sexbehav-sae.csv: adjust-best-3p1-multi-sexbehav-sae.csv
+        depends/adjust-best-3p1-aaa-multi-sexbehav-sae.csv: adjust-best-3p1-aaa-multi-sexbehav-sae.csv

@@ -2,16 +2,41 @@
 # orderly::orderly_develop_start("plot_age-variation")
 # setwd("src/plot_age-variation")
 
-df <- read_csv("depends/best-3-multi-sexbehav-sae.csv") %>%
+df <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv") %>%
   multi.utils::update_naming() %>%
   filter(age_group != "15-24")
 
+#' Add region column
+#' Defined based on the UN geoscheme for Africa
+#' https://en.wikipedia.org/wiki/United_Nations_geoscheme_for_Africa
+region_key <- c(
+  "Botswana" = "South",
+  "Cameroon" = "Middle",
+  "Kenya" = "East",
+  "Lesotho" = "South",
+  "Mozambique" = "East",
+  "Malawi" = "East",
+  "Namibia" = "South",
+  "Eswatini" = "South",
+  "Tanzania" = "East",
+  "Uganda" = "East",
+  "South Africa" = "South",
+  "Zambia" = "East",
+  "Zimbabwe" = "East"
+) %>%
+  as.data.frame() %>%
+  rename("region" = ".") %>%
+  tibble::rownames_to_column("iso3")
+
+df <- df %>%
+  left_join(region_key, by = "iso3")
+
 df_age_country <- df %>%
-  group_by(iso3, age_group, indicator) %>%
+  group_by(iso3, age_group, indicator, region) %>%
   summarise(estimate_smoothed = mean(estimate_smoothed, na.rm = TRUE))
 
 df_age <- df %>%
-  group_by(age_group, indicator) %>%
+  group_by(age_group, indicator, region) %>%
   summarise(estimate_smoothed = mean(estimate_smoothed, na.rm = TRUE))
 
 pdf("age-variation.pdf", h = 3.5, w = 6.25)
@@ -21,13 +46,14 @@ ggplot(df_age_country, aes(y = age_group, x = estimate_smoothed, fill = indicato
   scale_fill_manual(values = multi.utils::cbpalette()) +
   # facet_wrap(~indicator) +
   theme_minimal() +
-  scale_x_continuous(labels = function(x) paste0(100 * x, "%")) +
+  scale_x_continuous(labels = scales::percent, limits = c(0, 1)) +
   scale_y_discrete(expand = expansion(mult = c(0.05, 0))) +
-  xlim(0, 1) +
-  labs(y = "Age group", x = "Proportion", fill = "Category")
-  # theme(
-  #   legend.position = "bottom",
-  #   legend.key.width = unit(1, "lines")
-  # )
+  labs(y = "Age group", x = "Proportion", fill = "Category") +
+  theme(
+    legend.position = "bottom",
+    legend.key.width = unit(1, "lines"),
+    legend.title = element_text(size = 9),
+    legend.text = element_text(size = 9)
+  )
 
 dev.off()
