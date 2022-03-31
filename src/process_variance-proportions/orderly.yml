@@ -4,10 +4,10 @@ artefacts:
   - data:
       description: Proportions of variance explained by each random effect
       filenames:
-        - variance-proportions.csv
-        - variance-proportions.pdf
-        - variance-proportions.txt
-        - average-variance-proportions.csv
+        - aaa-variance-proportions.csv
+        - aaa-variance-proportions.pdf
+        - aaa-variance-proportions.txt
+        - aaa-average-variance-proportions.csv
 
 packages:
   - dplyr

@@ -7,7 +7,6 @@
 #' Perhaps I should look into other interpretability measures e.g. Shapley values
 
 #' Separate country fitting
-
 iso3 <- multi.utils::priority_iso3()
 
 #' The single survey estimates
@@ -42,7 +41,7 @@ df <- df %>%
   #' Reordering the columns as I'd prefer to see them appear
   select(iso3, model, all_of(variance_effects), total_variance, all_of(paste0("percentage_", variance_effects)))
 
-write_csv(df, "variance-proportions.csv", na = "")
+write_csv(df, "aaa-variance-proportions.csv", na = "")
 
 df <- df %>%
   mutate(
@@ -82,9 +81,7 @@ model_selector <- function(iso3, model) {
   )
 }
 
-#' A4 paper is 8-1/4 x 11-3/4
-#' 8-1/4 take away 1 inch margins gives 6-1/4
-pdf("variance-proportions.pdf", h = 3.5, w = 6.25)
+pdf("aaa-variance-proportions.pdf", h = 3.5, w = 6.25)
 
 df %>%
   filter(model_selector(iso3, model)) %>%
@@ -105,14 +102,17 @@ df %>%
     scale_fill_manual(values = multi.utils::cbpalette()[c(1, 2, 4, 3)]) +
     theme_minimal() +
     scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
-    labs(x = "", y = "Posterior variance", fill = "") +
+    labs(x = "", y = "Posterior variance", fill = "Random effect") +
     coord_flip() +
     theme(
       panel.grid.major.y = element_blank(),
       panel.grid.minor.y = element_blank(),
       plot.title = element_text(face = "bold"),
-      legend.key.width = unit(2, "lines"),
-      strip.placement = "outside"
+      legend.key.width = unit(1.5, "lines"),
+      legend.key.height = unit(1, "lines"),
+      strip.placement = "outside",
+      legend.title = element_text(size = 9),
+      legend.text = element_text(size = 9)
     )
 
 dev.off()
@@ -139,7 +139,7 @@ df %>%
   ) %>%
   as_latex() %>%
   as.character() %>%
-  cat(file = "variance-proportions.txt")
+  cat(file = "aaa-variance-proportions.txt")
 
 df %>%
   group_by(model) %>%
@@ -150,7 +150,7 @@ df %>%
     sur_idx = mean(percentage_variance_sur_idx),
     area_sur_idx = mean(percentage_variance_area_sur_idx)
   ) %>%
-  write_csv("average-variance-proportions.csv", na = "")
+  write_csv("aaa-average-variance-proportions.csv", na = "")
 
 #' Quantification of points discussed
 #' Which are the countries with the highest and lowest proportion of variance explained by area?
