@@ -64,8 +64,36 @@ devtools::install_github("athowes/multi.utils")
 ```
 
 The `R-INLA` package is not currently available on CRAN, and instead may be installed by following [instructions](https://www.r-inla.org/download-install) from the project website.
-As well, this repository requires a particular branch of the `naomi.utils` package, which can be installed from Github via:
+This repository also requires a particular branch of the `naomi.utils` package, which can be installed from Github via:
 
 ```r
 devtools::install_github("athowes/naomi.utils", ref = "sexbehav-vars-adam")
 ```
+
+The `sessionInfo()` used to run this analysis is:
+
+```
+R version 4.1.0 (2021-05-18)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 20.04.2 LTS
+
+Matrix products: default
+BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0
+LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0
+
+locale:
+ [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C               LC_TIME=en_GB.UTF-8        LC_COLLATE=en_GB.UTF-8    
+ [5] LC_MONETARY=en_GB.UTF-8    LC_MESSAGES=en_GB.UTF-8    LC_PAPER=en_GB.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C             LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] multi.utils_0.1.0 orderly_1.4.3     ggridges_0.5.3    tidyr_1.1.3       spdep_1.1-8       spData_0.3.8     
+ [7] sf_0.9-8          scales_1.1.1      readr_2.1.1       naomi_2.3.15      INLA_21.11.16     sp_1.4-6         
+[13] foreach_1.5.1     Matrix_1.3-4      ggplot2_3.3.5     forcats_0.5.1     dplyr_1.0.8  
+```
+
+
+
