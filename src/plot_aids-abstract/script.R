@@ -19,19 +19,19 @@ df_3p1 <- df_3p1 %>%
 #' To add region column defined based on the UN geoscheme for Africa
 #' https://en.wikipedia.org/wiki/United_Nations_geoscheme_for_Africa
 region_key <- c(
-  "Botswana" = "South",
-  "Cameroon" = "Middle",
-  "Kenya" = "East",
-  "Lesotho" = "South",
-  "Mozambique" = "East",
-  "Malawi" = "East",
-  "Namibia" = "South",
-  "Eswatini" = "South",
-  "Tanzania" = "East",
-  "Uganda" = "East",
-  "South Africa" = "South",
-  "Zambia" = "East",
-  "Zimbabwe" = "East"
+  "Botswana" = "Southern",
+  "Cameroon" = "Central",
+  "Kenya" = "Eastern",
+  "Lesotho" = "Southern",
+  "Mozambique" = "Eastern",
+  "Malawi" = "Eastern",
+  "Namibia" = "Southern",
+  "Eswatini" = "Southern",
+  "Tanzania" = "Eastern",
+  "Uganda" = "Eastern",
+  "South Africa" = "Southern",
+  "Zambia" = "Eastern",
+  "Zimbabwe" = "Eastern"
 ) %>%
   as.data.frame() %>%
   rename("region" = ".") %>%
