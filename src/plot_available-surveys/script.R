@@ -91,9 +91,9 @@ df %>%
   scale_size_discrete(range = c(2, 5)) +
   scale_shape_manual(values = c(17, 19)) +
   guides(
-    size = guide_legend(ncol = 2, override.aes = list(shape = 19, col = "darkgrey")),
-    colour = guide_legend(ncol = 2, override.aes = list(size = 3)),
-    shape = guide_legend(ncol = 2, override.aes = list(size = 3, col = "darkgrey"))
+    colour = guide_legend(ncol = 2, override.aes = list(size = 3), order = 1),
+    size = guide_legend(ncol = 2, override.aes = list(shape = 19, col = "darkgrey"), order = 2),
+    shape = guide_legend(ncol = 2, override.aes = list(size = 3, col = "darkgrey"), order = 3)
   ) +
   theme_minimal() +
   theme(
