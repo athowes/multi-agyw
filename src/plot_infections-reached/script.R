@@ -23,26 +23,8 @@ df_area_age_behav <- df %>%
 
 inf <- infections_reached_all_stratifications(df_area_age_behav)
 
-plot_infections_reached_above_baseline <- function(df) {
-  ggplot(df, aes(x = prop_population_cumulative, y = prop_infections_averted_cumulative_improvement, col = stratification)) +
-    geom_line(alpha = 0.8, size = 1) +
-    scale_color_manual(values = multi.utils::cbpalette()) +
-    scale_x_continuous(labels = scales::percent) +
-    scale_y_continuous(labels = scales::label_percent(accuracy = 1L)) +
-    labs(
-      x = paste0("Percent of at risk population (", signif(max(df$population_cumulative, na.rm = TRUE), 3) / 10^6, "M) reached"),
-      y = paste0("Percent of new infections (", signif(max(df$infections_averted_cumulative, na.rm = TRUE), 2) / 10^6, "M)\nreached beyond baseline"),
-      col = "Risk stratification"
-    ) +
-    theme_minimal() +
-    theme(
-      legend.title = element_text(size = 9),
-      legend.text = element_text(size = 9)
-    )
-}
-
 #' Infections reached above baseline
-pdf("infections-reached-above-baseline.pdf", h = 3, w = 6.25)
+pdf("infections-reached-above-baseline.pdf", h = 3.5, w = 6.25)
 
 plot_infections_reached_above_baseline(inf)
 
@@ -55,28 +37,8 @@ ggsave(
   width = 6, height = 4, units = "in", dpi = 300
 )
 
-plot_infections_reached <- function(df) {
-  ggplot(df, aes(x = prop_population_cumulative, y = prop_infections_averted_cumulative, col = stratification)) +
-    geom_line(alpha = 0.8, size = 1) +
-    scale_color_manual(values = multi.utils::cbpalette()) +
-    scale_x_continuous(labels = scales::percent) +
-    scale_y_continuous(labels = scales::label_percent(accuracy = 1L)) +
-    labs(
-      x = paste0("Percent of at risk population (", signif(max(df$population_cumulative, na.rm = TRUE), 3) / 10^6, "M) reached"),
-      y = paste0("Percent of new infections\n(", signif(max(df$infections_averted_cumulative, na.rm = TRUE), 2) / 10^6, "M) reached"),
-      col = ""
-    ) +
-    guides(col = guide_legend(ncol = 2)) +
-    theme_minimal() +
-    theme(
-      legend.position = c(0.75, 0.3),
-      legend.title = element_text(size = 9),
-      legend.text = element_text(size = 9)
-    )
-}
-
 #' Infections reached
-pdf("infections-reached.pdf", h = 3, w = 6.25)
+pdf("infections-reached.pdf", h = 3.5, w = 6.25)
 
 plot_infections_reached(inf)
 
@@ -118,7 +80,7 @@ inf_country <- df_area_age_behav %>%
       mutate(iso3 = x$iso3[1])
   )
 
-pdf("infections-reached-above-baseline-country.pdf", h = 3, w = 6.25)
+pdf("infections-reached-above-baseline-country.pdf", h = 3.5, w = 6.25)
 
 lapply(inf_country, function(x)
   x %>%
@@ -128,7 +90,7 @@ lapply(inf_country, function(x)
 
 dev.off()
 
-pdf("infections-reached-country.pdf", h = 3, w = 6.25)
+pdf("infections-reached-country.pdf", h = 3.5, w = 6.25)
 
 lapply(inf_country, function(x)
   x %>%
@@ -181,4 +143,3 @@ lapply(inf_country, function(x)
     select(prop_infections_averted_cumulative, prop_population_cumulative)
 ) %>%
   bind_rows(.id = "country")
-
