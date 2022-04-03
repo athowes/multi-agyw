@@ -10,6 +10,19 @@ artefacts:
         - 3p1-aaa-temporal-interpolation.pdf
         - 3p1-temporal-interpolation.pdf
         - 3p1-temporal-interpolation-ribbon.pdf
+        - 3p1-temporal-interpolation-ribbon-1.png
+        - 3p1-temporal-interpolation-ribbon-2.png
+        - 3p1-temporal-interpolation-ribbon-3.png
+        - 3p1-temporal-interpolation-ribbon-4.png
+        - 3p1-temporal-interpolation-ribbon-5.png
+        - 3p1-temporal-interpolation-ribbon-6.png
+        - 3p1-temporal-interpolation-ribbon-7.png
+        - 3p1-temporal-interpolation-ribbon-8.png
+        - 3p1-temporal-interpolation-ribbon-9.png
+        - 3p1-temporal-interpolation-ribbon-10.png
+        - 3p1-temporal-interpolation-ribbon-11.png
+        - 3p1-temporal-interpolation-ribbon-12.png
+        - 3p1-temporal-interpolation-ribbon-13.png
 
 packages:
   - dplyr

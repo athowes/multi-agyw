@@ -30,7 +30,7 @@ df_3p1_aaa %>%
 
 dev.off()
 
-pdf("3p1-temporal-interpolation-ribbon.pdf", h = 4, w = 6.25)
+pdf("3p1-temporal-interpolation-ribbon.pdf", h = 3.5, w = 6.25)
 
 df_3p1_ribbon <- df_3p1 %>%
   group_by(indicator, iso3, year, age_group) %>%
@@ -68,7 +68,7 @@ df_3p1_raw <- df_3p1 %>%
 # scales::show_pal(multi.utils::cbpalette())
 match_available_surveys_plot_palette <- c("DHS" = "#56B4E9", "PHIA" = "#009E73", "AIS" = "#E69F00", "BAIS" = "#CC79A7")
 
-df_3p1_ribbon %>%
+plotsA <- df_3p1_ribbon %>%
   split(.$iso3) %>%
   lapply(function(x)
     ggplot(x, aes(x = year, y = mean_smoothed)) +
@@ -94,7 +94,20 @@ df_3p1_ribbon %>%
       )
   )
 
+plotsA
+
 dev.off()
+
+#' Sadly multi-page .png don't exist
+#' This is a bit clunky but unsure if there is a better option
+lapply(1:length(plotsA), function(i) {
+  ggsave(
+    paste0("3p1-temporal-interpolation-ribbon-", i, ".png"),
+    plotsA[[i]],
+    width = 6.25, height = 3.5, units = "in", dpi = 300
+  )
+})
+
 
 #' Checking that the UGA bumps in 2011 and 2016
 # df_3p1 %>%
