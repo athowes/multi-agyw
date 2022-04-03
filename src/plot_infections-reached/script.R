@@ -30,11 +30,10 @@ plot_infections_reached_above_baseline(inf)
 
 dev.off()
 
-#' Save version for poster
 ggsave(
   "infections-reached-above-baseline.png",
   plot_infections_reached_above_baseline(inf) + theme(legend.position = "bottom"),
-  width = 6, height = 4, units = "in", dpi = 300
+  width = 6.25, height = 3.5, units = "in", dpi = 300
 )
 
 #' Infections reached
@@ -48,7 +47,7 @@ dev.off()
 ggsave(
   "infections-reached.png",
   plot_infections_reached(inf),
-  width = 6, height = 4, units = "in", dpi = 300
+  width = 6.25, height = 3.5, units = "in", dpi = 300
 )
 
 #' Separate analysis for each country
@@ -92,13 +91,25 @@ dev.off()
 
 pdf("infections-reached-country.pdf", h = 3.5, w = 6.25)
 
-lapply(inf_country, function(x)
+plotsA <- lapply(inf_country, function(x)
   x %>%
     plot_infections_reached +
     labs(title = paste0(x$iso3[1]))
 )
 
+plotsA
+
 dev.off()
+
+#' Sadly multi-page .png don't exist
+#' This is a bit clunky but unsure if there is a better option
+lapply(1:length(plotsA), function(i) {
+  ggsave(
+    paste0("infections-reached-country-", i, ".png"),
+    plotsA[[i]],
+    width = 6.25, height = 3.5, units = "in", dpi = 300
+  )
+})
 
 #' Quantification of points discussed
 

@@ -74,7 +74,7 @@ write_csv(df, "available-surveys.csv", na = "")
 
 pdf("available-surveys.pdf", h = 3.5, w = 6.25)
 
-df %>%
+plotA <- df %>%
   #' For now replace NA with a string NA
   mutate(
     giftsvar = fct_case_when(
@@ -105,7 +105,15 @@ df %>%
     legend.text = element_text(size = 9)
   )
 
+plotA
+
 dev.off()
+
+ggsave(
+  "available-surveys.png",
+  plotA,
+  width = 6.25, height = 3.5, units = "in", dpi = 300
+)
 
 df %>%
   select(country, type, year, giftsvar, Y015_019, Y020_024, Y025_029, Y015_029) %>%

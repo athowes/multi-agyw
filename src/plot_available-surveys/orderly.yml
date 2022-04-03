@@ -5,6 +5,7 @@ artefacts:
       description: Plot showing which surveys are used in our analysis
       filenames:
         - available-surveys.pdf
+        - available-surveys.png
         - available-surveys.csv
         - available-surveys.txt
   - data:
