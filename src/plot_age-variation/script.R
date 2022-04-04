@@ -41,7 +41,7 @@ df_age <- df %>%
 
 pdf("age-variation.pdf", h = 3.5, w = 6.25)
 
-ggplot(df_age_country, aes(y = age_group, x = estimate_smoothed, fill = indicator)) +
+plotA <- ggplot(df_age_country, aes(y = age_group, x = estimate_smoothed, fill = indicator)) +
   ggridges::geom_density_ridges(alpha = 0.7, col = NA) +
   scale_fill_manual(values = multi.utils::cbpalette()) +
   # facet_wrap(~indicator) +
@@ -56,4 +56,12 @@ ggplot(df_age_country, aes(y = age_group, x = estimate_smoothed, fill = indicato
     legend.text = element_text(size = 9)
   )
 
+plotA
+
 dev.off()
+
+ggsave(
+  "age-variation.png",
+  plotA,
+  width = 6.25, height = 6, units = "in", dpi = 300
+)

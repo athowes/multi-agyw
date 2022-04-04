@@ -5,6 +5,7 @@ artefacts:
       description: Aiming to show the three benefits of using modelled estimates over direct
       filenames:
         - model-direct-benefits.pdf
+        - model-direct-benefits.png
 
 packages:
   - dplyr

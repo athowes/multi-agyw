@@ -44,9 +44,9 @@ missing_districts <- df %>%
 
 missing_districts$area_name %>% sort()
 
-pdf("model-direct-benefits.pdf", h = 3, w = 6.25)
+pdf("model-direct-benefits.pdf", h = 3.5, w = 6.25)
 
-ggplot(df, aes(fill = estimate)) +
+plotA <- ggplot(df, aes(fill = estimate)) +
   geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
   scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
   facet_grid(indicator ~ source) +
@@ -65,7 +65,15 @@ ggplot(df, aes(fill = estimate)) +
     strip.text.y = element_blank()
   )
 
+plotA
+
 dev.off()
+
+ggsave(
+  "model-direct-benefits.png",
+  plotA,
+  width = 6.25, height = 3.5, units = "in", dpi = 300
+)
 
 #' This is a potential plot to compare the raw and smoothed estimates using a stacked barplot
 #' I haven't got it to look great though so far, so not including

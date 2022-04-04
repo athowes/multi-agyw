@@ -11,7 +11,7 @@ iso3 <- multi.utils::priority_iso3()
 
 #' The single survey estimates
 files <- paste0("depends/", tolower(iso3), "_variance-proportions.csv")
-df <- bind_rows(lapply(files, function(file) read_csv(file)))
+df_aaa <- bind_rows(lapply(files, function(file) read_csv(file)))
 
 #' Random effects created using area_idx_copy represent area_sur_idx
 #' Put those values into area_sur_idx then remove the left-over columns
@@ -19,7 +19,7 @@ variance_effects <- c(
   "variance_cat_idx", "variance_age_idx", "variance_area_idx", "variance_sur_idx", "variance_area_sur_idx"
 )
 
-df <- df %>%
+df_aaa <- df_aaa %>%
   #' Defensive programming
   mutate(
     variance_area_sur_idx = ifelse("variance_area_sur_idx" %in% names(.), variance_area_sur_idx, NA),
@@ -41,9 +41,9 @@ df <- df %>%
   #' Reordering the columns as I'd prefer to see them appear
   select(iso3, model, all_of(variance_effects), total_variance, all_of(paste0("percentage_", variance_effects)))
 
-write_csv(df, "aaa-variance-proportions.csv", na = "")
+write_csv(df_aaa, "aaa-variance-proportions.csv", na = "")
 
-df <- df %>%
+df_aaa <- df_aaa %>%
   mutate(
     iso3 = fct_recode(iso3,
     "Botswana" = "BWA",
@@ -67,7 +67,7 @@ fct_reorg <- function(fac, ...) {
 }
 
 #' When there is only one survey, we want to select Model 3, and when there are multiple, we want to select Model 6
-single_survey <- df %>%
+single_survey <- df_aaa %>%
   group_by(iso3) %>%
   summarise(max = max(model)) %>%
   select(iso3, max) %>%
@@ -83,7 +83,7 @@ model_selector <- function(iso3, model) {
 
 pdf("aaa-variance-proportions.pdf", h = 3.5, w = 6.25)
 
-df %>%
+plotA <- df_aaa %>%
   filter(model_selector(iso3, model)) %>%
   select(model, iso3, starts_with("percentage_variance")) %>%
   mutate(iso3 = reorder(iso3, percentage_variance_area_idx)) %>%
@@ -115,9 +115,17 @@ df %>%
       legend.text = element_text(size = 9)
     )
 
+plotA
+
 dev.off()
 
-df %>%
+ggsave(
+  "aaa-variance-proportions.png",
+  plotA,
+  width = 6.25, height = 3.5, units = "in", dpi = 300
+)
+
+df_aaa %>%
   filter(model_selector(iso3, model)) %>%
   select(iso3, starts_with("percentage_variance")) %>%
   rename(
@@ -142,7 +150,7 @@ df %>%
   as.character() %>%
   cat(file = "aaa-variance-proportions.txt")
 
-df %>%
+df_aaa %>%
   group_by(model) %>%
   summarise(
     cat_idx = mean(percentage_variance_cat_idx),
@@ -155,11 +163,19 @@ df %>%
 
 #' Quantification of points discussed
 #' Which are the countries with the highest and lowest proportion of variance explained by area?
-df %>%
+df_aaa %>%
   filter(model_selector(iso3, model)) %>%
   select(iso3, percentage_variance_area_idx) %>%
   arrange(desc(percentage_variance_area_idx)) %>%
   mutate(percentage_variance_area_idx = signif(100 * percentage_variance_area_idx, 3))
 
 #' Joint country fitting
-#' TODO
+df <- read_csv("depends/variance-proportions.csv")
+
+#' What's the proportion of variance explained?
+df %>%
+  select(starts_with("percentage_")) %>%
+  mutate(across(everything(), ~ 100 * round(.x, 3)))
+
+#' Now to try the alternative method for looking within country when the model is fit jointly between all countries
+fits <- readRDS("depends/multi-sexbehav-sae-fits.rds")

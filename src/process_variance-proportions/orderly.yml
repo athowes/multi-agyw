@@ -6,6 +6,7 @@ artefacts:
       filenames:
         - aaa-variance-proportions.csv
         - aaa-variance-proportions.pdf
+        - aaa-variance-proportions.png
         - aaa-variance-proportions.txt
         - aaa-average-variance-proportions.csv
 
@@ -28,6 +29,11 @@ depends:
       id: latest
       use:
         depends/available-surveys.csv: available-surveys.csv
+  - fit_multi-sexbehav-sae:
+      id: latest
+      use:
+        depends/variance-proportions.csv: variance-proportions.csv
+        depends/multi-sexbehav-sae-fits.rds: multi-sexbehav-sae-fits.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "BWA" && parameter:three_category == TRUE)
       use:

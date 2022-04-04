@@ -5,6 +5,7 @@ artefacts:
       description: Aiming to show the extent of variability by age group in the estimates
       filenames:
         - age-variation.pdf
+        - age-variation.png
 
 packages:
   - dplyr

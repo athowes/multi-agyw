@@ -10,6 +10,7 @@ artefacts:
         - 3p1-within-between-country-variation.pdf
         - 3p1-within-between-country-variation.png
         - fsw-within-between-country-variation.pdf
+        - fsw-within-between-country-variation.png
 
 packages:
   - dplyr

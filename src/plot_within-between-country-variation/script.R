@@ -78,7 +78,7 @@ df_national_fsw <- bind_rows(
 
 pdf("fsw-within-between-country-variation.pdf", h = 6, w = 6.25)
 
-df_subnational_fsw %>%
+plotB <- df_subnational_fsw %>%
   filter(indicator == "FSW") %>%
   mutate(iso3 = reorder(iso3, iso3_sort_order)) %>%
   ggplot(aes(x = fct_rev(iso3), y = estimate_smoothed, col = region)) +
@@ -101,7 +101,15 @@ df_subnational_fsw %>%
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
   )
 
+plotB
+
 dev.off()
+
+ggsave(
+  "fsw-within-between-country-variation.png",
+  plotB,
+  width = 6.25, height = 6, units = "in", dpi = 300
+)
 
 #' Quantification of points discussed
 #' District level quantile information (age disaggregated)
