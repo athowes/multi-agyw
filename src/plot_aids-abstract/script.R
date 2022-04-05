@@ -136,24 +136,22 @@ df_3p1_subnational_sf <- df_3p1_subnational %>%
   ) %>%
   st_as_sf()
 
+#' Countries that I want to show on the plot but we don't have data for
+#' These are just chosen manually by looking at countries between CMR and the rest on a map
+missing_iso3 <- c("AGO", "DRC", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
+
 #' Using these just to show missing data for the countries we don't consider in the analysis
-national_areas <- national_areas %>%
-  filter(
-    !(GID_0 %in% multi.utils::priority_iso3()),
-    #' These are just chosen manually by looking at countries between CMR and the rest on a map
-    GID_0 %in% c("AGO", "DRC", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
-  ) %>%
-  rename(
-    iso3 = NAME_0, #' Weird but OK
-  ) %>%
+missing_national_areas <- national_areas %>%
+  filter(GID_0 %in% missing_iso3) %>%
+  rename(iso3 = NAME_0) %>%
   select(-GID_0)
 
 df_3p1_national_areas <- crossing(
   indicator = as.factor(c("Cohabiting partner", "Nonregular partner(s)")),
   age_group = c("20-29"),
-  iso3 = unique(national_areas$iso3)
+  iso3 = unique(missing_national_areas$iso3)
 ) %>%
-  left_join(national_areas, by = "iso3")
+  left_join(missing_national_areas, by = "iso3")
 
 df_3p1_subnational_sf <- bind_rows(
   df_3p1_subnational_sf,
@@ -164,6 +162,8 @@ plotA <- df_3p1_subnational_sf %>%
   filter(indicator %in% c("Cohabiting partner", "Nonregular partner(s)")) %>%
   ggplot(aes(fill = estimate_smoothed)) +
     geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+    geom_sf(data = filter(national_areas, GID_0 %in% c(multi.utils::priority_iso3(), missing_iso3)),
+            aes(geometry = geometry), fill = NA, size = 0.2) +
     scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
     facet_grid(age_group ~ indicator) +
     labs(

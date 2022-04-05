@@ -16,24 +16,24 @@ continental_map <- function(df, areas, national_areas) {
 
   priority_iso3 <- multi.utils::priority_iso3()
 
+  #' Countries that I want to show on the plot but we don't have data for
+  #' These are just chosen manually by looking at countries between CMR and the rest on a map
+  missing_iso3 <- c("AGO", "DRC", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
+
   df_subnational <- filter(df, !(area_id %in% priority_iso3))
   df_national <- setdiff(df, df_subnational)
 
-  #' Using these just to show missing data for the countries we don't consider in the analysis
-  national_areas <- national_areas %>%
-    #' These are just chosen manually by looking at countries between CMR and the rest on a map
-    filter(GID_0 %in% c("AGO", "DRC", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
-    ) %>%
-    #' Weird but OK
+  missing_national_areas <- national_areas %>%
+    filter(GID_0 %in% missing_iso3) %>%
     rename(iso3 = NAME_0) %>%
     select(-GID_0)
 
   df_national_areas <- crossing(
     indicator = unique(df_national$indicator),
     age_group = unique(df_national$age_group),
-    iso3 = unique(national_areas$iso3)
+    iso3 = unique(missing_national_areas$iso3)
   ) %>%
-    left_join(national_areas, by = "iso3")
+    left_join(missing_national_areas, by = "iso3")
 
   df_subnational <- bind_rows(
     df_subnational,
@@ -42,6 +42,8 @@ continental_map <- function(df, areas, national_areas) {
 
   ggplot(df_subnational, aes(fill = estimate_smoothed)) +
     geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+    geom_sf(data = filter(national_areas, GID_0 %in% c(priority_iso3, missing_iso3)),
+            aes(geometry = geometry), fill = NA, size = 0.2) +
     scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
     facet_grid(age_group ~ indicator) +
     labs(fill = "Estimated proportion") +
