@@ -178,59 +178,64 @@ df <- df %>%
 #' `A` should be a matrix which has `ncol(A) = length(u)` and `nrow(A)` equal to the number of constraints required.
 #' `e` should have length equal to the number of constraints required.
 
-#' Model 1: category random effects (IID), age x category random effects (IID)
-formula1 <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = multi.utils::tau_fixed(0.000001)) +
+#' Baseline model:
+#' * category random effects (IID)
+#' * age x category random effects (IID)
+formula_baseline <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = multi.utils::tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(age_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
-#' `formula2` below specifies the space x category random effects to have structure matrix given as
-#' the Kronecker product R_{space x category} = I_{space} (x) I_{cat} = I. An alternative is to define
-#' four separate structure matrices. A difference between these approaches is that the former only
-#' involves a single precision parameter whereas the later includes many.
-
-#' Model 2: category random effects (IID), age x category random effects (IID),
-#' space x category random effects (IID)
-formula2 <- update(formula1,
-  . ~ . + f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
-)
-
-#' Model 3: category random effects (IID), age x category random effects (IID),
-#' space x category random effects (Besag)
-formula3 <- update(formula1,
-  . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
-            control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
-)
-
-formulas <- list(formula1, formula2, formula3)
-models <- list("Model 1", "Model 2", "Model 3")
-
-#' If there is more than one survey, then add temporal random effect models
+#' Is more than one survey?
 include_temporal <- (length(unique(df$survey_id)) > 1)
+
+if(!include_temporal) {
+
+  #' `formula1` below specifies the space x category random effects to have structure matrix given as
+  #' the Kronecker product R_{space x category} = I_{space} (x) I_{cat} = I. An alternative is to define
+  #' four separate structure matrices. A difference between these approaches is that the former only
+  #' involves a single precision parameter whereas the later includes many.
+
+  #' Model 1:
+  #' * space x category random effects (IID)
+  formula1 <- update(formula_baseline,
+    . ~ . + f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+              constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+  )
+
+  #' Model 2:
+  #' * space x category random effects (Besag)
+  formula2 <- update(formula_baseline,
+    . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
+              control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+  )
+
+  formulas <- list(formula1, formula2)
+  models <- list("Model 1", "Model 2")
+}
 
 if(include_temporal) {
 
-  #' Model 4:  category random effects (IID), age x category random effects (IID),
-  #' survey x category random effects (IID)
-  formula4 <- update(formula1,
-    . ~ . + f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+  #' Model 1:
+  #' * space x category random effects (IID)
+  #' * survey x category random effects (IID)
+  formula1 <- update(formula_baseline,
+    . ~ . + f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+              constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+            f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
               constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
-  #' Model 5:  category random effects (IID), age x category random effects (IID),
-  #' space x category random effects (IID), survey x category random effects (IID)
-  formula5 <- update(formula2,
-    . ~ . + f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+  #' Model 2:
+  #' * space x category random effects (Besag)
+  #' * survey x category random effects (IID)
+  formula2 <- update(formula_baseline,
+    . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
+              control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+            f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
               constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
-  #' Model 6: category random effects (IID), age x category random effects (IID),
-  #' space x category random effects (Besag), survey x category random effects (IID)
-  formula6 <- update(formula3,
-    . ~ . + f(sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
-              constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
-  )
 
   #' Prior for the correlation parameter of the AR1 model together with the grouped precision parameter
   #' For the correlation parameter, we choose a base model of correlation one with P(rho > 0 = 0.75)
@@ -239,74 +244,73 @@ if(include_temporal) {
     prec = list(prec = "pc.prec", param = c(2.5, 0.01), initial = log(0.001))
   )
 
-  #' Model 7:  category random effects (IID), age x category random effects (IID),
-  #' survey x category random effects (AR1)
-  formula7 <- update(formula1,
-   . ~ . + f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
-             constr = TRUE, hyper = ar1_group_prior)
-  )
-
-  #' Model 8:  category random effects (IID), age x category random effects (IID),
-  #' space x category random effects (IID), survey x category random effects (AR1)
-  formula8 <- update(formula2,
-    . ~ . + f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
+  #' Model 3:
+  #' * space x category random effects (IID)
+  #' * survey x category random effects (AR1)
+  formula3 <- update(formula_baseline,
+    . ~ . + f(area_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+              constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+            f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
               constr = TRUE, hyper = ar1_group_prior)
   )
 
-  #' Model 9: category random effects (IID), age x category random effects (IID),
-  #' space x category random effects (Besag), survey x category random effects (AR1)
-  formula9 <- update(formula3,
-    . ~ . + f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
-              constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+  #' Model 4:
+  #' * space x category random effects (Besag)
+  #' * survey x category random effects (AR1)
+  formula4 <- update(formula_baseline,
+    . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
+              control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+            f(sur_idx, model = "ar1", group = cat_idx, control.group = list(model = "iid"),
+              constr = TRUE, hyper = ar1_group_prior)
   )
 
-  formulas <- append(formulas, parse(text = paste0("list(", paste0("formula", 4:9, collapse = ", "), ")")) %>% eval())
-  models <- append(models, paste0("Model ", 4:9) %>% as.list())
+  formulas <- list(formula1, formula2, formula3, formula4)
+  models <- list("Model 1", "Model 2", "Model 3", "Model 4")
 }
 
-#' Should the interaction models under development should be fit too?
+#' Should the interaction models be fit too?
 if(include_interactions & include_temporal) {
 
-  #' Model 5x:  category random effects (IID), age x category random effects (IID),
-  #' space x category random effects (IID), survey x category random effects (IID),
-  #' space x survey x category random effects (IID)
-  formula5x <- update(formula5,
+  #' Model 1x:
+  #' * Model 1
+  #' * space x survey x category random effects (IID x IID)
+  formula1x <- update(formula1,
     . ~ . + f(area_sur_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
               constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
   #' Create Besag x IID interaction adjacency matrix
   #' Check the resulting matrix with image()
-  interaction_adjM_6x <- multi.utils::repeat_matrix(adjM, n = length(unique(df$sur_idx)))
+  interaction_adjM_2x <- multi.utils::repeat_matrix(adjM, n = length(unique(df$sur_idx)))
 
-  #' Model 6x: category random effects (IID), age x category random effects (IID),
-  #' space x category random effects (Besag), survey x category random effects (IID)
-  #' space x survey x category random effects (Besag x IID)
-  formula6x <- update(formula6,
+  #' Model 2x:
+  #' * Model 2
+  #' * space x survey x category random effects (Besag x IID)
+  formula2x <- update(formula2,
     . ~ . + f(area_sur_idx, model = "besag", graph = interaction_adjM_6x, scale.model = TRUE, group = cat_idx,
               control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
-  #' Model 8x:  category random effects (IID), age x category random effects (IID),
-  #' space x category random effects (IID), survey x category random effects (AR1),
-  #' space x survey x category random effects (IID x AR1)
-  formula8x <- update(formula8,
+  #' Model 3x:
+  #' * Model 3
+  #' * space x survey x category random effects (IID x AR1)
+  formula3x <- update(formula3,
     . ~ . + f(area_idx_copy, model = "iid", group = sur_idx, replicate = cat_idx,
               control.group = list(model = "ar1", hyper = list(rho = list(prior = "pc.cor1", param = c(0, 0.75)))),
               constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
-  #' Model 9x: category random effects (IID), age x category random effects (IID),
-  #' space x category random effects (Besag), survey x category random effects (AR1)
-  #' space x survey x category random effects (Besag x AR1)
-  formula9x <- update(formula9,
+  #' Model 4x:
+  #' * Model 4
+  #' * space x survey x category random effects (Besag x AR1)
+  formula4x <- update(formula4,
     . ~ . + f(area_idx_copy, model = "besag", graph = adjM, scale.model = TRUE, group = sur_idx, replicate = cat_idx,
               control.group = list(model = "ar1", hyper = list(rho = list(prior = "pc.cor1", param = c(0, 0.75)))),
               constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
-  formulas <- append(formulas, list(formula5x, formula6x, formula8x, formula9x))
-  models <- append(models, list("Model 5x", "Model 6x", "Model 8x", "Model 9x"))
+  formulas <- list(formula1, formula1x, formula2, formula2x, formula3, formula3x, formula4, formula4x)
+  models <- list("Model 1", "Model 1x", "Model 2", "Model 2x", "Model 3", "Model 3x", "Model 4", "Model 4x")
 }
 
 #' Fit the models
@@ -319,13 +323,8 @@ S <- 1000
 if(lightweight) {
   S <- 100
 
-  if(!include_temporal) {
-    formulas <- list(formula3)
-    models <- list("Model 3")
-  } else {
-    formulas <- list(formula6)
-    models <- list("Model 6")
-  }
+  formulas <- list(formula4)
+  models <- list("Model 4")
 }
 
 #' tryCatch version for safety
@@ -527,11 +526,8 @@ res_df %>%
   filter(area_id != iso3) %>%
   mutate(
     model = fct_recode(model,
-      "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
-      "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
-      "7" = "Model 7", "8" = "Model 8", "9" = "Model 9",
-      "5x" = "Model 5x", "6x" = "Model 6x",
-      "8x" = "Model 8x", "9x" = "Model 9x"
+      "1" = "Model 1", "2" = "Model 2", "3" = "Model 3", "4" = "Model 4",
+      "1x" = "Model 1", "2x" = "Model 2x", "3x" = "Model 3x", "4x" = "Model 4x",
     )
   ) %>%
   split(.$survey_id) %>%
