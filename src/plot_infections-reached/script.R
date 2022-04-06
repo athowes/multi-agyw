@@ -9,7 +9,7 @@ df <- read_csv("depends/incidence-district-sexbehav.csv")
 p <- 1
 
 df_area_age_behav <- df %>%
-  select(iso3, area_id, age_group, starts_with("population_sex"), starts_with("incidence_sex")) %>%
+  select(iso3, area_id, age_group, population_nosex12m, incidence_nosex12m, starts_with("population_sex"), starts_with("incidence_sex")) %>%
   pivot_longer(
     cols = starts_with("population") | starts_with("incidence"),
     names_to = c("indicator", "category"),

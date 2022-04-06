@@ -1,6 +1,6 @@
 #' https://tidyeval.tidyverse.org/dplyr.html
 compute_infections_reached <- function(df, stratification_name, ...) {
-  #' Aggreate incidence and population according to stratification
+  #' Aggregate incidence and population according to stratification
   if(stratification_name != "Area, age, behaviour") {
     df <- df %>%
       group_by(...) %>%
@@ -84,7 +84,7 @@ plot_infections_reached_above_baseline <- function(df) {
     scale_y_continuous(labels = scales::label_percent(accuracy = 1L)) +
     # coord_fixed(ratio = 1) +
     labs(
-      x = paste0("Percent of at risk population (", signif(max(df$population_cumulative, na.rm = TRUE), 3) / 10^6, "M) reached"),
+      x = paste0("Percent of population (", signif(max(df$population_cumulative, na.rm = TRUE), 3) / 10^6, "M) reached"),
       y = paste0("Percent of new infections (", signif(max(df$infections_averted_cumulative, na.rm = TRUE), 2) / 10^6, "M)\nreached beyond baseline"),
       col = "Risk stratification"
     ) +
@@ -103,7 +103,7 @@ plot_infections_reached <- function(df) {
     scale_y_continuous(labels = scales::label_percent(accuracy = 1L)) +
     coord_fixed(ratio = 1) +
     labs(
-      x = paste0("Percent of at risk population (", signif(max(df$population_cumulative, na.rm = TRUE), 3) / 10^6, "M) reached"),
+      x = paste0("Percent of population (", signif(max(df$population_cumulative, na.rm = TRUE), 3) / 10^6, "M) reached"),
       y = paste0("Percent of new infections\n(", signif(max(df$infections_averted_cumulative, na.rm = TRUE), 2) / 10^6, "M) reached"),
       col = ""
     ) +
