@@ -63,5 +63,5 @@ dev.off()
 ggsave(
   "age-variation.png",
   plotA,
-  width = 6.25, height = 6, units = "in", dpi = 300
+  width = 6.25, height = 3.5, units = "in", dpi = 300
 )
