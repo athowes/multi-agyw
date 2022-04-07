@@ -52,8 +52,8 @@ naomi <- naomi %>%
     incidence = 100 * infections / (population - plhiv),
     incidence_cat = cut(
       incidence,
-      c(0, 0.1, 0.3, 1, 10^6),
-      labels = c("Low", "Moderate", "High", "Very High"),
+      c(0, 0.1, 0.3, 1, 3, 10^6),
+      labels = c("Low", "Moderate", "High", "Very High", "Very Very High"),
       include.lowest = TRUE,
       right = TRUE
     )
@@ -76,16 +76,29 @@ df_3p1 <- naomi %>%
     by = c("area_id", "age_group")
   )
 
-#' TODO: Get distributions on these and using a sampling method to get uncertainty in economic analysis
 rr_sexcohab <- 1
 rr_sexnonreg <- 1.72
+
+#' Tiered HIV risk ratio for the FSW group depending on district-level HIV incidence in general population
+rr_sexpaid12m_vvh <- 3 #' >3%
+rr_sexpaid12m_vh <- 6 #' 1-3%
+rr_sexpaid12m_h <- 9 #' 0.3-1%
+rr_sexpaid12m_m <- 13 #' 0.1-0.3%
+rr_sexpaid12m_l <- 25 #' <0.1%
+
+#' TODO: Get distributions on these and using a sampling method to get uncertainty in economic analysis e.g.
 rr_sexnonreg_se <- 0.2
-rr_sexpaid12m <- 13
 rr_sexnonreg_se <- 1
-rr_sexnonregplus <- rr_sexnonreg * 0.91 + rr_sexpaid12m * 0.09 #' This is an approximate value
 
 df_3p1 <- df_3p1 %>%
   mutate(
+    rr_sexpaid12m = case_when(
+      incidence_cat == "Very Very High" ~ rr_sexpaid12m_vvh,
+      incidence_cat == "Very High" ~ rr_sexpaid12m_vh,
+      incidence_cat == "High" ~ rr_sexpaid12m_h,
+      incidence_cat == "Moderate" ~ rr_sexpaid12m_m,
+      incidence_cat == "Low" ~ rr_sexpaid12m_l
+    ),
     population_nosex12m = population * nosex12m,
     population_sexcohab = population * sexcohab,
     population_sexnonreg = population * sexnonreg,
