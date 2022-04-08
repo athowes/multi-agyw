@@ -1,0 +1,30 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: HIV prevalence by risk group
+      filenames:
+        - prev-district-sexbehav.csv
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - tibble
+
+# depends:
+#   - process_differentiate-high-risk:
+#       id: latest
+#       use:
+#         depends/best-3p1-multi-sexbehav-sae.csv: best-3p1-multi-sexbehav-sae.csv
+#   - process_all-data:
+#       id: latest
+#       use:
+#         depends/areas.rds: areas.rds
