@@ -1,0 +1,63 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Slides
+      filenames:
+        - 12-05-22-mrc-gida.pdf
+
+resources:
+  - 12-05-22-mrc-gida.Rmd
+  - preamble.tex
+  - citations.bib
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - tibble
+
+depends:
+  plot-tikz_category-flowchart:
+    id: latest
+    use:
+      depends/category-flowchart.pdf: category-flowchart.pdf
+  plot_available-surveys:
+    id: latest
+    use:
+      depends/available-surveys.png: available-surveys.png
+  process_variance-proportions:
+    id: latest
+    use:
+      depends/aaa-variance-proportions.png: aaa-variance-proportions.png
+  plot_age-variation:
+    id: latest
+    use:
+      depends/age-variation.png: age-variation.png
+  plot_model-direct-benefits:
+    id: latest
+    use:
+      depends/model-direct-benefits.png: model-direct-benefits.png
+  plot_continental-map:
+    id: latest
+    use:
+      depends/3p1-continental-map.png: 3p1-continental-map.png
+  plot_within-between-country-variation:
+    id: latest
+    use:
+      depends/3p1-within-between-country-variation.png: 3p1-within-between-country-variation.png
+  process_incidence:
+    id: latest
+    use:
+      depends/incidence-district-sexbehav.csv: incidence-district-sexbehav.csv
+  plot_infections-reached:
+    id: latest
+    use:
+      depends/infections-reached.png: infections-reached.png

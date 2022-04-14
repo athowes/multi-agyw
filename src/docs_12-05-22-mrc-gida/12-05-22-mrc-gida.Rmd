@@ -1,0 +1,214 @@
+---
+title: Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa
+subtitle: MRC Centre for Global Infectious Disease Analysis Seminars
+author: Adam Howes
+institute: Imperial College London
+date: May 2022
+bibliography: citations.bib
+output:
+  beamer_presentation:
+    latex_engine: pdflatex
+    highlight: haddock
+    fig_width: 7 
+    fig_height: 3
+    includes:
+        in_header: preamble.tex
+---
+
+## Background
+
+* In sub-Saharan Africa, adolescent girls and young women (AGYW) are XX.X\% of the population but XX.X\% of all new HIV infections
+* Reasons for this disparity include:
+  1. Younger age at first sex
+  2. Age patterns of sexual mixing
+  3. Structural vulnerabilities and power imbalances
+  4. Increased susceptibility to HIV infection
+  
+## Stratified prevention
+
+* To have the greatest impact with available prevention resources, interventions should be prioritised to those at highest risk
+* The Global AIDS Strategy 2021-2016 proposed stratifying HIV prevention for AGYW based upon
+  1. Population-level HIV incidence in the local population
+  2. Individual-level sexual risk behaviour
+  
+## Scope for our work
+
+### Goals
+
+1. Enable countries to implement prevention approaches stratified by incidence and behaviour
+2. Assess the extent to which this would be beneficial
+
+### Approach
+
+1. Estimate the proportion of AGYW in four sexual risk behaviour groups at a district level (in 13 countries identified as priority by The Global Fund)
+2. Analyze the number of new infections reached by stratified prevention strategies
+
+## Data
+
+* We used sexual behaviour data from household surveys (see next slide)
+* District-level HIV incidence estimates from the Naomi model [@eaton2021naomi]
+* District boundaries
+
+##
+
+```{r echo=FALSE, out.width = "400px"}
+knitr::include_graphics("depends/available-surveys.png")
+```
+
+## Two-stage model for risk group proportions
+
+### Stage 1.
+
+* Multinomial logistic regression model for the proportion of AGYW in the None, Low and {High, Very High} risk groups, using all 47 surveys
+* Selected model included:
+  * Age effects (IID)
+  * Country effects (IID)
+  * Correlated spatial effects (ICAR)
+  * Correlated temporal effects (AR1) 
+* Multinomial-Poisson transformation allowed use of `R-INLA` for inference
+
+## Two-stage model for risk group proportions
+
+### Stage 2.
+
+* Logistic regression model for the proportion of {High, Very High} who are in the Very High risk group, using only the 13 surveys with a specific transactional sex question
+* Selected model included:
+  * Age effects (IID)
+  * Country effects (IID)
+  * Correlated spatial effects (ICAR)
+  * Clients of FSW covariates
+* Used `R-INLA` for inference
+
+## Two-stage model for risk group proportions
+
+### Combination and FSW adjustment
+
+* Take 1000 samples from each model, then suitably multiply to generate estimates for all four risk groups
+* We adjusted the Very High risk group to match national FSW estimates from @johnston2022deriving 
+
+\begin{center}
+\begin{tcolorbox}[width=0.9\textwidth, colframe={title}, colback={white}, title={}]
+$\implies$ estimates of risk group proportions $\rho_{itak}$ by district, year and age group
+\end{tcolorbox}
+\end{center}
+
+<!-- ## -->
+
+<!-- ```{r echo=FALSE, out.width = "400px"} -->
+<!-- knitr::include_graphics("depends/3p1-continental-map.png") -->
+<!-- ``` -->
+
+##
+
+```{r echo=FALSE, out.width = "400px"}
+knitr::include_graphics("depends/3p1-within-between-country-variation.png")
+```
+
+## Benefits of our modelled risk group estimates
+
+1. Estimates even where there isn't direct data
+    * Although some people think of this as "making up data", the data almost never "speak for themselves"
+    * Uncertainty should be higher in regions with infilling: important to clearly communicate this
+2. Borrow information across space, between countries, over multiple surveys, (weakly) between risk groups
+    * See next slide for illustration of why this is important
+  
+##
+
+```{r echo=FALSE, out.width = "400px"}
+knitr::include_graphics("depends/model-direct-benefits.png")
+```
+
+## HIV incidence by risk group
+
+* We used our risk group proportion estimates and relative risk ratio estimates from the literature to disaggregate Naomi general population HIV incidence estimates
+\begin{align*}
+I_{ia} &= \sum_k \lambda_{iak} N_{iak} \\
+&= \sum_k \lambda_{ia2} \text{RR}_k N_{iak}.
+\end{align*}
+
+\begin{center}
+\begin{tcolorbox}[width=0.9\textwidth, colframe={title}, colback={white}, title={}]
+$\implies$ estimates of HIV incidence $\lambda_{iak}$ and number of new HIV infections $I_{iak}$ by district, age group and risk group
+\end{tcolorbox}
+\end{center}
+
+## Prioritisation with risk group information
+
+* Suppose we have all of the information (district, age, and risk group)
+* Which are the strata with highest incidence?
+
+```{r include=FALSE}
+df <- readr::read_csv("depends/incidence-district-sexbehav.csv")
+
+df_area_age_behav <- df %>%
+  select(iso3, area_id, age_group, population_nosex12m, incidence_nosex12m, starts_with("population_sex"), starts_with("incidence_sex")) %>%
+  pivot_longer(
+    cols = starts_with("population") | starts_with("incidence"),
+    names_to = c("indicator", "category"),
+    names_sep = "_"
+  ) %>%
+  pivot_wider(
+    id_cols = c("iso3", "area_id", "age_group", "indicator", "category"),
+    names_from = "indicator",
+    values_from = "value"
+  )
+```
+
+```{r echo=FALSE}
+df_area_age_behav %>%
+  arrange(desc(incidence)) %>%
+  head() %>%
+  knitr::kable()
+```
+
+## Prioritisation without risk group information
+
+* What about if we lost the risk group information? Now what are the strata with the highest incidence?
+
+```{r include=FALSE}
+df_area_age <- df_area_age_behav %>%
+  group_by(iso3, area_id, age_group) %>%
+  summarise(
+    incidence = sum(incidence * population, na.rm = TRUE) / sum(population, na.rm = TRUE),
+    population = sum(population, na.rm = TRUE)
+  ) %>%
+  ungroup()
+```
+
+```{r echo=FALSE}
+df_area_age %>%
+  select(iso3, area_id, age_group, population, incidence) %>%
+  arrange(desc(incidence)) %>%
+  head() %>%
+  knitr::kable()
+```
+
+##
+
+```{r echo=FALSE, out.width = "400px"}
+knitr::include_graphics("depends/infections-reached.png")
+```
+
+## Policy takeaways
+
+* ?
+
+## Limitations
+
+* Infections reached analysis simplistic, doesn't account for e.g. difficulty in reaching each strata, variable intervention effectiveness, change in strata membership
+* High risk sexual behaviours are under-reported, and likely varyingly so by age (foremost) and location (less so)
+* Risk group definitions didn't consider other important characteristics that may determine risk e.g. condom usage
+* Our analysis only focused on AGYW 15-29, and could be extended to adults of both sexes aged 15-49
+
+## Methods takeaways
+
+* `R-INLA` and the multinomial-Poisson trick are a relatively good choice for spatio-temporal multinomial models
+  * Make good use of the `group` and `replicate` feature to define sufficiently complex Kronecker product effects
+  * Can run into limitations on model complexity: I might be moving to something more flexible e.g. `tmb`, `aghq` to continue development of this project
+
+## Thanks for listening!
+
+* \faEnvelope $\,$ `ath19@ic.ac.uk`
+* \faHome $\,$ `athowes.github.io`
+
+## Bibliography {-}
