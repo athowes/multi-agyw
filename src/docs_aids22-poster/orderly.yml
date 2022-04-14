@@ -1,0 +1,38 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Poster
+      filenames:
+        - amazon-poster.html
+        - amazon-poster.pdf
+
+resources:
+  - amazon-poster.Rmd
+  - citations.bib
+  - UNAIDS-reverse-EN.gif
+  - IMP_ML_W_N.png
+
+packages:
+  - rmarkdown
+  - dplyr
+  - ggplot2
+  - forcats
+
+depends:
+  plot_infections-reached:
+    id: latest
+    use:
+      depends/infections-reached.png: infections-reached.png
+  plot_aids-abstract:
+    id: latest
+    use:
+      depends/aids-abstract.png: aids-abstract.png
+  plot_within-between-country-variation:
+    id: latest
+    use:
+      depends/3p1-within-between-country-variation.png: 3p1-within-between-country-variation.png
+  plot_continental-map:
+    id: latest
+    use:
+      depends/3p1-continental-map.png: 3p1-continental-map.png

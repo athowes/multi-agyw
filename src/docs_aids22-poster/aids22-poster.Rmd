@@ -1,0 +1,176 @@
+---
+main_topsize: 0.2
+main_bottomsize: 0.075
+poster_height: "48in"
+poster_width: "36in"
+font_family: "Open Sans"
+# Essentials
+title: Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa
+author:
+  - name: '**Adam Howes**'
+    affil: 1, 2
+    main: true
+    twitter: adamhowes
+    email: ath19@ic.ac.uk
+  - name: "Kathryn A. Risher"
+    affil: 2, 3
+  - name: "Van Kinh Nguyen"
+    affil: 2
+  - name: "Oliver Stevens"
+    affil: 2
+  - name: "Katherine M. Jia"
+    affil: 4
+  - name: "Tim M. Wolock"
+    affil: 1, 2
+  - name: "Lycias Zembe"
+    affil: 5
+  - name: "Ian Wanyeki"
+    affil: 5
+  - name: "Mary Mahy"
+    affil: 5
+  - name: "Clemens Benedikt"
+    affil: 5
+  - name: "Seth R. Flaxman"
+    affil: 6
+  - name: "Jeffrey W. Eaton"
+    affil: 2
+affiliation:
+  - num: 1
+    address: Department of Mathematics, Imperial College London
+  - num: 2
+    address: MRC Centre for Global Infectious Disease Analysis, School of Public Health, Imperial College London
+  - num: 3
+    address: Department of Medical Social Sciences, Feinberg School of Medicine, Northwestern University
+  - num: 4
+    address: Harvard T. H. Chan School of Public Health, Harvard University
+  - num: 5
+    address: Joint United Nations Programme on HIV/AIDS, Geneva, Switzerland
+  - num: 6
+    address: Department of Computer Science, University of Oxford
+main_findings:
+  - "Successful **targeting of HIV prevention** using **risk behaviour** would **greatly increase** expected new infections preemptively reached."
+logoleft_name: "IMP_ML_W_N.png"
+logoright_name: "UNAIDS-reverse-EN.gif"
+# Style & formatting
+column_numbers: 3
+title_textsize: "60px"
+author_textsize: "1.17em"
+authorextra_textsize: "35px"
+affiliation_textsize: "25px"
+affiliation_textcol: '#00000080'
+caption_fontsize: "20px"
+# Main
+main_fontfamily: "Open Sans"
+# Poster body options
+primary_colour: '#38761C'
+secondary_colour: '#3b77D8'
+accent_colour: "#5d19c4"
+body_bgcol: "#ffffff"
+body_textsize: "40px"
+body_textcol: "#000000"
+reference_textsize: "25px"
+sectitle_textsize: "40px"
+# Standard options
+bibliography: citations.bib
+output: 
+  posterdown::posterdown_betterport:
+    self_contained: false
+    pandoc_args: --mathjax
+    highlight: espresso
+    number_sections: false
+---
+
+<!-- Using LaTeX to create spacing -->
+$$\\[0.15in]$$
+
+## Introduction
+
+* Adolescent girls and young women (AGYW) 15-29 **face disproportionately high risk** of HIV infection, and have been identified as a **priority population** for prevention efforts
+* The UNAIDS Global AIDS Strategy 2021-2026 **recommends differentiating services** for AGYW geographically based both on individual risk behaviour and epidemic indicators
+* We used a spatio-temporal model to estimate the proportion of AGYW in **four behavioural risk categories** $k = 1:4$ in 13 priority countries at a district level in the years 1999-2018
+
+|$k$|Category                 | Risk ratio|
+|:--|:------------------------|----------:|
+|1  |Not sexually active      |          0|
+|2  |One cohabiting partner   |          1|
+|3  |Non-regular partner(s)   |       1.72|
+|4  |Female sex workers (FSW) |         13|
+
+<!-- Using LaTeX to create spacing -->
+$$\\[0.05in]$$
+
+## Methods
+
+* We analyzed 47 national household surveys (AIS, BAIS, DHS, PHIA)
+* For the categories $k \in \{1, 2, 3^{+}\}$ we fit a survey-weighted multinomial logistic regression via the multinomial-Poisson transformation
+\begin{align}
+    &y_{itak}^\star \sim \text{Poisson}(\kappa_{itak}), \\
+    &\log(\kappa_{itak}) 
+    = \underbrace{\theta_{ita}}_{\text{Observation (IID)}}
+    + \underbrace{\beta_k}_{\text{Category (IID)}}
+    + \underbrace{\alpha_{ak}}_{\text{Age (IID)}} \\
+    &+ \underbrace{\zeta_{ck}}_{\text{Country (IID)}} 
+    + \underbrace{\phi_{ik}}_{\text{Spatial (Besag)}} 
+    + \underbrace{\gamma_{tk}}_{\text{Temporal (AR1)}}
+\end{align}
+where $p_{itak} = \text{softmax}(\kappa_{ita})_k$
+* Using the Poisson formulation facilitated inference using integrated nested Laplace approximation [@rue2009approximate] via `R-INLA`
+* To estimate the FSW proportion we used the 13 surveys with a transactional sex question to fit a survey-weighted logistic regression
+\begin{align}
+    &y_{ia4}^\star \sim \text{Binomial} \left( y_{ia3} + y_{ia4}, p_{ia4} / (p_{ia3} + p_{ia4}) \right), \\
+    &\text{logit}(p_{ia4} / (p_{ia3} + p_{ia4}))
+    = \beta_0
+    + \beta_\texttt{cfswever} x_c \\
+    &+ \underbrace{\alpha_a}_{\text{Age (IID)}}
+    + \underbrace{\zeta_c}_{\text{Country (IID)}}
+    + \underbrace{\phi_i}_{\text{Spatial (Besag)}}
+\end{align}
+where $x_c$ is the proportion of men in each country who are clients of FSW [@hodgins2021cfsw]
+* We aligned our FSW estimates to the national-level UNAIDS Key Populations Atlas [@johnston2022deriving]
+* We estimated incidence and number of expected new infections by risk group using the risk ratios to disaggregate Naomi model [@eaton2021naomi] general population incidence estimates
+
+## Results
+
+```{r echo=FALSE, fig.align='center', out.width='100%', fig.cap='Dotplots showing the posterior mean of our district level estimates (in colour) and national estimates (in white) in 2018.'}
+knitr::include_graphics("depends/3p1-within-between-country-variation.png")
+```
+
+```{r echo=FALSE, fig.align='center', out.width='100%', fig.cap='Cloropleths showing the posterior mean of our district level estimates in 2018.'}
+knitr::include_graphics("depends/3p1-continental-map.png")
+```
+
+* There is **significant variation** in risk group proportions **within and between countries**, as well as **between age groups** (but close to no change over time)
+* We found a geographic delineation, with **cohabiting more common in the east** and **non-regular partner(s) more common in the south**
+* Large numbers of 15-19 in Mozambique have early sexual debut and are already cohabiting
+
+```{r echo=FALSE, fig.align='center', out.width='100%', fig.cap='Comparison of targeting strategies'}
+knitr::include_graphics("depends/infections-reached.png")
+```
+
+* Using location, age and behavioral risk stratification, **25% of expected new infections can be found by reaching 3% of the population**, compared with 8% of the population when behaviour is excluded 
+* Majority of this benefit comes from reaching FSW, who are **3.5% of the at risk population but 21.0% of all expected new infections**
+
+## Discussion
+
+* Using a **modular approach** allowed us to integrate all data from non-conformable surveys
+* **Spatio-temporal smoothing** can be used to overcome high variance from the small sample sizes that result when further stratifying districts
+* Individual behaviour is a **key determinant** of risk and providing prevention services on the basis of behavior would allow many more expected new infections to be reached, **especially among FSW**
+
+### Limitations
+
+* No assessment of **practicalities or costs** of risk stratification approaches, or efficacy of available interventions
+* No adjustment for **reporting bias**
+* **Risk category definitions** could be disputed
+  * What constitutes sex work?
+  * Is within-group risk heterogeneity small enough?
+
+### Future work
+
+* Inclusion of **more surveys** e.g. VACS
+* Extension to **general population**: men and women 15-49
+
+<font size="6"> **Funding** AH was supported by the EPSRC and Bill & Melinda Gates Foundation. This research was supported by the MRC Centre for Global Infectious Disease Analysis. </font>
+
+## References
+
+<div id="refs" class="references"></div>
