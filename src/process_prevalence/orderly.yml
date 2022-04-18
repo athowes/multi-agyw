@@ -5,6 +5,20 @@ artefacts:
       description: HIV prevalence by risk group
       filenames:
         - prev-district-sexbehav.csv
+        - prev-district-sexbehav.pdf
+        - prev-district-sexbehav-1.png
+        - prev-district-sexbehav-2.png
+        - prev-district-sexbehav-3.png
+        - prev-district-sexbehav-4.png
+        - prev-district-sexbehav-5.png
+        - prev-district-sexbehav-6.png
+        - prev-district-sexbehav-7.png
+        - prev-district-sexbehav-8.png
+        - prev-district-sexbehav-9.png
+        - prev-district-sexbehav-10.png
+        - prev-district-sexbehav-11.png
+        - prev-district-sexbehav-12.png
+        - prev-district-sexbehav-13.png
 
 packages:
   - dplyr
@@ -19,12 +33,16 @@ packages:
   - tidyr
   - tibble
 
-# depends:
-#   - process_differentiate-high-risk:
-#       id: latest
-#       use:
-#         depends/best-3p1-multi-sexbehav-sae.csv: best-3p1-multi-sexbehav-sae.csv
-#   - process_all-data:
-#       id: latest
-#       use:
-#         depends/areas.rds: areas.rds
+resources:
+ - katie-prev-pr.csv
+ - naomi3.rds
+
+depends:
+  - process_johnston-adjustment:
+      id: latest
+      use:
+        depends/adjust-best-3p1-multi-sexbehav-sae.csv: adjust-best-3p1-multi-sexbehav-sae.csv
+  - process_all-data:
+      id: latest
+      use:
+        depends/areas.rds: areas.rds
