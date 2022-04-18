@@ -24,6 +24,26 @@ files <- c(
   "zwe_20210331-161516_naomi_spectrum_digest"
 )
 
+# naomi3 <- readRDS("naomi3.rds")
+#
+# naomi3 <- naomi3 %>%
+#   filter(iso3 %in% multi.utils::priority_iso3()) %>%
+#   mutate(analysis_level = analysis_level[iso3]) %>%
+#   filter(
+#     age_group_label %in% c("15-19", "20-24", "25-29"),
+#     indicator_label %in% c("New infections", "PLHIV", "HIV incidence", "Population"),
+#     sex == "female",
+#     case_when(
+#       iso3 %in% c("TZA", "ZAF") ~ calendar_quarter == "CY2020Q3",
+#       TRUE ~ calendar_quarter == "CY2020Q4"
+#     )
+#   ) %>%
+#   select(iso3, area_id, sex, age_group_label, indicator_label, mean) %>%
+#   pivot_wider(
+#     names_from = indicator_label,
+#     values_from = mean
+#   )
+
 naomi <- lapply(files, function(file) read.csv(paste0("naomi-output/", file, "/indicators.csv"))) %>%
   bind_rows()
 
