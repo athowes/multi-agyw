@@ -2,13 +2,13 @@ script: script.R
 
 artefacts:
   - data:
-      description: Poster
+      description: Poster for AIDS 2022 conference
       filenames:
-        - amazon-poster.html
-        - amazon-poster.pdf
+        - aids2022-poster.html
+        - aids2022-poster.pdf
 
 resources:
-  - amazon-poster.Rmd
+  - aids22-poster.Rmd
   - citations.bib
   - UNAIDS-reverse-EN.gif
   - IMP_ML_W_N.png

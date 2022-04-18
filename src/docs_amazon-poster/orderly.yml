@@ -2,7 +2,7 @@ script: script.R
 
 artefacts:
   - data:
-      description: Poster
+      description: Poster for Amazon Berlin conference
       filenames:
         - amazon-poster.html
         - amazon-poster.pdf
