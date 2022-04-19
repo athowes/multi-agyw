@@ -45,14 +45,19 @@ depends:
     id: latest
     use:
       depends/model-direct-benefits.png: model-direct-benefits.png
-  plot_continental-map:
+  plot_aids-abstract:
     id: latest
     use:
-      depends/3p1-continental-map.png: 3p1-continental-map.png
-  plot_within-between-country-variation:
-    id: latest
-    use:
-      depends/3p1-within-between-country-variation.png: 3p1-within-between-country-variation.png
+      depends/aids-abstract-A.pdf: aids-abstract-A.pdf
+      depends/aids-abstract-B.pdf: aids-abstract-B.pdf
+  # plot_continental-map:
+  #   id: latest
+  #   use:
+  #     depends/3p1-continental-map.png: 3p1-continental-map.png
+  # plot_within-between-country-variation:
+  #   id: latest
+  #   use:
+  #     depends/3p1-within-between-country-variation.png: 3p1-within-between-country-variation.png
   process_incidence:
     id: latest
     use:
