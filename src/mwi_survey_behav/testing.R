@@ -35,12 +35,9 @@ sb_vars <- c("v504", "v529", "v531", "v766b", "v767a", "v767b", "v767c", "v791a"
              "v763a", "v763b", "v763c", "v501")
 
 ## Individual recode
-ird_path <- "MWIR7AFL.rds"
-ir <- readRDS(ird_path)
+ir <- readRDS(ird_path[[SurveyId]])
 dat <- dplyr::select(ir, individual_id = caseid, tidyselect::any_of(sb_vars))
 dat[setdiff(sb_vars, names(dat))] <- NA
-
-dat$v504
 
 ## Male recode
 if (!is.null(mrd_path)) {
@@ -108,7 +105,7 @@ dat$sexcohab <- dplyr::case_when(dat$sexcohabspouse == TRUE & dat$v504 == 1 ~ TR
 # or multiple partners in the past year. Recode v766b (# partners in past 12 mo)
 # and v767a-c (relationship w/partners)
 dat$sexnonreg <- dplyr::case_when(dat$sex12m == FALSE ~ FALSE,
-                                  dat$v504 == 1 ~ FALSE,
+                                  dat$v504 == 2 ~ TRUE,
                                   (dat$v766b > 1 & dat$v766b != 99) |
                                     (dat$v767a %in% cas_cats | dat$v767b %in% cas_cats |
                                        dat$v767c %in% cas_cats) ~ TRUE,
@@ -158,7 +155,7 @@ dat$SurveyId <- SurveyId
 # As well as adding in a new variable, sexnonregplus, which is sexnonreg with all
 # the individuals in sexpaid12m added on as well
 dat <- dat %>%
-  dplyr::select(SurveyId, individual_id, sex12m, nosex12m, sexcohab, sexcohabrelax, sexcohabspouse, sexnonreg, sexpaid12m, giftsvar) %>%
+  dplyr::select(SurveyId, individual_id, sex12m, nosex12m, sexcohab, sexcohabspouse, sexnonreg, sexpaid12m, giftsvar) %>%
   dplyr::mutate(
     # When nosex12m = 1, set sexpaid12m = 0
     # Being paid for sex in the last year requires having had sex in the past year
@@ -183,7 +180,9 @@ dat <- dat %>%
 #' Checking the distributions of sexcohab and sexcohabspouse
 summary(dat$sexcohab)
 summary(dat$sexcohabspouse)
+summary(dat$sexnonregplus)
 
 #' Compare to the most recent PHIA
 phia_survey_sexbehav <- read_csv("depends/mwi2016phia_survey_sexbehav.csv")
 summary(phia_survey_sexbehav$sexcohab)
+summary(phia_survey_sexbehav$sexnonregplus)
