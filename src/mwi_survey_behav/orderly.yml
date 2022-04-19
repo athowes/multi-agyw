@@ -20,6 +20,10 @@ packages:
   - naomi.utils
   - rdhs
 
+resources:
+  - testing.R
+  - MWIR7AFL.rds
+
 depends:
   mwi_data_areas:
     id: latest
