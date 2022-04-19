@@ -6,9 +6,13 @@ analysis_level <- multi.utils::analysis_level()
 
 df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
 areas <- readRDS("depends/areas.rds")
-prev_pr <- read_csv("katie-prev-pr.csv")
 naomi3 <- readRDS("naomi3.rds")
 
+#' Just the prevalence ratios
+prev_pr <- read_csv("katie-prev-pr.csv") %>%
+  select(iso3, starts_with("pr_"))
+
+#' Naomi estimates of PLHIV and population by district and age band
 naomi3 <- naomi3 %>%
   filter(iso3 %in% multi.utils::priority_iso3()) %>%
   mutate(analysis_level = analysis_level[iso3]) %>%
@@ -38,6 +42,7 @@ naomi3 <- naomi3 %>%
     plhiv = PLHIV
   )
 
+#' Modelled estimates of proportion in each risk group
 df_3p1 <- df_3p1 %>%
   filter(year == 2018) %>%
   select(area_id, age_group, indicator, estimate_smoothed) %>%
@@ -47,23 +52,19 @@ df_3p1 <- df_3p1 %>%
     values_fn = mean
   )
 
+#' Merge the datasets
 df_3p1 <- naomi3 %>%
   left_join(
     df_3p1,
     by = c("area_id", "age_group")
   ) %>%
-  filter(!is.na(nosex12m))
-
-#' Just the prevalence ratios
-prev_pr <- prev_pr %>%
-  select(iso3, starts_with("pr_"))
-
-df_3p1 <- df_3p1 %>%
+  filter(!is.na(nosex12m)) %>%
   left_join(
     prev_pr,
     by = "iso3"
   )
 
+#' Calculate disaggregated population, prevalence and PLHIV
 df_3p1 <- df_3p1 %>%
   mutate(
     population_nosex12m = population * nosex12m,
