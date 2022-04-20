@@ -5,6 +5,11 @@ sources:
 
 artefacts:
   - data:
+      description: Checks that the data is as intended
+      filenames:
+        - areas-check.pdf
+        - data-check.pdf
+  - data:
       description: Smoothed district indicator estimates for multinomial models
       filenames:
         - multi-sexbehav-sae.csv

@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "MWI"))
+# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "ZMB"))
 # setwd("src/aaa_fit_multi-sexbehav-sae")
 
 analysis_level <- multi.utils::analysis_level()
@@ -42,6 +42,15 @@ areas_model <- areas %>%
   #' Add an integer index for INLA
   arrange(area_sort_order) %>%
   mutate(area_idx = row_number())
+
+pdf("areas-check.pdf", h = 5, w = 8)
+
+ggplot(areas_model, aes(fill = iso3)) +
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+  labs(fill = "ISO3") +
+  theme_minimal()
+
+dev.off()
 
 #' Create adjacency matrix for INLA
 adjM <- spdep::poly2nb(areas_model)
@@ -101,6 +110,28 @@ df <- df %>%
     by = c("indicator", "survey_id", "age_group", "area_id")
   )
 
+
+pdf("data-check.pdf", h = 11, w = 8.75)
+
+df %>%
+  left_join( #' Use this to make it an sf again
+    select(areas, area_id),
+    by = "area_id"
+  ) %>%
+  st_as_sf() %>%
+  split(.$survey_id) %>%
+  lapply(function(x) {
+    x %>%
+      ggplot(aes(fill = estimate)) +
+      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+      scale_fill_viridis_c(option = "C", label = label_percent(), limits = c(0, 1)) +
+      facet_grid(indicator ~ age_group) +
+      labs(title = paste0(x$survey_id[1])) +
+      theme_minimal()
+  })
+
+dev.off()
+
 #' Add indicies for:
 df <- df %>%
   mutate(
@@ -127,56 +158,6 @@ df <- df %>%
   arrange(obs_idx)
 
 #' Specify the models to be fit
-
-#' # Gaussian Markov Kronecker random fields
-#'
-#' R-INLA's group argument allows specifying Gaussian Kronecker product random fields with
-#' covariance given as the Kronecker product of between group and within group covariance matrices.
-#' If A (m x n) and B (p x q) are matrices then their Kronecker product C (pm x qn) is the block matrix
-#'
-#' C = [a_11 B ... a_1n B]
-#'     [...    ...    ...]
-#'     [a_m1 B ... a_mn B]
-#'
-#' Within-group is controlled by f(), and between group is controlled by the control.group argument.
-#' See https://becarioprecario.bitbucket.io/inla-gitbook/ch-temporal.html#sec:spacetime.
-#'
-#' Often the group argument is used to define (separable) spatiotemporal covariance structures.
-#' Following e.g. Blangiardo and Cameletti (2015), let delta_it be spatio-temporal interaction
-#' random effects. Knorr-Held (2000) present four ways to specify the structure matrix R_delta,
-#' where in the following R_space and R_time refer to spatially or temporally structured random
-#' effects and I_space and I_time unstructured random effects:
-#' * Type I: I_space (x) I_time `f(spacetime, model = "iid")`
-#' * Type II: I_space (x) R_time `f(space, model = "iid", group = time, control.group = list(model = "rw1"))`
-#' * Type III: R_space (x) I_time `f(time, model = "iid", group = space, control.group = list(model = "besag"))`
-#' * Type IV: R_space (x) R_time `f(space, model = "besag", group = time, control.group = list(model = "rw1"))`
-#'
-#' We use the group option to define random effects for each of the multinomial categories. For example,
-#' setting `f(sur_idx)` with `group = cat_idx` gives the grouped survey random effects for each category.
-#'
-#' # Additional constraints
-#'
-#' Interaction random effects should be constrained such that the sum over the non-category index is zero.
-#' For example, in each category the sum over ages of \alpha_{ak} should be zero:
-#'
-#' \sum_a \alpha_{ak} = 0 \forall k = 1, ..., K
-#'
-#' Intuition for this constraint is as follows. Suppose that the sum over age groups in category k is non-zero.
-#'
-#' \sum_a \alpha_{a1} = C_1
-#' ...
-#' \sum_a \alpha_{ak} = C_k
-#' ...
-#' \sum_a \alpha_{aK} = C_K
-#'
-#' If C_1 =/= C_k =/= C_K, then the age x category interactions have the effect of increasing the likelihood
-#' of a particular category. This isn't the desired effect: increasing the likelihood of any of the categories
-#' relative to the others should be left to the category random effects \beta_k.
-#'
-#' Additional linear constraints may be enforced on random effects in `R-INLA` using `extraconstr = list(A = A, e = e)`
-#' See https://becarioprecario.bitbucket.io/inla-gitbook/ch-INLAfeatures.html#sec:constraints.
-#' `A` should be a matrix which has `ncol(A) = length(u)` and `nrow(A)` equal to the number of constraints required.
-#' `e` should have length equal to the number of constraints required.
 
 #' Baseline model:
 #' * category random effects (IID)
