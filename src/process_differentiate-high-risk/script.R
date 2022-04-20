@@ -17,6 +17,13 @@ df_3p1 <- differentiate_high_risk(df_3, df_prop)
 write_csv(df_3p1, "best-3p1-multi-sexbehav-sae.csv", na = "")
 
 #' And now on the samples
-#' TODO
-# samples <- readRDS("depends/every-3-multi-sexbehav-sae-samples.rds")
-# samples_prop <- readRDS("depends/best-fsw-logit-sae-samples.rds")
+fits <- readRDS("depends/multi-sexbehav-sae-fits.rds")
+fit <- fits[[1]]
+samples_prop <- readRDS("depends/best-fsw-logit-sae-samples.rds")
+
+#' Start with very low number of samples
+S <- 10
+full_samples <- inla.posterior.sample(n = S, result = fit)
+full_samples <- lapply(full_samples, "[", "latent")
+
+matrix(unlist(full_samples), ncol = S)
