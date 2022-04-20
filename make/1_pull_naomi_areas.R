@@ -1,4 +1,6 @@
 priority_iso3 <- multi.utils::priority_iso3()
+missing_iso3 <- c("AGO", "DRC", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
+iso3 <- c(priority_iso3, missing_iso3)
 
 #' Names of the reports to pull
 reports <- paste0(tolower(iso3), "_data_areas")
