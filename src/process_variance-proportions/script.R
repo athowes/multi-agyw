@@ -178,4 +178,60 @@ df %>%
   mutate(across(everything(), ~ 100 * round(.x, 3)))
 
 #' Now to try the alternative method for looking within country when the model is fit jointly between all countries
+#' Probably there is a better way to do this
+
 fits <- readRDS("depends/multi-sexbehav-sae-fits.rds")
+fit <- fits[[1]]
+
+#' Use the results from the model as dictionary for variable to idx correspondence
+#' * indicator: cat_idx
+#' * iso3: iso3_idx
+#' * year: year_idx
+#' * area_id: area_idx
+#' * age_group: age_idx
+idx_dictionary <- read_csv("depends/multi-sexbehav-sae.csv") %>%
+  select(indicator, cat_idx, age_group, age_idx, iso3, iso3_idx,  area_id, area_idx, year, year_idx) %>%
+  mutate(
+    age_idx_rowname = age_idx * cat_idx,
+    iso3_idx_rowname = iso3_idx * cat_idx,
+    area_idx_rowname = area_idx * cat_idx,
+    year_idx_rowname = year_idx * cat_idx
+  )
+
+cat_df <- fit$summary.random$cat_idx
+age_df <- rownames_to_column(fit$summary.random$age_idx) %>% mutate(rowname = as.numeric(rowname))
+iso3_df <- rownames_to_column(fit$summary.random$iso3_idx) %>% mutate(rowname = as.numeric(rowname))
+area_df <- rownames_to_column(fit$summary.random$area_idx) %>% mutate(rowname = as.numeric(rowname))
+year_df <- rownames_to_column(fit$summary.random$year_idx) %>% mutate(rowname = as.numeric(rowname))
+
+re_df <-idx_dictionary %>%
+  left_join(
+    select(cat_df, cat_idx = ID, cat_val = mean),
+    by = "cat_idx"
+  ) %>%
+  left_join(
+    select(age_df, age_idx_rowname = rowname, age_val = mean),
+    by = "age_idx_rowname"
+  ) %>%
+  left_join(
+    select(iso3_df, iso3_idx_rowname = rowname, iso3_val = mean),
+    by = "iso3_idx_rowname"
+  ) %>%
+  left_join(
+    select(area_df, area_idx_rowname = rowname, area_val = mean),
+    by = "area_idx_rowname"
+  ) %>%
+  left_join(
+    select(year_df, year_idx_rowname = rowname, year_val = mean),
+    by = "year_idx_rowname"
+  )
+
+re_df %>%
+  group_by(iso3) %>%
+  summarise(
+    cat_idx = mean(abs(cat_val)),
+    age_idx = mean(abs(age_val)),
+    iso3_idx = mean(abs(iso3_val)),
+    area_idx = mean(abs(area_val)),
+    year_idx = mean(abs(year_val))
+  )

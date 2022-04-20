@@ -33,6 +33,7 @@ depends:
       id: latest
       use:
         depends/variance-proportions.csv: variance-proportions.csv
+        depends/multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
         depends/multi-sexbehav-sae-fits.rds: multi-sexbehav-sae-fits.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "BWA" && parameter:three_category == TRUE)
