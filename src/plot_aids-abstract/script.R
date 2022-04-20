@@ -138,13 +138,12 @@ df_3p1_subnational_sf <- df_3p1_subnational %>%
 
 #' Countries that I want to show on the plot but we don't have data for
 #' These are just chosen manually by looking at countries between CMR and the rest on a map
-missing_iso3 <- c("AGO", "DRC", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
+missing_iso3 <- c("AGO", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
 
 #' Using these just to show missing data for the countries we don't consider in the analysis
 missing_national_areas <- national_areas %>%
-  filter(GID_0 %in% missing_iso3) %>%
-  rename(iso3 = NAME_0) %>%
-  select(-GID_0)
+  filter(area_id %in% missing_iso3) %>%
+  rename(iso3 = area_id)
 
 df_3p1_national_areas <- crossing(
   indicator = as.factor(c("Cohabiting partner", "Nonregular partner(s)")),
@@ -162,7 +161,7 @@ plotA <- df_3p1_subnational_sf %>%
   filter(indicator %in% c("Cohabiting partner", "Nonregular partner(s)")) %>%
   ggplot(aes(fill = estimate_smoothed)) +
     geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
-    geom_sf(data = filter(national_areas, GID_0 %in% c(multi.utils::priority_iso3(), missing_iso3)),
+    geom_sf(data = filter(national_areas, area_id %in% c(multi.utils::priority_iso3(), missing_iso3)),
             aes(geometry = geometry), fill = NA, size = 0.2) +
     scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
     facet_grid(age_group ~ indicator) +

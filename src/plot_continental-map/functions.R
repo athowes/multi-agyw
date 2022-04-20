@@ -18,15 +18,14 @@ continental_map <- function(df, areas, national_areas) {
 
   #' Countries that I want to show on the plot but we don't have data for
   #' These are just chosen manually by looking at countries between CMR and the rest on a map
-  missing_iso3 <- c("AGO", "DRC", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
+  missing_iso3 <- c("AGO", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
 
   df_subnational <- filter(df, !(area_id %in% priority_iso3))
   df_national <- setdiff(df, df_subnational)
 
   missing_national_areas <- national_areas %>%
-    filter(GID_0 %in% missing_iso3) %>%
-    rename(iso3 = NAME_0) %>%
-    select(-GID_0)
+    filter(area_id %in% missing_iso3) %>%
+    rename(iso3 = area_id)
 
   df_national_areas <- crossing(
     indicator = unique(df_national$indicator),
@@ -42,7 +41,7 @@ continental_map <- function(df, areas, national_areas) {
 
   ggplot(df_subnational, aes(fill = estimate_smoothed)) +
     geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
-    geom_sf(data = filter(national_areas, GID_0 %in% c(priority_iso3, missing_iso3)),
+    geom_sf(data = filter(national_areas, area_id %in% c(priority_iso3, missing_iso3)),
             aes(geometry = geometry), fill = NA, size = 0.2) +
     scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
     facet_grid(age_group ~ indicator) +
