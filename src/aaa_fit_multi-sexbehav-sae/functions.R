@@ -56,6 +56,7 @@ multinomial_model <- function(formula, model_name, S = 1000) {
       #' Normalise each column (to avoid overflow of softmax)
       x_samples <- apply(x_samples, MARGIN = 2, FUN = function(x) x - max(x))
       #' Exponentiate (can be done outside apply)
+      #' WARNING: That these are samples from lambda posterior isn't true! Come back to this
       lambda_samples <- exp(x_samples)
       #' Calculate samples from posterior of probabilites
       prob_samples <- apply(lambda_samples, MARGIN = 2, FUN = function(x) x / sum(x))
@@ -80,6 +81,16 @@ multinomial_model <- function(formula, model_name, S = 1000) {
   lower <- function(x) quantile(x, 0.025, na.rm = TRUE)
   upper <- function(x) quantile(x, 0.975, na.rm = TRUE)
 
+  #' Quantile of the observation within posterior predictive
+  prob_predictive_quantile <- prob_predictive_samples_df %>%
+    mutate(estimate = df$estimate) %>%
+    apply(MARGIN = 1, function(x) {
+      estimate <- x[S + 1]
+      samples <- x[1:S]
+      if(all(is.na(samples))) return(NA)
+      else ecdf(samples)(estimate)
+    })
+
   #' Calculate mean, median, lower and upper for each set of samples
   df <- df %>%
     mutate(
@@ -95,6 +106,7 @@ multinomial_model <- function(formula, model_name, S = 1000) {
       prob_predictive_median = row_summary(prob_predictive_samples_df, median),
       prob_predictive_lower = row_summary(prob_predictive_samples_df, lower),
       prob_predictive_upper = row_summary(prob_predictive_samples_df, upper),
+      prob_predictive_quantile = prob_predictive_quantile,
       model = model_name
     )
 

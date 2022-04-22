@@ -14,7 +14,6 @@ artefacts:
       filenames:
         - multi-sexbehav-sae.csv
         - multi-sexbehav-sae.pdf
-        - multi-sexbehav-sae-samples.rds
   - data:
       description: Stacked proportion barplots
       filenames:

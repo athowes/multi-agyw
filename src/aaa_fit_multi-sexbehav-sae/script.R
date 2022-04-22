@@ -324,10 +324,6 @@ res <- purrr::pmap(
 #' Extract the df, full fitted models and samples
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
-res_samples <- lapply(res, "[[", 3)
-
-#' Artefact: Full samples
-saveRDS(res_samples, "multi-sexbehav-sae-samples.rds")
 
 #' Add columns for local DIC, WAIC, CPO
 ic <- lapply(res_fit, function(fit) {
@@ -553,7 +549,7 @@ polygon_data <- data.frame(
 res_df %>%
   split(.$model) %>%
   lapply(function(x) {
-  ggplot(x, aes(x = prob_quantile)) +
+  ggplot(x, aes(x = prob_preditive_quantile)) +
     facet_grid(indicator ~ survey_id, drop = TRUE, scales = "free") +
     geom_histogram(aes(y = (..count..) / tapply(..count..,..PANEL..,sum)[..PANEL..]),
                    breaks = seq(0, 1, length.out = bins + 1), fill = "#009E73", col = "black", alpha = 0.9) +
@@ -572,11 +568,11 @@ res_df %>%
   split(.$model) %>%
   lapply(function(x) {
   x %>%
-    select(indicator, survey_id, prob_quantile) %>%
-    filter(!is.na(prob_quantile)) %>%
+    select(indicator, survey_id, prob_predictive_quantile) %>%
+    filter(!is.na(prob_predictive_quantile)) %>%
     split(~ indicator + survey_id) %>%
     lapply(function(y) {
-      empirical_coverage <- purrr::map_dbl(seq(0, 1, by = 0.01), ~ empirical_coverage(y$prob_quantile, .x))
+      empirical_coverage <- purrr::map_dbl(seq(0, 1, by = 0.01), ~ empirical_coverage(y$prob_predictive_quantile, .x))
       data.frame(nominal_coverage = seq(0, 1, by = 0.01), empirical_coverage = empirical_coverage) %>%
         mutate(
           ecdf_diff = empirical_coverage - nominal_coverage,
