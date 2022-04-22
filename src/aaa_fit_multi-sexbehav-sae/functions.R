@@ -19,93 +19,83 @@ multinomial_model <- function(formula, model_name, S = 1000) {
 
   message("Begin post-processing")
 
-  df <- df %>%
-    mutate(
-      #' Add mean of linear predictor
-      eta = fit$summary.linear.predictor$mean
-    ) %>%
-    #' Split by observation indicator and lapply softmax
-    split(.$obs_idx) %>%
-    lapply(function(x)
-      x %>%
-        mutate(prob_mean = stable_softmax(eta))
-    ) %>%
-    bind_rows() %>%
-    #' Remove eta
-    select(-eta) %>%
-    #' Add model identifier
-    mutate(model = model_name)
-
-  #' Number of samples from the posterior, keep it low to begin with
+  #' Full R-INLA samples
   full_samples <- inla.posterior.sample(n = S, result = fit)
 
-  #' Calculate the probabilities for each sample from the posterior
-  x <- lapply(
-    seq_along(full_samples),
-    function(i)
-      full_samples[[i]]$latent %>%
-      data.frame() %>%
+  #' Just the latent field
+  eta_samples <- lapply(full_samples, "[", "latent")
+
+  #' For some reason "latent" is comprised of more than only the latent field
+  eta_samples <- lapply(eta_samples, function(eta_sample) {
+    data.frame(eta_sample) %>%
       tibble::rownames_to_column() %>%
-      #' eta = 2 is the second column, which usually is called
-      #' paste0("sample.", i) but I have experienced some inconsistency
-      #' from this within INLA so avoiding
       rename(eta = 2) %>%
       filter(substr(rowname, 1, 10) == "Predictor:") %>%
-      bind_cols(
-        df %>%
-          #' c(obs_idx, cat_idx) is sufficient to identify
-          select(obs_idx, cat_idx, n_eff_kish)
-      ) %>%
-      split(.$obs_idx) %>%
-      lapply(function(x)
-        x %>%
-          #' Use stable_softmax(eta) here as the probability with additional multinomial sampling variability
-          #' Would like to sample from multinomial with non-integer counts for n_eff_kish but can't
-          #' Instead use the floor, which the size argument automatically does but written here for clarity
-          #' Sometimes n_eff_kish is NA (missing data). In these cases we use 100 (around the average)
-          #' This is a little makeshift but probably sufficient for our purposes
-          mutate(
-            n_eff_kish_new = ifelse(is.na(n_eff_kish), 100, n_eff_kish),
-            prob = stats::rmultinom(n = 1, size = floor(n_eff_kish_new), prob = stable_softmax(eta)) / n_eff_kish_new
-          ) %>%
-          select(-n_eff_kish_new)
-      ) %>%
-      bind_rows() %>%
-      mutate(
-        #' Sample of the intensity
-        lambda = exp(eta),
-        #' Sample number / identifier
-        sample = i
-      ) %>%
-      #' Add model identifier
-      mutate(model = model_name)
-  ) %>%
-    bind_rows()
+      select(-rowname)
+  })
 
-  #' Obtain quantiles from the inla.posterior.sample and join them into df
+  #' Into a matrix with a row for each observation and a column for each sample
+  eta_samples_matrix <- matrix(unlist(eta_samples), ncol = S)
+  eta_samples_df <- data.frame(eta_samples_matrix)
+
+  samples <- eta_samples_df  %>%
+    mutate(
+      #' To split by
+      obs_idx = df$obs_idx,
+      #' To sample predictive
+      n_eff_kish_new = floor(ifelse(is.na(df$n_eff_kish), 100, df$n_eff_kish))
+    ) %>%
+    split(.$obs_idx) %>%
+    mclapply(function(x) {
+      n_eff_kish_new <- x$n_eff_kish_new
+      #' Remove the obs_idx and n_eff_kish_new columns
+      x_samples <- x[1:(length(x) - 2)]
+      #' Normalise each column (to avoid overflow of softmax)
+      x_samples <- apply(x_samples, MARGIN = 2, FUN = function(x) x - max(x))
+      #' Exponentiate (can be done outside apply)
+      lambda_samples <- exp(x_samples)
+      #' Calculate samples from posterior of probabilites
+      prob_samples <- apply(lambda_samples, MARGIN = 2, FUN = function(x) x / sum(x))
+      #' Calculate predictive samples (including sampling variability)
+      prob_predictive_samples <- apply(prob_samples, MARGIN = 2, FUN = function(x) {
+        stats::rmultinom(n = 1, size = n_eff_kish_new, prob = x) / n_eff_kish_new
+      })
+      #' Return list, allowing extraction of each set of samples
+      list(
+        lambda = data.frame(lambda_samples),
+        prob = data.frame(prob_samples),
+        prob_predictive = data.frame(prob_predictive_samples))
+    })
+
+  lambda_samples_df <- bind_rows(lapply(samples, "[[", "lambda"))
+  prob_samples_df <- bind_rows(lapply(samples, "[[", "prob"))
+  prob_predictive_samples_df <- bind_rows(lapply(samples, "[[", "prob_predictive"))
+
+  #' Helper functions
+  row_summary <- function(df, ...) unname(apply(df, MARGIN = 1, ...))
+  median <- function(x) quantile(x, 0.5, na.rm = TRUE)
+  lower <- function(x) quantile(x, 0.025, na.rm = TRUE)
+  upper <- function(x) quantile(x, 0.975, na.rm = TRUE)
+
+  #' Calculate mean, median, lower and upper for each set of samples
   df <- df %>%
-    left_join(
-      left_join(x, df, by = c("obs_idx", "cat_idx")) %>%
-        group_by(obs_idx, cat_idx) %>%
-        summarise(
-          #' The quantile of the raw estimate
-          estimate = mean(estimate), #' These should all be identical anyway
-          prob_quantile = ecdf(prob)(estimate),
-          #' Quantiles of the proportion
-          prob_median = quantile(prob, 0.5, na.rm = TRUE),
-          prob_lower = quantile(prob, 0.025, na.rm = TRUE),
-          prob_upper = quantile(prob, 0.975, na.rm = TRUE),
-          #' Quantiles of the intensity, used to calculate sample size recovery later
-          lambda_median = quantile(lambda, 0.5, na.rm = TRUE),
-          lambda_lower = quantile(lambda, 0.025, na.rm = TRUE),
-          lambda_upper = quantile(lambda, 0.975, na.rm = TRUE),
-          .groups = "drop"
-        ) %>%
-        select(-estimate),
-      by = c("obs_idx", "cat_idx")
+    mutate(
+      lambda_mean = row_summary(lambda_samples_df, mean),
+      lambda_median = row_summary(lambda_samples_df, median),
+      lambda_lower = row_summary(lambda_samples_df, lower),
+      lambda_upper = row_summary(lambda_samples_df, upper),
+      prob_mean = row_summary(prob_samples_df, mean),
+      prob_median = row_summary(prob_samples_df, median),
+      prob_lower = row_summary(prob_samples_df, lower),
+      prob_upper = row_summary(prob_samples_df, upper),
+      prob_predictive_mean = row_summary(prob_predictive_samples_df, mean),
+      prob_predictive_median = row_summary(prob_predictive_samples_df, median),
+      prob_predictive_lower = row_summary(prob_predictive_samples_df, lower),
+      prob_predictive_upper = row_summary(prob_predictive_samples_df, upper),
+      model = model_name
     )
 
   message("Completed post-processing")
 
-  return(list(df = df, fit = fit, samples = x))
+  return(list(df = df, fit = fit))
 }
