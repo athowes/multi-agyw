@@ -43,7 +43,10 @@ multinomial_model <- function(formula, model_name, S = 1000) {
       #' To split by
       obs_idx = df$obs_idx,
       #' To sample predictive
-      n_eff_kish_new = floor(ifelse(is.na(df$n_eff_kish), 100, df$n_eff_kish))
+      #' When n_eff_kish is missing there is no survey for that observation,
+      #' so the posterior predictive is meaningless. Setting to zero may save
+      #' some computation, but probably better to filter out entirely.
+      n_eff_kish_new = floor(ifelse(is.na(df$n_eff_kish), 0, df$n_eff_kish))
     ) %>%
     split(.$obs_idx) %>%
     mclapply(function(x) {
