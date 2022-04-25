@@ -6,20 +6,28 @@ df_3_aaa <- read_csv("depends/best-3-aaa-multi-sexbehav-sae.csv")
 df_3 <- read_csv("depends/multi-sexbehav-sae.csv") %>%
   filter(model == "Model 4") #' Temporary solution, should be earlier in pipeline
 
-#' Just want one set of estimates for each country
-df_prop <- read_csv("depends/best-fsw-logit-sae.csv") %>%
-  filter(!(survey_id %in% c("MWI2015DHS", "ZMB2016PHIA", "ZWE2015DHS")))
+df_prop <- read_csv("depends/best-fsw-logit-sae.csv")
 
-df_3p1_aaa <- differentiate_high_risk(df_3_aaa, df_prop)
-write_csv(df_3p1_aaa, "best-3p1-aaa-multi-sexbehav-sae.csv", na = "")
-
-df_3p1 <- differentiate_high_risk(df_3, df_prop)
-write_csv(df_3p1, "best-3p1-multi-sexbehav-sae.csv", na = "")
+# df_3p1_aaa <- differentiate_high_risk(df_3_aaa, df_prop)
+# write_csv(df_3p1_aaa, "best-3p1-aaa-multi-sexbehav-sae.csv", na = "")
+#
+# df_3p1 <- differentiate_high_risk(df_3, df_prop)
+# write_csv(df_3p1, "best-3p1-multi-sexbehav-sae.csv", na = "")
 
 #' And now on the samples
 fits <- readRDS("depends/multi-sexbehav-sae-fits.rds")
 fit <- fits[[1]]
-samples_prop <- readRDS("depends/best-fsw-logit-sae-samples.rds")
+
+#' Add column to df_3 containing obs_idx of relevant row in df_prop for splitting sexnonregplus
+df_3 <- df_3 %>%
+  left_join(
+    df_prop %>%
+      #' Without this, there would be multiple matches
+      #' (Just want one set of estimates for each country)
+      filter(!(survey_id %in% c("MWI2015DHS", "ZMB2016PHIA", "ZWE2015DHS"))) %>%
+      select(age_group, area_id, prop_obs_idx = obs_idx),
+    by = c("age_group", "area_id")
+  )
 
 #' Start with very low number of samples
 S <- 4
@@ -41,12 +49,8 @@ eta_samples <- lapply(eta_samples, function(eta_sample) {
 eta_samples_matrix <- matrix(unlist(eta_samples), ncol = S)
 eta_samples_df <- data.frame(eta_samples_matrix)
 
-cores <- detectCores()
-ncores <- 4
-
-start_time <- Sys.time()
-
-samples <- eta_samples_df  %>%
+#' Add identifier columns
+eta_samples_df <- eta_samples_df  %>%
   mutate(
     #' To split by
     obs_idx = df_3$obs_idx,
@@ -54,34 +58,98 @@ samples <- eta_samples_df  %>%
     #' When n_eff_kish is missing there is no survey for that observation,
     #' so the posterior predictive is meaningless. Setting to zero may save
     #' some computation, but probably better to filter out entirely.
-    n_eff_kish_new = floor(ifelse(is.na(df_3$n_eff_kish), 0, df_3$n_eff_kish))
-  ) %>%
+    n_eff_kish_new = floor(ifelse(is.na(df_3$n_eff_kish), 0, df_3$n_eff_kish)),
+    prop_obs_idx = df_3$prop_obs_idx
+  )
+
+#' Now the logistic regression model
+full_samples_prop <- readRDS("depends/best-fsw-logit-sae-samples.rds")
+full_samples_prop <- full_samples_prop[1:S]
+eta_samples_prop <- lapply(full_samples_prop, "[", "latent")
+
+eta_samples_prop <- lapply(eta_samples_prop, function(eta_sample) {
+  data.frame(eta_sample) %>%
+    tibble::rownames_to_column() %>%
+    rename(eta = 2) %>%
+    filter(substr(rowname, 1, 10) == "Predictor:") %>%
+    select(-rowname)
+})
+
+eta_samples_prop_matrix <- matrix(unlist(eta_samples_prop), ncol = S)
+samples_prop_matrix <- plogis(eta_samples_prop_matrix)
+samples_prop_df <- data.frame(samples_prop_matrix)
+
+#' Useful to have this pre-split for the mclapply
+samples_prop_df_split <- samples_prop_df %>%
+  mutate(prop_obs_idx = df_prop$obs_idx) %>%
+  split(.$prop_obs_idx)
+
+cores <- detectCores()
+ncores <- 2
+
+start_time <- Sys.time()
+
+#' The aim here is to manipulate the samples from the three category
+#' multinomial-Poisson model (stored in the dataframe eta_samples_df)
+#' together with the samples from the two category logistic model
+#' (stored in the dataframe samples_prop_df) to generate samples
+#' of the probabilities from a four category model. These samples
+#' are then summarised via the mean, median, 95% credible interval
+#' ready to be added as columns to the main results dataframe.
+
+samples <- eta_samples_df %>%
+  #' Some don't have a matching logistic proportion
+  #' TODO: Go back and sort this out
+  filter(!is.na(prop_obs_idx)) %>%
   split(.$obs_idx) %>%
   mclapply(function(x) {
-    n_eff_kish_new <- x[["n_eff_kish_new"]]
-    #' Remove the obs_idx and n_eff_kish_new columns
-    x_samples <- x[1:(length(x) - 2)]
+
+    #' 1. Take softmax of the eta samples
+
+    #' Remove the information columns
+    eta_samples <- x[1:S]
     #' Normalise each column (to avoid overflow of softmax)
-    x_samples <- apply(x_samples, MARGIN = 2, FUN = function(x) x - max(x))
+    eta_samples <- apply(eta_samples, MARGIN = 2, FUN = function(x) x - max(x))
     #' Exponentiate (can be done outside apply)
-    #' WARNING: That these are samples from lambda posterior isn't true! Come back to this
-    lambda_samples <- exp(x_samples)
+    #' WARNING: These aren't samples from lambda posterior! Come back to this
+    lambda_samples <- exp(eta_samples)
     #' Calculate samples from posterior of probabilities
     prob_samples <- apply(lambda_samples, MARGIN = 2, FUN = function(x) x / sum(x))
-    #' Calculate predictive samples (including sampling variability)
+
+    #' 2. Obtain the logisitic samples
+
+    #' Pick out the correct sample from logistic regression model
+    samples_prop <- samples_prop_df_split[[as.character(x$prop_obs_idx[1])]]
+    #' Just the samples (no extra information)
+    samples_prop <- samples_prop[1:S]
+
+    #' 3. Calculate predictive samples (including sampling variability)
+
+    n_eff_kish_new <- x[["n_eff_kish_new"]]
     prob_predictive_samples <- apply(prob_samples, MARGIN = 2, FUN = function(x) {
       stats::rmultinom(n = 1, size = n_eff_kish_new, prob = x) / n_eff_kish_new
     })
-    #' Return list, allowing extraction of each set of samples
+
+    #' 4. Differentiate the third row into the fourth and fifth rows
+
+    #' (1) nosex12m, (2) sexcohab, (3) sexnonregplus, (4) sexnonreg, (5) sexpaid12m
+    prob_samples <- data.frame(prob_samples)
+    prob_samples[4, ] <- prob_samples[3, ] * (1 - samples_prop)
+    prob_samples[5, ] <- prob_samples[3, ] * samples_prop
+
+    #' 5. Return list allowing extraction of each set of samples
+
     list(
       lambda = data.frame(lambda_samples),
-      prob = data.frame(prob_samples),
-      prob_predictive = data.frame(prob_predictive_samples))
+      prob = prob_samples,
+      prob_predictive = data.frame(prob_predictive_samples)
+    )
+
   }, mc.cores = ncores)
 
 end_time <- Sys.time()
 
-end_time - start_time #' 20 seconds for one sample
+end_time - start_time
 
 lambda_samples_df <- bind_rows(lapply(samples, "[[", "lambda"))
 prob_samples_df <- bind_rows(lapply(samples, "[[", "prob"))
@@ -103,20 +171,22 @@ prob_predictive_quantile <- prob_predictive_samples_df %>%
     else ecdf(samples)(estimate)
   })
 
+#' TODO: Add sexnonreg and sexpaid12m rows to df_3
+
 #' Calculate mean, median, lower and upper for each set of samples
-df_3 <- df_3 %>%
-  mutate(
-    lambda_mean = row_summary(lambda_samples_df, mean),
-    lambda_median = row_summary(lambda_samples_df, median),
-    lambda_lower = row_summary(lambda_samples_df, lower),
-    lambda_upper = row_summary(lambda_samples_df, upper),
-    prob_mean = row_summary(prob_samples_df, mean),
-    prob_median = row_summary(prob_samples_df, median),
-    prob_lower = row_summary(prob_samples_df, lower),
-    prob_upper = row_summary(prob_samples_df, upper),
-    prob_predictive_mean = row_summary(prob_predictive_samples_df, mean),
-    prob_predictive_median = row_summary(prob_predictive_samples_df, median),
-    prob_predictive_lower = row_summary(prob_predictive_samples_df, lower),
-    prob_predictive_upper = row_summary(prob_predictive_samples_df, upper),
-    prob_predictive_quantile = prob_predictive_quantile
-  )
+# df_3 <- df_3 %>%
+#   mutate(
+#     lambda_mean = row_summary(lambda_samples_df, mean),
+#     lambda_median = row_summary(lambda_samples_df, median),
+#     lambda_lower = row_summary(lambda_samples_df, lower),
+#     lambda_upper = row_summary(lambda_samples_df, upper),
+#     prob_mean = row_summary(prob_samples_df, mean),
+#     prob_median = row_summary(prob_samples_df, median),
+#     prob_lower = row_summary(prob_samples_df, lower),
+#     prob_upper = row_summary(prob_samples_df, upper),
+#     prob_predictive_mean = row_summary(prob_predictive_samples_df, mean),
+#     prob_predictive_median = row_summary(prob_predictive_samples_df, median),
+#     prob_predictive_lower = row_summary(prob_predictive_samples_df, lower),
+#     prob_predictive_upper = row_summary(prob_predictive_samples_df, upper),
+#     prob_predictive_quantile = prob_predictive_quantile
+#   )
