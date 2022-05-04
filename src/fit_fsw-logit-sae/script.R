@@ -290,11 +290,6 @@ res <- purrr::pmap(
 #' Extract the df and the full fitted models
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
-res_samples <- lapply(res, "[[", 3)
-names(res_samples) <- unlist(models)
-
-#' Artefact: Samples from all models
-saveRDS(res_samples, "every-fsw-logit-sae-samples.rds")
 
 #' Artefact: Smoothed district indicator estimates for logistic regression models
 res_df <- res_df %>%
@@ -451,9 +446,6 @@ which.max(ic_df$cpo)
 #' Model 6 at the moment!
 res_df_best <- filter(res_df, model == "Model 6")
 write_csv(res_df_best, "best-fsw-logit-sae.csv", na = "")
-
-res_samples_best <- res_samples[["Model 6"]]
-saveRDS(res_samples_best, "best-fsw-logit-sae-samples.rds")
 
 write_csv(ic_df, "fsw-logit-information-criteria.csv", na = "")
 

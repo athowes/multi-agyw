@@ -15,7 +15,6 @@ artefacts:
         - multi-sexbehav-sae.csv
         - multi-sexbehav-sae-fits.rds
         - multi-sexbehav-sae.pdf
-        - every-multi-sexbehav-sae-samples.rds
   - data:
       description: Model selection information criteria for multinomial models
       filenames:

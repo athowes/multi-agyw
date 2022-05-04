@@ -276,13 +276,9 @@ models <- list("Model 1", "Model 1x", "Model 2", "Model 2x", "Model 3", "Model 3
 
 #' Fit the models
 
-#' Number of Monte Carlo samples
-S <- 1000
-
 #' If low on computational resources i.e. not on the cluster
 #' Just fit one model
 if(lightweight) {
-  S <- 100
   formulas <- list(formula4)
   models <- list("Model 4")
 }
@@ -296,21 +292,16 @@ try_multinomial_model <- function(...) {
 }
 
 res <- purrr::pmap(
-  list(formula = formulas, model_name = models, S = S),
+  list(formula = formulas, model_name = models),
   try_multinomial_model
 )
 
 #' Extract the df and the full fitted models
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
-res_samples <- lapply(res, "[[", 3)
-names(res_samples) <- unlist(models)
 
 #' Artefact: Fitted model objects
 saveRDS(res_fit, "multi-sexbehav-sae-fits.rds")
-
-#' Artefact: Samples from all models
-saveRDS(res_samples, "every-multi-sexbehav-sae-samples.rds")
 
 #' Add columns for local DIC, WAIC, CPO and PIT
 #' res_df has the 15-24 category too

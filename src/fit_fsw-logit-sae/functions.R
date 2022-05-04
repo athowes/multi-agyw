@@ -2,7 +2,7 @@
 #'
 #' @param formula A formula object passed to `R-INLA`.
 #' @return A fitted model object.
-logistic_model <- function(formula, model_name, S = 1000) {
+logistic_model <- function(formula, model_name) {
 
   message(paste0("Begin fitting ", model_name, "."))
 
@@ -38,9 +38,7 @@ logistic_model <- function(formula, model_name, S = 1000) {
       model = model_name
     )
 
-  full_samples <- inla.posterior.sample(n = S, result = fit)
-
   message("Completed post-processing")
 
-  return(list(df = df, fit = fit, samples = full_samples))
+  return(list(df = df, fit = fit))
 }
