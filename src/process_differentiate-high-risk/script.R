@@ -6,20 +6,30 @@ df_3 <- read_csv("depends/multi-sexbehav-sae.csv") %>%
   filter(model == "Model 4") #' Temporary solution, should be earlier in pipeline
 
 df_prop <- read_csv("depends/best-fsw-logit-sae.csv")
+df_prop_distinct <- distinct(df_prop, age_group, area_id, .keep_all = TRUE)
 
 fits <- readRDS("depends/multi-sexbehav-sae-fits.rds")
 fit <- fits[[1]] #' Because it's a lightweight run
 
-#' Add column to df_3 containing obs_idx of relevant row in df_prop for splitting sexnonregplus
+#' Add column to df_3 containing obs_idx of relevant row in df_prop_distinct for splitting sexnonregplus
 df_3 <- df_3 %>%
   left_join(
-    df_prop %>%
-      #' Without this, there would be multiple matches
-      #' (Just want one set of estimates for each country)
-      filter(!(survey_id %in% c("MWI2015DHS", "ZMB2016PHIA", "ZWE2015DHS"))) %>%
+    df_prop_distinct %>%
       select(age_group, area_id, prop_obs_idx = obs_idx),
     by = c("age_group", "area_id")
   )
+
+#' Which obs_idx are missing matches in prop_obs_idx
+# missing_obs_idx <- eta_samples_df %>%
+#   filter(is.na(prop_obs_idx)) %>%
+#   pull(obs_idx) %>%
+#   unique()
+
+#' These are the relevant districts that are missing links to prop_obs_idx
+# missing_area_id <- df_3 %>%
+#   filter(obs_idx %in% missing_obs_idx) %>%
+#   pull(area_id) %>%
+#   unique()
 
 #' Start with very low number of samples
 S <- 4
@@ -83,7 +93,10 @@ samples_prop_df <- data.frame(samples_prop_matrix)
 #' Useful to have this pre-split for the mclapply
 samples_prop_df_split <- samples_prop_df %>%
   mutate(prop_obs_idx = df_prop$obs_idx) %>%
+  filter(prop_obs_idx %in% df_prop_distinct$obs_idx) %>%
   split(.$prop_obs_idx)
+
+stopifnot(length(samples_prop_df_split) == nrow(df_prop_distinct))
 
 cores <- detectCores()
 ncores <- 2
@@ -99,9 +112,6 @@ start_time <- Sys.time()
 #' ready to be added as columns to the main results dataframe.
 
 samples <- eta_samples_df %>%
-  #' Some don't have a matching logistic proportion
-  #' TODO: Go back and sort this out
-  filter(!is.na(prop_obs_idx)) %>%
   split(.$obs_idx) %>%
   mclapply(function(x) {
 
@@ -154,15 +164,15 @@ end_time - start_time
 
 #' Includes lambda samples for nosex12m, sexcohab and sexnonregplus
 lambda_samples_df <- bind_rows(lapply(samples, "[[", "lambda"))
-dim(lambda_samples_df)
+stopifnot(nrow(df_3) == nrow(lambda_samples_df))
 
 #' Includes prob samples for nosex12m, sexcohab, sexnonregplus, sexnonreg and sexpaid12m
 prob_samples_df <- bind_rows(lapply(samples, "[[", "prob"))
-dim(prob_samples_df)
+# stopifnot(nrow(df_3) == nrow(prob_samples_df) / 5 * 3) #' TODO: Getting an error here!
 
 #' Includes prob_predictive samples for nosex12m, sexcohab and sexnonregplus
 prob_predictive_samples_df <- bind_rows(lapply(samples, "[[", "prob_predictive"))
-dim(prob_predictive_samples_df)
+stopifnot(nrow(df_3) == nrow(prob_predictive_samples_df))
 
 #' Helper functions
 row_summary <- function(df, ...) unname(apply(df, MARGIN = 1, ...))
@@ -182,7 +192,6 @@ prob_predictive_quantile <- prob_predictive_samples_df %>%
 
 #' Calculate mean, median, lower and upper for the lambda and prob_predictive samples
 #' As well as adding the column for the observation quantile within posterior predictive
-#' TODO: For this to work, need to resolve missing prop_obs_idx above
 df_3 <- df_3 %>%
   mutate(
     lambda_mean = row_summary(lambda_samples_df, mean),
@@ -202,6 +211,9 @@ df_sexnonreg <- replace(df_sexnonregplus, 1, "sexnonreg")
 df_sexpaid12m <- replace(df_sexnonregplus, 1, "sexpaid12m")
 df <- bind_rows(df_3, df_sexnonreg, df_sexpaid12m) %>%
   arrange(obs_idx)
+
+#' TODO: Missing around 3000 samples from prob_samples_df here..
+stopifnot(nrow(df) == nrow(prob_samples_df))
 
 #' Calculate mean, median, lower and upper for the lambda and prob_predictive samples
 df <- df %>%
