@@ -190,6 +190,18 @@ phia_survey_indicators <- calc_survey_indicators(
   area_bottom_level = 5
 )
 
+phia_survey_indicators %>%
+  filter(indicator %in% c("sexcohab", "sexcohabspouse")) %>%
+  select(area_id, age_group, indicator, estimate) %>%
+  pivot_wider(
+    id_cols = c(area_id, age_group),
+    names_from = indicator,
+    values_from = estimate
+  ) %>%
+  ggplot(aes(x = sexcohab, y = sexcohabspouse, col = age_group)) +
+    geom_point() +
+    theme_minimal()
+
 #' Combine all surveys together
 survey_indicators <- bind_rows(survey_indicators, phia_survey_indicators)
 
