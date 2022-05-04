@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE))
+# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE, fewer_countries = TRUE))
 # setwd("src/fit_multi-sexbehav-sae")
 
 analysis_level <- multi.utils::analysis_level()
@@ -147,7 +147,7 @@ df %>%
 
 dev.off()
 
-#' Add indicies for:
+#' Add indices for:
 df <- mutate(df,
     #' year
     year_idx = multi.utils::to_int(year),
@@ -167,6 +167,8 @@ df <- mutate(df,
     area_cat_idx = multi.utils::to_int(interaction(area_idx, cat_idx)),
     #' space x year
     area_year_idx = multi.utils::to_int(interaction(area_idx, year_idx)),
+    #' age x country
+    age_iso3_idx = multi.utils::to_int(interaction(age_idx, iso3_idx)),
     #' observation
     obs_idx = multi.utils::to_int(interaction(age_idx, area_idx, year_idx)),
     #' copies
@@ -177,11 +179,11 @@ df <- mutate(df,
 
 #' Baseline model:
 #' * category random effects (IID)
-#' * age x category random effects (IID)
+#' * age x country x category random effects (IID)
 #' * country x category random effects (IID)
 formula_baseline <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-  f(age_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+  f(age_iso3_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(iso3_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
