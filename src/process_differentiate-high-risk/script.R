@@ -170,6 +170,26 @@ stopifnot(nrow(df_3) == nrow(lambda_samples_df))
 prob_samples_df <- bind_rows(lapply(samples, "[[", "prob"))
 # stopifnot(nrow(df_3) == nrow(prob_samples_df) / 5 * 3) #' TODO: Getting an error here!
 
+weird_idx <- lapply(samples, "[[", "prob") %>%
+  lapply(nrow) %>%
+  unlist() %>%
+  as.data.frame() %>%
+  filter(. == 6) %>%
+  tibble::rownames_to_column() %>%
+  pull(rowname) %>%
+  as.numeric() %>%
+  unique()
+
+#' We've got I think multiple obs_idx with the same obs_idx here!
+eta_samples_df %>%
+  filter(obs_idx %in% weird_idx)
+
+#' Ladies and gentlemen, we got em'
+nrow(df) - nrow(prob_samples_df)
+# [1] 3112
+length(weird_idx) * 4
+# [1] 3112
+
 #' Includes prob_predictive samples for nosex12m, sexcohab and sexnonregplus
 prob_predictive_samples_df <- bind_rows(lapply(samples, "[[", "prob_predictive"))
 stopifnot(nrow(df_3) == nrow(prob_predictive_samples_df))
