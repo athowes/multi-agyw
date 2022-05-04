@@ -2,21 +2,13 @@
 # orderly::orderly_develop_start("process_differentiate-high-risk")
 # setwd("src/process_differentiate-high-risk")
 
-df_3_aaa <- read_csv("depends/best-3-aaa-multi-sexbehav-sae.csv")
 df_3 <- read_csv("depends/multi-sexbehav-sae.csv") %>%
   filter(model == "Model 4") #' Temporary solution, should be earlier in pipeline
 
 df_prop <- read_csv("depends/best-fsw-logit-sae.csv")
 
-# df_3p1_aaa <- differentiate_high_risk(df_3_aaa, df_prop)
-# write_csv(df_3p1_aaa, "best-3p1-aaa-multi-sexbehav-sae.csv", na = "")
-#
-# df_3p1 <- differentiate_high_risk(df_3, df_prop)
-# write_csv(df_3p1, "best-3p1-multi-sexbehav-sae.csv", na = "")
-
-#' And now on the samples
 fits <- readRDS("depends/multi-sexbehav-sae-fits.rds")
-fit <- fits[[1]]
+fit <- fits[[1]] #' Because it's a lightweight run
 
 #' Add column to df_3 containing obs_idx of relevant row in df_prop for splitting sexnonregplus
 df_3 <- df_3 %>%
@@ -32,6 +24,10 @@ df_3 <- df_3 %>%
 #' Start with very low number of samples
 S <- 4
 full_samples <- inla.posterior.sample(n = S, result = fit)
+
+#' Save memory once samples are taken
+rm(fits)
+rm(fit)
 
 #' Just the latent field
 eta_samples <- lapply(full_samples, "[", "latent")
@@ -66,8 +62,9 @@ eta_samples_df <- eta_samples_df  %>%
   )
 
 #' Now the logistic regression model
-full_samples_prop <- readRDS("depends/best-fsw-logit-sae-samples.rds")
-full_samples_prop <- full_samples_prop[1:S] #' Only need as many samples as using above
+fit_prop <- readRDS("depends/best-fsw-logit-sae-fit.rds")
+full_samples_prop <- inla.posterior.sample(n = S, result = fit_prop)
+rm(fit_prop)
 eta_samples_prop <- lapply(full_samples_prop, "[", "latent")
 
 #' Again have to extract out a smaller part of the "latent" field
