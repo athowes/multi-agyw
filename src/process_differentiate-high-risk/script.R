@@ -50,6 +50,9 @@ eta_samples_matrix <- matrix(unlist(eta_samples), ncol = S)
 eta_samples_df <- data.frame(eta_samples_matrix)
 
 #' Add identifier columns
+#' This assumes that the rows of eta_samples_df correspond to rows of df_3
+#' It would be preferable if there were an identifier columns to be more
+#' sure that this is correct, but I'm not sure it can be provided by R-INLA
 eta_samples_df <- eta_samples_df  %>%
   mutate(
     #' To split by
@@ -64,9 +67,10 @@ eta_samples_df <- eta_samples_df  %>%
 
 #' Now the logistic regression model
 full_samples_prop <- readRDS("depends/best-fsw-logit-sae-samples.rds")
-full_samples_prop <- full_samples_prop[1:S]
+full_samples_prop <- full_samples_prop[1:S] #' Only need as many samples as using above
 eta_samples_prop <- lapply(full_samples_prop, "[", "latent")
 
+#' Again have to extract out a smaller part of the "latent" field
 eta_samples_prop <- lapply(eta_samples_prop, function(eta_sample) {
   data.frame(eta_sample) %>%
     tibble::rownames_to_column() %>%
@@ -151,9 +155,17 @@ end_time <- Sys.time()
 
 end_time - start_time
 
+#' Includes lambda samples for nosex12m, sexcohab and sexnonregplus
 lambda_samples_df <- bind_rows(lapply(samples, "[[", "lambda"))
+dim(lambda_samples_df)
+
+#' Includes prob samples for nosex12m, sexcohab, sexnonregplus, sexnonreg and sexpaid12m
 prob_samples_df <- bind_rows(lapply(samples, "[[", "prob"))
+dim(prob_samples_df)
+
+#' Includes prob_predictive samples for nosex12m, sexcohab and sexnonregplus
 prob_predictive_samples_df <- bind_rows(lapply(samples, "[[", "prob_predictive"))
+dim(prob_predictive_samples_df)
 
 #' Helper functions
 row_summary <- function(df, ...) unname(apply(df, MARGIN = 1, ...))
@@ -171,22 +183,34 @@ prob_predictive_quantile <- prob_predictive_samples_df %>%
     else ecdf(samples)(estimate)
   })
 
-#' TODO: Add sexnonreg and sexpaid12m rows to df_3
+#' Calculate mean, median, lower and upper for the lambda and prob_predictive samples
+#' As well as adding the column for the observation quantile within posterior predictive
+#' TODO: For this to work, need to resolve missing prop_obs_idx above
+df_3 <- df_3 %>%
+  mutate(
+    lambda_mean = row_summary(lambda_samples_df, mean),
+    lambda_median = row_summary(lambda_samples_df, median),
+    lambda_lower = row_summary(lambda_samples_df, lower),
+    lambda_upper = row_summary(lambda_samples_df, upper),
+    prob_predictive_mean = row_summary(prob_predictive_samples_df, mean),
+    prob_predictive_median = row_summary(prob_predictive_samples_df, median),
+    prob_predictive_lower = row_summary(prob_predictive_samples_df, lower),
+    prob_predictive_upper = row_summary(prob_predictive_samples_df, upper),
+    prob_predictive_quantile = prob_predictive_quantile
+  )
 
-#' Calculate mean, median, lower and upper for each set of samples
-# df_3 <- df_3 %>%
-#   mutate(
-#     lambda_mean = row_summary(lambda_samples_df, mean),
-#     lambda_median = row_summary(lambda_samples_df, median),
-#     lambda_lower = row_summary(lambda_samples_df, lower),
-#     lambda_upper = row_summary(lambda_samples_df, upper),
-#     prob_mean = row_summary(prob_samples_df, mean),
-#     prob_median = row_summary(prob_samples_df, median),
-#     prob_lower = row_summary(prob_samples_df, lower),
-#     prob_upper = row_summary(prob_samples_df, upper),
-#     prob_predictive_mean = row_summary(prob_predictive_samples_df, mean),
-#     prob_predictive_median = row_summary(prob_predictive_samples_df, median),
-#     prob_predictive_lower = row_summary(prob_predictive_samples_df, lower),
-#     prob_predictive_upper = row_summary(prob_predictive_samples_df, upper),
-#     prob_predictive_quantile = prob_predictive_quantile
-#   )
+#' Add sexnonreg and sexpaid12m rows to df_3
+df_sexnonregplus <- filter(df_3, indicator == "sexnonregplus")
+df_sexnonreg <- replace(df_sexnonregplus, 1, "sexnonreg")
+df_sexpaid12m <- replace(df_sexnonregplus, 1, "sexpaid12m")
+df <- bind_rows(df_3, df_sexnonreg, df_sexpaid12m) %>%
+  arrange(obs_idx)
+
+#' Calculate mean, median, lower and upper for the lambda and prob_predictive samples
+df <- df %>%
+  mutate(
+    prob_mean = row_summary(prob_samples_df, mean),
+    prob_median = row_summary(prob_samples_df, median),
+    prob_lower = row_summary(prob_samples_df, lower),
+    prob_upper = row_summary(prob_samples_df, upper)
+  )

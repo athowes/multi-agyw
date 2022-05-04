@@ -8,7 +8,6 @@ artefacts:
       description: Multinomial smoothed district estimate results (four categories)
       filenames:
         - best-3p1-multi-sexbehav-sae.csv
-        - best-3p1-aaa-multi-sexbehav-sae.csv
 
 packages:
   - dplyr
