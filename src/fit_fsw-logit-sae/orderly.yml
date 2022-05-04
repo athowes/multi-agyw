@@ -17,6 +17,8 @@ artefacts:
         - best-fsw-logit-sae.csv
         - fsw-logit-sae.pdf
         - best-fsw-logit-sae.pdf
+        - fsw-logit-sae-fits.rds
+        - best-fsw-logit-sae-fit.rds
   - data:
       description: Model selection information criteria for logistic regression models
       filenames:

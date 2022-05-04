@@ -241,9 +241,11 @@ dev.off()
 
 #' Baseline model:
 #' * intercept
-#' * age random effects (IID)
+#' * age x country random effects (IID)
+#' * country random effects (IID)
 formula_baseline <- x_eff ~ 1 +
-  f(age_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
+  f(age_idx, model = "iid", group = iso3_idx, control.group = list(model = "iid"),
+    constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(iso3_idx, model = "iid", constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 
 #' Model 1:
@@ -290,6 +292,9 @@ res <- purrr::pmap(
 #' Extract the df and the full fitted models
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
+
+#' Artefact: Fitted model objects
+saveRDS(res_fit, "fsw-logit-sae-fits.rds")
 
 #' Artefact: Smoothed district indicator estimates for logistic regression models
 res_df <- res_df %>%
@@ -440,14 +445,18 @@ ic_df %>%
 
 dev.off()
 
+write_csv(ic_df, "fsw-logit-information-criteria.csv", na = "")
+
 #' Which model has the highest CPO?
 which.max(ic_df$cpo)
 
 #' Model 6 at the moment!
-res_df_best <- filter(res_df, model == "Model 6")
-write_csv(res_df_best, "best-fsw-logit-sae.csv", na = "")
+res_df_best <- filter(res_df, model == paste0("Model ", which.max(ic_df$cpo)))
+res_fit_best <- res_fit[[which.max(ic_df$cpo)]]
 
-write_csv(ic_df, "fsw-logit-information-criteria.csv", na = "")
+#' Artefacts: Best fitted model results and object
+write_csv(res_df_best, "best-fsw-logit-sae.csv", na = "")
+saveRDS(res_fit_best, "best-fsw-logit-sae-fit.rds")
 
 #' Calculate average FSW proportion (temporarily useful for changing the RR for sexnonregplus)
 #' Approximately 10%
