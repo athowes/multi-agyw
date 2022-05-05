@@ -8,9 +8,6 @@ df_3 <- read_csv("depends/multi-sexbehav-sae.csv") %>%
 df_prop <- read_csv("depends/best-fsw-logit-sae.csv")
 df_prop_distinct <- distinct(df_prop, age_group, area_id, .keep_all = TRUE)
 
-fits <- readRDS("depends/multi-sexbehav-sae-fits.rds")
-fit <- fits[[1]] #' Because it's a lightweight run
-
 #' Add column to df_3 containing obs_idx of relevant row in df_prop_distinct for splitting sexnonregplus
 df_3 <- df_3 %>%
   left_join(
@@ -19,13 +16,8 @@ df_3 <- df_3 %>%
     by = c("age_group", "area_id")
   )
 
-#' Start with very low number of samples
 S <- 4
-full_samples <- inla.posterior.sample(n = S, result = fit)
-
-#' Save memory once samples are taken
-rm(fits)
-rm(fit)
+full_samples <- readRDS("depends/multi-sexbehav-sae-samples.rds")
 
 #' Just the latent field
 eta_samples <- lapply(full_samples, "[", "latent")
@@ -60,9 +52,7 @@ eta_samples_df <- eta_samples_df  %>%
   )
 
 #' Now the logistic regression model
-fit_prop <- readRDS("depends/best-fsw-logit-sae-fit.rds")
-full_samples_prop <- inla.posterior.sample(n = S, result = fit_prop)
-rm(fit_prop)
+full_samples_prop <- readRDS("depends/fsw-logit-sae-samples.rds")
 eta_samples_prop <- lapply(full_samples_prop, "[", "latent")
 
 #' Again have to extract out a smaller part of the "latent" field
@@ -156,37 +146,7 @@ stopifnot(nrow(df_3) == nrow(lambda_samples_df))
 
 #' Includes prob samples for nosex12m, sexcohab, sexnonregplus, sexnonreg and sexpaid12m
 prob_samples_df <- bind_rows(lapply(samples, "[[", "prob"))
-# stopifnot(nrow(df_3) == nrow(prob_samples_df) / 5 * 3) #' TODO: Getting an error here!
-
-weird_idx <- lapply(samples, "[[", "prob") %>%
-  lapply(nrow) %>%
-  unlist() %>%
-  as.data.frame() %>%
-  filter(. == 6) %>%
-  tibble::rownames_to_column() %>%
-  pull(rowname) %>%
-  as.numeric() %>%
-  unique()
-
-#' We've got I think multiple obs_idx with the same obs_idx here!
-eta_samples_df %>%
-  filter(obs_idx %in% weird_idx) %>%
-  dim()
-
-#' Ladies and gentlemen, we got em'
-nrow(df_3) / 3 * 5 - nrow(prob_samples_df)
-# [1] 3112
-length(weird_idx) * 4
-# [1] 3112
-
-#' It's surveys where there are two surveys in the same country in the same year!
-#' This suggests an indexing issue earlier in the pipeline. I guess I've only determined
-#' obs_idx on the basis of survey and year, which has led these to have the same obs_idx.
-#' So what is required is to add the type of survey so that these are differentiated!
-df_3 %>%
-  filter(obs_idx %in% weird_idx) %>%
-  pull(survey_id) %>%
-  unique()
+stopifnot(nrow(df_3) == nrow(prob_samples_df) / 5 * 3)
 
 #' Includes prob_predictive samples for nosex12m, sexcohab and sexnonregplus
 prob_predictive_samples_df <- bind_rows(lapply(samples, "[[", "prob_predictive"))
@@ -230,7 +190,6 @@ df_sexpaid12m <- replace(df_sexnonregplus, 1, "sexpaid12m")
 df <- bind_rows(df_3, df_sexnonreg, df_sexpaid12m) %>%
   arrange(obs_idx)
 
-#' TODO: Missing around 3000 samples from prob_samples_df here..
 stopifnot(nrow(df) == nrow(prob_samples_df))
 
 #' Calculate mean, median, lower and upper for the lambda and prob_predictive samples
@@ -241,3 +200,6 @@ df <- df %>%
     prob_lower = row_summary(prob_samples_df, lower),
     prob_upper = row_summary(prob_samples_df, upper)
   )
+
+#' Save output!
+write_csv(df, "best-3p1-multi-sexbehav-sae.csv")

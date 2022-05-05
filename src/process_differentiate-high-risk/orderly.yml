@@ -31,9 +31,12 @@ depends:
       id: latest
       use:
         depends/multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-        depends/multi-sexbehav-sae-fits.rds: multi-sexbehav-sae-fits.rds
   - fit_fsw-logit-sae:
       id: latest
       use:
         depends/best-fsw-logit-sae.csv: best-fsw-logit-sae.csv
-        depends/best-fsw-logit-sae-fit.rds: best-fsw-logit-sae-fit.rds
+  - process_sampling:
+      id: latest
+      use:
+        depends/multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
+        depends/fsw-logit-sae-samples.rds: fsw-logit-sae-samples.rds

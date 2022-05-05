@@ -1,0 +1,31 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: S samples from the multinomial and logistic regression models
+      filenames:
+        - multi-sexbehav-sae-samples.rds
+        - fsw-logit-sae-samples.rds
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - multi.utils
+
+depends:
+  - fit_multi-sexbehav-sae:
+      id: latest
+      use:
+        depends/multi-sexbehav-sae-fits.rds: multi-sexbehav-sae-fits.rds
+  - fit_fsw-logit-sae:
+      id: latest
+      use:
+        depends/best-fsw-logit-sae-fit.rds: best-fsw-logit-sae-fit.rds
