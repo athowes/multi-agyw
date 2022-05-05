@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE, fewer_countries = TRUE))
+# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE))
 # setwd("src/fit_multi-sexbehav-sae")
 
 analysis_level <- multi.utils::analysis_level()
@@ -157,6 +157,8 @@ df <- mutate(df,
     age_idx = multi.utils::to_int(age_group),
     #' category
     cat_idx = multi.utils::to_int(indicator),
+    #' survey type
+    type_idx = multi.utils::to_int(ifelse(is.na(survey_id), "Missing", substr(survey_id, 8, 11))),
     #' year x category
     year_cat_idx = multi.utils::to_int(interaction(year_idx, cat_idx)),
     #' country x category
@@ -170,12 +172,19 @@ df <- mutate(df,
     #' age x country
     age_iso3_idx = multi.utils::to_int(interaction(age_idx, iso3_idx)),
     #' observation
-    obs_idx = multi.utils::to_int(interaction(age_idx, area_idx, year_idx)),
+    obs_idx = multi.utils::to_int(interaction(age_idx, area_idx, year_idx, type_idx)),
     #' copies
     area_idx_copy = area_idx,
     year_idx_copy = year_idx
   ) %>%
   arrange(obs_idx)
+
+#' Checking some dimensions:
+stopifnot(df$age_idx %>% max() == 3) #' 3 age groups
+stopifnot(df$year_idx %>% max() == length(1999:2018)) #' 20 years
+stopifnot(
+  df$type_idx %>% max() == substr(ind$survey_id, 8, 11) %>% unique() %>% length() + 1
+) #' The survey types plus one for country year pairs missing a survey
 
 #' Baseline model:
 #' * category random effects (IID)
