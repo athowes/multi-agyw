@@ -100,7 +100,8 @@ samples <- eta_samples_df %>%
     #' Normalise each column (to avoid overflow of softmax)
     eta_samples <- apply(eta_samples, MARGIN = 2, FUN = function(x) x - max(x))
     #' Exponentiate (can be done outside apply)
-    #' WARNING: These aren't samples from lambda posterior! Come back to this
+    #' WARNING: These aren't samples from lambda posterior!
+    #' TODO: Come back to this
     lambda_samples <- exp(eta_samples)
     #' Calculate samples from posterior of probabilities
     prob_samples <- apply(lambda_samples, MARGIN = 2, FUN = function(x) x / sum(x))
@@ -185,8 +186,33 @@ df_3 <- df_3 %>%
 
 #' Add sexnonreg and sexpaid12m rows to df_3
 df_sexnonregplus <- filter(df_3, indicator == "sexnonregplus")
-df_sexnonreg <- replace(df_sexnonregplus, 1, "sexnonreg")
-df_sexpaid12m <- replace(df_sexnonregplus, 1, "sexpaid12m")
+
+df_sexnonreg <- df_sexnonregplus %>%
+  left_join(
+    select(df_prop, prop_obs_idx = obs_idx, estimate_smoothed_prop = estimate_smoothed, estimate_raw_prop = estimate_raw),
+    by = "prop_obs_idx"
+  ) %>%
+  mutate(
+    indicator = "sexnonreg",
+    estimate_smoothed = estimate_smoothed * (1 - estimate_smoothed_prop),
+    estimate_part_raw = estimate_raw * (1 - estimate_smoothed_prop),
+    estimate_raw = estimate_raw * (1 - estimate_raw_prop)
+  ) %>%
+  select(-estimate_smoothed_prop, -estimate_raw_prop)
+
+df_sexpaid12m <- df_sexnonregplus %>%
+  left_join(
+    select(df_prop, prop_obs_idx = obs_idx, estimate_smoothed_prop = estimate_smoothed, estimate_raw_prop = estimate_raw),
+    by = "prop_obs_idx"
+  ) %>%
+  mutate(
+    indicator = "sexpaid12m",
+    estimate_smoothed = estimate_smoothed * estimate_smoothed_prop,
+    estimate_part_raw = estimate_raw * estimate_smoothed_prop,
+    estimate_raw = estimate_raw * estimate_raw_prop
+  ) %>%
+  select(-estimate_smoothed_prop, -estimate_raw_prop)
+
 df <- bind_rows(df_3, df_sexnonreg, df_sexpaid12m) %>%
   arrange(obs_idx)
 
