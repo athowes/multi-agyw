@@ -19,18 +19,6 @@ df_3 <- df_3 %>%
     by = c("age_group", "area_id")
   )
 
-#' Which obs_idx are missing matches in prop_obs_idx
-# missing_obs_idx <- eta_samples_df %>%
-#   filter(is.na(prop_obs_idx)) %>%
-#   pull(obs_idx) %>%
-#   unique()
-
-#' These are the relevant districts that are missing links to prop_obs_idx
-# missing_area_id <- df_3 %>%
-#   filter(obs_idx %in% missing_obs_idx) %>%
-#   pull(area_id) %>%
-#   unique()
-
 #' Start with very low number of samples
 S <- 4
 full_samples <- inla.posterior.sample(n = S, result = fit)
@@ -182,13 +170,23 @@ weird_idx <- lapply(samples, "[[", "prob") %>%
 
 #' We've got I think multiple obs_idx with the same obs_idx here!
 eta_samples_df %>%
-  filter(obs_idx %in% weird_idx)
+  filter(obs_idx %in% weird_idx) %>%
+  dim()
 
 #' Ladies and gentlemen, we got em'
-nrow(df) - nrow(prob_samples_df)
+nrow(df_3) / 3 * 5 - nrow(prob_samples_df)
 # [1] 3112
 length(weird_idx) * 4
 # [1] 3112
+
+#' It's surveys where there are two surveys in the same country in the same year!
+#' This suggests an indexing issue earlier in the pipeline. I guess I've only determined
+#' obs_idx on the basis of survey and year, which has led these to have the same obs_idx.
+#' So what is required is to add the type of survey so that these are differentiated!
+df_3 %>%
+  filter(obs_idx %in% weird_idx) %>%
+  pull(survey_id) %>%
+  unique()
 
 #' Includes prob_predictive samples for nosex12m, sexcohab and sexnonregplus
 prob_predictive_samples_df <- bind_rows(lapply(samples, "[[", "prob_predictive"))
