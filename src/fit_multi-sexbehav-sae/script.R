@@ -185,6 +185,9 @@ stopifnot(df$year_idx %>% max() == length(1999:2018)) #' 20 years
 stopifnot(
   df$type_idx %>% max() == substr(ind$survey_id, 8, 11) %>% unique() %>% length() + 1
 ) #' The survey types plus one for country year pairs missing a survey
+stopifnot(
+  df$obs_idx %>% unique() %>% length() * 3 == nrow(df)
+) #' The number of observations times the number of categories (3) gives the total rows
 
 #' Baseline model:
 #' * category random effects (IID)
