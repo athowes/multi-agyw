@@ -5,6 +5,8 @@ author: Adam Howes
 institute: Imperial College London
 date: May 2022
 bibliography: citations.bib
+header-includes:
+  - \widowpenalties 1 150
 output:
   beamer_presentation:
     latex_engine: pdflatex
@@ -17,8 +19,8 @@ output:
 
 ## Background
 
-* In sub-Saharan Africa, adolescent girls and young women (AGYW) are XX.X\% of the population but XX.X\% of all new HIV infections
-* Reasons for this disparity include:
+* In sub-Saharan Africa, adolescent girls and young women (AGYW) aged 15-29 are disproportionately at risk of HIV infection
+* This disparity is because of:
   1. Younger age at first sex
   2. Age patterns of sexual mixing
   3. Structural vulnerabilities and power imbalances
@@ -26,7 +28,8 @@ output:
   
 ## Stratified prevention
 
-* To have the greatest impact with available prevention resources, interventions should be prioritised to those at highest risk
+* Prevention packages are made up of a core package, available to everyone, and more intensified interventions
+* To have the greatest impact, it's important to priorisite intensified interventions to those at highest risk
 * The Global AIDS Strategy 2021-2016 proposed stratifying HIV prevention for AGYW based upon
   1. Population-level HIV incidence in the local population
   2. Individual-level sexual risk behaviour
@@ -40,13 +43,24 @@ output:
 
 ### Approach
 
-1. Estimate the proportion of AGYW in four sexual risk behaviour groups at a district level (in 13 countries identified as priority by The Global Fund)
+1. Estimate the proportion of AGYW in four behavioural risk groups at a district level (in 13 countries identified as priority by The Global Fund)
 2. Analyze numbers of new infections reached by stratified prevention strategies
 
 ## Data
 
-* Sexual behaviour data from AIS, BAIS, DHS and PHIA household surveys (see next slide)
-* Later, we used district-level HIV incidence, prevalence, population size estimates from the Naomi model [@eaton2021naomi]
+* We used sexual behaviour data from AIS, BAIS, DHS and PHIA household surveys to place respondents into four risk groups:
+  1. $k = 1$: Not sexually active
+  2. $k = 2$: One cohabiting sexual partner
+  3. $k = 3$: Non-regular sexual partner(s)
+  4. $k = 4$: Female sex workers
+* District-level HIV incidence, prevalence, population size estimates from the Naomi model [@eaton2021naomi]
+* Risk ratios from ALPHA network analysis [@slaymaker2020croi] and UNAIDS analysis led by Keith Sabin
+
+##
+
+```{r echo=FALSE, out.width = "400px"}
+knitr::include_graphics("depends/category-flowchart.pdf")
+```
 
 ##
 
@@ -58,9 +72,9 @@ knitr::include_graphics("depends/available-surveys.png")
 
 ### Stage 1: $k = 1, 2, 3^{+}$
 
-* Multinomial logistic regression model for the proportion of AGYW in the none, low and {high, very high} risk groups, using all 47 surveys
+* Multinomial logistic regression model for the proportion of AGYW in the $k = 1, 2, 3^{+}$ risk groups, using all 47 surveys
 * Selected model included:
-  * Age effects (IID)
+  * Age country effects (IID)
   * Country effects (IID)
   * Correlated spatial effects (ICAR)
   * Correlated temporal effects (AR1) 
@@ -70,9 +84,9 @@ knitr::include_graphics("depends/available-surveys.png")
 
 ### Stage 2: $k = 3, 4$
 
-* Logistic regression model for the proportion of those in the {high, very high} risk groups who are in the very high risk group, using only the 13 surveys with a specific transactional sex question
+* Logistic regression model for the proportion of those in the $k = 3^{+} = \{3, 4\}$ risk groups who are in the $k = 4$ risk group, using only the 13 surveys with a specific transactional sex question
 * Selected model included:
-  * Age effects (IID)
+  * Age country effects (IID)
   * Country effects (IID)
   * Correlated spatial effects (ICAR)
   * Clients of FSW covariates [@hodgins2022population]
@@ -83,7 +97,7 @@ knitr::include_graphics("depends/available-surveys.png")
 ### Combination and FSW adjustment
 
 * Take 1000 samples from each model, then multiply suitably to generate estimates for all four risk groups
-* We adjusted the very high risk group to match national FSW estimates from @johnston2022deriving 
+* We adjusted the $k = 4$ risk group to match national FSW estimates from @johnston2022deriving 
 
 \begin{center}
 \begin{tcolorbox}[width=0.9\textwidth, colframe={title}, colback={white}, title={}]
@@ -93,54 +107,31 @@ $\implies$ Estimates of risk group proportions $\rho_{itak}$ by district, year a
 
 ##
 
-```{r echo=FALSE, out.width = "400px"}
+```{r echo=FALSE, out.width="350px", fig.cap = "We found a geographic discontinuity in behaviour between Southern and Eastern Africa."}
 knitr::include_graphics("depends/aids-abstract-A.pdf")
 ```
 
 ##
 
-```{r echo=FALSE, out.width = "400px"}
+```{r echo=FALSE, out.width="350px", fig.cap = "Here is another view of the discontinuity."}
 knitr::include_graphics("depends/aids-abstract-B.pdf")
 ```
 
-<!-- ## -->
-
-<!-- ```{r echo=FALSE, out.width = "400px"} -->
-<!-- knitr::include_graphics("depends/3p1-continental-map.png") -->
-<!-- ``` -->
-
-<!-- ## -->
-
-<!-- ```{r echo=FALSE, out.width = "400px"} -->
-<!-- knitr::include_graphics("depends/3p1-within-between-country-variation.png") -->
-<!-- ``` -->
-
 ## Benefits of our modelled risk group estimates
 
-### Integration of all relevant surveys
-
-* Modular approach allowed estimating FSW proportion even for surveys without a specific transactional sex question
-
-## Benefits of our modelled risk group estimates
-
-### Alleivating small-sample sizes
-
-* Direct estimates display large variance
-* We borrowed information across space, between countries and over surveys
-* Our estimates more plausibly reflect spatial heterogeneity
+* Integration of all relevant surveys
+  * Modular approach allowed estimating FSW proportion even for surveys without a specific transactional sex question
+* Alleivating small-sample sizes (that caused direct estimates to display large variance)
+  * We borrowed information across space, between countries and over surveys so that our estimates more plausibly reflect spatial heterogeneity
+* Estimates where there isn't direct data
+  * Although some people think of this as "making up data", the data almost never "speak for themselves" (everything is a model)
+  * Uncertainty should be higher in regions with infilling: important to transparently communicate this
 
 ##
 
-```{r echo=FALSE, out.width = "400px"}
+```{r echo=FALSE, out.width = "350px", fig.cap = "Illustration of the problem with direct survey estimates."}
 knitr::include_graphics("depends/model-direct-benefits.png")
 ```
-
-## Benefits of our modelled risk group estimates
-
-### Estimates even where there isn't direct data
-
-* Although some people think of this as "making up data", the data almost never "speak for themselves"
-* Uncertainty should be higher in regions with infilling: important to clearly communicate this
 
 ## HIV incidence by risk group
 
@@ -228,20 +219,22 @@ knitr::include_graphics("depends/infections-reached.png")
 
 ## Policy takeaways
 
-* We hope that our risk group estimates will help countries to implement the Global AIDS Strategy
-  * (User guide currently under development)
-* It's very important to reach FSW!
-* Countries have different epidemic profiles 
+* Our risk group estimates can be used to help countries implement the Global AIDS Strategy (user guide currently under development)
+* It's important to reach FSW (not a new message!)
+* Countries have different epidemic profiles
 
 ## Methods takeaways
 
-* `R-INLA` and the multinomial-Poisson trick are a relatively good choice for spatio-temporal multinomial models
-  * Make good use of the `group` and `replicate` feature to define sufficiently complex Kronecker product effects
-  * Can run into limitations on model complexity: I might be moving to something more flexible e.g. `tmb`, `aghq` to continue development of this project
+* `R-INLA` and the multinomial-Poisson trick are a good choice for spatio-temporal multinomial models
+  * The `group` and `replicate` features can be used to define quite complex Kronecker product effects
+  * However, can run into limitations on model complexity and I might be moving to something more flexible e.g. `tmb`, `aghq` to continue development of this project
 
 ## Thanks for listening!
 
-* \faEnvelope $\,$ `ath19@ic.ac.uk`
-* \faHome $\,$ `athowes.github.io`
+* This project was joint work with members of the HIV inference group, particularly Katie Risher and Jeff Eaton
+  * \faHome $\,$ `hiv-inference.org`
+* You can find me via
+  * \faEnvelope $\,$ `ath19@ic.ac.uk`
+  * \faHome $\,$ `athowes.github.io`
 
-## Bibliography {-}
+## Bibliography {.allowframebreaks}
