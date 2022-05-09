@@ -86,10 +86,10 @@ survey_indicators <- calc_survey_indicators(
 #' Save survey indicators dataset
 write_csv(survey_indicators, "zaf_survey_indicators_sexbehav.csv", na = "")
 
+#' Get prevalence estimates for different sexual behaviours
 survey_sexbehav_reduced <- survey_sexbehav %>%
   select(-sex12m, -sexcohabspouse, -giftsvar, -sexnonregplus)
 
-#' Get prevalence estimates for different sexual behaviours
 hiv_indicators <- calc_survey_hiv_indicators(
   survey_meta,
   survey_regions,
@@ -107,7 +107,7 @@ hiv_indicators <- calc_survey_hiv_indicators(
 )
 
 #' Keep only the stratifications with "all" in everything but the indicator itself
-hiv_indicators %>%
+hiv_indicators <- hiv_indicators %>%
   filter(
     rowSums(across(.cols = nosex12m:sexpaid12m, ~ .x == "all")) == 4 - 1 &
     rowSums(across(.cols = nosex12m:sexpaid12m, ~ is.na(.x))) == 0

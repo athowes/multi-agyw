@@ -5,6 +5,7 @@ artefacts:
       description: Survey indicator dataset
       filenames:
         - lso_survey_indicators_sexbehav.csv
+        - lso_hiv_indicators_sexbehav.csv
 
 packages:
   - dplyr

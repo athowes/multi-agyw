@@ -11,9 +11,10 @@ artefacts:
         - bwa2013bais_survey_biomarker.csv
         - bwa2013bais_survey_sexbehav.csv
   - data:
-      description: Survey indicator dataset
+      description: Survey indicator datasets
       filenames:
         - bwa_survey_indicators_sexbehav.csv
+        - bwa_hiv_indicators_sexbehav.csv
 
 displayname: BAIS IV survey datasets
 

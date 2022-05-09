@@ -2,9 +2,10 @@ script: script.R
 
 artefacts:
   - data:
-      description: Survey indicator dataset
+      description: Survey indicator datasets
       filenames:
         - nam_survey_indicators_sexbehav.csv
+        - nam_hiv_indicators_sexbehav.csv
 
 packages:
   - dplyr
