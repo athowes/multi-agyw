@@ -38,6 +38,11 @@ ind %>%
 
 dev.off()
 
+#' Merge all of the HIV datasets
+hiv <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_hiv_indicators_sexbehav.csv"))) %>%
+  bind_rows()
+
+write_csv(hiv, "hiv_indicators_sexbehav.csv")
 
 #' Merge all of the population datasets
 pop <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_interpolated-population.csv"))) %>%
