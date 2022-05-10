@@ -55,6 +55,7 @@ names(survey_biomarker)
 #' Extract sexual behaviour characteristics from the survey
 survey_sexbehav <- create_sexbehav_dhs(surveys)
 names(survey_sexbehav)
+(misallocation <- check_survey_sexbehav(survey_sexbehav))
 
 survey_other <- list(survey_sexbehav)
 
@@ -82,6 +83,7 @@ phia_survey_clusters <- read_csv("depends/lso2017phia_survey_clusters.csv")
 phia_survey_individuals <- read_csv("depends/lso2017phia_survey_individuals.csv")
 phia_survey_biomarker <- read_csv("depends/lso2017phia_survey_biomarker.csv")
 phia_survey_sexbehav <- read_csv("depends/lso2017phia_survey_sexbehav.csv")
+(phia_misallocation <- check_survey_sexbehav(phia_survey_sexbehav))
 
 #' PHIA survey indicator dataset
 phia_survey_indicators <- calc_survey_indicators(
@@ -99,6 +101,28 @@ phia_survey_indicators <- calc_survey_indicators(
 
 #' Combine all surveys together
 survey_indicators <- bind_rows(survey_indicators, phia_survey_indicators)
+
+#' Stacked barchart for spousal
+survey_indicators %>%
+  filter(
+    area_id == "LSO",
+    indicator %in% c("sexcohab", "sexcohabspouse", "sexnonreg", "sexnonregspouse")
+  ) %>%
+  mutate(
+    spouse_indicator = grepl("spouse", indicator, fixed = TRUE)
+  ) %>%
+  ggplot(aes(x = spouse_indicator, y = estimate, group = spouse_indicator, fill = indicator)) +
+  geom_bar(stat = "identity", alpha = 0.8) +
+  facet_grid(survey_id ~ age_group, space = "free_x", scales = "free_x", switch = "x") +
+  scale_color_manual(values = multi.utils::cbpalette()) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom",
+    legend.key.width = unit(4, "lines"),
+    strip.placement = "outside"
+  )
 
 #' Save survey indicators dataset
 write_csv(survey_indicators, "lso_survey_indicators_sexbehav.csv", na = "")
