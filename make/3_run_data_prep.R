@@ -16,19 +16,19 @@ reports <- paste0(tolower(iso3), "_survey_behav")
 run_commit_push(reports)
 
 #' (If the above isn't working, here are separate ones)
-run_commit_push("bwa_survey_behav") #' [TODO]
+run_commit_push("bwa_survey_behav") #' [ ]
 run_commit_push("cmr_survey_behav") #' [x]
 run_commit_push("ken_survey_behav") #' [x]
 run_commit_push("lso_survey_behav") #' [x]
 run_commit_push("moz_survey_behav") #' [x]
-run_commit_push("mwi_survey_behav") #' [/]
-run_commit_push("nam_survey_behav") #' [/]
-run_commit_push("swz_survey_behav") #' [/]
-run_commit_push("tza_survey_behav") #' [/]
-run_commit_push("uga_survey_behav") #' [/]
-run_commit_push("zaf_survey_behav") #' [/]
-run_commit_push("zmb_survey_behav") #' [/]
-run_commit_push("zwe_survey_behav") #' [/]
+run_commit_push("mwi_survey_behav") #' [x]
+run_commit_push("nam_survey_behav") #' [x]
+run_commit_push("swz_survey_behav") #' [x]
+run_commit_push("tza_survey_behav") #' [x]
+run_commit_push("uga_survey_behav") #' [x]
+run_commit_push("zaf_survey_behav") #' [x]
+run_commit_push("zmb_survey_behav") #' [x]
+run_commit_push("zwe_survey_behav") #' [x]
 
 #' Make a plot of all available surveys for manuscript
 run_commit_push("plot_available-surveys")

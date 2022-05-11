@@ -24,7 +24,7 @@ write_csv(ind, "survey_indicators_sexbehav.csv")
 pdf("survey_indicators_sexbehav.pdf", h = 10, w = 6.25)
 
 ind %>%
-  filter(indicator %in% c("nosex12m", "sexcohab", "sexnonregplus")) %>%
+  filter(indicator %in% c("nosex12m", "sexcohab", "sexnonregplus", "sexcohabspouse", "sexnonregspouseplus")) %>%
   group_by(indicator, survey_id) %>%
   summarise(estimate = mean(estimate)) %>%
   mutate(
@@ -34,15 +34,76 @@ ind %>%
   ) %>%
   ggplot(aes(x = year, y = estimate, col = type)) +
   geom_point() +
-  facet_grid(iso3 ~ indicator)
+  facet_grid(iso3 ~ indicator) +
+  theme_minimal()
+
+dev.off()
+
+pdf("spouse-barplot.pdf", h = 5, w = 4)
+
+ind %>%
+  filter(
+    area_id %in% c(iso3),
+    indicator %in% c("sexcohab", "sexcohabspouse", "sexnonreg", "sexnonregspouse")
+  ) %>%
+  mutate(
+    spouse_indicator = grepl("spouse", indicator, fixed = TRUE)
+  ) %>%
+  split(.$area_id) %>%
+  lapply(function(x)
+    ggplot(x, aes(x = spouse_indicator, y = estimate, group = spouse_indicator, fill = indicator)) +
+    geom_bar(stat = "identity", alpha = 0.8, width = 0.5) +
+    facet_grid(age_group ~ survey_id, space = "free_x", scales = "free_x", switch = "x") +
+    scale_color_manual(values = multi.utils::cbpalette()) +
+    lims(y = c(0, 1)) +
+    labs(x = "") +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_blank(),
+      plot.title = element_text(face = "bold"),
+      legend.position = "bottom",
+      strip.placement = "outside"
+    )
+  )
+
+dev.off()
+
+pdf("spouse-livesaway.pdf", h = 4, w = 6.25)
+
+spouselivesaway <- ind %>%
+  filter(
+    area_id %in% c(iso3),
+    indicator %in% c("sexcohab", "sexcohabspouse", "sexnonreg", "sexnonregspouse"),
+    age_group == "Y015_024"
+  ) %>%
+  pivot_wider(
+    names_from = indicator,
+    id_cols = c("survey_id", "area_id", "age_group"),
+    values_from = estimate
+  ) %>%
+  select(survey_id, area_id, age_group, sexcohab:sexnonregspouse) %>%
+  mutate(
+    spouselivesaway = sexcohabspouse - sexcohab,
+    spouselivesaway2 = sexnonreg - sexnonregspouse
+  )
+
+ggplot(spouselivesaway, aes(x = survey_id, y = spouselivesaway, col = area_id)) +
+  geom_point() +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = -90, hjust = 0))
+
+ggplot(spouselivesaway, aes(x = spouselivesaway, y = spouselivesaway2, col = area_id)) +
+  geom_point() +
+  lims(x = c(0, 0.2), y = c(0, 0.2)) +
+  theme_minimal()
 
 dev.off()
 
 #' Merge all of the HIV datasets
-hiv <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_hiv_indicators_sexbehav.csv"))) %>%
-  bind_rows()
-
-write_csv(hiv, "hiv_indicators_sexbehav.csv")
+# hiv <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_hiv_indicators_sexbehav.csv"))) %>%
+#   bind_rows()
+#
+# write_csv(hiv, "hiv_indicators_sexbehav.csv")
 
 #' Merge all of the population datasets
 pop <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_interpolated-population.csv"))) %>%

@@ -11,11 +11,16 @@ artefacts:
       filenames:
         - survey_indicators_sexbehav.csv
         - survey_indicators_sexbehav.pdf
-        - hiv_indicators_sexbehav.csv
+        # - hiv_indicators_sexbehav.csv
   - data:
       description: All population datasets
       filenames:
         - interpolated_population.csv
+  - data:
+      description: Compare spouse risk group sizes
+      filenames:
+        - spouse-comparison.pdf
+        - spouse-livesaway.pdf
 
 packages:
   - dplyr
@@ -90,67 +95,67 @@ depends:
       id: latest
       use:
         depends/bwa_survey_indicators_sexbehav.csv: bwa_survey_indicators_sexbehav.csv
-        depends/bwa_hiv_indicators_sexbehav.csv: bwa_hiv_indicators_sexbehav.csv
+        # depends/bwa_hiv_indicators_sexbehav.csv: bwa_hiv_indicators_sexbehav.csv
   - cmr_survey_behav:
       id: latest
       use:
         depends/cmr_survey_indicators_sexbehav.csv: cmr_survey_indicators_sexbehav.csv
-        depends/cmr_hiv_indicators_sexbehav.csv: cmr_hiv_indicators_sexbehav.csv
+        # depends/cmr_hiv_indicators_sexbehav.csv: cmr_hiv_indicators_sexbehav.csv
   - ken_survey_behav:
       id: latest
       use:
         depends/ken_survey_indicators_sexbehav.csv: ken_survey_indicators_sexbehav.csv
-        depends/ken_hiv_indicators_sexbehav.csv: ken_hiv_indicators_sexbehav.csv
+        # depends/ken_hiv_indicators_sexbehav.csv: ken_hiv_indicators_sexbehav.csv
   - lso_survey_behav:
       id: latest
       use:
         depends/lso_survey_indicators_sexbehav.csv: lso_survey_indicators_sexbehav.csv
-        depends/lso_hiv_indicators_sexbehav.csv: lso_hiv_indicators_sexbehav.csv
+        # depends/lso_hiv_indicators_sexbehav.csv: lso_hiv_indicators_sexbehav.csv
   - moz_survey_behav:
       id: latest
       use:
         depends/moz_survey_indicators_sexbehav.csv: moz_survey_indicators_sexbehav.csv
-        depends/moz_hiv_indicators_sexbehav.csv: moz_hiv_indicators_sexbehav.csv
+        # depends/moz_hiv_indicators_sexbehav.csv: moz_hiv_indicators_sexbehav.csv
   - mwi_survey_behav:
       id: latest
       use:
         depends/mwi_survey_indicators_sexbehav.csv: mwi_survey_indicators_sexbehav.csv
-        depends/mwi_hiv_indicators_sexbehav.csv: mwi_hiv_indicators_sexbehav.csv
+        # depends/mwi_hiv_indicators_sexbehav.csv: mwi_hiv_indicators_sexbehav.csv
   - nam_survey_behav:
       id: latest
       use:
         depends/nam_survey_indicators_sexbehav.csv: nam_survey_indicators_sexbehav.csv
-        depends/nam_hiv_indicators_sexbehav.csv: nam_hiv_indicators_sexbehav.csv
+        # depends/nam_hiv_indicators_sexbehav.csv: nam_hiv_indicators_sexbehav.csv
   - swz_survey_behav:
       id: latest
       use:
         depends/swz_survey_indicators_sexbehav.csv: swz_survey_indicators_sexbehav.csv
-        depends/swz_hiv_indicators_sexbehav.csv: swz_hiv_indicators_sexbehav.csv
+        # depends/swz_hiv_indicators_sexbehav.csv: swz_hiv_indicators_sexbehav.csv
   - tza_survey_behav:
       id: latest
       use:
         depends/tza_survey_indicators_sexbehav.csv: tza_survey_indicators_sexbehav.csv
-        depends/tza_hiv_indicators_sexbehav.csv: tza_hiv_indicators_sexbehav.csv
+        # depends/tza_hiv_indicators_sexbehav.csv: tza_hiv_indicators_sexbehav.csv
   - uga_survey_behav:
       id: latest
       use:
         depends/uga_survey_indicators_sexbehav.csv: uga_survey_indicators_sexbehav.csv
-        depends/uga_hiv_indicators_sexbehav.csv: uga_hiv_indicators_sexbehav.csv
+        # depends/uga_hiv_indicators_sexbehav.csv: uga_hiv_indicators_sexbehav.csv
   - zaf_survey_behav:
       id: latest
       use:
         depends/zaf_survey_indicators_sexbehav.csv: zaf_survey_indicators_sexbehav.csv
-        depends/zaf_hiv_indicators_sexbehav.csv: zaf_hiv_indicators_sexbehav.csv
+        # depends/zaf_hiv_indicators_sexbehav.csv: zaf_hiv_indicators_sexbehav.csv
   - zmb_survey_behav:
       id: latest
       use:
         depends/zmb_survey_indicators_sexbehav.csv: zmb_survey_indicators_sexbehav.csv
-        depends/zmb_hiv_indicators_sexbehav.csv: zmb_hiv_indicators_sexbehav.csv
+        # depends/zmb_hiv_indicators_sexbehav.csv: zmb_hiv_indicators_sexbehav.csv
   - zwe_survey_behav:
       id: latest
       use:
         depends/zwe_survey_indicators_sexbehav.csv: zwe_survey_indicators_sexbehav.csv
-        depends/zwe_hiv_indicators_sexbehav.csv: zwe_hiv_indicators_sexbehav.csv
+        # depends/zwe_hiv_indicators_sexbehav.csv: zwe_hiv_indicators_sexbehav.csv
   - aaa_scale_pop:
       id: latest(parameter:iso3 == "BWA")
       use:

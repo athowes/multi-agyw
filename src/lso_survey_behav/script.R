@@ -102,28 +102,6 @@ phia_survey_indicators <- calc_survey_indicators(
 #' Combine all surveys together
 survey_indicators <- bind_rows(survey_indicators, phia_survey_indicators)
 
-#' Stacked barchart for spousal
-survey_indicators %>%
-  filter(
-    area_id == "LSO",
-    indicator %in% c("sexcohab", "sexcohabspouse", "sexnonreg", "sexnonregspouse")
-  ) %>%
-  mutate(
-    spouse_indicator = grepl("spouse", indicator, fixed = TRUE)
-  ) %>%
-  ggplot(aes(x = spouse_indicator, y = estimate, group = spouse_indicator, fill = indicator)) +
-  geom_bar(stat = "identity", alpha = 0.8) +
-  facet_grid(survey_id ~ age_group, space = "free_x", scales = "free_x", switch = "x") +
-  scale_color_manual(values = multi.utils::cbpalette()) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_blank(),
-    plot.title = element_text(face = "bold"),
-    legend.position = "bottom",
-    legend.key.width = unit(4, "lines"),
-    strip.placement = "outside"
-  )
-
 #' Save survey indicators dataset
 write_csv(survey_indicators, "lso_survey_indicators_sexbehav.csv", na = "")
 
