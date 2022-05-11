@@ -1,3 +1,6 @@
+# orderly::orderly_develop_start("bwa_survey_bais")
+# setwd("src/bwa_survey_bais")
+
 sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
 url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/Botswana/BAIS IV/bais-iv-2013-20150319-v1.dta"
 path <- sharepoint$download(URLencode(url))
@@ -261,11 +264,12 @@ bais4 <- bais4 %>%
 #'
 #' Sex behaviour variables:
 #'
-#' * Q301                             "Have you ever had sexual intercourse?"
-#' * Q307A                            "Have you had sex in the past 12 months?"
-#' * Q307B                            "In the last 12 months with how many people overall have you had sex?"
+#' * Q301                             "Have you ever had sexual intercourse?" YES 1, NO 2
+#' * Q307A                            "Have you had sex in the past 12 months?" YES 1, NO 2
+#' * Q307B                            "In the last 12 months with how many people overall have you had sex?" NUMBER
 #' * Q308_P1, Q308_P2, Q308_P3        "What is your relationship to [MOST RECENT/NEXT MOST RECENT PARTNER]"
-#' * Q319                             "In the last 12 months have you ever been paid or received gifts for sex?"
+#' HUSBAND/WIFE 1, LIVING TOGETHER 2, GIRLFRIEND/BOYFRIEND 3, PAID 4, CASUAL 5
+#' * Q319                             "In the last 12 months have you ever been paid or received gifts for sex?" YES 1, NO 2
 #' * Q411                             "During the last 12 months, have you had any of the following symptoms?"
 #' * Q411_2                           "GENITAL DISCHARGE"
 #' * Q411_6                           "GENITAL ULCERS/OPEN SORES"
@@ -283,24 +287,24 @@ bais4 <- bais4 %>%
                                   Q307A == 1 ~ TRUE,
                                   TRUE ~ NA)),
     nosex12m = 1 - sex12m,
-    sexcohab = as.integer(case_when(sex12m == FALSE ~ FALSE,
-                                    Q307B == 1 & ((!Q308_P1 %in% cas_cats) &
-                                                    (!Q308_P2 %in% cas_cats) &
-                                                    (!Q308_P3 %in% cas_cats)) ~ TRUE,
-                                    is.na(sex12m) ~ NA,
-                                    TRUE ~ FALSE)),
-    sexnonreg = as.integer(case_when(sex12m == FALSE ~ FALSE,
-                                     Q307B > 1 | (Q308_P1 %in% cas_cats |
-                                                    Q308_P2 %in% cas_cats |
-                                                    Q308_P3 %in% cas_cats) ~ TRUE,
-                                     is.na(sex12m) ~ NA,
-                                     TRUE ~ FALSE)),
+    sexcohabspouse = as.integer(case_when(sex12m == FALSE ~ FALSE,
+                                          Q307B == 1 & ((!Q308_P1 %in% cas_cats) &
+                                                        (!Q308_P2 %in% cas_cats) &
+                                                        (!Q308_P3 %in% cas_cats)) ~ TRUE,
+                                          is.na(sex12m) ~ NA,
+                                          TRUE ~ FALSE)),
+    sexnonregspouse = as.integer(case_when(sex12m == FALSE ~ FALSE,
+                                           Q307B > 1 | (Q308_P1 %in% cas_cats |
+                                                        Q308_P2 %in% cas_cats |
+                                                        Q308_P3 %in% cas_cats) ~ TRUE,
+                                           is.na(sex12m) ~ NA,
+                                           TRUE ~ FALSE)),
     sexpaid12m = as.integer(case_when(Q319 == 1 |
                                         (Q308_P1 == 4 | Q308_P2 == 4 | Q308_P3 == 4) ~ TRUE,
                                       (is.na(Q319) & is.na(Q308_P1) & is.na(Q308_P2) & is.na(Q308_P3) &
                                          is.na(sex12m)) ~ NA,
                                       TRUE ~ FALSE)),
-    sexnonregplus = ifelse(sexpaid12m == 1, 1, sexnonreg),
+    sexnonregspouseplus = as.integer(ifelse(sexpaid12m == 1, 1, sexnonregspouse)),
     sti12m = as.integer(case_when(Q411_2 == 1 | Q411_6 == 1 ~ TRUE,
                                   (is.na(Q411_2) & is.na(Q411_6) & is.na(sex12m)) ~ NA,
                                   TRUE ~ FALSE)),
@@ -311,6 +315,6 @@ bais4 <- bais4 %>%
 bais4out <- bais4 %>%
   select(district_code, district_name, stratum, urban_rural, cluster_id, latitude, longitude,
          individual_id, sex, age, hivstatus, evertest, test12m, artself, Weight1,
-         sex12m, nosex12m, sexcohab, sexnonreg, sexpaid12m, giftsvar, sexnonregplus)
+         sex12m, nosex12m, sexcohabspouse, sexnonregspouse, sexpaid12m, giftsvar, sexnonregspouseplus)
 
 write_csv(bais4out, "bwa2013bais-recode-sexbehav.csv", na = "")
