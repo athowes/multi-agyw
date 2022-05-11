@@ -137,22 +137,12 @@ names(survey_biomarker)
 #' Extract sexual behaviour characteristics from the survey
 survey_sexbehav <- create_sexbehav_dhs(surveys)
 names(survey_sexbehav)
+(misallocation <- check_survey_sexbehav(survey_sexbehav))
 
 survey_other <- list(survey_sexbehav)
 
 age_group_include <- c("Y015_019", "Y020_024", "Y025_029", "Y015_024")
 sex <- c("female")
-
-#' Remaining NA are all in eversex and sti12m
-survey_sexbehav %>% is.na() %>% colSums()
-
-#' #' Verify no overlap
-#' stopifnot(
-#'   survey_sexbehav %>%
-#'     mutate(r_sum = (1 - sex12m) + sexcohab + sexnonreg + sexpaid12m) %>%
-#'     filter(r_sum != 1) %>%
-#'     nrow() == 0
-#' )
 
 #' Survey indicator dataset
 survey_indicators <- calc_survey_indicators(
@@ -175,6 +165,7 @@ phia_survey_clusters <- read_csv("depends/mwi2016phia_survey_clusters.csv")
 phia_survey_individuals <- read_csv("depends/mwi2016phia_survey_individuals.csv")
 phia_survey_biomarker <- read_csv("depends/mwi2016phia_survey_biomarker.csv")
 phia_survey_sexbehav <- read_csv("depends/mwi2016phia_survey_sexbehav.csv")
+(phia_misallocation <- check_survey_sexbehav(phia_survey_sexbehav))
 
 #' PHIA survey indicator dataset
 phia_survey_indicators <- calc_survey_indicators(
@@ -189,18 +180,6 @@ phia_survey_indicators <- calc_survey_indicators(
   age_group_include = age_group_include,
   area_bottom_level = 5
 )
-
-phia_survey_indicators %>%
-  filter(indicator %in% c("sexcohab", "sexcohabspouse")) %>%
-  select(area_id, age_group, indicator, estimate) %>%
-  pivot_wider(
-    id_cols = c(area_id, age_group),
-    names_from = indicator,
-    values_from = estimate
-  ) %>%
-  ggplot(aes(x = sexcohab, y = sexcohabspouse, col = age_group)) +
-    geom_point() +
-    theme_minimal()
 
 #' Combine all surveys together
 survey_indicators <- bind_rows(survey_indicators, phia_survey_indicators)
@@ -229,7 +208,7 @@ hiv_indicators <- calc_survey_hiv_indicators(
 )
 
 phia_survey_sexbehav_reduced <- phia_survey_sexbehav %>%
-  select(-sex12m, -giftsvar, -sexnonregplus)
+  select(-sex12m, -sexcohabspouse, -sexnonregspouse, -giftsvar, -sexnonregplus, -sexnonregspouseplus)
 
 phia_hiv_indicators <- calc_survey_hiv_indicators(
   phia_survey_meta,

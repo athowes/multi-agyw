@@ -59,6 +59,7 @@ names(survey_biomarker)
 #' Extract sexual behaviour characteristics from the survey
 survey_sexbehav <- create_sexbehav_dhs(surveys)
 names(survey_sexbehav)
+(misallocation <- check_survey_sexbehav(survey_sexbehav))
 
 survey_other <- list(survey_sexbehav)
 
@@ -85,6 +86,7 @@ phia_survey_clusters <- read_csv("depends/zwe2016phia_survey_clusters.csv")
 phia_survey_individuals <- read_csv("depends/zwe2016phia_survey_individuals.csv")
 phia_survey_biomarker <- read_csv("depends/zwe2016phia_survey_biomarker.csv")
 phia_survey_sexbehav <- read_csv("depends/zwe2016phia_survey_sexbehav.csv")
+(phia_misallocation <- check_survey_sexbehav(phia_survey_sexbehav))
 
 #' PHIA survey indicator dataset
 phia_survey_indicators <- calc_survey_indicators(
@@ -107,7 +109,7 @@ write_csv(survey_indicators, "zwe_survey_indicators_sexbehav.csv", na = "")
 
 #' Get prevalence estimates for different sexual behaviours
 survey_sexbehav_reduced <- survey_sexbehav %>%
-  select(-sex12m, -sexcohabspouse, -giftsvar, -sexnonregplus)
+  select(-sex12m, -sexcohabspouse, -sexnonregspouse, -giftsvar, -sexnonregplus, -sexnonregspouseplus)
 
 hiv_indicators <- calc_survey_hiv_indicators(
   survey_meta,
@@ -126,7 +128,7 @@ hiv_indicators <- calc_survey_hiv_indicators(
 )
 
 phia_survey_sexbehav_reduced <- phia_survey_sexbehav %>%
-  select(-sex12m, -giftsvar, -sexnonregplus)
+  select(-sex12m, -sexcohabspouse, -sexnonregspouse, -giftsvar, -sexnonregplus, -sexnonregspouseplus)
 
 phia_hiv_indicators <- calc_survey_hiv_indicators(
   phia_survey_meta,

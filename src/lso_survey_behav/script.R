@@ -129,7 +129,7 @@ write_csv(survey_indicators, "lso_survey_indicators_sexbehav.csv", na = "")
 
 #' Get prevalence estimates for different sexual behaviours
 survey_sexbehav_reduced <- survey_sexbehav %>%
-  select(-sex12m, -sexcohabspouse, -giftsvar, -sexnonregplus)
+  select(-sex12m, -sexcohabspouse, -sexnonregspouse, -giftsvar, -sexnonregplus, -sexnonregspouseplus)
 
 hiv_indicators <- calc_survey_hiv_indicators(
   survey_meta,
@@ -148,7 +148,7 @@ hiv_indicators <- calc_survey_hiv_indicators(
 )
 
 phia_survey_sexbehav_reduced <- phia_survey_sexbehav %>%
-  select(-sex12m, -giftsvar, -sexnonregplus)
+  select(-sex12m, -sexcohabspouse, -sexnonregspouse, -giftsvar, -sexnonregplus, -sexnonregspouseplus)
 
 phia_hiv_indicators <- calc_survey_hiv_indicators(
   phia_survey_meta,

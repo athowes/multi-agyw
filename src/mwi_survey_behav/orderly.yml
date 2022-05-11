@@ -21,9 +21,6 @@ packages:
   - naomi.utils
   - rdhs
 
-resources:
-  - testing.R
-
 depends:
   mwi_data_areas:
     id: latest
