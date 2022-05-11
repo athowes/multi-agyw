@@ -177,6 +177,21 @@ df %>%
   select(starts_with("percentage_")) %>%
   mutate(across(everything(), ~ 100 * round(.x, 3)))
 
+#' The uncertainty on that?
+S <- 10
+full_samples <- readRDS("depends/multi-sexbehav-sae-samples.rds")
+
+#' Just the hyperparameters
+precision_samples <- lapply(full_samples, "[", "hyperpar")
+precision_samples_matrix <- matrix(unlist(precision_samples), ncol = S)
+precision_samples_df <- data.frame(t(precision_samples_matrix))
+names(precision_samples_df) <- names(precision_samples[[1]][[1]])
+variance_samples_df <- 1 / precision_samples_df
+
+variance_samples_df %>%
+  select(starts_with("Precision")) %>%
+  rename_all(list(~ stringr::str_replace(., "Precision for ", "variance_")))
+
 #' Now to try the alternative method for looking within country when the model is fit jointly between all countries
 #' Probably there is a better way to do this
 
