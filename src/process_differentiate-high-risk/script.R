@@ -16,7 +16,7 @@ df_3 <- df_3 %>%
     by = c("age_group", "area_id")
   )
 
-S <- 4
+S <- 10
 full_samples <- readRDS("depends/multi-sexbehav-sae-samples.rds")
 
 #' Just the latent field
@@ -77,7 +77,7 @@ samples_prop_df_split <- samples_prop_df %>%
 stopifnot(length(samples_prop_df_split) == nrow(df_prop_distinct))
 
 cores <- detectCores()
-ncores <- 2
+ncores <- 4
 
 start_time <- Sys.time()
 

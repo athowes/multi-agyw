@@ -2,28 +2,18 @@
 # orderly::orderly_develop_start("process_coverage")
 # setwd("src/process_coverage")
 
-df <- read_csv("depends/best-3-multi-sexbehav-sae.csv")
+df <- read_csv("depends/best-3p1-multi-sexbehav-sae.csv")
 
 df <- df %>%
+  multi.utils::update_naming() %>%
   filter(
-    age_group != "Y015_024",
-  ) %>%
-  mutate(
-    age_group = fct_recode(age_group,
-      "15-19" = "Y015_019",
-      "20-24" = "Y020_024",
-      "25-29" = "Y025_029"
-    ),
-    indicator = fct_recode(indicator,
-      "No sex (past 12 months)" = "nosex12m",
-      "Cohabiting partner" = "sexcohab",
-      "Nonregular partner(s)" = "sexnonregplus"
-    )
+    age_group %in% c("15-19", "20-24", "25-29"),
+    !is.na(estimate_raw)
   )
 
 pdf("coverage.pdf", h = 4, w = 6.25)
 
-S <- 100 #' Number of Monte Carlo samples
+S <- 10 #' Number of Monte Carlo samples
 bins <- 20
 alpha <- 0.05
 
@@ -38,7 +28,7 @@ polygon_data <- data.frame(
   y = c(ci[1], ci[2], ci[2], ci[2], ci[3], ci[3], ci[2], ci[1], ci[1]) / S
 )
 
-histograms <- ggplot(df, aes(x = prob_quantile)) +
+histograms <- ggplot(df, aes(x = prob_predictive_quantile)) +
   facet_grid(~indicator, drop = TRUE, scales = "free") +
   geom_histogram(aes(y = (..count..) / tapply(..count..,..PANEL..,sum)[..PANEL..]),
                  breaks = seq(0, 1, length.out = bins + 1), fill = "#009E73", col = "black", alpha = 0.9) +
@@ -50,11 +40,11 @@ histograms <- ggplot(df, aes(x = prob_quantile)) +
 lims <- get_lims(n = S, alpha, K = 100)
 
 ecdf_diff <- df %>%
-  select(indicator, prob_quantile) %>%
-  filter(!is.na(prob_quantile)) %>%
+  select(indicator, prob_predictive_quantile) %>%
+  filter(!is.na(prob_predictive_quantile)) %>%
   split(.$indicator) %>%
   lapply(function(y) {
-    empirical_coverage <- purrr::map_dbl(seq(0, 1, by = 0.01), ~ empirical_coverage(y$prob_quantile, .x))
+    empirical_coverage <- purrr::map_dbl(seq(0, 1, by = 0.01), ~ empirical_coverage(y$prob_predictive_quantile, .x))
     data.frame(nominal_coverage = seq(0, 1, by = 0.01), empirical_coverage = empirical_coverage) %>%
       mutate(
         ecdf_diff = empirical_coverage - nominal_coverage,
@@ -64,7 +54,7 @@ ecdf_diff <- df %>%
   }) %>%
   purrr::map_df(~as.data.frame(.x), .id = "indicator") %>%
   ggplot(aes(x = nominal_coverage, y = ecdf_diff)) +
-  facet_grid(~factor(indicator, levels = c("No sex (past 12 months)", "Cohabiting partner", "Nonregular partner(s)")),
+  facet_grid(~factor(indicator, levels = c("No sex", "Cohabiting partner", "Nonregular partner(s)", "Nonregular partners(s) +", "FSW")),
              drop = TRUE, scales = "free") +
   geom_line(col = "#009E73") +
   geom_step(aes(x = nominal_coverage, y = ecdf_diff_upper), alpha = 0.7, col = "grey50") +

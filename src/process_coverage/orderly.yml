@@ -2,7 +2,7 @@ script: script.R
 
 artefacts:
   - data:
-      description: Coverage summary plots
+      description: Coverage posterior predictive checks
       filenames:
         - coverage.pdf
 
@@ -20,8 +20,8 @@ packages:
   - multi.utils
 
 depends:
-  - process_multi-sexbehav-sae:
+  - process_differentiate-high-risk:
       id: latest
       use:
-        depends/best-3-multi-sexbehav-sae.csv: best-3-multi-sexbehav-sae.csv
+        depends/best-3p1-multi-sexbehav-sae.csv: best-3p1-multi-sexbehav-sae.csv
 

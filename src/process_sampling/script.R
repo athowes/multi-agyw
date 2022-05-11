@@ -2,8 +2,8 @@
 # orderly::orderly_develop_start("process_sampling")
 # setwd("src/process_sampling")
 
-#' Start with very low number of samples
-S <- 4
+#' Start with low number of samples
+S <- 10
 
 #' Multinomial regression model
 fits <- readRDS("depends/multi-sexbehav-sae-fits.rds")
