@@ -190,7 +190,29 @@ variance_samples_df <- 1 / precision_samples_df
 
 variance_samples_df %>%
   select(starts_with("Precision")) %>%
-  rename_all(list(~ stringr::str_replace(., "Precision for ", "variance_")))
+  rename_all(list(~ stringr::str_replace(., "Precision for ", "variance_"))) %>%
+  mutate(total_variance = rowSums(., na.rm = TRUE)) %>%
+  #' Create new columns with the percentage variance
+  mutate(
+    across(
+      .cols = starts_with("variance"),
+      .fns = list(percentage = ~ . / total_variance),
+      .names = "{fn}_{col}"
+    )
+  ) %>%
+  select(starts_with("percentage_")) %>%
+  summarise(
+    across(
+      .cols = everything(),
+      .fns = list(mean = mean, lower = ~ quantile(.x, probs = 0.025), upper = ~ quantile(.x, probs = 0.975))
+    )
+  ) %>%
+  pivot_longer(
+    cols = everything(),
+    names_prefix = "percentage_variance_",
+    names_to = "variable",
+    values_to = "percentage_variance"
+  )
 
 #' Now to try the alternative method for looking within country when the model is fit jointly between all countries
 #' Probably there is a better way to do this
