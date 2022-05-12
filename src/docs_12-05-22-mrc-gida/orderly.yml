@@ -10,6 +10,7 @@ resources:
   - 12-05-22-mrc-gida.Rmd
   - preamble.tex
   - citations.bib
+  - global-aids-strategy.png
 
 packages:
   - dplyr
@@ -54,10 +55,10 @@ depends:
   #   id: latest
   #   use:
   #     depends/3p1-continental-map.png: 3p1-continental-map.png
-  # plot_within-between-country-variation:
-  #   id: latest
-  #   use:
-  #     depends/3p1-within-between-country-variation.png: 3p1-within-between-country-variation.png
+  plot_within-between-country-variation:
+    id: latest
+    use:
+      depends/cohabiting-girls.pdf: cohabiting-girls.pdf
   process_incidence:
     id: latest
     use:
@@ -66,3 +67,4 @@ depends:
     id: latest
     use:
       depends/infections-reached.png: infections-reached.png
+      depends/infections-reached-moz.png: infections-reached-country-5.png

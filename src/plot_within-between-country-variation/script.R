@@ -2,7 +2,8 @@
 # orderly::orderly_develop_start("plot_within-between-country-variation")
 # setwd("src/plot_within-between-country-variation")
 
-df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
+df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv") %>%
+  filter(indicator != "sexnonregplus")
 pop <- read_csv("depends/interpolated_population.csv")
 
 #' Add population and updating naming
@@ -51,6 +52,40 @@ ggsave(
   plotA,
   width = 6.25, height = 7, units = "in", dpi = 300
 )
+
+#' Version showing cohabiting numbers for 15-19
+
+pdf("cohabiting-girls.pdf", h = 4, w = 6.25)
+
+df_3p1_subnational %>%
+  mutate(iso3 = reorder(iso3, iso3_sort_order)) %>%
+  filter(
+    age_group == "15-19",
+    indicator == "Cohabiting partner"
+  ) %>%
+  mutate(
+    moz_indicator = factor(ifelse(iso3 == "Mozambique", 1, 0))
+  ) %>%
+  ggplot(aes(x = fct_rev(iso3), y = estimate_smoothed, col = moz_indicator)) +
+  geom_jitter(width = 0.1, shape = 20) +
+  geom_point(data = filter(df_3p1_national, age_group == "15-19", indicator == "Cohabiting partner"),
+             aes(x = fct_rev(iso3), y = estimate_smoothed), shape = 21, size = 2, fill = "white",
+             col = "black", alpha = 0.9) +
+  scale_color_manual(values = c("#D3D3D3", multi.utils::cbpalette()[2])) +
+  scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
+  coord_flip() +
+  labs(x = "", y = "Proportion of girls 15-19 cohabiting", col = "") +
+  guides(colour = FALSE) +
+  theme_minimal() +
+  theme(
+    panel.spacing = unit(0.5, "lines"),
+    legend.position = "bottom",
+    strip.text = element_text(face = "bold"),
+    legend.title = element_text(size = 9),
+    legend.text = element_text(size = 9),
+  )
+
+dev.off()
 
 #' Have a closer look at the FSW estimates and check that the Johnston adjustment has worked
 df_3p1_unadjusted <- read_csv("depends/best-3p1-multi-sexbehav-sae.csv")
