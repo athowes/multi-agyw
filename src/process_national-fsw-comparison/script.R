@@ -2,6 +2,27 @@
 # orderly::orderly_develop_start("process_national-fsw-comparison")
 # setwd("src/process_national-fsw-comparison/")
 
+#' All available FSW data sources
+#'
+#' * Paper: "Deriving and interpreting population size estimates for adolescent and young key populations at higher
+#' risk of HIV transmission: men who have sex with men, female sex workers and transgender persons"
+#' * First author: Lisa Johnston
+#' * Areas: National
+#' * Age groups: 15-19, 20-24, 25-49
+#' * Code: Could ask Kinh for it
+#'
+#' * Paper: "Estimating key population size, HIV prevalence, and ART coverage for sub-Saharan Africa at the national level"
+#' * First author: Oliver Stevens
+#' * Areas: National
+#' * Age groups: 15-49
+#' * Code: Could ask Oli for it
+#'
+#' * Paper: "Mapping female sex worker prevalence (aged 15-49 years) in sub-Saharan Africa"
+#' * First author: Ian Laga
+#' * Areas: Sub-national
+#' * Age-groups: 15-49
+#' * Code: https://github.com/ilaga/Mapping-FSW-SSA
+
 analysis_level <- multi.utils::analysis_level()
 priority_iso3 <- multi.utils::priority_iso3()
 
@@ -21,7 +42,7 @@ naomi3 <- naomi3 %>%
     iso3 %in% priority_iso3,
     indicator_label == "Population",
     #' These are the age groups we are considering,
-    age_group_label %in% c("15-19", "20-24", "25-29", "15-49"),
+    age_group_label %in% c("15-19", "20-24", "25-29", "25-29", "15-49"),
     #' Only female
     sex == "female"
   ) %>%
@@ -82,7 +103,7 @@ johnston <- johnston %>%
   filter(
     region %in% c("ESA", "WCA"),
     iso3 %in% priority_iso3,
-    age_group %in% c("15-19", "20-24", "25-29")
+    age_group %in% c("15-19", "20-24", "25-49")
   ) %>%
   select(-region) %>%
   filter(iso3 %in% priority_iso3) %>%
@@ -99,7 +120,7 @@ pdf("johnston-fsw-data.pdf", h = 8, w = 6.25)
 
 johnston_sf <- johnston %>%
   left_join(
-    select(national_areas, "iso3" = "GID_0"),
+    select(national_areas, "iso3" = "area_id"),
     by = "iso3"
   ) %>%
   st_as_sf()
@@ -124,15 +145,13 @@ cowplot::plot_grid(plotA, plotB, ncol = 1)
 
 dev.off()
 
-#' The proportion estimates from the sexpaid12m category of our model
+#' The proportion estimates from the sexpaid12m category of our model (pre-adjustment)
 est <- read_csv("depends/best-3p1-multi-sexbehav-sae.csv") %>%
   multi.utils::update_naming() %>%
   filter(
     indicator == "FSW",
     age_group %in% c("15-19", "20-24", "25-29")
   ) %>%
-  #' Assuming the survey_id is structured as ISO2000DHS
-  mutate(year = substr(survey_id, 4, 7)) %>%
   #' Only the most recent survey in each year
   group_by(iso3) %>%
   filter(year == max(year)) %>%
@@ -194,7 +213,7 @@ johnston_comparison %>%
 
 johnston_comparison %>%
   left_join(
-    select(national_areas, "iso3" = "GID_0"),
+    select(national_areas, "iso3" = "area_id"),
     by = "iso3"
   ) %>%
   st_as_sf() %>%
@@ -292,7 +311,7 @@ laga_comparison %>%
 
 laga_comparison %>%
   left_join(
-    select(national_areas, "iso3" = "GID_0"),
+    select(national_areas, "iso3" = "area_id"),
     by = "iso3"
   ) %>%
   st_as_sf() %>%
