@@ -39,7 +39,7 @@ ind %>%
 
 dev.off()
 
-pdf("spouse-barplot.pdf", h = 5, w = 4)
+pdf("spouse-comparison.pdf", h = 5, w = 4)
 
 ind %>%
   filter(
@@ -128,13 +128,14 @@ ind %>%
     geom_sf() +
     facet_grid(indicator ~ age_group) +
     scale_fill_viridis_c() +
-    labs(title = "MWI2015DHS - MWI2016PHIA")
+    labs(title = "MWI2015DHS - MWI2016PHIA") +
+    theme_minimal()
 
 #' Merge all of the HIV datasets
-# hiv <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_hiv_indicators_sexbehav.csv"))) %>%
-#   bind_rows()
-#
-# write_csv(hiv, "hiv_indicators_sexbehav.csv")
+hiv <- lapply(iso3[-1], function(x) read_csv(paste0("depends/", tolower(x), "_hiv_indicators_sexbehav.csv"))) %>%
+  bind_rows()
+
+write_csv(hiv, "hiv_indicators_sexbehav.csv")
 
 #' Merge all of the population datasets
 pop <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_interpolated-population.csv"))) %>%

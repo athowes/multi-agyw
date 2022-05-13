@@ -7,10 +7,135 @@ analysis_level <- multi.utils::analysis_level()
 df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
 areas <- readRDS("depends/areas.rds")
 naomi3 <- readRDS("naomi3.rds")
+prev <- read_csv("depends/hiv_indicators_sexbehav.csv")
 
-#' Just the prevalence ratios
+prev <- prev %>%
+  filter(
+    (nosex12m != 0) & (sexcohab != 0) & (sexnonreg != 0) & (sexpaid12m != 0),
+    age_group != "Y015_024"
+  ) %>%
+  mutate(
+    behav = case_when(
+      nosex12m == 1 ~ "nosex12m",
+      sexcohab == 1 ~ "sexcohab",
+      sexnonreg == 1 ~ "sexnonreg",
+      sexpaid12m == 1 ~ "sexpaid12m"
+    ), .after = indicator
+  ) %>%
+  select(indicator, behav, survey_id, area_id, age_group, estimate) %>%
+  pivot_wider(
+    names_from = "behav",
+    values_from = "estimate",
+  ) %>%
+  mutate(
+    #' Calculate the odds
+    across(nosex12m:sexpaid12m, ~ .x / (1 - .x), .names = "{.col}_odds"),
+    #' Log odds
+    across(nosex12m:sexpaid12m, ~ log(.x / (1 - .x)), .names = "{.col}_logodds"),
+    #' Prevalence ratios
+    across(nosex12m:sexpaid12m, ~ .x / nosex12m, .names = "{.col}_pr"),
+    #' Odds ratios
+    across(nosex12m:sexpaid12m, ~ (.x / (1 - .x)) / (nosex12m / (1 - nosex12m)), .names = "{.col}_or")
+  ) %>%
+  rename_with(.cols = nosex12m:sexpaid12m, ~ paste0(.x, "_prevalence")) %>%
+  select(-indicator) %>%
+  pivot_longer(
+    cols = starts_with(c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")),
+    names_to = "indicator",
+    values_to = "estimate"
+  ) %>%
+  separate(indicator, into = c("behav", "indicator"))
+
+pdf("prev-data.pdf", h = 8, w = 6.25)
+
+prev %>%
+  split(.$indicator) %>%
+  lapply(function(x)
+  ggplot(x, aes( x = "", y = estimate)) +
+    geom_boxplot(outlier.shape = NA) +
+    geom_jitter(aes(col = area_id), alpha = 0.5) +
+    facet_grid(age_group ~ behav) +
+    labs(title = paste0(x$indicator[1]), x = "") +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_blank(),
+      plot.title = element_text(face = "bold"),
+      legend.position = "bottom"
+    )
+  )
+
+dev.off()
+
 prev_pr <- read_csv("katie-prev-pr.csv") %>%
   select(iso3, starts_with("pr_"))
+
+katie_temp <- prev_pr %>%
+  pivot_longer(
+    cols = starts_with("pr_"),
+    names_to = c("indicator", "behav"),
+    names_sep = "_",
+    values_to = "estimate"
+  ) %>%
+  rename(area_id = iso3)
+
+pdf("katie-comp.pdf", h = 10, w = 6.25)
+
+prev %>%
+  filter(indicator == "pr") %>%
+  ggplot(aes(x = "", y = estimate)) +
+    geom_jitter(width = 0.2, alpha = 0.5, aes(col = age_group)) +
+    geom_point(data = katie_temp, aes(x = "", y = estimate), col = "black", shape = 2) +
+    facet_grid(area_id ~ behav, scales = "free") +
+    scale_color_manual(values = multi.utils::cbpalette()) +
+    labs(x = "") +
+    theme_minimal()
+
+dev.off()
+
+prev_inla <- prev %>%
+  mutate(
+    nosex12m_id = ifelse(behav == "nosex12m", 1, 0),
+    sexcohab_id = ifelse(behav == "sexcohab", 1, 0),
+    sexnonreg_id = ifelse(behav == "sexnonreg", 1, 0),
+    sexpaid12m_id = ifelse(behav == "sexpaid12m", 1, 0)
+  ) %>%
+  filter(
+    indicator == "prevalence",
+    !is.na(estimate)
+  )
+
+formula_baseline <- estimate ~ 1 + sexcohab_id + sexnonreg_id + sexpaid12m_id
+
+fit <- inla(
+  formula_baseline,
+  control.family = list(link = "logit"),
+  control.predictor = list(link = 1, compute = TRUE),
+  data = prev_inla,
+  control.compute = list(dic = TRUE, waic = TRUE, cpo = TRUE, config = TRUE),
+  inla.mode = "experimental"
+)
+
+contents <- fit$misc$configs$contents
+fixed_effects_idx <- contents$start[contents$tag != "Predictor"]
+samples <- inla.posterior.sample(n = 1000, fit)
+fixed_effects <-  lapply(samples, function(x) x$latent[fixed_effects_idx])
+fixed_effects <- matrix(unlist(fixed_effects), byrow = T, nrow = length(fixed_effects))
+odds <- colMeans(exp(fixed_effects))
+exp(fit$summary.fixed$mean) #' This is what you'd get without sampling from the posterior
+odds / odds[1] #' Odds ratio
+log(odds / odds[1]) #' Log odds ratio
+
+#' PRs can be estimated directly using the log link function instead of the logit
+fit_log <- inla(
+  formula_baseline,
+  control.family = list(link = "log"),
+  control.predictor = list(link = 1, compute = TRUE),
+  data = prev_inla,
+  control.compute = list(dic = TRUE, waic = TRUE, cpo = TRUE, config = TRUE),
+  inla.mode = "experimental"
+)
+
+exp(fit_log$summary.fixed$mean) / exp(fit_log$summary.fixed$mean)[1]
 
 #' Naomi estimates of PLHIV and population by district and age band
 naomi3 <- naomi3 %>%

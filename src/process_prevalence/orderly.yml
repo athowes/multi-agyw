@@ -4,6 +4,8 @@ artefacts:
   - data:
       description: HIV prevalence by risk group
       filenames:
+        - prev-data.pdf
+        - katie-comp.pdf
         - prev-district-sexbehav.csv
         - prev-district-sexbehav.pdf
         - prev-district-sexbehav-1.png
@@ -46,3 +48,4 @@ depends:
       id: latest
       use:
         depends/areas.rds: areas.rds
+        depends/hiv_indicators_sexbehav.csv: hiv_indicators_sexbehav.csv
