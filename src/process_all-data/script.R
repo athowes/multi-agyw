@@ -99,6 +99,8 @@ ggplot(spouselivesaway, aes(x = spouselivesaway, y = spouselivesaway2, col = are
 
 dev.off()
 
+pdf("mwi-dhs-phia-comparison.pdf", h = 6, w = 6.25)
+
 ind %>%
   filter(
     survey_id %in% c("MWI2015DHS", "MWI2016PHIA"),
@@ -131,8 +133,10 @@ ind %>%
     labs(title = "MWI2015DHS - MWI2016PHIA") +
     theme_minimal()
 
+dev.off()
+
 #' Merge all of the HIV datasets
-hiv <- lapply(iso3[-1], function(x) read_csv(paste0("depends/", tolower(x), "_hiv_indicators_sexbehav.csv"))) %>%
+hiv <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_hiv_indicators_sexbehav.csv"))) %>%
   bind_rows()
 
 write_csv(hiv, "hiv_indicators_sexbehav.csv")

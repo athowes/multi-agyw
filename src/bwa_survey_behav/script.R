@@ -164,11 +164,15 @@ survey_sexbehav <- raw %>%
     sex12m,
     nosex12m,
     sexcohab,
+    sexcohabspouse,
     sexnonreg,
+    sexnonregspouse,
     sexpaid12m,
-    giftsvar,
-    sexnonregplus
+    sexnonregplus,
+    sexnonregspouseplus,
+    giftsvar
   )
+(misallocation <- check_survey_sexbehav(survey_sexbehav))
 
 survey_other <- list(survey_sexbehav)
 
@@ -200,10 +204,10 @@ write_csv(survey_individuals, "bwa2013bais_survey_individuals.csv", na = "")
 write_csv(survey_biomarker, "bwa2013bais_survey_biomarker.csv", na = "")
 write_csv(survey_sexbehav, "bwa2013bais_survey_sexbehav.csv", na = "")
 
-survey_sexbehav_reduced <- survey_sexbehav %>%
-  select(-sex12m, -giftsvar, -sexnonregplus)
-
 #' Get prevalence estimates for different sexual behaviours
+survey_sexbehav_reduced <- survey_sexbehav %>%
+  select(-sex12m, -sexcohabspouse, -sexnonregspouse, -giftsvar, -sexnonregplus, -sexnonregspouseplus)
+
 hiv_indicators <- calc_survey_hiv_indicators(
   survey_meta,
   survey_regions,

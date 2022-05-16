@@ -21,6 +21,7 @@ artefacts:
       filenames:
         - spouse-comparison.pdf
         - spouse-livesaway.pdf
+        - mwi-dhs-phia-comparison.pdf
 
 packages:
   - dplyr
@@ -95,7 +96,7 @@ depends:
       id: latest
       use:
         depends/bwa_survey_indicators_sexbehav.csv: bwa_survey_indicators_sexbehav.csv
-        # depends/bwa_hiv_indicators_sexbehav.csv: bwa_hiv_indicators_sexbehav.csv
+        depends/bwa_hiv_indicators_sexbehav.csv: bwa_hiv_indicators_sexbehav.csv
   - cmr_survey_behav:
       id: latest
       use:

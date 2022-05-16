@@ -269,6 +269,7 @@ bais4 <- bais4 %>%
 #' * Q307B                            "In the last 12 months with how many people overall have you had sex?" NUMBER
 #' * Q308_P1, Q308_P2, Q308_P3        "What is your relationship to [MOST RECENT/NEXT MOST RECENT PARTNER]"
 #' HUSBAND/WIFE 1, LIVING TOGETHER 2, GIRLFRIEND/BOYFRIEND 3, PAID 4, CASUAL 5
+#' * Q108A                            "Does your husband/wife/partner live with you?" YES 1, NO 2
 #' * Q319                             "In the last 12 months have you ever been paid or received gifts for sex?" YES 1, NO 2
 #' * Q411                             "During the last 12 months, have you had any of the following symptoms?"
 #' * Q411_2                           "GENITAL DISCHARGE"
@@ -281,40 +282,70 @@ cas_cats <- c(3, 4, 5, 6)
 
 bais4 <- bais4 %>%
   mutate(
-    eversex = as.integer(recode(as.integer(Q301), `1` = TRUE, `2` = FALSE)),
-    sex12m = as.integer(case_when(Q301 == 2 ~ FALSE,
-                                  Q307A == 2 ~ FALSE,
-                                  Q307A == 1 ~ TRUE,
-                                  TRUE ~ NA)),
+    eversex = recode(as.integer(Q301), `1` = TRUE, `2` = FALSE),
+    sex12m = case_when(
+      Q301 == 2 ~ FALSE,
+      Q307A == 2 ~ FALSE,
+      Q307A == 1 ~ TRUE,
+      TRUE ~ NA
+    ),
     nosex12m = 1 - sex12m,
-    sexcohabspouse = as.integer(case_when(sex12m == FALSE ~ FALSE,
-                                          Q307B == 1 & ((!Q308_P1 %in% cas_cats) &
-                                                        (!Q308_P2 %in% cas_cats) &
-                                                        (!Q308_P3 %in% cas_cats)) ~ TRUE,
-                                          is.na(sex12m) ~ NA,
-                                          TRUE ~ FALSE)),
-    sexnonregspouse = as.integer(case_when(sex12m == FALSE ~ FALSE,
-                                           Q307B > 1 | (Q308_P1 %in% cas_cats |
-                                                        Q308_P2 %in% cas_cats |
-                                                        Q308_P3 %in% cas_cats) ~ TRUE,
-                                           is.na(sex12m) ~ NA,
-                                           TRUE ~ FALSE)),
-    sexpaid12m = as.integer(case_when(Q319 == 1 |
-                                        (Q308_P1 == 4 | Q308_P2 == 4 | Q308_P3 == 4) ~ TRUE,
-                                      (is.na(Q319) & is.na(Q308_P1) & is.na(Q308_P2) & is.na(Q308_P3) &
-                                         is.na(sex12m)) ~ NA,
-                                      TRUE ~ FALSE)),
-    sexnonregspouseplus = as.integer(ifelse(sexpaid12m == 1, 1, sexnonregspouse)),
-    sti12m = as.integer(case_when(Q411_2 == 1 | Q411_6 == 1 ~ TRUE,
-                                  (is.na(Q411_2) & is.na(Q411_6) & is.na(sex12m)) ~ NA,
-                                  TRUE ~ FALSE)),
-    giftsvar = as.integer(case_when(sum(!is.na(Q319)) > 0 ~ TRUE,
-                          TRUE ~ FALSE))
+    sexcohab = case_when(
+      sex12m == FALSE ~ FALSE,
+      Q307B == 1 & (Q308_P1 == 2 | Q308_P2 == 2 | Q308_P3 == 2) ~ TRUE,
+      Q307B == 1 & (Q308_P1 == 1 | Q308_P2 == 1 | Q308_P3 == 1) & Q108A == 1 ~ TRUE,
+      is.na(sex12m) ~ NA,
+      TRUE ~ FALSE
+    ),
+    sexcohabspouse = case_when(
+      sex12m == FALSE ~ FALSE,
+      Q307B == 1 & ((!Q308_P1 %in% cas_cats) & (!Q308_P2 %in% cas_cats) & (!Q308_P3 %in% cas_cats)) ~ TRUE,
+      is.na(sex12m) ~ NA,
+      TRUE ~ FALSE
+    ),
+    sexnonreg = case_when(
+      sex12m == FALSE ~ FALSE,
+      Q108A == 2 ~ TRUE,
+      Q308_P1 %in% cas_cats | Q308_P2 %in% cas_cats | Q308_P3 %in% cas_cats ~ TRUE,
+      Q307B > 1 ~ TRUE,
+      is.na(sex12m) ~ NA,
+      TRUE ~ FALSE
+    ),
+    sexnonregspouse = case_when(
+      sex12m == FALSE ~ FALSE,
+      Q307B == 1 & (Q308_P1 == 1 | Q308_P2 == 1 | Q308_P3 == 1) & Q108A == 1 ~ FALSE,
+      Q308_P1 %in% cas_cats | Q308_P2 %in% cas_cats | Q308_P3 %in% cas_cats ~ TRUE,
+      Q307B > 1 ~ TRUE,
+      is.na(sex12m) ~ NA,
+      TRUE ~ FALSE
+    ),
+    sexpaid12m = case_when(
+      Q319 == 1 | (Q308_P1 == 4 | Q308_P2 == 4 | Q308_P3 == 4) ~ TRUE,
+      (is.na(Q319) & is.na(Q308_P1) & is.na(Q308_P2) & is.na(Q308_P3) & is.na(sex12m)) ~ NA,
+      TRUE ~ FALSE
+    ),
+    sexnonregplus = ifelse(sexpaid12m == 1, 1, sexnonreg),
+    sexnonregspouseplus = ifelse(sexpaid12m == 1, 1, sexnonregspouse),
+    sti12m = case_when(
+      Q411_2 == 1 | Q411_6 == 1 ~ TRUE,
+      (is.na(Q411_2) & is.na(Q411_6) & is.na(sex12m)) ~ NA,
+      TRUE ~ FALSE
+    ),
+    giftsvar = case_when(sum(!is.na(Q319)) > 0 ~ TRUE, TRUE ~ FALSE),
+    # Just want the highest risk category that an individual belongs to
+    nosex12m = ifelse(sexcohab | sexnonreg | sexpaid12m, FALSE, nosex12m),
+    sexcohab = ifelse(sexnonreg | sexpaid12m, FALSE, sexcohab),
+    sexcohabspouse = ifelse(sexnonregspouse | sexpaid12m, FALSE, sexcohabspouse),
+    sexnonreg = ifelse(sexpaid12m, FALSE, sexnonreg),
+    sexnonregspouse = ifelse(sexpaid12m, FALSE, sexnonregspouse),
+    # Turn everything from TRUE / FALSE coding to 1 / 0
+    across(sex12m:giftsvar, ~ as.integer(.x))
   )
 
 bais4out <- bais4 %>%
   select(district_code, district_name, stratum, urban_rural, cluster_id, latitude, longitude,
          individual_id, sex, age, hivstatus, evertest, test12m, artself, Weight1,
-         sex12m, nosex12m, sexcohabspouse, sexnonregspouse, sexpaid12m, giftsvar, sexnonregspouseplus)
+         sex12m, nosex12m, sexcohab, sexcohabspouse, sexnonreg, sexnonregspouse,
+         sexpaid12m, sexnonregplus, sexnonregspouseplus, giftsvar)
 
 write_csv(bais4out, "bwa2013bais-recode-sexbehav.csv", na = "")
