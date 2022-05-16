@@ -1,4 +1,4 @@
-source("make/utils.R")
+source(here::here("make/utils.R"))
 
 run_commit_push("fit_fsw-logit-sae")
 run_commit_push("process_sampling")

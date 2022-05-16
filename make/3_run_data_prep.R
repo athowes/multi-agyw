@@ -1,4 +1,4 @@
-source("make/utils.R")
+source(here::here("make/utils.R"))
 
 #' Prepare PHIA data in the 9 GF AGYW countries that have surveys
 iso3 <- c("CMR", "LSO", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZMB", "ZWE")
@@ -16,7 +16,7 @@ reports <- paste0(tolower(iso3), "_survey_behav")
 run_commit_push(reports)
 
 #' (If the above isn't working, here are separate ones)
-run_commit_push("bwa_survey_behav") #' [ ]
+run_commit_push("bwa_survey_behav") #' [x]
 run_commit_push("cmr_survey_behav") #' [x]
 run_commit_push("ken_survey_behav") #' [x]
 run_commit_push("lso_survey_behav") #' [x]

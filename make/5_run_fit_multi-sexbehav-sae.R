@@ -1,4 +1,4 @@
-source("make/utils.R")
+source(here::here("make/utils.R"))
 
 #' Run model for all countries
 id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE, fewer_countries = TRUE))
