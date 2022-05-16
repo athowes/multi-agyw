@@ -5,9 +5,6 @@
 df_3_aaa <- read_csv("depends/best-3-aaa-multi-sexbehav-sae.csv") %>%
   multi.utils::update_naming()
 
-df_3p1_aaa <- read_csv("depends/adjust-best-3p1-aaa-multi-sexbehav-sae.csv") %>%
-  multi.utils::update_naming()
-
 df_3 <- read_csv("depends/best-3-multi-sexbehav-sae.csv") %>%
   mutate(iso3 = substr(area_id, 1, 3)) %>%
   multi.utils::update_naming() %>%
@@ -23,14 +20,6 @@ national_areas <- readRDS("depends/national_areas.rds")
 pdf("3-aaa-continental-map.pdf", h = 7, w = 6.25)
 
 continental_map(df_3_aaa, areas, national_areas)
-
-dev.off()
-
-pdf("3p1-aaa-continental-map.pdf", h = 7, w = 6.25)
-
-df_3p1_aaa %>%
-  mutate(iso3 = substr(survey_id, 1, 3)) %>%
-  continental_map(areas, national_areas)
 
 dev.off()
 

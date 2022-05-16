@@ -3,7 +3,6 @@
 # setwd("src/process_johnston-adjustment")
 
 df_3p1 <- read_csv("depends/best-3p1-multi-sexbehav-sae.csv")
-df_3p1_aaa <- read_csv("depends/best-3p1-aaa-multi-sexbehav-sae.csv")
 johnston <- read_csv("depends/johnston-fsw-comparison.csv")
 
 johnston <- johnston %>%
@@ -51,9 +50,6 @@ perform_johnston_adjustment <- function(df, johnston) {
 
 df_3p1_adjusted <- perform_johnston_adjustment(df_3p1, johnston)
 write_csv(df_3p1_adjusted, "adjust-best-3p1-multi-sexbehav-sae.csv")
-
-df_3p1_aaa_adjusted <- perform_johnston_adjustment(df_3p1_aaa, johnston)
-write_csv(df_3p1_aaa_adjusted, "adjust-best-3p1-aaa-multi-sexbehav-sae.csv")
 
 pdf("quick-adjustment-comparison.pdf", h = 5, w = 6.25)
 

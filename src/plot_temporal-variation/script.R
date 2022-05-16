@@ -5,23 +5,9 @@
 df_3p1 <- read_csv("depends/best-3p1-multi-sexbehav-sae.csv") %>%
   multi.utils::update_naming()
 
-df_3p1_aaa <- read_csv("depends/best-3p1-aaa-multi-sexbehav-sae.csv") %>%
-  multi.utils::update_naming()
-
 pdf("3p1-temporal-interpolation.pdf", h = 4, w = 6.25)
 
 df_3p1 %>%
-  split(.$iso3) %>%
-  lapply(function(x)
-    plot_temporal_interpolation(x) +
-      labs(title = paste0(x$iso3[1]))
-  )
-
-dev.off()
-
-pdf("3p1-aaa-temporal-interpolation.pdf", h = 4, w = 6.25)
-
-df_3p1_aaa %>%
   split(.$iso3) %>%
   lapply(function(x)
     plot_temporal_interpolation(x) +
@@ -108,16 +94,20 @@ lapply(1:length(plotsA), function(i) {
   )
 })
 
+#' Checking estimates for one country (UGA)
+pdf("uga-check.pdf", h = 7, w = 6.25)
 
-#' Checking that the UGA bumps in 2011 and 2016
-# df_3p1 %>%
-#   filter(iso3 == "Uganda", year %in% c(2011, 2016), indicator == "Cohabiting partner") %>%
-#   select(year, age_group, estimate_raw, estimate_smoothed) %>%
-#   pivot_longer(
-#     cols = starts_with("estimate"),
-#     names_to = "type",
-#     values_to = "estimate"
-#   ) %>%
-#   ggplot(aes(x = age_group, y = estimate, col = type)) +
-#     geom_jitter() +
-#     facet_wrap(~year)
+df_3p1 %>%
+  filter(iso3 == "Uganda", indicator == "Cohabiting partner") %>%
+  select(year, age_group, estimate_raw, estimate_smoothed) %>%
+  pivot_longer(
+    cols = starts_with("estimate"),
+    names_to = "type",
+    values_to = "estimate"
+  ) %>%
+  ggplot(aes(x = age_group, y = estimate, col = type)) +
+    geom_jitter() +
+    facet_wrap(~year) +
+    theme_minimal()
+
+dev.off()

@@ -7,7 +7,6 @@ artefacts:
   - data:
       description: Time series style plots
       filenames:
-        - 3p1-aaa-temporal-interpolation.pdf
         - 3p1-temporal-interpolation.pdf
         - 3p1-temporal-interpolation-ribbon.pdf
         - 3p1-temporal-interpolation-ribbon-1.png
@@ -23,6 +22,7 @@ artefacts:
         - 3p1-temporal-interpolation-ribbon-11.png
         - 3p1-temporal-interpolation-ribbon-12.png
         - 3p1-temporal-interpolation-ribbon-13.png
+        - uga-check.pdf
 
 packages:
   - dplyr
@@ -41,4 +41,3 @@ depends:
       id: latest
       use:
         depends/best-3p1-multi-sexbehav-sae.csv: best-3p1-multi-sexbehav-sae.csv
-        depends/best-3p1-aaa-multi-sexbehav-sae.csv: best-3p1-aaa-multi-sexbehav-sae.csv

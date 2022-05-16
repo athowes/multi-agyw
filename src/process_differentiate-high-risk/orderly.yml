@@ -20,10 +20,6 @@ packages:
   - multi.utils
 
 depends:
-  # - process_multi-sexbehav-sae:
-  #     id: latest
-  #     use:
-  #       depends/best-3-aaa-multi-sexbehav-sae.csv: best-3-aaa-multi-sexbehav-sae.csv
   - fit_multi-sexbehav-sae:
       id: latest
       use:
