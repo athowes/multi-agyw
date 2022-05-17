@@ -13,3 +13,6 @@ sapply(reports,
     )
   }
 )
+
+#' Test Mac push
+# orderly::orderly_pull_archive("bwa_data_areas", remote = "naomi2")
