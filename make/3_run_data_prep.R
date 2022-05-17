@@ -1,5 +1,3 @@
-source(here::here("make/utils.R"))
-
 #' Prepare PHIA data in the 9 GF AGYW countries that have surveys
 iso3 <- c("CMR", "LSO", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZMB", "ZWE")
 reports <- paste0(tolower(iso3), "_survey_phia")

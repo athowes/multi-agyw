@@ -1,5 +1,4 @@
  #' Run aaa_fit_multi-sexbehav-sae in bulk
-
 report <- "aaa_fit_multi-sexbehav-sae"
 
 #' Three categories, for all 13 countries

@@ -1,5 +1,3 @@
-source("make/utils.R")
-
 run_commit_push("process_information-criteria")
 run_commit_push("process_variance-proportions")
 run_commit_push("process_coverage")

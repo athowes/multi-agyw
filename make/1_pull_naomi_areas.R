@@ -1,5 +1,5 @@
 priority_iso3 <- multi.utils::priority_iso3()
-missing_iso3 <- c("AGO", "DRC", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
+missing_iso3 <- c("AGO", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
 iso3 <- c(priority_iso3, missing_iso3)
 
 #' Names of the reports to pull
@@ -13,6 +13,3 @@ sapply(reports,
     )
   }
 )
-
-#' Test Mac push
-# orderly::orderly_pull_archive("bwa_data_areas", remote = "naomi2")
