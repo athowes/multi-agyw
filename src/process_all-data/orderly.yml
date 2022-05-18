@@ -49,7 +49,7 @@ depends:
       use:
         depends/cmr_areas.geojson: cmr_areas.geojson
   - ken_data_areas:
-      id: latest
+      id: 20201111-135452-f9ac48a9
       use:
         depends/ken_areas.geojson: ken_areas.geojson
   - lso_data_areas:

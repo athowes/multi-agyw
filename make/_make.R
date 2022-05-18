@@ -1,23 +1,25 @@
-#' 1. Pull the Naomi area files as reports which can be depended upon
-src(here::here("make/pull_naomi_areas.R"))
+scr_here <- function(x) src(here::here(x))
 
-#' 2.  Pull the population data from Oli's fertility repo as reports which can be depended upon
-src(here::here("make/pull_oli_population.R"))
+#' 1. Pull the Naomi area files
+src_here("make/pull_naomi_areas.R")
 
-#' 3. Run each of the _data_survey_behav scripts to prepare the input data for modelling
-src(here::here("make/run_data_prep.R"))
+#' 2.  Pull the population data from Oli's fertility repo
+src_here("make/pull_oli_population.R")
 
-#' 4. Run the separate country models for applicable countries
-src(here::here("make/run_aaa_fit_multi-sexbehav-sae.R"))
+#' 3. Run each of the survey_behav scripts to prepare the data for modelling
+src_here("make/run_data_prep.R")
 
-#' 5. Run the three category models for all countries jointly
-src(here::here("make/run_fit_multi-sexbehav-sae.R"))
+#' 4. Run the models for each country individually
+src_here("make/run_aaa_fit_multi-sexbehav-sae.R")
+
+#' 5. Run the models for all countries jointly
+src_here("make/run_fit_multi-sexbehav-sae.R")
 
 #' 6. Differentiate the highest risk category using a logistic regression model
-src(here::here("make/high_risk_differentiation.R"))
+src_here("make/high_risk_differentiation.R")
 
 #' 7. Post processing (including e.g. figures) of the modelling results
-src(here::here("make/post_process.R"))
+src_here("make/post_process.R")
 
-#' 8. Create documentation
-src(here::here("make/docs.R"))
+#' 8. Create documentation, presentations, posters, etc.
+src_here("make/docs.R")

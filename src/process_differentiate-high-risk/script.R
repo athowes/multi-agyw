@@ -2,9 +2,7 @@
 # orderly::orderly_develop_start("process_differentiate-high-risk")
 # setwd("src/process_differentiate-high-risk")
 
-df_3 <- read_csv("depends/multi-sexbehav-sae.csv") %>%
-  filter(model == "Model 4") #' Temporary solution, should be earlier in pipeline
-
+df_3 <- read_csv("depends/best-multi-sexbehav-sae.csv")
 df_prop <- read_csv("depends/best-fsw-logit-sae.csv")
 df_prop_distinct <- distinct(df_prop, age_group, area_id, .keep_all = TRUE)
 
@@ -16,8 +14,8 @@ df_3 <- df_3 %>%
     by = c("age_group", "area_id")
   )
 
-S <- 10
 full_samples <- readRDS("depends/multi-sexbehav-sae-samples.rds")
+S <- length(full_samples)
 
 #' Just the latent field
 eta_samples <- lapply(full_samples, "[", "latent")

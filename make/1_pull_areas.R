@@ -13,3 +13,5 @@ sapply(reports,
     )
   }
 )
+
+run_commit_push("national_data_areas")

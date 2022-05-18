@@ -23,7 +23,7 @@ depends:
   - fit_multi-sexbehav-sae:
       id: latest
       use:
-        depends/multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
+        depends/best-multi-sexbehav-sae.csv: best-multi-sexbehav-sae.csv
   - fit_fsw-logit-sae:
       id: latest
       use:

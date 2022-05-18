@@ -369,7 +369,7 @@ pdf("oli-fsw-data.pdf", h = 8, w = 6.25)
 
 oli_sf <- oli %>%
   left_join(
-    select(national_areas, "iso3" = "GID_0"),
+    select(national_areas, "iso3" = "area_id"),
     by = "iso3"
   ) %>%
   st_as_sf()
@@ -377,17 +377,10 @@ oli_sf <- oli %>%
 plotA <- oli_sf %>%
   ggplot(aes(fill = median)) +
   geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
-  scale_fill_viridis_c(option = "C", na.value = "#E6E6E6") +
-  labs(fill = "Median proportion") +
-  theme_minimal()
-
-plotB <- oli_sf %>%
-  ggplot(aes(fill = median)) +
-  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
   scale_fill_viridis_c(option = "C",  label = label_percent(), na.value = "#E6E6E6") +
   labs(fill = "Median proportion") +
   theme_minimal()
 
-cowplot::plot_grid(plotA, plotB, ncol = 1)
+plotA
 
 dev.off()

@@ -24,7 +24,7 @@ depends:
   - fit_multi-sexbehav-sae:
       id: latest
       use:
-        depends/multi-sexbehav-sae-fits.rds: multi-sexbehav-sae-fits.rds
+        depends/best-multi-sexbehav-sae-fit.rds: best-multi-sexbehav-sae-fit.rds
   - fit_fsw-logit-sae:
       id: latest
       use:

@@ -3,11 +3,10 @@
 # setwd("src/process_sampling")
 
 #' Start with low number of samples
-S <- 10
+S <- 100
 
 #' Multinomial regression model
-fits <- readRDS("depends/multi-sexbehav-sae-fits.rds")
-fit <- fits[[1]] #' Because it's a lightweight run
+fit <- readRDS("depends/best-multi-sexbehav-sae-fit.rds")
 full_samples <- inla.posterior.sample(n = S, result = fit)
 saveRDS(full_samples, "multi-sexbehav-sae-samples.rds")
 

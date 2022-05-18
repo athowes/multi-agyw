@@ -1,13 +1,17 @@
 #' Run model for all countries
-id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE, fewer_countries = TRUE))
-orderly::orderly_commit(id)
 
-#' Attempted to run this but R crash on 4x :'(
+#' Options for reducing computation in testing:
+#' @param `lightweight` Fit just one model rather than all (eight) considered models
+#' @param `fewer_countries` Use five (BWA, MOZ, MWI, ZMB, ZWE) out of the thirteen total countries
+
+id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE, fewer_countries = TRUE))
+orderly::orderly_commit(id) #' [x]
+
 id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(fewer_countries = TRUE))
-orderly::orderly_commit(id)
+orderly::orderly_commit(id) #' [/] (Old: R crash on 4x; haven't tried new)
 
 id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE))
-orderly::orderly_commit(id)
+orderly::orderly_commit(id) #' [x]
 
 id <- orderly::orderly_run("fit_multi-sexbehav-sae")
-orderly::orderly_commit(id)
+orderly::orderly_commit(id) #' [ ]

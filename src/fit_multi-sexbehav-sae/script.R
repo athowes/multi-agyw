@@ -2,6 +2,8 @@
 # orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE))
 # setwd("src/fit_multi-sexbehav-sae")
 
+sf_use_s2(FALSE)
+
 analysis_level <- multi.utils::analysis_level()
 admin1_level <- multi.utils::admin1_level()
 
@@ -313,9 +315,13 @@ res <- purrr::pmap(
 #' Extract the df and the full fitted models
 res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
+names(res_fit) <- models
+
+best <- "Model 4"
 
 #' Artefact: Fitted model objects
 saveRDS(res_fit, "multi-sexbehav-sae-fits.rds")
+saveRDS(res_fit[[best]], "best-multi-sexbehav-sae-fit.rds")
 
 #' Add columns for local DIC, WAIC, CPO and PIT
 #' res_df has the 15-24 category too
@@ -398,6 +404,7 @@ res_df <- res_df %>%
   relocate(model, .before = estimate_smoothed)
 
 write_csv(res_df, "multi-sexbehav-sae.csv", na = "")
+write_csv(filter(res_df, model == best), "best-multi-sexbehav-sae.csv", na = "")
 
 #' Create plotting data for years with surveys
 unique_surveys <- res_df %>%

@@ -13,7 +13,9 @@ artefacts:
       description: Smoothed district indicator estimates for multinomial models
       filenames:
         - multi-sexbehav-sae.csv
+        - best-multi-sexbehav-sae.csv
         - multi-sexbehav-sae-fits.rds
+        - best-multi-sexbehav-sae-fit.rds
         - multi-sexbehav-sae.pdf
   - data:
       description: Model selection information criteria for multinomial models
@@ -23,14 +25,6 @@ artefacts:
       description: Random effect variance parameter posterior means
       filenames:
         - variance-proportions.csv
-  # - data:
-  #     description: Sample size recovery diagnostic
-  #     filenames:
-  #       - sample-size-recovery.pdf
-  # - data:
-  #     description: Coverage histogram posterior predictive check
-  #     filenames:
-  #       - coverage-histograms.pdf
 
 parameters:
   #' Should we be using three categories or four
