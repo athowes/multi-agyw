@@ -1,0 +1,34 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Age country specific FSW estimates
+      filenames:
+        - fsw-estimates.csv
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - readxl
+  - multi.utils
+
+resources:
+  - pse_estimates.csv
+  - kinh-afs-dist.rds
+
+depends:
+  national_data_areas:
+    id: latest
+    use:
+      depends/national_areas.rds: national_areas.rds
+  process_all-data:
+    id: latest
+    use:
+      depends/interpolated_population.csv: interpolated_population.csv
