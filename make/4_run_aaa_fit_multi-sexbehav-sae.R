@@ -4,9 +4,23 @@ report <- "aaa_fit_multi-sexbehav-sae"
 #' Three categories, for all 13 countries
 priority_iso3 <- multi.utils::priority_iso3()
 
-#' Lightweight, without PHIA, without interactions
+#' Lightweight, including PHIA
 params <- data.frame(iso3 = priority_iso3, lightweight = TRUE)
 ids <- orderly::orderly_batch(report, params)
+
+orderly::orderly_run(report, filter(params, iso3 == "BWA")) #' [x]
+orderly::orderly_run(report, filter(params, iso3 == "CMR")) #' [x]
+orderly::orderly_run(report, filter(params, iso3 == "KEN")) #' [x]
+orderly::orderly_run(report, filter(params, iso3 == "LSO")) #' [x]
+orderly::orderly_run(report, filter(params, iso3 == "MOZ")) #' [x]
+orderly::orderly_run(report, filter(params, iso3 == "MWI")) #' [x]
+orderly::orderly_run(report, filter(params, iso3 == "NAM")) #' [x]
+orderly::orderly_run(report, filter(params, iso3 == "SWZ")) #' [x]
+orderly::orderly_run(report, filter(params, iso3 == "TZA")) #' [x]
+orderly::orderly_run(report, filter(params, iso3 == "UGA")) #' [x]
+orderly::orderly_run(report, filter(params, iso3 == "ZAF")) #' [x]
+orderly::orderly_run(report, filter(params, iso3 == "ZMB")) #' [x]
+orderly::orderly_run(report, filter(params, iso3 == "ZWE")) #' [x]
 
 #' Get the most recent archived or drafted version of each of the reports
 #' Could also use ids from orderly_batch here: if you've just run it then they should be the same

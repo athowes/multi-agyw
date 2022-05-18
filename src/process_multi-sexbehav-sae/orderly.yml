@@ -11,8 +11,6 @@ artefacts:
       filenames:
         - every-3-aaa-multi-sexbehav-sae.csv
         - best-3-aaa-multi-sexbehav-sae.csv
-        - every-3-aaa-multi-sexbehav-sae-samples.rds
-        # - best-3-aaa-multi-sexbehav-sae-samples.rds
 
 packages:
   - dplyr
@@ -72,64 +70,52 @@ depends:
       id: latest(parameter:iso3 == "BWA" && parameter:three_category == TRUE)
       use:
         depends/bwa_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-        depends/bwa_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "CMR" && parameter:three_category == TRUE)
       use:
         depends/cmr_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-        depends/cmr_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "KEN" && parameter:three_category == TRUE)
       use:
         depends/ken_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-        depends/ken_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "LSO" && parameter:three_category == TRUE)
       use:
         depends/lso_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-        depends/lso_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MOZ" && parameter:three_category == TRUE)
       use:
         depends/moz_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-        depends/moz_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
+
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "MWI" && parameter:three_category == TRUE)
       use:
         depends/mwi_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-        depends/mwi_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "NAM" && parameter:three_category == TRUE)
       use:
         depends/nam_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-        depends/nam_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "SWZ" && parameter:three_category == TRUE)
       use:
         depends/swz_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-        depends/swz_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "TZA" && parameter:three_category == TRUE)
       use:
         depends/tza_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-        depends/tza_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "UGA" && parameter:three_category == TRUE)
       use:
         depends/uga_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-        depends/uga_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZAF" && parameter:three_category == TRUE)
       use:
          depends/zaf_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-         depends/zaf_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZMB" && parameter:three_category == TRUE)
       use:
         depends/zmb_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-        depends/zmb_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
   - aaa_fit_multi-sexbehav-sae:
       id: latest(parameter:iso3 == "ZWE" && parameter:three_category == TRUE)
       use:
         depends/zwe_3-multi-sexbehav-sae.csv: multi-sexbehav-sae.csv
-        depends/zwe_3-multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds

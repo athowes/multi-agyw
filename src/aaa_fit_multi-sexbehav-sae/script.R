@@ -1,6 +1,8 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "ZMB"))
+# orderly::orderly_develop_start("aaa_fit_multi-sexbehav-sae", parameters = list(iso3 = "BWA"))
 # setwd("src/aaa_fit_multi-sexbehav-sae")
+
+sf_use_s2(FALSE)
 
 analysis_level <- multi.utils::analysis_level()
 admin1_level <- multi.utils::admin1_level()
@@ -304,8 +306,14 @@ S <- 1000
 if(lightweight) {
   S <- 100
 
-  formulas <- list(formula4)
-  models <- list("Model 4")
+  if(include_temporal) {
+    formulas <- list(formula4)
+    models <- list("Model 4")
+  }
+  else {
+    formulas <- list(formula2)
+    models <- list("Model 2")
+  }
 }
 
 #' tryCatch version for safety
@@ -530,7 +538,7 @@ res_df %>%
 dev.off()
 
 #' Artefact: Posterior predictive checks of coverage
-pdf("coverage-histograms.pdf", h = 8.25, w = 11.75)
+pdf("coverage-histograms.pdf", h = 6, w = 8)
 
 bins <- 20
 alpha <- 0.05
@@ -549,18 +557,19 @@ polygon_data <- data.frame(
 res_df %>%
   split(.$model) %>%
   lapply(function(x) {
-  ggplot(x, aes(x = prob_preditive_quantile)) +
+  ggplot(x) +
     facet_grid(indicator ~ survey_id, drop = TRUE, scales = "free") +
-    geom_histogram(aes(y = (..count..) / tapply(..count..,..PANEL..,sum)[..PANEL..]),
-                   breaks = seq(0, 1, length.out = bins + 1), fill = "#009E73", col = "black", alpha = 0.9) +
-    geom_polygon(data = polygon_data, aes(x = x, y = y), fill = "grey75", color = "grey50", alpha = 0.6) +
+    geom_histogram(aes(x = prob_predictive_quantile, y = (..count..) / tapply(..count..,..PANEL..,sum)[..PANEL..]),
+                   breaks = seq(0, 1, length.out = bins + 1), fill = "#009E73", col = "black", alpha = 0.9, inherit.aes = FALSE) +
+    geom_polygon(data = polygon_data, aes(x = x, y = y), fill = "grey75", color = "grey50", alpha = 0.6, inherit.aes = FALSE) +
     labs(title = paste0(x$model[1]), x = "", y = "") +
-    scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1))
+    scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1)) +
+    theme_minimal()
   })
 
 dev.off()
 
-pdf("coverage-ecdf-diff.pdf", h = 10, w = 12)
+pdf("coverage-ecdf-diff.pdf", h = 6, w = 8)
 
 lims <- get_lims(n = S, alpha, K = 100)
 
@@ -589,7 +598,8 @@ res_df %>%
       geom_step(aes(x = nominal_coverage, y = ecdf_diff_lower), alpha = 0.7) +
       geom_abline(intercept = 0, slope = 0, linetype = "dashed", col = "grey50") +
       labs(title = paste0(x$model[1]), x = "", y = "ECDF difference") +
-      scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1))
+      scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 0.25, 0.5, 0.75, 1)) +
+      theme_minimal()
   })
 
 dev.off()
