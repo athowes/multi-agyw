@@ -13,21 +13,22 @@ N <- 100
 #' Broken down by behaviour as follows
 N_fine <- c(30, 20, 45, 5)
 
-#' Some first guess as to the prevalence in the subgroups
-prev_fine <- c(0.05, 0.1, 0.1, 0.3)
+#' @param lor Log odds-ratios
+#' @param N_fine Number of individuals in each group
+#' @param prev Prevalence in
+#' @param N
+logit_scale_prev <- function(lor, N_fine, prev, N) {
+  #' Total number of PLHIV
+  target <- prev * N
+  #' theta represents prevalence in baseline risk group
+  #' plogis(lor + theta) is prevalence in each risk group
+  #' plogis(lor + theta) * N_fine is PLHIV in each risk group
+  optfn <- function(theta) (sum(plogis(lor + theta) * N_fine) - target)^2
+  #' Optimisation for baseline risk group prevalence
+  #' On the logit scale should be more numerically stable
+  opt <- optimise(optfn, c(-10, 10), tol = .Machine$double.eps^0.5)
+  #' Return prevalence
+  plogis(lor + opt$minimum)
+}
 
-#' On the logit scale
-logit_prev_fine <- qlogis(prev_fine)
-
-#' Values to aim for
-target_val <- lor
-
-#' Current values
-current_val <- logit_prev_fine - logit_prev_fine[1]
-
-#' Loss function
-sum(current_val - target_val)^2
-
-#' Want to constrain such that these two things are equal
-prev * N
-sum(prev_fine * N_fine)
+logit_scale_prev(lor, N_fine, prev, N)
