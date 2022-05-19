@@ -9,7 +9,7 @@ areas <- readRDS("depends/areas.rds")
 naomi3 <- readRDS("naomi3.rds")
 prev <- read_csv("depends/hiv_indicators_sexbehav.csv")
 
-prev <- prev %>%
+prev_wide <- prev %>%
   filter(
     (nosex12m != 0) & (sexcohab != 0) & (sexnonreg != 0) & (sexpaid12m != 0),
     age_group != "Y015_024"
@@ -26,7 +26,9 @@ prev <- prev %>%
   pivot_wider(
     names_from = "behav",
     values_from = "estimate",
-  ) %>%
+  )
+
+ind <- prev_wide %>%
   mutate(
     #' Calculate the odds
     across(nosex12m:sexpaid12m, ~ .x / (1 - .x), .names = "{.col}_odds"),
@@ -48,7 +50,7 @@ prev <- prev %>%
 
 pdf("prev-data.pdf", h = 8, w = 6.25)
 
-prev %>%
+ind %>%
   split(.$indicator) %>%
   lapply(function(x)
   ggplot(x, aes( x = "", y = estimate)) +
@@ -78,9 +80,9 @@ katie_temp <- prev_pr %>%
   ) %>%
   rename(area_id = iso3)
 
-pdf("katie-comp.pdf", h = 10, w = 6.25)
+pdf("katie-comp.pdf", h = 8, w = 6.25)
 
-prev %>%
+ind %>%
   filter(indicator == "pr") %>%
   ggplot(aes(x = "", y = estimate)) +
     geom_jitter(width = 0.2, alpha = 0.5, aes(col = age_group)) +
@@ -92,7 +94,7 @@ prev %>%
 
 dev.off()
 
-prev_inla <- prev %>%
+ind_inla <- ind %>%
   mutate(
     nosex12m_id = ifelse(behav == "nosex12m", 1, 0),
     sexcohab_id = ifelse(behav == "sexcohab", 1, 0),
@@ -110,7 +112,7 @@ fit <- inla(
   formula_baseline,
   control.family = list(link = "logit"),
   control.predictor = list(link = 1, compute = TRUE),
-  data = prev_inla,
+  data = ind_inla,
   control.compute = list(dic = TRUE, waic = TRUE, cpo = TRUE, config = TRUE),
   inla.mode = "experimental"
 )
@@ -122,20 +124,8 @@ fixed_effects <-  lapply(samples, function(x) x$latent[fixed_effects_idx])
 fixed_effects <- matrix(unlist(fixed_effects), byrow = T, nrow = length(fixed_effects))
 odds <- colMeans(exp(fixed_effects))
 exp(fit$summary.fixed$mean) #' This is what you'd get without sampling from the posterior
-odds / odds[1] #' Odds ratio
-log(odds / odds[1]) #' Log odds ratio
-
-#' PRs can be estimated directly using the log link function instead of the logit
-fit_log <- inla(
-  formula_baseline,
-  control.family = list(link = "log"),
-  control.predictor = list(link = 1, compute = TRUE),
-  data = prev_inla,
-  control.compute = list(dic = TRUE, waic = TRUE, cpo = TRUE, config = TRUE),
-  inla.mode = "experimental"
-)
-
-exp(fit_log$summary.fixed$mean) / exp(fit_log$summary.fixed$mean)[1]
+or <- odds / odds[1] #' Odds ratio
+lor <- log(odds / odds[1]) #' Log odds ratio
 
 #' Naomi estimates of PLHIV and population by district and age band
 naomi3 <- naomi3 %>%
@@ -174,7 +164,8 @@ df_3p1 <- df_3p1 %>%
   pivot_wider(
     names_from = indicator,
     values_from = estimate_smoothed,
-    values_fn = mean
+    values_fn = mean,
+    names_prefix = "prop_"
   )
 
 #' Merge the datasets
@@ -183,19 +174,21 @@ df_3p1 <- naomi3 %>%
     df_3p1,
     by = c("area_id", "age_group")
   ) %>%
-  filter(!is.na(nosex12m)) %>%
+  filter(!is.na(prop_nosex12m)) %>%
   left_join(
     prev_pr,
     by = "iso3"
+  ) %>%
+  mutate(
+    population_nosex12m = population * prop_nosex12m,
+    population_sexcohab = population * prop_sexcohab,
+    population_sexnonreg = population * prop_sexnonreg,
+    population_sexpaid12m = population * prop_sexpaid12m
   )
 
-#' Calculate disaggregated population, prevalence and PLHIV
-df_3p1 <- df_3p1 %>%
+#' Calculate prevalence and PLHIV using linear disaggregation
+df_3p1_linear <- df_3p1 %>%
   mutate(
-    population_nosex12m = population * nosex12m,
-    population_sexcohab = population * sexcohab,
-    population_sexnonreg = population * sexnonreg,
-    population_sexpaid12m = population * sexpaid12m,
     prev_nosex12m = plhiv / (population_nosex12m +
                              pr_sexcohab * population_sexcohab +
                              pr_sexnonreg * population_sexnonreg +
@@ -209,9 +202,65 @@ df_3p1 <- df_3p1 %>%
     plhiv_nosex12m = prev_sexpaid12m * population_sexpaid12m
   )
 
-write_csv(df_3p1, "prev-district-sexbehav.csv")
+write_csv(df_3p1_linear, "prev-district-sexbehav-linear.csv")
 
-df_3p1_plot <- df_3p1 %>%
+#' Calculate prevalence and PLHIV using logit-scale disaggregation
+
+#' @param lor Log odds-ratios
+#' @param N_fine Number of individuals in each group
+#' @param plhiv Total number of people living with HIV
+logit_scale_prev <- function(lor, N_fine, plhiv) {
+  #' theta represents prevalence in baseline risk group
+  #' plogis(lor + theta) is prevalence in each risk group
+  #' plogis(lor + theta) * N_fine is PLHIV in each risk group
+  optfn <- function(theta) (sum(plogis(lor + theta) * N_fine) - plhiv)^2
+  #' Optimisation for baseline risk group prevalence
+  #' On the logit scale should be more numerically stable
+  opt <- optimise(optfn, c(-10, 10), tol = .Machine$double.eps^0.5)
+  #' Return prevalence
+  plogis(lor + opt$minimum)
+}
+
+df_3p1_logit <- df_3p1 %>%
+  select(-starts_with("pr_")) %>%
+  pivot_longer(
+    cols = starts_with(c("population_", "prop_")),
+    names_to = "indicator",
+    values_to = "estimate"
+  ) %>%
+  separate(
+    indicator,
+    into = c("indicator", "behav")
+  ) %>%
+  filter(behav %in% c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")) %>%
+  split(~ area_id + age_group) %>%
+  lapply(function(x) {
+    population <- filter(x, indicator == "population")$population
+    prop <- filter(x, indicator == "prop")$prop
+    plhiv <- x$plhiv[1]
+    prev <- logit_scale_prev(lor, population, plhiv)
+    y <- filter(x, indicator == "prop") %>%
+      mutate(
+        indicator = "prev",
+        estimate = prev
+      )
+    bind_rows(x, y)
+  }) %>%
+  bind_rows()
+
+df_3p1_logit <- df_3p1_logit %>%
+  unite("indicator", indicator, behav, sep = "_") %>%
+  pivot_wider(
+    names_from = indicator,
+    values_from = estimate
+  )
+
+write_csv(df_3p1_logit, "prev-district-sexbehav-logit.csv")
+
+#' Artefact: Cloropleths
+pdf("prev-district-sexbehav-linear.pdf", h = 8, w = 6.25)
+
+df_3p1_plot <- df_3p1_linear %>%
   select(iso3, area_id, age_group, starts_with("prev_")) %>%
   pivot_longer(
     cols = starts_with("prev_"),
@@ -224,9 +273,6 @@ df_3p1_plot <- df_3p1 %>%
     by = "area_id"
   ) %>%
   st_as_sf()
-
-#' Artefact: Cloropleths
-pdf("prev-district-sexbehav.pdf", h = 8, w = 6.25)
 
 plotsA <- df_3p1_plot %>%
   multi.utils::update_naming() %>%
@@ -260,8 +306,53 @@ dev.off()
 #' Sadly multi-page .png don't exist
 lapply(1:length(plotsA), function(i) {
   ggsave(
-    paste0("prev-district-sexbehav-", i, ".png"),
+    paste0("prev-district-sexbehav-linear-", i, ".png"),
     plotsA[[i]],
     width = 6.25, height = 8, units = "in", dpi = 300
   )
 })
+
+pdf("prev-district-sexbehav-logit.pdf", h = 8, w = 6.25)
+
+df_3p1_plot <- df_3p1_logit %>%
+  select(iso3, area_id, age_group, starts_with("prev_")) %>%
+  pivot_longer(
+    cols = starts_with("prev_"),
+    names_to = "indicator",
+    names_prefix = "prev_",
+    values_to = "prev",
+  ) %>%
+  left_join(
+    select(areas, area_id),
+    by = "area_id"
+  ) %>%
+  st_as_sf()
+
+plotsA <- df_3p1_plot %>%
+  multi.utils::update_naming() %>%
+  split(.$iso3) %>%
+  lapply(function(x)
+    x %>%
+      ggplot(aes(fill = prev)) +
+      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+      coord_sf(lims_method = "geometry_bbox") +
+      scale_fill_viridis_c(option = "C", label = label_percent()) +
+      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(10))) +
+      theme_minimal() +
+      labs(
+        title = paste0(x$iso3[1]),
+        fill = "Prevalence"
+      ) +
+      theme(
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        strip.text = element_text(face = "bold"),
+        legend.position = "bottom",
+        legend.key.width = unit(4, "lines")
+      )
+  )
+
+plotsA
+
+dev.off()

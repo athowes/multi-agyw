@@ -6,21 +6,23 @@ artefacts:
       filenames:
         - prev-data.pdf
         - katie-comp.pdf
-        - prev-district-sexbehav.csv
-        - prev-district-sexbehav.pdf
-        - prev-district-sexbehav-1.png
-        - prev-district-sexbehav-2.png
-        - prev-district-sexbehav-3.png
-        - prev-district-sexbehav-4.png
-        - prev-district-sexbehav-5.png
-        - prev-district-sexbehav-6.png
-        - prev-district-sexbehav-7.png
-        - prev-district-sexbehav-8.png
-        - prev-district-sexbehav-9.png
-        - prev-district-sexbehav-10.png
-        - prev-district-sexbehav-11.png
-        - prev-district-sexbehav-12.png
-        - prev-district-sexbehav-13.png
+        - prev-district-sexbehav-linear.csv
+        - prev-district-sexbehav-logit.csv
+        - prev-district-sexbehav-linear.pdf
+        - prev-district-sexbehav-logit.pdf
+        # - prev-district-sexbehav-linear-1.png
+        # - prev-district-sexbehav-linear-2.png
+        # - prev-district-sexbehav-linear-3.png
+        # - prev-district-sexbehav-linear-4.png
+        # - prev-district-sexbehav-linear-5.png
+        # - prev-district-sexbehav-linear-6.png
+        # - prev-district-sexbehav-linear-7.png
+        # - prev-district-sexbehav-linear-8.png
+        # - prev-district-sexbehav-linear-9.png
+        # - prev-district-sexbehav-linear-10.png
+        # - prev-district-sexbehav-linear-11.png
+        # - prev-district-sexbehav-linear-12.png
+        # - prev-district-sexbehav-linear-13.png
 
 packages:
   - dplyr
