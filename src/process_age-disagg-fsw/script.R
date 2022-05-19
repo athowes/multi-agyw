@@ -101,4 +101,12 @@ ggplot(df, aes(x = forcats::fct_rev(area_id), y = fsw_prop)) +
 
 dev.off()
 
+pdf("age-disagg-fsw-line.pdf", h = 5, w = 6.25)
+
+ggplot(df, aes(x = age_group, y = fsw_prop, group = area_id, col = area_id)) +
+  geom_line() +
+  theme_minimal()
+
+dev.off()
+
 write_csv(df, "fsw-estimates.csv")

@@ -5,6 +5,7 @@ artefacts:
       description: Age country specific FSW estimates
       filenames:
         - age-disagg-fsw.pdf
+        - age-disagg-fsw-line.pdf
         - fsw-estimates.csv
 packages:
   - dplyr
