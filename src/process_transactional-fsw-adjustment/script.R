@@ -1,6 +1,6 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("process_johnston-adjustment")
-# setwd("src/process_johnston-adjustment")
+# orderly::orderly_develop_start("process_transactional-fsw-adjustment")
+# setwd("src/process_transactional-fsw-adjustment")
 
 df_3p1 <- read_csv("depends/best-3p1-multi-sexbehav-sae.csv")
 johnston <- read_csv("depends/johnston-fsw-comparison.csv")
