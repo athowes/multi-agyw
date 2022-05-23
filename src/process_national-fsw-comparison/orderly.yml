@@ -12,6 +12,8 @@ artefacts:
         - laga-fsw-comparison.csv
         - laga-fsw-comparison-xy.pdf
         - oli-fsw-data.pdf
+        - oli-johnston-fsw-comparison-xy.pdf
+        - oli-johnston-fsw-comparison.csv
 
 packages:
   - dplyr
@@ -42,3 +44,11 @@ depends:
     id: latest
     use:
       depends/national_areas.rds: national_areas.rds
+  process_all-data:
+    id: latest
+    use:
+      depends/interpolated_population.csv: interpolated_population.csv
+  process_age-disagg-fsw:
+    id: latest
+    use:
+      depends/fsw-estimates.csv: fsw-estimates.csv
