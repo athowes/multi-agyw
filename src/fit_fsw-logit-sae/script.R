@@ -2,6 +2,8 @@
 # orderly::orderly_develop_start("fit_fsw-logit-sae")
 # setwd("src/fit_fsw-logit-sae")
 
+sf_use_s2(FALSE)
+
 analysis_level <- multi.utils::analysis_level()
 admin1_level <- multi.utils::admin1_level()
 iso3 <- names(analysis_level)
@@ -229,13 +231,16 @@ df <- mutate(df,
 pdf("covariate-correlation-check.pdf", h = 5, w = 6.25)
 
 ggplot(df, aes(x = cfswrecent)) +
-  geom_histogram()
+  geom_histogram() +
+  theme_minimal()
 
 ggplot(df, aes(x = cfswever)) +
-  geom_histogram()
+  geom_histogram() +
+  theme_minimal()
 
 ggplot(df, aes(x = cfswrecent, y = cfswever)) +
-  geom_point()
+  geom_point() +
+  theme_minimal()
 
 dev.off()
 
@@ -450,7 +455,7 @@ write_csv(ic_df, "fsw-logit-information-criteria.csv", na = "")
 #' Which model has the highest CPO?
 which.max(ic_df$cpo)
 
-#' Model 6 at the moment!
+#' Model 4 at the moment!
 res_df_best <- filter(res_df, model == paste0("Model ", which.max(ic_df$cpo)))
 res_fit_best <- res_fit[[which.max(ic_df$cpo)]]
 
