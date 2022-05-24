@@ -23,7 +23,7 @@ packages:
   - tibble
 
 depends:
-  - process_johnston-adjustment:
+  - process_transactional-fsw-adjustment:
       id: latest
       use:
         depends/adjust-best-3p1-multi-sexbehav-sae.csv: adjust-best-3p1-multi-sexbehav-sae.csv

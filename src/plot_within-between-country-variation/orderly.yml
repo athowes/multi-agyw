@@ -31,7 +31,7 @@ depends:
       id: latest
       use:
         depends/interpolated_population.csv: interpolated_population.csv
-  - process_johnston-adjustment:
+  - process_transactional-fsw-adjustment:
       id: latest
       use:
         depends/adjust-best-3p1-multi-sexbehav-sae.csv: adjust-best-3p1-multi-sexbehav-sae.csv
