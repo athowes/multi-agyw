@@ -80,6 +80,7 @@ national_areas <- readRDS("depends/national_areas.rds")
 
 johnston <- johnston %>%
   left_join(country_codes) %>%
+  mutate(`size_15-49` = `size_15-19` + `size_20-24` + `size_25-49`) %>%
   pivot_longer(
     cols = contains("size"),
     names_prefix = "size_",
@@ -89,10 +90,9 @@ johnston <- johnston %>%
   filter(
     region %in% c("ESA", "WCA"),
     iso3 %in% priority_iso3,
-    age_group %in% c("15-19", "20-24", "25-49")
+    age_group %in% c("15-19", "20-24", "25-49", "15-49")
   ) %>%
   select(-region) %>%
-  filter(iso3 %in% priority_iso3) %>%
   left_join(
     pop %>%
       filter(area_id %in% priority_iso3),
@@ -361,7 +361,8 @@ oli_johnston_comparison <- johnston %>%
       mutate(
         age_group = recode_factor(
           age_group,
-          "Y015_019" = "15-19", "Y020_024" = "20-24", "Y025_029" = "25-29"
+          "Y015_019" = "15-19", "Y020_024" = "20-24",
+          "Y025_029" = "25-29", "Y015_049" = "15-49"
         )
       ),
     by = c("area_id", "age_group")
@@ -370,13 +371,24 @@ oli_johnston_comparison <- johnston %>%
 pdf("oli-johnston-fsw-comparison-xy.pdf", h = 5, w = 6.25)
 
 oli_johnston_comparison %>%
+  filter(age_group == "15-49") %>%
+  filter(!is.na(total_johnston), !is.na(total_oli)) %>%
+  ggplot(aes(x = total_johnston, y = total_oli, col = area_id, shape = age_group)) +
+  geom_point(alpha = 0.8, size = 2) +
+  lims(x = c(0, 5 * 10^5), y = c(0, 5 * 10^5)) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", col = "grey") +
+  theme_minimal() +
+  labs(x = "Total FSW (Johnston)", y = "Total FSW (Oli)")
+
+oli_johnston_comparison %>%
+  filter(age_group != "15-49") %>%
   filter(!is.na(total_johnston), !is.na(total_oli)) %>%
   ggplot(aes(x = total_johnston, y = total_oli, col = area_id, shape = age_group)) +
   geom_point(alpha = 0.8, size = 2) +
   lims(x = c(0, 10^5), y = c(0, 10^5)) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", col = "grey") +
   theme_minimal() +
-  labs(x = "Total FSW (Johnston)", y = "Total FSW (Oli)")
+  labs(x = "FSW (Johnston)", y = "FSW (Oli)")
 
 dev.off()
 
