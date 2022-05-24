@@ -78,21 +78,32 @@ for(x in priority_iso3) {
     ) %>%
     mutate(eversexpop = eversex * population)
 
-  total_eversexpop <- sum(df_x$eversexpop)
-  total_fsw <- filter(fsw, area_id == x)$total_fsw
-
-  df_x <- df_x %>%
-    mutate(
-      fsw = (eversexpop / total_eversexpop) * total_fsw,
+  df_x_total <- df_x %>%
+    summarise(
+      age_group = "Y015_049",
+      eversex = NA,
+      year = mean(year),
+      sex = "female",
+      population = sum(population),
+      eversexpop = sum(eversexpop),
+      fsw = filter(fsw, area_id == x)$total_fsw,
       fsw_prop = fsw / population
     )
 
-  df <- bind_rows(df, df_x)
+  df_x <- df_x %>%
+    mutate(
+      fsw = (eversexpop / df_x_total$eversexpop) * df_x_total$fsw,
+      fsw_prop = fsw / population
+    )
+
+  df <- bind_rows(df, df_x, df_x_total)
 }
 
 pdf("age-disagg-fsw.pdf", h = 5, w = 6.25)
 
-ggplot(df, aes(x = forcats::fct_rev(area_id), y = fsw_prop)) +
+df %>%
+  filter(age_group != "Y015_049") %>%
+  ggplot(aes(x = forcats::fct_rev(area_id), y = fsw_prop)) +
   geom_bar(stat = "identity", alpha = 0.7) +
   facet_grid(~age_group) +
   scale_y_continuous(breaks = seq(0, 0.05, by = 0.025)) +
@@ -103,7 +114,9 @@ dev.off()
 
 pdf("age-disagg-fsw-line.pdf", h = 5, w = 6.25)
 
-ggplot(df, aes(x = age_group, y = fsw_prop, group = area_id, col = area_id)) +
+df %>%
+  filter(age_group != "Y015_049") %>%
+  ggplot(aes(x = age_group, y = fsw_prop, group = area_id, col = area_id)) +
   geom_line() +
   theme_minimal()
 
