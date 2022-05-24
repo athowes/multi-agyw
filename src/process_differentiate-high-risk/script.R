@@ -14,6 +14,9 @@ df_3 <- df_3 %>%
     by = c("age_group", "area_id")
   )
 
+#' Add check that there are no observations missing a logit counterpart
+stopifnot(df_3 %>% filter(is.na(prop_obs_idx)) %>% nrow() == 0)
+
 full_samples <- readRDS("depends/multi-sexbehav-sae-samples.rds")
 S <- length(full_samples)
 
@@ -75,7 +78,7 @@ samples_prop_df_split <- samples_prop_df %>%
 stopifnot(length(samples_prop_df_split) == nrow(df_prop_distinct))
 
 cores <- detectCores()
-ncores <- 4
+ncores <- cores - 2
 
 start_time <- Sys.time()
 
@@ -225,5 +228,29 @@ df <- df %>%
     prob_upper = row_summary(prob_samples_df, upper)
   )
 
-#' Save output!
+#' Save output
 write_csv(df, "best-3p1-multi-sexbehav-sae.csv")
+
+#' Visualise result
+pdf("3p1-boxplots.pdf", h = 5, w = 6.25)
+
+df %>%
+  filter(
+    year == 2018,
+    indicator %in% c("sexnonregplus", "sexnonreg", "sexpaid12m")
+  ) %>%
+  split(.$iso3) %>%
+  lapply(function(x)
+  x %>%
+    ggplot(aes(y = prob_mean, x = 1)) +
+      geom_boxplot() +
+      facet_wrap(iso3 ~ indicator) +
+      theme_minimal() +
+      theme(
+        axis.title.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()
+      )
+  )
+
+dev.off()
