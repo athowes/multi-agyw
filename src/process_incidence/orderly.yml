@@ -19,6 +19,7 @@ artefacts:
         - incidence-district-sexbehav-11.png
         - incidence-district-sexbehav-12.png
         - incidence-district-sexbehav-13.png
+        - infections-district-sexbehav-pdf
 
 packages:
   - dplyr
@@ -46,3 +47,7 @@ depends:
       id: latest
       use:
         depends/areas.rds: areas.rds
+  - process_prevalence:
+      id: latest
+      use:
+        depends/prev-district-sexbehav-logit.csv: prev-district-sexbehav-logit.csv

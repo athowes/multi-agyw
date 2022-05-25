@@ -5,6 +5,7 @@
 analysis_level <- multi.utils::analysis_level()
 
 df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
+prev <- read_csv("depends/prev-district-sexbehav-logit.csv")
 areas <- readRDS("depends/areas.rds")
 
 #' Confusing file names here, but I believe they are all the same thing
@@ -24,6 +25,7 @@ files <- c(
   "zwe_20210331-161516_naomi_spectrum_digest"
 )
 
+#' This would be preferable to the above, if it worked
 # naomi3 <- readRDS("naomi3.rds")
 #
 # naomi3 <- naomi3 %>%
@@ -94,6 +96,11 @@ df_3p1 <- naomi %>%
   left_join(
     df_3p1,
     by = c("area_id", "age_group")
+  ) %>%
+  left_join(
+    prev %>%
+      select("area_id", "age_group", starts_with("prev_")),
+    by = c("area_id", "age_group")
   )
 
 rr_sexcohab <- 1
@@ -123,14 +130,18 @@ df_3p1 <- df_3p1 %>%
     population_sexcohab = population * sexcohab,
     population_sexnonreg = population * sexnonreg,
     population_sexpaid12m = population * sexpaid12m,
+    plhiv_nosex12m = population_nosex12m * prev_nosex12m,
+    plhiv_sexcohab = population_sexcohab * prev_sexcohab,
+    plhiv_sexnonreg = population_sexnonreg * prev_sexnonreg,
+    plhiv_sexpaid12m = population_sexpaid12m * prev_sexpaid12m,
     incidence_nosex12m = 0,
     incidence_sexcohab = infections / (population_sexcohab + rr_sexnonreg * population_sexnonreg + rr_sexpaid12m * population_sexpaid12m),
     incidence_sexnonreg = incidence_sexcohab * rr_sexnonreg,
     incidence_sexpaid12m = incidence_sexcohab * rr_sexpaid12m,
     infections_nosex12m = 0,
-    infections_sexcohab = population_sexcohab * incidence_sexcohab,
-    infections_sexnonreg = population_sexnonreg * incidence_sexnonreg,
-    infections_sexpaid12m = population_sexpaid12m * incidence_sexpaid12m
+    infections_sexcohab = (population_sexcohab - plhiv_sexcohab) * incidence_sexcohab,
+    infections_sexnonreg = (population_sexnonreg - plhiv_sexnonreg) * incidence_sexnonreg,
+    infections_sexpaid12m = (population_sexpaid12m - plhiv_sexpaid12m) * incidence_sexpaid12m
   )
 
 write_csv(df_3p1, "incidence-district-sexbehav.csv")
@@ -190,3 +201,44 @@ lapply(1:length(plotsA), function(i) {
     width = 6.25, height = 8, units = "in", dpi = 300
   )
 })
+
+pdf("infections-district-sexbehav.pdf", h = 8, w = 6.25)
+
+df_3p1 %>%
+  select(iso3, area_id, age_group, starts_with("infections_sex")) %>%
+  pivot_longer(
+    cols = starts_with("infections_sex"),
+    names_to = "indicator",
+    names_prefix = "infections_",
+    values_to = "infections",
+  ) %>%
+  left_join(
+    select(areas, area_id),
+    by = "area_id"
+  ) %>%
+  st_as_sf() %>%
+  multi.utils::update_naming() %>%
+  split(.$iso3) %>%
+  lapply(function(x)
+    x %>%
+      ggplot(aes(fill = infections)) +
+      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+      coord_sf(lims_method = "geometry_bbox") +
+      scale_fill_viridis_c(option = "C") +
+      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(10))) +
+      theme_minimal() +
+      labs(
+        title = paste0(x$iso3[1]),
+        fill = "New infections"
+      ) +
+      theme(
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        strip.text = element_text(face = "bold"),
+        legend.position = "bottom",
+        legend.key.width = unit(4, "lines")
+      )
+  )
+
+dev.off()
