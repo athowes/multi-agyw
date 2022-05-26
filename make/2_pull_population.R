@@ -28,7 +28,7 @@ area_hierarchy <- read_csv(path)
 naomi3 <- naomi3 %>%
   filter(
     iso3 %in% priority_iso3,
-    indicator_label == "Population",
+    indicator_label %in% c("Population", "PLHIV"),
     #' These are the age groups we are considering,
     age_group_label %in% c("15-19", "20-24", "25-29", "15-24", "15-49"),
     #' Only female
@@ -43,15 +43,18 @@ naomi3 <- naomi3 %>%
     select(area_hierarchy, area_id, parent_area_id),
     by = "area_id"
   ) %>%
-  select(iso3, area_id, area_level, age_group = age_group_label, population_mean = mean, parent_area_id)
+  select(
+    iso3, area_id, area_level, age_group = age_group_label,
+    indicator = indicator_label, estimate = mean, parent_area_id
+  )
 
-#' The BWA and CMR population are at one level too low
+#' BWA and CMR are at one level too low
 naomi3_aggregates <- naomi3 %>%
   filter(iso3 %in% c("BWA", "CMR")) %>%
-  group_by(parent_area_id, age_group) %>%
+  group_by(parent_area_id, age_group, indicator) %>%
   summarise(
     iso3 = iso3,
-    population_mean = sum(population_mean)
+    estimate = sum(estimate)
   ) %>%
   rename(area_id = parent_area_id) %>%
   mutate(area_level = as.numeric(substr(area_id, 5, 5)))
@@ -65,9 +68,9 @@ naomi3 <- bind_rows(naomi3, naomi3_aggregates) %>%
   select(-parent_area_id)
 
 naomi3_national <- naomi3 %>%
-  group_by(iso3, age_group) %>%
+  group_by(iso3, age_group, indicator) %>%
   summarise(
-    population_mean = sum(population_mean)
+    estimate = sum(estimate)
   ) %>%
   mutate(
     area_level = 0,
@@ -76,4 +79,4 @@ naomi3_national <- naomi3 %>%
 
 naomi3 <- bind_rows(naomi3, naomi3_national)
 
-saveRDS(naomi3, "global/naomi3-population.rds")
+saveRDS(naomi3, "global/naomi3-population-plhiv.rds")
