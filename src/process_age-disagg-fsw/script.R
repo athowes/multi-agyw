@@ -5,6 +5,7 @@
 priority_iso3 <- multi.utils::priority_iso3()
 
 pse <- read_csv("pse_estimates.csv")
+pse_new <- read_csv("fsw_ntl_pse.csv")
 afs <- readRDS("kinh-afs-dist.rds")
 pop <- read_csv("depends/interpolated_population.csv")
 
@@ -18,24 +19,37 @@ pop <- pop %>%
     year == 2018,
   )
 
-fsw <- pse %>%
-  select(-"...1", -lower, -upper, -region, -four_region) %>%
-  rename(area_id = iso3) %>%
-  mutate(year = 2018) %>%
-  filter(
-    kp == "FSW",
-    area_id %in% priority_iso3
-  ) %>%
-  left_join(
-    pop %>%
-      group_by(area_id, year) %>%
-      summarise(population = sum(population)) %>%
-      mutate(age_group = "Y015_049", .before = population),
-    by = c("area_id", "year")
-  ) %>%
-  mutate(
-    total_fsw = median * population
-  )
+updated_data <- TRUE
+
+if(updated_data) {
+  fsw <- pse_new %>%
+    select(-indicator, -lower, -upper) %>%
+    rename(
+      area_id = iso3,
+      total_fsw = median
+    ) %>%
+    filter(area_id %in% priority_iso3) %>%
+    mutate(year = 2018, age_group = "Y015_049")
+} else {
+  fsw <- pse %>%
+    select(-"...1", -lower, -upper, -region, -four_region) %>%
+    rename(area_id = iso3) %>%
+    mutate(year = 2018) %>%
+    filter(
+      kp == "FSW",
+      area_id %in% priority_iso3
+    ) %>%
+    left_join(
+      pop %>%
+        group_by(area_id, year) %>%
+        summarise(population = sum(population)) %>%
+        mutate(age_group = "Y015_049", .before = population),
+      by = c("area_id", "year")
+    ) %>%
+    mutate(
+      total_fsw = median * population
+    )
+}
 
 #' Just take the yob to be 2000 for now, could be improved later
 afs <- afs %>%
