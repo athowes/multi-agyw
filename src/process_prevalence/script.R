@@ -68,10 +68,11 @@ ind %>%
 
 dev.off()
 
-prev_pr <- read_csv("katie-prev-pr.csv") %>%
-  select(iso3, starts_with("pr_"))
+#' Imported from the prevalence ratio tab of Katie's spreadsheet
+katie_prev_pr <- read_csv("katie-prev-pr.csv")
 
-katie_temp <- prev_pr %>%
+katie_pr <- katie_prev_pr %>%
+  select(iso3, starts_with("pr_")) %>%
   pivot_longer(
     cols = starts_with("pr_"),
     names_to = c("indicator", "behav"),
@@ -80,19 +81,28 @@ katie_temp <- prev_pr %>%
   ) %>%
   rename(area_id = iso3)
 
+#' Compare to prevalence ratios from this analysis
 pdf("katie-comp.pdf", h = 8, w = 6.25)
 
 ind %>%
   filter(indicator == "pr") %>%
   ggplot(aes(x = "", y = estimate)) +
     geom_jitter(width = 0.2, alpha = 0.5, aes(col = age_group)) +
-    geom_point(data = katie_temp, aes(x = "", y = estimate), col = "black", shape = 2) +
+    geom_point(data = katie_pr, aes(x = "", y = estimate), col = "black", shape = 2) +
     facet_grid(area_id ~ behav, scales = "free") +
     scale_color_manual(values = multi.utils::cbpalette()) +
     labs(x = "") +
     theme_minimal()
 
 dev.off()
+
+#' Extract YWKP prevalence log-odds ratio
+katie_prev <- katie_prev_pr %>%
+  select(iso3, starts_with("prev_"))
+
+odds <- function(p) p / (1 - p)
+
+lor_ywkp <- mean(log(odds(katie_prev$prev_sexpaid12m) / odds(katie_prev$prev_nosex12m)))
 
 ind_inla <- ind %>%
   mutate(
@@ -126,6 +136,7 @@ odds <- colMeans(exp(fixed_effects))
 exp(fit$summary.fixed$mean) #' This is what you'd get without sampling from the posterior
 or <- odds / odds[1] #' Odds ratio
 lor <- log(odds / odds[1]) #' Log odds ratio
+lor[4] <- lor_ywkp
 
 #' Naomi estimates of PLHIV and population by district and age band
 naomi3 <- naomi3 %>%
