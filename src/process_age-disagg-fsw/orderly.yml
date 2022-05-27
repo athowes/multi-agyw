@@ -7,6 +7,7 @@ artefacts:
         - age-disagg-fsw.pdf
         - age-disagg-fsw-line.pdf
         - fsw-estimates.csv
+        - thembisa-fsw-age-dist.pdf
 packages:
   - dplyr
   - forcats

@@ -113,6 +113,26 @@ for(x in priority_iso3) {
   df <- bind_rows(df, df_x, df_x_total)
 }
 
+#' FSW age distribution parameters from Thembisa
+#' Downloaded from: https://www.thembisa.org/content/downloadPage/Thembisa4_3
+gamma_mean <- 29
+gamma_sd <- 9
+
+#' gamma_mean = alpha / beta
+#' gamma_variance = alpha / beta^2
+beta <- gamma_mean / gamma_sd^2 #'rate
+alpha <- gamma_mean * beta #' shape
+
+pdf("thembisa-fsw-age-dist.pdf", h = 5, w = 6.25)
+
+data.frame(x = 15:49, y = dgamma(15:49, shape = alpha, rate = beta)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line() +
+  labs(x = "Age", y = "", title = "Age distribution of FSW from Thembisa 4.3 (ZAF)") +
+  theme_minimal()
+
+dev.off()
+
 pdf("age-disagg-fsw.pdf", h = 5, w = 6.25)
 
 df %>%
