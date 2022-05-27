@@ -39,7 +39,9 @@ packages:
 
 resources:
  - katie-prev-pr.csv
- - naomi3.rds
+
+global_resources:
+  naomi3-population-plhiv.rds: naomi3-population-plhiv.rds
 
 depends:
   - process_transactional-fsw-adjustment:

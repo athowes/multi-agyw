@@ -49,6 +49,13 @@ naomi3 <- naomi3 %>%
   )
 
 #' BWA and CMR are at one level too low
+naomi3 %>%
+  group_by(iso3) %>%
+  summarise(area_level = unique(area_level)) %>%
+  filter(area_level != 0) %>%
+  t()
+
+#' So lets aggregate them upwards here
 naomi3_aggregates <- naomi3 %>%
   filter(iso3 %in% c("BWA", "CMR")) %>%
   group_by(parent_area_id, age_group, indicator) %>%
@@ -57,15 +64,18 @@ naomi3_aggregates <- naomi3 %>%
     estimate = sum(estimate)
   ) %>%
   rename(area_id = parent_area_id) %>%
-  mutate(area_level = as.numeric(substr(area_id, 5, 5)))
+  mutate(area_level = as.numeric(substr(area_id, 5, 5))) %>%
+  #' For some reason some of the rows are duplicated here
+  #' Could investigate this more...
+  distinct()
 
 naomi3 <- bind_rows(naomi3, naomi3_aggregates) %>%
   split(.$iso3) %>%
   lapply(function(x) {
+    #' Checking here that the area_level is correct
     filter(x, area_level == analysis_level[x$iso3[1]])
   }) %>%
-  bind_rows() %>%
-  select(-parent_area_id)
+  bind_rows()
 
 naomi3_national <- naomi3 %>%
   group_by(iso3, age_group, indicator) %>%
@@ -74,9 +84,11 @@ naomi3_national <- naomi3 %>%
   ) %>%
   mutate(
     area_level = 0,
-    area_id = iso3
+    area_id = iso3,
+    parent_area_id = NA
   )
 
-naomi3 <- bind_rows(naomi3, naomi3_national)
+naomi3 <- bind_rows(naomi3, naomi3_national) %>%
+  select(-parent_area_id)
 
 saveRDS(naomi3, "global/naomi3-population-plhiv.rds")

@@ -6,7 +6,7 @@ analysis_level <- multi.utils::analysis_level()
 
 df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
 areas <- readRDS("depends/areas.rds")
-naomi3 <- readRDS("naomi3.rds")
+naomi3 <- readRDS("naomi3-population-plhiv.rds")
 prev <- read_csv("depends/hiv_indicators_sexbehav.csv")
 
 prev_wide <- prev %>%
@@ -129,27 +129,17 @@ lor <- log(odds / odds[1]) #' Log odds ratio
 
 #' Naomi estimates of PLHIV and population by district and age band
 naomi3 <- naomi3 %>%
-  filter(iso3 %in% multi.utils::priority_iso3()) %>%
-  mutate(analysis_level = analysis_level[iso3]) %>%
-  filter(
-    age_group_label %in% c("15-19", "20-24", "25-29"),
-    indicator_label %in% c("PLHIV", "Population"),
-    sex == "female",
-    case_when(
-      iso3 %in% c("TZA", "ZAF") ~ calendar_quarter == "CY2020Q3",
-      TRUE ~ calendar_quarter == "CY2020Q4"
-    )
-  ) %>%
-  select(iso3, area_id, sex, age_group_label, indicator_label, mean) %>%
   pivot_wider(
-    names_from = indicator_label,
-    values_from = mean
+    names_from = indicator,
+    values_from = estimate
   ) %>%
   mutate(
     age_group = case_when(
-      age_group_label == "15-19" ~ "Y015_019",
-      age_group_label == "20-24" ~ "Y020_024",
-      age_group_label == "25-29" ~ "Y025_029"
+      age_group == "15-19" ~ "Y015_019",
+      age_group == "20-24" ~ "Y020_024",
+      age_group == "25-29" ~ "Y025_029",
+      age_group == "15-24" ~ "Y015_024",
+      age_group == "15-49" ~ "Y015_049"
     )
   ) %>%
   rename(
@@ -221,6 +211,8 @@ logit_scale_prev <- function(lor, N_fine, plhiv) {
   plogis(lor + opt$minimum)
 }
 
+start_time <- Sys.time()
+
 df_3p1_logit <- df_3p1 %>%
   select(-starts_with("pr_")) %>%
   pivot_longer(
@@ -248,6 +240,10 @@ df_3p1_logit <- df_3p1 %>%
   }) %>%
   bind_rows()
 
+end_time <- Sys.time()
+
+end_time - start_time
+
 df_3p1_logit <- df_3p1_logit %>%
   unite("indicator", indicator, behav, sep = "_") %>%
   pivot_wider(
@@ -260,7 +256,7 @@ write_csv(df_3p1_logit, "prev-district-sexbehav-logit.csv")
 #' Artefact: Cloropleths
 pdf("prev-district-sexbehav-linear.pdf", h = 8, w = 6.25)
 
-df_3p1_plot <- df_3p1_linear %>%
+df_3p1_linear_plot <- df_3p1_linear %>%
   select(iso3, area_id, age_group, starts_with("prev_")) %>%
   pivot_longer(
     cols = starts_with("prev_"),
@@ -274,7 +270,7 @@ df_3p1_plot <- df_3p1_linear %>%
   ) %>%
   st_as_sf()
 
-plotsA <- df_3p1_plot %>%
+plotsA <- df_3p1_linear_plot %>%
   multi.utils::update_naming() %>%
   split(.$iso3) %>%
   lapply(function(x)
@@ -304,13 +300,13 @@ plotsA
 dev.off()
 
 #' Sadly multi-page .png don't exist
-lapply(1:length(plotsA), function(i) {
-  ggsave(
-    paste0("prev-district-sexbehav-linear-", i, ".png"),
-    plotsA[[i]],
-    width = 6.25, height = 8, units = "in", dpi = 300
-  )
-})
+# lapply(1:length(plotsA), function(i) {
+#   ggsave(
+#     paste0("prev-district-sexbehav-linear-", i, ".png"),
+#     plotsA[[i]],
+#     width = 6.25, height = 8, units = "in", dpi = 300
+#   )
+# })
 
 pdf("prev-district-sexbehav-logit.pdf", h = 8, w = 6.25)
 
@@ -328,7 +324,7 @@ df_3p1_plot <- df_3p1_logit %>%
   ) %>%
   st_as_sf()
 
-plotsA <- df_3p1_plot %>%
+plotsB <- df_3p1_plot %>%
   multi.utils::update_naming() %>%
   split(.$iso3) %>%
   lapply(function(x)
@@ -353,6 +349,6 @@ plotsA <- df_3p1_plot %>%
       )
   )
 
-plotsA
+plotsB
 
 dev.off()
