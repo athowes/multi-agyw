@@ -17,9 +17,6 @@ packages:
   - rdhs
   - naomi.utils
 
-global_resources:
-  depends/phia_sexbehav.csv: phia_sexbehav.csv
-
 depends:
   lso_data_areas:
     id: latest
