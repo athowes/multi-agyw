@@ -28,7 +28,7 @@ area_hierarchy <- read_csv(path)
 naomi3 <- naomi3 %>%
   filter(
     iso3 %in% priority_iso3,
-    indicator_label %in% c("Population", "PLHIV"),
+    indicator_label %in% c("Population", "PLHIV", "New infections"),
     #' These are the age groups we are considering,
     age_group_label %in% c("15-19", "20-24", "25-29", "15-24", "15-49"),
     #' Only female
@@ -84,11 +84,10 @@ naomi3_national <- naomi3 %>%
   ) %>%
   mutate(
     area_level = 0,
-    area_id = iso3,
-    parent_area_id = NA
+    area_id = iso3
   )
 
 naomi3 <- bind_rows(naomi3, naomi3_national) %>%
   select(-parent_area_id)
 
-saveRDS(naomi3, "global/naomi3-population-plhiv.rds")
+saveRDS(naomi3, "global/naomi3-population-plhiv-infections.rds")

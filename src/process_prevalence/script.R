@@ -6,7 +6,7 @@ analysis_level <- multi.utils::analysis_level()
 
 df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
 areas <- readRDS("depends/areas.rds")
-naomi3 <- readRDS("naomi3-population-plhiv.rds")
+naomi3 <- readRDS("naomi3-population-plhiv-infections.rds")
 prev <- read_csv("depends/hiv_indicators_sexbehav.csv")
 
 prev_wide <- prev %>%

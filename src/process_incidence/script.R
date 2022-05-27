@@ -6,70 +6,23 @@ analysis_level <- multi.utils::analysis_level()
 
 df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
 prev <- read_csv("depends/prev-district-sexbehav-logit.csv")
+naomi3 <- readRDS("naomi3-population-plhiv-infections.rds")
 areas <- readRDS("depends/areas.rds")
 
-#' Confusing file names here, but I believe they are all the same thing
-files <- c(
-  "bwa_20210329-142306_naomi_spectrum_digest",
-  "CMR_20210427-155423_naomi_spectrum_digest",
-  "ken-naomi-output_calibrated-sex-age-coarse_2021-03-30",
-  "LSO_naomi-output_20210616-0905",
-  "MOZ_20210504-101529_naomi_spectrum_digest",
-  "MWI_20210428-213633_sex-age-coarse-calibrated_naomi_spectrum_digest",
-  "nam_20210408-003934_naomi_spectrum_digest",
-  "SWZ_naomi-output_20210616-1231",
-  "tza-naomi-output-time2-art_calibrated-sex-age-coarse_2021-04-13",
-  "uga-2016-art-adjusted_naomi-output_calibrated-sex-age-fine_2021-02-05",
-  "zaf_district_naomi-output_calibrated-province",
-  "zmb-naomi-output_calibrated-sex-age-coarse_2021-04-27",
-  "zwe_20210331-161516_naomi_spectrum_digest"
-)
-
-#' This would be preferable to the above, if it worked
-# naomi3 <- readRDS("naomi3.rds")
-#
-# naomi3 <- naomi3 %>%
-#   filter(iso3 %in% multi.utils::priority_iso3()) %>%
-#   mutate(analysis_level = analysis_level[iso3]) %>%
-#   filter(
-#     age_group_label %in% c("15-19", "20-24", "25-29"),
-#     indicator_label %in% c("New infections", "PLHIV", "HIV incidence", "Population"),
-#     sex == "female",
-#     case_when(
-#       iso3 %in% c("TZA", "ZAF") ~ calendar_quarter == "CY2020Q3",
-#       TRUE ~ calendar_quarter == "CY2020Q4"
-#     )
-#   ) %>%
-#   select(iso3, area_id, sex, age_group_label, indicator_label, mean) %>%
-#   pivot_wider(
-#     names_from = indicator_label,
-#     values_from = mean
-#   )
-
-naomi <- lapply(files, function(file) read.csv(paste0("naomi-output/", file, "/indicators.csv"))) %>%
-  bind_rows()
-
-naomi <- naomi %>%
-  mutate(
-    iso3 = substr(area_id, 1, 3),
-    analysis_level = analysis_level[iso3]
-  ) %>%
-  filter(
-    area_level == analysis_level,
-    age_group %in% c("Y015_019", "Y020_024", "Y025_029"),
-    indicator %in% c("infections", "plhiv", "population"),
-    sex == "female",
-    case_when(
-      iso3 %in% c("TZA", "ZAF") ~ calendar_quarter == "CY2020Q3",
-      TRUE ~ calendar_quarter == "CY2020Q4"
-    )
-  ) %>%
-  select(iso3, area_id, sex, age_group, indicator, mean) %>%
+naomi3 <- naomi3 %>%
   pivot_wider(
     names_from = indicator,
-    values_from = mean
+    values_from = estimate
   ) %>%
+  rename(infections = `New infections`, plhiv = PLHIV, population = Population) %>%
   mutate(
+    age_group = fct_recode(age_group,
+      "Y015_019" = "15-19",
+      "Y020_024" = "20-24",
+      "Y025_029" = "25-29",
+      "Y015_024" = "15-24",
+      "Y015_049" = "15-49"
+    ),
     #' In terms of new infections per hundred person years
     incidence = 100 * infections / (population - plhiv),
     incidence_cat = cut(
@@ -79,9 +32,7 @@ naomi <- naomi %>%
       include.lowest = TRUE,
       right = TRUE
     )
-  ) %>%
-  #' Only female, so don't need this column
-  select(-sex)
+  )
 
 df_3p1 <- df_3p1 %>%
   filter(year == 2018) %>%
@@ -92,14 +43,13 @@ df_3p1 <- df_3p1 %>%
     values_fn = mean
   )
 
-df_3p1 <- naomi %>%
+df <- df_3p1 %>%
   left_join(
-    df_3p1,
+    naomi3,
     by = c("area_id", "age_group")
   ) %>%
   left_join(
-    prev %>%
-      select("area_id", "age_group", starts_with("prev_")),
+    select(prev, "area_id", "age_group", starts_with("prev_")),
     by = c("area_id", "age_group")
   )
 
@@ -117,7 +67,7 @@ rr_sexpaid12m_l <- 25 #' <0.1%
 rr_sexnonreg_se <- 0.2
 rr_sexnonreg_se <- 1
 
-df_3p1 <- df_3p1 %>%
+df <- df %>%
   mutate(
     rr_sexpaid12m = case_when(
       incidence_cat == "Very Very High" ~ rr_sexpaid12m_vvh,
@@ -135,7 +85,8 @@ df_3p1 <- df_3p1 %>%
     plhiv_sexnonreg = population_sexnonreg * prev_sexnonreg,
     plhiv_sexpaid12m = population_sexpaid12m * prev_sexpaid12m,
     incidence_nosex12m = 0,
-    incidence_sexcohab = infections / (population_sexcohab + rr_sexnonreg * population_sexnonreg + rr_sexpaid12m * population_sexpaid12m),
+    incidence_sexcohab = infections / (population_sexcohab +
+      rr_sexnonreg * population_sexnonreg + rr_sexpaid12m * population_sexpaid12m),
     incidence_sexnonreg = incidence_sexcohab * rr_sexnonreg,
     incidence_sexpaid12m = incidence_sexcohab * rr_sexpaid12m,
     infections_nosex12m = 0,
@@ -144,9 +95,9 @@ df_3p1 <- df_3p1 %>%
     infections_sexpaid12m = (population_sexpaid12m - plhiv_sexpaid12m) * incidence_sexpaid12m
   )
 
-write_csv(df_3p1, "incidence-district-sexbehav.csv")
+write_csv(df, "incidence-district-sexbehav.csv")
 
-df_3p1_plot <- df_3p1 %>%
+df_plot <- df %>%
   select(iso3, area_id, age_group, starts_with("incidence_sex")) %>%
   pivot_longer(
     cols = starts_with("incidence_sex"),
@@ -163,7 +114,7 @@ df_3p1_plot <- df_3p1 %>%
 #' Artefact: Cloropleths
 pdf("incidence-district-sexbehav.pdf", h = 8, w = 6.25)
 
-plotsA <- df_3p1_plot %>%
+plotsA <- df_plot %>%
   multi.utils::update_naming() %>%
   split(.$iso3) %>%
   lapply(function(x)
@@ -204,7 +155,7 @@ lapply(1:length(plotsA), function(i) {
 
 pdf("infections-district-sexbehav.pdf", h = 8, w = 6.25)
 
-df_3p1 %>%
+df %>%
   select(iso3, area_id, age_group, starts_with("infections_sex")) %>%
   pivot_longer(
     cols = starts_with("infections_sex"),

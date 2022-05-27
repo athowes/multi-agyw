@@ -36,7 +36,9 @@ packages:
 
 resources:
  - naomi-output
- - naomi3.rds
+
+global_resources:
+  naomi3-population-plhiv-infections.rds: naomi3-population-plhiv-infections.rds
 
 depends:
   - process_transactional-fsw-adjustment:
