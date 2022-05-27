@@ -310,30 +310,24 @@ dev.off()
 
 pdf("prev-district-sexbehav-logit.pdf", h = 8, w = 6.25)
 
-df_3p1_plot <- df_3p1_logit %>%
-  select(iso3, area_id, age_group, starts_with("prev_")) %>%
-  pivot_longer(
-    cols = starts_with("prev_"),
-    names_to = "indicator",
-    names_prefix = "prev_",
-    values_to = "prev",
-  ) %>%
+df_3p1_logit_plot <- df_3p1_logit %>%
+  filter(indicator == "prev") %>%
   left_join(
     select(areas, area_id),
     by = "area_id"
   ) %>%
   st_as_sf()
 
-plotsB <- df_3p1_plot %>%
+plotsB <- df_3p1_logit_plot %>%
   multi.utils::update_naming() %>%
   split(.$iso3) %>%
   lapply(function(x)
     x %>%
-      ggplot(aes(fill = prev)) +
+      ggplot(aes(fill = estimate)) +
       geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
       coord_sf(lims_method = "geometry_bbox") +
       scale_fill_viridis_c(option = "C", label = label_percent()) +
-      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(10))) +
+      facet_grid(age_group ~ behav, labeller = labeller(indicator = label_wrap_gen(10))) +
       theme_minimal() +
       labs(
         title = paste0(x$iso3[1]),
