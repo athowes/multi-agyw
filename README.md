@@ -5,9 +5,9 @@ Code for the manuscript Howes *et al.* "Spatio-temporal estimates of HIV risk gr
 New HIV infections are disproportionately common in adolescent girls and young women.
 Accelerating provision of HIV prevention programming in this key population is a top priority, but funding is insufficient to reach everyone ([HIV Prevention Coalition, 2020](https://hivpreventioncoalition.unaids.org/wp-content/uploads/2020/06/Decision-making-aide-AGYW-investment-Version-March-2020-Final.pdf)).
 Small-area estimation of risk group population sizes enables countries to prioritise provision of services to those at greatest risk, taking into account both geographic and behavioral factors, as called for in the [Global AIDS Strategy 2021-2026](https://www.unaids.org/en/Global-AIDS-Strategy-2021-2026).
-
 Using [AIS](https://dhsprogram.com/methodology/survey-types/ais.cfm), [BAIS](https://baisv20.com/), [DHS](https://dhsprogram.com/) and [PHIA](https://phia.icap.columbia.edu/) survey data, we fit multinomial logistic regressions to priority countries using the package [`R-INLA`](https://www.r-inla.org/).
 To enable inference with the `R-INLA` package, each model is reformulated as an equivalent Poisson log linear model using the multinomial-Poisson transformation [(Baker, 1994)](https://www.jstor.org/stable/2348134?seq=1#metadata_info_tab_contents).
+We use the resulting proportion estimates to disaggregate HIV prevalence and HIV incidence estimates from the [Naomi small-area estimation model](https://github.com/mrc-ide/naomi) according to risk group membership.
 
 ![This figure is produced by the report `plot_aids-abstract`](aids-abstract.png)
 
@@ -26,21 +26,20 @@ The directories of this repository are:
 ## `orderly`
 
 We use the [`orderly`](https://github.com/vimc/orderly) package ([RESIDE, 2020](https://reside-ic.github.io/)) to simplify the process of doing reproducible research.
-After installing [`orderly`](https://github.com/vimc/orderly) (from either CRAN or Github) a report, let's say called `example`, may be run by:
+After installing [`orderly`](https://github.com/vimc/orderly) (from either CRAN or Github) a report, `example`, may be run by:
 
 ```r
 orderly::orderly_run(name = "src/example")
 ```
 
 The results of this run will appear in the `draft/` folder (ignored on Github).
-To commit the draft (with associated `id`) to the `archive/` folder (also ignored on Github, and which should be treated as "read only") use:
+To commit the draft (with associated `id`) to the `archive/` folder (also ignored on Github, and treated as "read only") use:
 
 ```r
 orderly::orderly_commit(id)
 ```
 
 Any outputs of this report will then be available to use as dependencies within other reports.
-
 Reports can be pushed to the HIV inference group sharepoint (the remote) using:
 
 ```r
@@ -69,6 +68,8 @@ This repository also requires a particular branch of the `naomi.utils` package, 
 ```r
 devtools::install_github("athowes/naomi.utils", ref = "sexbehav-vars-adam")
 ```
+
+## Session information
 
 The `sessionInfo()` used to run this analysis is:
 
