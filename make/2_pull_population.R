@@ -90,4 +90,15 @@ naomi3_national <- naomi3 %>%
 naomi3 <- bind_rows(naomi3, naomi3_national) %>%
   select(-parent_area_id)
 
+moz_area_mapping <- read_csv("global/2022_moz_area_mapping.csv") %>%
+  select(-area_name, area_id = old_area_id, new_area_id = area_id)
+
+naomi3 <- naomi3 %>%
+  left_join(
+    moz_area_mapping,
+    by = "area_id"
+  ) %>%
+  mutate(area_id = ifelse(!is.na(new_area_id), new_area_id, area_id)) %>%
+  select(-new_area_id)
+
 saveRDS(naomi3, "global/naomi3-population-plhiv-infections.rds")
