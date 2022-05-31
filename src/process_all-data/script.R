@@ -3,6 +3,7 @@
 # setwd("src/process_all-data")
 
 iso3 <- multi.utils::priority_iso3()
+analysis_level <- multi.utils::analysis_level()
 
 #' Merge all of the area datasets
 areas <- lapply(iso3, function(x) read_sf(paste0("depends/", tolower(x), "_areas.geojson")))
@@ -12,6 +13,20 @@ areas <- bind_rows(areas)
 pdf("areas.pdf", h = 11, w = 6.25)
 plot(areas$geometry)
 dev.off()
+
+#' Check on the number of areas in each country
+areas %>%
+  st_drop_geometry() %>%
+  select(area_id, area_level) %>%
+  mutate(iso3 = substr(area_id, 1, 3)) %>%
+  left_join(
+    as.data.frame(analysis_level) %>%
+      tibble::rownames_to_column("iso3"),
+    by = "iso3"
+  ) %>%
+  filter(area_level == analysis_level) %>%
+  group_by(iso3) %>%
+  summarise(n = n())
 
 saveRDS(areas, "areas.rds")
 
