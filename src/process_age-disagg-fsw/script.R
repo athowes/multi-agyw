@@ -4,52 +4,56 @@
 
 priority_iso3 <- multi.utils::priority_iso3()
 
-pse <- read_csv("pse_estimates.csv")
-pse_new <- read_csv("fsw_ntl_pse.csv")
+pse <- read_csv("fsw_ntl_pse.csv")
 afs <- readRDS("kinh-afs-dist.rds")
-pop <- read_csv("depends/interpolated_population.csv")
+naomi3 <- readRDS("naomi3-population-plhiv-infections.rds")
 
-age_groups <- c("Y015_019", "Y020_024", "Y025_029", "Y030_034", "Y035_039", "Y040_044", "Y045_049")
+age_groups <- c("15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49")
 
-pop <- pop %>%
+pop <- naomi3 %>%
   filter(
     age_group %in% age_groups,
-    sex == "female",
     area_id %in% priority_iso3,
-    year == 2018,
-  )
+    indicator == "Population"
+  ) %>%
+  rename(population = estimate) %>%
+  select(-indicator)
 
-updated_data <- TRUE
+fsw <- pse %>%
+  select(-indicator, -lower, -upper) %>%
+  rename(
+    area_id = iso3,
+    total_fsw = median
+  ) %>%
+  filter(area_id %in% priority_iso3) %>%
+  mutate(age_group = "15-49")
 
-if(updated_data) {
-  fsw <- pse_new %>%
-    select(-indicator, -lower, -upper) %>%
-    rename(
-      area_id = iso3,
-      total_fsw = median
-    ) %>%
-    filter(area_id %in% priority_iso3) %>%
-    mutate(year = 2018, age_group = "Y015_049")
-} else {
-  fsw <- pse %>%
-    select(-"...1", -lower, -upper, -region, -four_region) %>%
-    rename(area_id = iso3) %>%
-    mutate(year = 2018) %>%
-    filter(
-      kp == "FSW",
-      area_id %in% priority_iso3
-    ) %>%
-    left_join(
-      pop %>%
-        group_by(area_id, year) %>%
-        summarise(population = sum(population)) %>%
-        mutate(age_group = "Y015_049", .before = population),
-      by = c("area_id", "year")
-    ) %>%
-    mutate(
-      total_fsw = median * population
-    )
-}
+#' FSW age distribution parameters in ZAF from Thembisa
+#' Downloaded from: https://www.thembisa.org/content/downloadPage/Thembisa4_3
+gamma_mean <- 29
+gamma_sd <- 9
+
+#' gamma_mean = alpha / beta
+#' gamma_variance = alpha / beta^2
+beta <- gamma_mean / gamma_sd^2 #'rate
+alpha <- gamma_mean * beta #' shape
+
+pdf("thembisa-fsw-age-dist.pdf", h = 5, w = 6.25)
+
+data.frame(x = 15:49, y = dgamma(15:49, shape = alpha, rate = beta)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line() +
+  labs(x = "Age", y = "", title = "Age distribution of FSW from Thembisa 4.3 (ZAF)") +
+  theme_minimal()
+
+dev.off()
+
+#' Distribution function of the gamma
+zaf_gamma <- data.frame(
+  dist = diff(pgamma(c(15, 20, 25, 30, 35, 40, 45, 50), shape = alpha, rate = beta)),
+  age_group = age_groups
+) %>%
+  mutate(dist = dist / sum(dist))
 
 #' Just take the yob to be 2000 for now, could be improved later
 afs <- afs %>%
@@ -90,48 +94,45 @@ for(x in priority_iso3) {
       pop,
       by = c("area_id", "age_group")
     ) %>%
-    mutate(eversexpop = eversex * population)
-
-  df_x_total <- df_x %>%
-    summarise(
-      age_group = "Y015_049",
-      eversex = NA,
-      year = mean(year),
-      sex = "female",
-      population = sum(population),
-      eversexpop = sum(eversexpop),
-      fsw = filter(fsw, area_id == x)$total_fsw,
-      fsw_prop = fsw / population
-    )
-
-  df_x <- df_x %>%
     mutate(
-      fsw = (eversexpop / df_x_total$eversexpop) * df_x_total$fsw,
-      fsw_prop = fsw / population
+      eversexpop = eversex * population,
+      eversexpop_prop = eversexpop / sum(eversexpop)
     )
 
-  df <- bind_rows(df, df_x, df_x_total)
+  df <- bind_rows(df, df_x)
 }
 
-#' FSW age distribution parameters from Thembisa
-#' Downloaded from: https://www.thembisa.org/content/downloadPage/Thembisa4_3
-gamma_mean <- 29
-gamma_sd <- 9
+#' Calculate propensities based on ZAF
+propensity <- df %>%
+  filter(area_id == "ZAF") %>%
+  left_join(
+    zaf_gamma,
+    by = "age_group"
+  ) %>%
+  mutate(propensity = dist / eversexpop_prop) %>%
+  select(age_group, propensity)
 
-#' gamma_mean = alpha / beta
-#' gamma_variance = alpha / beta^2
-beta <- gamma_mean / gamma_sd^2 #'rate
-alpha <- gamma_mean * beta #' shape
+#' Compute proportions for each age group for other countries
+df <- df %>%
+  left_join(
+    propensity,
+    by = "age_group"
+  ) %>%
+  mutate(dist = eversexpop_prop * propensity) %>%
+  group_by(iso3) %>%
+  mutate(dist = dist / sum(dist)) %>%
+  ungroup()
 
-pdf("thembisa-fsw-age-dist.pdf", h = 5, w = 6.25)
-
-data.frame(x = 15:49, y = dgamma(15:49, shape = alpha, rate = beta)) %>%
-  ggplot(aes(x = x, y = y)) +
-  geom_line() +
-  labs(x = "Age", y = "", title = "Age distribution of FSW from Thembisa 4.3 (ZAF)") +
-  theme_minimal()
-
-dev.off()
+df <- df %>%
+  left_join(
+    select(fsw, total_fsw, area_id),
+    by = c("area_id")
+  ) %>%
+  mutate(
+    fsw = dist * total_fsw,
+    fsw_prop = fsw / population
+  ) %>%
+  select(-eversexpop, -eversexpop_prop, -propensity, - dist, -total_fsw)
 
 pdf("age-disagg-fsw.pdf", h = 5, w = 6.25)
 

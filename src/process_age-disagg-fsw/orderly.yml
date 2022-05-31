@@ -27,12 +27,11 @@ resources:
   - fsw_ntl_pse.csv
   - kinh-afs-dist.rds
 
+global_resources:
+  naomi3-population-plhiv-infections.rds: naomi3-population-plhiv-infections.rds
+
 depends:
   national_data_areas:
     id: latest
     use:
       depends/national_areas.rds: national_areas.rds
-  process_all-data:
-    id: latest
-    use:
-      depends/interpolated_population.csv: interpolated_population.csv
