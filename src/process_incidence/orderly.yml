@@ -34,9 +34,6 @@ packages:
   - tidyr
   - tibble
 
-global_resources:
-  naomi3-population-plhiv-infections.rds: naomi3-population-plhiv-infections.rds
-
 depends:
   - process_transactional-fsw-adjustment:
       id: latest
@@ -46,6 +43,7 @@ depends:
       id: latest
       use:
         depends/areas.rds: areas.rds
+        depends/naomi3.rds: naomi3.rds
   - process_prevalence:
       id: latest
       use:

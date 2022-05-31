@@ -2,11 +2,11 @@
 # orderly::orderly_develop_start("process_all-data")
 # setwd("src/process_all-data")
 
-iso3 <- multi.utils::priority_iso3()
+priority_iso3 <- multi.utils::priority_iso3()
 analysis_level <- multi.utils::analysis_level()
 
 #' Merge all of the area datasets
-areas <- lapply(iso3, function(x) read_sf(paste0("depends/", tolower(x), "_areas.geojson")))
+areas <- lapply(priority_iso3, function(x) read_sf(paste0("depends/", tolower(x), "_areas.geojson")))
 areas[[9]]$epp_level <- as.numeric(areas[[9]]$epp_level) #' Fix non-conforming column type
 areas <- bind_rows(areas)
 
@@ -31,7 +31,7 @@ areas %>%
 saveRDS(areas, "areas.rds")
 
 #' Merge all of the indicator datasets
-ind <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_survey_indicators_sexbehav.csv"))) %>%
+ind <- lapply(priority_iso3, function(x) read_csv(paste0("depends/", tolower(x), "_survey_indicators_sexbehav.csv"))) %>%
   bind_rows()
 
 write_csv(ind, "survey_indicators_sexbehav.csv")
@@ -58,7 +58,7 @@ pdf("spouse-comparison.pdf", h = 5, w = 4)
 
 ind %>%
   filter(
-    area_id %in% c(iso3),
+    area_id %in% priority_iso3,
     indicator %in% c("sexcohab", "sexcohabspouse", "sexnonreg", "sexnonregspouse")
   ) %>%
   mutate(
@@ -87,7 +87,7 @@ pdf("spouse-livesaway.pdf", h = 4, w = 6.25)
 
 spouselivesaway <- ind %>%
   filter(
-    area_id %in% c(iso3),
+    area_id %in% priority_iso3,
     indicator %in% c("sexcohab", "sexcohabspouse", "sexnonreg", "sexnonregspouse"),
     age_group == "Y015_024"
   ) %>%
@@ -151,13 +151,105 @@ ind %>%
 dev.off()
 
 #' Merge all of the HIV datasets
-hiv <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_hiv_indicators_sexbehav.csv"))) %>%
+hiv <- lapply(priority_iso3, function(x) read_csv(paste0("depends/", tolower(x), "_hiv_indicators_sexbehav.csv"))) %>%
   bind_rows()
 
 write_csv(hiv, "hiv_indicators_sexbehav.csv")
 
-#' Merge all of the population datasets
-pop <- lapply(iso3, function(x) read_csv(paste0("depends/", tolower(x), "_interpolated-population.csv"))) %>%
+#' Merge all of the population datasets (aaa_scale_pop reports from Oli's fertility repo)
+pop <- lapply(priority_iso3, function(x) read_csv(paste0("depends/", tolower(x), "_interpolated-population.csv"))) %>%
   bind_rows()
 
 write_csv(pop, "interpolated_population.csv")
+
+#' Population option 2: Naomi population data from Sharepoint
+#' Get age-stratified population total sizes from Naomi model outputs
+sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+
+url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2021 naomi/Naomi datasets in R/naomi3.rds"
+path <- sharepoint$download(URLencode(url))
+naomi3 <- readRDS(path)
+
+url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2021 naomi/areas-extract/naomi-2021-results_pooled-area-hierarchy.csv"
+path <- sharepoint$download(URLencode(url))
+area_hierarchy <- read_csv(path)
+
+naomi3 <- naomi3 %>%
+  filter(
+    iso3 %in% priority_iso3,
+    indicator_label %in% c("Population", "PLHIV", "New infections"),
+    #' These are the age groups we are considering, as well as those which are useful
+    #' for disaggregation purposes
+    age_group_label %in% c("15-19", "20-24", "25-29", "30-34", "35-39",
+                           "40-44", "45-49", "15-24", "15-49"),
+    #' Only female
+    sex == "female"
+  ) %>%
+  #' The most recent estimates
+  group_by(iso3) %>%
+  filter(calendar_quarter == max(calendar_quarter)) %>%
+  ungroup() %>%
+  #' Merge with area hierarchy data
+  left_join(
+    select(area_hierarchy, area_id, parent_area_id),
+    by = "area_id"
+  ) %>%
+  select(
+    iso3, area_id, area_level, age_group = age_group_label,
+    indicator = indicator_label, estimate = mean, parent_area_id
+  )
+
+#' BWA and CMR are at one level too low
+naomi3 %>%
+  group_by(iso3) %>%
+  summarise(area_level = unique(area_level)) %>%
+  filter(area_level != 0) %>%
+  t()
+
+#' So lets aggregate them upwards here
+naomi3_aggregates <- naomi3 %>%
+  filter(iso3 %in% c("BWA", "CMR")) %>%
+  group_by(parent_area_id, age_group, indicator) %>%
+  summarise(
+    iso3 = iso3,
+    estimate = sum(estimate)
+  ) %>%
+  rename(area_id = parent_area_id) %>%
+  mutate(area_level = as.numeric(substr(area_id, 5, 5))) %>%
+  #' For some reason some of the rows are duplicated here
+  #' Could investigate this more...
+  distinct()
+
+naomi3 <- bind_rows(naomi3, naomi3_aggregates) %>%
+  split(.$iso3) %>%
+  lapply(function(x) {
+    #' Checking here that the area_level is correct
+    filter(x, area_level == analysis_level[x$iso3[1]])
+  }) %>%
+  bind_rows()
+
+naomi3_national <- naomi3 %>%
+  group_by(iso3, age_group, indicator) %>%
+  summarise(
+    estimate = sum(estimate)
+  ) %>%
+  mutate(
+    area_level = 0,
+    area_id = iso3
+  )
+
+naomi3 <- bind_rows(naomi3, naomi3_national) %>%
+  select(-parent_area_id)
+
+moz_area_mapping <- read_csv("2022_moz_area_mapping.csv") %>%
+  select(-area_name, area_id = old_area_id, new_area_id = area_id)
+
+naomi3 <- naomi3 %>%
+  left_join(
+    moz_area_mapping,
+    by = "area_id"
+  ) %>%
+  mutate(area_id = ifelse(!is.na(new_area_id), new_area_id, area_id)) %>%
+  select(-new_area_id)
+
+saveRDS(naomi3, "naomi3.rds")

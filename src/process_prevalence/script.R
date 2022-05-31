@@ -6,7 +6,7 @@ analysis_level <- multi.utils::analysis_level()
 
 df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
 areas <- readRDS("depends/areas.rds")
-naomi3 <- readRDS("naomi3-population-plhiv-infections.rds")
+naomi3 <- readRDS("depends/naomi3.rds")
 prev <- read_csv("depends/hiv_indicators_sexbehav.csv")
 
 prev_wide <- prev %>%
@@ -177,7 +177,7 @@ df_3p1 <- naomi3 %>%
   ) %>%
   filter(!is.na(prop_nosex12m)) %>%
   left_join(
-    prev_pr,
+    katie_prev_pr,
     by = "iso3"
   ) %>%
   mutate(

@@ -6,7 +6,7 @@ priority_iso3 <- multi.utils::priority_iso3()
 
 pse <- read_csv("fsw_ntl_pse.csv")
 afs <- readRDS("kinh-afs-dist.rds")
-naomi3 <- readRDS("naomi3-population-plhiv-infections.rds")
+naomi3 <- readRDS("depends/naomi3.rds")
 
 age_groups <- c("15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49")
 
