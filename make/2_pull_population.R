@@ -29,8 +29,10 @@ naomi3 <- naomi3 %>%
   filter(
     iso3 %in% priority_iso3,
     indicator_label %in% c("Population", "PLHIV", "New infections"),
-    #' These are the age groups we are considering,
-    age_group_label %in% c("15-19", "20-24", "25-29", "15-24", "15-49"),
+    #' These are the age groups we are considering, as well as those which are useful
+    #' for disaggregation purposes
+    age_group_label %in% c("15-19", "20-24", "25-29", "30-34", "35-39",
+                           "40-44", "45-49", "15-24", "15-49"),
     #' Only female
     sex == "female"
   ) %>%
