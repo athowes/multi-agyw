@@ -36,9 +36,12 @@ areas <- areas %>%
     by = "iso3"
   )
 
+fewer_countries <- TRUE
+
 #' If working with a subset of the countries for model development and testing, also filter out of the data
 if(fewer_countries) {
   subset_iso3 <- c("BWA", "MOZ", "MWI", "ZMB", "ZWE")
+  subset_iso3 <- c("MOZ")
 
   ind <- ind %>%
     mutate(iso3 = substr(survey_id, 1, 3)) %>%
@@ -214,6 +217,19 @@ stopifnot(df$year_idx %>% max() == length(1999:2018)) #' 20 years
 stopifnot(
   df$type_idx %>% max() == substr(ind$survey_id, 8, 11) %>% unique() %>% length() + 1
 ) #' The survey types plus one for country year pairs missing a survey
+
+df %>%
+  group_by(obs_idx) %>%
+  summarise(test = length(unique(cat_idx))) %>%
+  filter(test != 3)
+
+df %>% filter(obs_idx == 15494) %>% View()
+df %>% filter(obs_idx == 25154) %>% View()
+
+#' It's 2011, MOZ_3_1013, 20-24
+ind %>%
+  filter(age_group == "Y020_024", area_id == "MOZ_3_1013", survey_id == "MOZ2011DHS") %>%
+  View()
 
 #' Bug discrepancy here caused by type_idx, which when removed from the obs_idx definition
 #' can allow passing this test (when there are no year-countries with duplicate surveys).
