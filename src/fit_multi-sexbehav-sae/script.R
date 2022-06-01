@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE))
+# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE, fewer_countries = TRUE))
 # setwd("src/fit_multi-sexbehav-sae")
 
 sf_use_s2(FALSE)
@@ -195,9 +195,10 @@ stopifnot(
 #' * category random effects (IID)
 #' * age x country x category random effects (IID)
 #' * country x category random effects (IID)
+#' NB: grouping by iso3_cat_idx will apply sum-to-zero in each country and category
 formula_baseline <- x_eff ~ -1 + f(obs_idx, model = "iid", hyper = tau_fixed(0.000001)) +
   f(cat_idx, model = "iid", constr = TRUE, hyper = tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-  f(age_iso3_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
+  f(age_idx, model = "iid", group = iso3_cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
   f(iso3_idx, model = "iid", group = cat_idx, control.group = list(model = "iid"),
     constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
