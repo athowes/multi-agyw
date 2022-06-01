@@ -56,10 +56,12 @@ zaf_gamma <- data.frame(
   mutate(dist = dist / sum(dist))
 
 #' Just take the yob to be 2000 for now, could be improved later
+cohort <- 2000
+
 afs <- afs %>%
   rename(area_id = ISO_A3) %>%
   filter(
-    yob == 2000,
+    yob == cohort,
     sex == "female",
     area_id %in% priority_iso3
   )
