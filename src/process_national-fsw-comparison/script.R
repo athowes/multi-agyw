@@ -31,41 +31,24 @@
 analysis_level <- multi.utils::analysis_level()
 priority_iso3 <- multi.utils::priority_iso3()
 
-pop <- read_csv("depends/interpolated_population.csv")
-age_groups <- c("Y015_019", "Y020_024", "Y025_029", "Y030_034", "Y035_039", "Y040_044", "Y045_049")
+naomi3 <- readRDS("depends/naomi3.rds")
 
-pop <- pop %>%
-  mutate(
-    iso3 = substr(area_id, 1, 3)
-  ) %>%
-  filter(
-    age_group %in% age_groups,
-    sex == "female",
-    iso3 %in% priority_iso3,
-    year == 2018,
-  ) %>%
+pop <- naomi3 %>%
+  filter(indicator == "Population") %>%
+  select(-indicator) %>%
+  rename(population = estimate) %>%
   pivot_wider(
     names_from = age_group,
     values_from = population
   ) %>%
   mutate(
-    Y025_049 = Y025_029 + Y030_034 + Y035_039 + Y040_044 + Y045_049,
-    Y015_049 = Y015_019 + Y020_024 + Y025_049,
-    Y015_029 = Y015_019 + Y020_024 + Y025_029,
+    `25-49` = `25-29` + `30-34` + `35-39` + `40-44` + `45-49`,
+    `15-29` = `15-19` + `20-24` + `25-29`,
   ) %>%
   pivot_longer(
-    cols = starts_with("Y0"),
+    cols = -c(iso3, area_id, area_level),
     names_to = "age_group",
     values_to = "population"
-  ) %>%
-  mutate(
-    age_group = recode_factor(
-      age_group,
-      "Y015_019" = "15-19", "Y020_024" = "20-24", "Y025_029" = "25-29",
-      "Y030_034" = "30-34", "Y035_039" = "35-39", "Y040_044" = "40-44",
-      "Y045_049" = "45-49", "Y025_049" = "25-49", "Y015_049" = "15-49",
-      "Y015_029" = "15-29"
-    )
   )
 
 #' Read in the population size estimates (PSEs) for AYKP
@@ -348,7 +331,7 @@ dev.off()
 oli_age <- read_csv("depends/fsw-estimates.csv")
 
 oli_johnston_comparison <- johnston %>%
-  select(-country, -iso3, -sex, -population, - proportion) %>%
+  select(-country, -iso3, -population, - proportion) %>%
   rename(total_johnston = total) %>%
   left_join(
     select(df, area_id = iso3, age_group, total_raw, total_smoothed),
