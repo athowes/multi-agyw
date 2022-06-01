@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE, fewer_countries = TRUE))
+# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE, fewer_countries = FALSE))
 # setwd("src/fit_multi-sexbehav-sae")
 
 sf_use_s2(FALSE)
@@ -14,7 +14,8 @@ ind <- read_csv("depends/survey_indicators_sexbehav.csv")
 if(!include_phia) {
   ind <- ind %>%
     mutate(type = substr(survey_id, 8, 11)) %>%
-    filter(type != "PHIA")
+    filter(type != "PHIA") %>%
+    select(-type)
 }
 
 #' Set ind$estimate > 1 to 1, as well as ind$estimate < 0 to 0
@@ -73,6 +74,30 @@ ggplot(areas_model, aes(fill = iso3)) +
   theme_minimal()
 
 dev.off()
+
+#' Naomi area levels from preliminary 2021 estimates:
+#' iso3  area_level  n
+#' BWA   3           27
+#' CMR   3           190
+#' KEN   3           306
+#' LSO   1           10
+#' MOZ   3           161
+#' MWI   5           33
+#' NAM   2           38
+#' SWZ   1           4
+#' TZA   4           195
+#' UGA   3           136
+#' ZAF   2           52
+#' ZMB   2           116
+#' ZWE   2           63
+
+#' Expect differences for CMR and KEN
+areas_model %>%
+  st_drop_geometry() %>%
+  group_by(iso3, area_level) %>%
+  summarise(
+    n = n()
+  )
 
 #' Create adjacency matrix for INLA
 adjM <- spdep::poly2nb(areas_model)
