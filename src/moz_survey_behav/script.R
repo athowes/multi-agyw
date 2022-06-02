@@ -61,6 +61,15 @@ survey_sexbehav <- create_sexbehav_dhs(surveys)
 names(survey_sexbehav)
 (misallocation <- check_survey_sexbehav(survey_sexbehav))
 
+#' Patch for NA entries
+survey_sexbehav <- survey_sexbehav %>%
+  replace_na(
+    list(sex12m = 0, nosex12m = 0, sexcohab = 0, sexcohabspouse = 0,
+        sexnonreg = 0, sexnonregspouse = 0, sexpaid12m = 0)
+  )
+
+# survey_sexbehav %>% filter(individual_id == "       10118  2", survey_id == "MOZ2011DHS")
+
 survey_other <- list(survey_sexbehav)
 
 age_group_include <- c("Y015_019", "Y020_024", "Y025_029", "Y015_024")
@@ -78,6 +87,10 @@ survey_indicators <- calc_survey_indicators(
   sex = sex,
   age_group_include = age_group_include
 )
+
+# survey_indicators %>%
+#   filter(area_name == "Nangade", age_group == "Y020_024", survey_id == "MOZ2011DHS") %>%
+#   View()
 
 #' Save survey indicators dataset
 write_csv(survey_indicators, "moz_survey_indicators_sexbehav.csv", na = "")
