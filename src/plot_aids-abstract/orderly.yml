@@ -31,7 +31,7 @@ depends:
       id: latest
       use:
         depends/areas.rds: areas.rds
-        depends/interpolated_population.csv: interpolated_population.csv
+        depends/naomi_pop.rds: naomi_pop.rds
   - national_data_areas:
       id: latest
       use:

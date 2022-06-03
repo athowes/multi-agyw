@@ -3,16 +3,19 @@
 # setwd("src/plot_plot_aids-abstract")
 
 df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
-pop <- read_csv("depends/interpolated_population.csv")
+pop <- readRDS("depends/naomi_pop.rds")
 
 #' Add population and updating naming
 df_3p1 <- df_3p1 %>%
-  left_join(
-    filter(pop, sex == "female"),
-    by = c("area_id", "year", "age_group")
+  filter(
+    age_group != "15-24",
+    year == 2018
   ) %>%
-  rename(population_mean = population) %>%
-  multi.utils::update_naming()
+  multi.utils::update_naming() %>%
+  left_join(
+    select(pop, area_id, age_group, population_mean = population),
+    by = c("area_id", "age_group")
+  )
 
 #' The following section is copied mostly from plot_within-between-country-variation
 
