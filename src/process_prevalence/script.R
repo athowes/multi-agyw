@@ -6,7 +6,7 @@ analysis_level <- multi.utils::analysis_level()
 
 df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
 areas <- readRDS("depends/areas.rds")
-naomi3 <- readRDS("depends/naomi3.rds")
+naomi <- readRDS("depends/naomi.rds")
 prev <- read_csv("depends/hiv_indicators_sexbehav.csv")
 
 prev_wide <- prev %>%
@@ -16,10 +16,8 @@ prev_wide <- prev %>%
   ) %>%
   mutate(
     behav = case_when(
-      nosex12m == 1 ~ "nosex12m",
-      sexcohab == 1 ~ "sexcohab",
-      sexnonreg == 1 ~ "sexnonreg",
-      sexpaid12m == 1 ~ "sexpaid12m"
+      nosex12m == 1 ~ "nosex12m", sexcohab == 1 ~ "sexcohab",
+      sexnonreg == 1 ~ "sexnonreg", sexpaid12m == 1 ~ "sexpaid12m"
     ), .after = indicator
   ) %>%
   select(indicator, behav, survey_id, area_id, age_group, estimate) %>%
@@ -139,23 +137,23 @@ lor <- log(odds / odds[1]) #' Log odds ratio
 lor[4] <- lor_ywkp
 
 #' Naomi estimates of PLHIV and population by district and age band
-naomi3 <- naomi3 %>%
+naomi <- naomi %>%
   pivot_wider(
     names_from = indicator,
     values_from = estimate
   ) %>%
+  filter(age_group %in% c("15-19", "20-24", "25-29")) %>%
   mutate(
     age_group = case_when(
       age_group == "15-19" ~ "Y015_019",
       age_group == "20-24" ~ "Y020_024",
-      age_group == "25-29" ~ "Y025_029",
-      age_group == "15-24" ~ "Y015_024",
-      age_group == "15-49" ~ "Y015_049"
+      age_group == "25-29" ~ "Y025_029"
     )
   ) %>%
   rename(
     population = Population,
-    plhiv = PLHIV
+    plhiv = PLHIV,
+    infections = `New infections`
   )
 
 #' Modelled estimates of proportion in each risk group
@@ -170,14 +168,14 @@ df_3p1 <- df_3p1 %>%
   )
 
 #' Merge the datasets
-df_3p1 <- naomi3 %>%
+df_3p1 <- naomi %>%
   left_join(
     df_3p1,
     by = c("area_id", "age_group")
   ) %>%
   filter(!is.na(prop_nosex12m)) %>%
   left_join(
-    katie_prev_pr,
+    select(katie_prev_pr, -starts_with("prev_")),
     by = "iso3"
   ) %>%
   mutate(
@@ -238,8 +236,7 @@ df_3p1_logit <- df_3p1 %>%
   filter(behav %in% c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")) %>%
   split(~ area_id + age_group) %>%
   lapply(function(x) {
-    population <- filter(x, indicator == "population")$population
-    prop <- filter(x, indicator == "prop")$prop
+    population <- filter(x, indicator == "population")$estimate
     plhiv <- x$plhiv[1]
     prev <- logit_scale_prev(lor, population, plhiv)
     y <- filter(x, indicator == "prop") %>%

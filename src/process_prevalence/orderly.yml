@@ -50,4 +50,4 @@ depends:
       use:
         depends/areas.rds: areas.rds
         depends/hiv_indicators_sexbehav.csv: hiv_indicators_sexbehav.csv
-        depends/naomi3.rds: naomi3.rds
+        depends/naomi.rds: naomi.rds
