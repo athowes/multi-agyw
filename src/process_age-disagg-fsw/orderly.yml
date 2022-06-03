@@ -23,7 +23,6 @@ packages:
   - multi.utils
 
 resources:
-  - pse_estimates.csv
   - fsw_ntl_pse.csv
   - kinh-afs-dist.rds
 
