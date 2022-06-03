@@ -163,25 +163,26 @@ pop <- lapply(priority_iso3, function(x) read_csv(paste0("depends/", tolower(x),
 write_csv(pop, "interpolated_population.csv")
 
 #' Population option 2: Naomi population data from Sharepoint
-#' Get age-stratified population total sizes from Naomi model outputs
+#' Get age-stratified population total sizes from (most recent) Naomi model outputs
 sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
 
-url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2021 naomi/Naomi datasets in R/naomi3.rds"
+url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2022 naomi preliminary/r-extracts/indicators_adam.rds"
 path <- sharepoint$download(URLencode(url))
-naomi3 <- readRDS(path)
+naomi_output <- readRDS(path)
 
-url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2021 naomi/areas-extract/naomi-2021-results_pooled-area-hierarchy.csv"
+url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2022 naomi preliminary/r-extracts/meta_area.rds"
 path <- sharepoint$download(URLencode(url))
-area_hierarchy <- read_csv(path)
+area_hierarchy <- readRDS(path)
 
-naomi3 <- naomi3 %>%
+naomi_output <- naomi_output %>%
   filter(
     iso3 %in% priority_iso3,
     indicator_label %in% c("Population", "PLHIV", "New infections"),
-    #' These are the age groups we are considering, as well as those which are useful
-    #' for disaggregation purposes
-    age_group_label %in% c("15-19", "20-24", "25-29", "30-34", "35-39",
-                           "40-44", "45-49", "15-24", "15-49"),
+    #' These are the age groups we are considering, plus those which are useful for disaggregation
+    age_group_label %in% c(
+      "15-19", "20-24", "25-29", "30-34", "35-39",
+      "40-44", "45-49", "15-24", "15-49"
+    ),
     #' Only female
     sex == "female"
   ) %>%
@@ -196,65 +197,22 @@ naomi3 <- naomi3 %>%
   ) %>%
   select(
     iso3, area_id, area_level, age_group = age_group_label,
-    indicator = indicator_label, estimate = mean, parent_area_id
+    indicator = indicator_label, estimate = mean
   )
 
-#' BWA and CMR are at one level too low
-naomi3 %>%
-  group_by(iso3) %>%
-  summarise(area_level = unique(area_level)) %>%
-  filter(area_level != 0) %>%
-  t()
-
-#' So lets aggregate them upwards here
-naomi3_aggregates <- naomi3 %>%
-  filter(iso3 %in% c("BWA", "CMR")) %>%
-  group_by(parent_area_id, age_group, indicator) %>%
-  summarise(
-    iso3 = iso3,
-    estimate = sum(estimate)
-  ) %>%
-  rename(area_id = parent_area_id) %>%
-  mutate(area_level = as.numeric(substr(area_id, 5, 5))) %>%
-  #' For some reason some of the rows are duplicated here
-  #' Could investigate this more...
-  distinct()
-
-naomi3 <- bind_rows(naomi3, naomi3_aggregates) %>%
-  split(.$iso3) %>%
-  lapply(function(x) {
-    #' Checking here that the area_level is correct
-    filter(x, area_level == analysis_level[x$iso3[1]])
-  }) %>%
-  bind_rows()
-
-naomi3_national <- naomi3 %>%
+naomi_national <- naomi_output %>%
   group_by(iso3, age_group, indicator) %>%
-  summarise(
-    estimate = sum(estimate)
-  ) %>%
+  summarise(estimate = sum(estimate)) %>%
   mutate(
     area_level = 0,
     area_id = iso3
   )
 
-naomi3 <- bind_rows(naomi3, naomi3_national) %>%
-  select(-parent_area_id)
+naomi_output <- bind_rows(naomi_output, naomi_national)
 
-moz_area_mapping <- read_csv("2022_moz_area_mapping.csv") %>%
-  select(-area_name, area_id = old_area_id, new_area_id = area_id)
+saveRDS(naomi_output, "naomi.rds")
 
-naomi3 <- naomi3 %>%
-  left_join(
-    moz_area_mapping,
-    by = "area_id"
-  ) %>%
-  mutate(area_id = ifelse(!is.na(new_area_id), new_area_id, area_id)) %>%
-  select(-new_area_id)
-
-saveRDS(naomi3, "naomi3.rds")
-
-pop <- naomi3 %>%
+pop <- naomi_output %>%
   filter(indicator == "Population") %>%
   select(-indicator) %>%
   rename(population = estimate) %>%
@@ -272,5 +230,4 @@ pop <- naomi3 %>%
     values_to = "population"
   )
 
-saveRDS(pop, "naomi3_pop.rds")
-
+saveRDS(pop, "naomi_pop.rds")

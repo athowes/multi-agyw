@@ -19,17 +19,14 @@ artefacts:
   - data:
       description: Naomi population, PLHIV and new infections data
       filenames:
-        - naomi3.rds
-        - naomi3_pop.rds
+        - naomi.rds
+        - naomi_pop.rds
   - data:
       description: Compare spouse risk group sizes
       filenames:
         - spouse-comparison.pdf
         - spouse-livesaway.pdf
         - mwi-dhs-phia-comparison.pdf
-
-resources:
-  - 2022_moz_area_mapping.csv
 
 packages:
   - dplyr
