@@ -34,4 +34,4 @@ depends:
   process_all-data:
     id: latest
     use:
-      depends/naomi3.rds: naomi3.rds
+      depends/naomi_pop.rds: naomi_pop.rds

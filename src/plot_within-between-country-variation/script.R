@@ -4,16 +4,22 @@
 
 df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv") %>%
   filter(indicator != "sexnonregplus")
-pop <- read_csv("depends/interpolated_population.csv")
+pop <- readRDS("depends/naomi_pop.rds")
+
+df_3p1 %>% filter(iso3 == "Tanzania") %>% pull(area_id) %>% unique()
+pop %>% filter(iso3 == "TZA") %>% pull(area_id) %>% unique()
 
 #' Add population and updating naming
 df_3p1 <- df_3p1 %>%
-  left_join(
-    filter(pop, sex == "female"),
-    by = c("area_id", "year", "age_group")
+  filter(
+    age_group != "15-24",
+    year == 2018
   ) %>%
-  rename(population_mean = population) %>%
-  multi.utils::update_naming()
+  multi.utils::update_naming() %>%
+  left_join(
+    select(pop, area_id, age_group, population_mean = population),
+    by = c("area_id", "age_group")
+  )
 
 temp_3p1 <- prepare_estimates(df_3p1)
 df_3p1_subnational <- temp_3p1$df_subnational
@@ -87,28 +93,31 @@ df_3p1_subnational %>%
 
 dev.off()
 
-#' Have a closer look at the FSW estimates and check that the Johnston adjustment has worked
+#' Have a closer look at the FSW estimates and check that the adjustment has worked
 df_3p1_unadjusted <- read_csv("depends/best-3p1-multi-sexbehav-sae.csv")
 
 #' Add population and updating naming
 df_3p1_unadjusted <- df_3p1_unadjusted %>%
-  left_join(
-    filter(pop, sex == "female"),
-    by = c("area_id", "year", "age_group")
+  filter(
+    age_group != "15-24",
+    year == 2018
   ) %>%
-  rename(population_mean = population) %>%
-  multi.utils::update_naming()
+  multi.utils::update_naming() %>%
+  left_join(
+    select(pop, area_id, age_group, population_mean = population),
+    by = c("area_id", "age_group")
+  )
 
 temp_3p1_unadjusted <- prepare_estimates(df_3p1_unadjusted)
 
 df_subnational_fsw <- bind_rows(
-  mutate(df_3p1_subnational, adjustment = "Johnston"),
-  mutate(temp_3p1_unadjusted$df_subnational, adjustment = "None")
+  mutate(df_3p1_subnational, adjustment = "Adjusted"),
+  mutate(temp_3p1_unadjusted$df_subnational, adjustment = "Not adjusted")
 )
 
 df_national_fsw <- bind_rows(
-  mutate(df_3p1_national, adjustment = "Johnston"),
-  mutate(temp_3p1_unadjusted$df_national, adjustment = "None")
+  mutate(df_3p1_national, adjustment = "Adjusted"),
+  mutate(temp_3p1_unadjusted$df_national, adjustment = "Not adjusted")
 )
 
 pdf("fsw-within-between-country-variation.pdf", h = 6, w = 6.25)

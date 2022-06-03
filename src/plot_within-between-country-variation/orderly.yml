@@ -30,7 +30,7 @@ depends:
   - process_all-data:
       id: latest
       use:
-        depends/interpolated_population.csv: interpolated_population.csv
+        depends/naomi_pop.rds: naomi_pop.rds
   - process_transactional-fsw-adjustment:
       id: latest
       use:

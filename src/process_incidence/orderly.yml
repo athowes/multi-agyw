@@ -43,7 +43,7 @@ depends:
       id: latest
       use:
         depends/areas.rds: areas.rds
-        depends/naomi3.rds: naomi3.rds
+        depends/naomi.rds: naomi.rds
   - process_prevalence:
       id: latest
       use:

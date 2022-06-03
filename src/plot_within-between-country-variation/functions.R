@@ -1,10 +1,4 @@
 prepare_estimates <- function(df) {
-  df <- df %>%
-    filter(
-      age_group != "15-24",
-      year == 2018
-    )
-
   df_subnational <- df
 
   df_national <- df %>%

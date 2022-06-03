@@ -31,7 +31,7 @@
 analysis_level <- multi.utils::analysis_level()
 priority_iso3 <- multi.utils::priority_iso3()
 
-pop <- readRDS("depends/naomi3_pop.rds")
+pop <- readRDS("depends/naomi_pop.rds")
 
 #' Read in the population size estimates (PSEs) for AYKP
 johnston <- read_excel("aykp_pse_july17.xlsx", sheet = "FSW", range = "A3:F187")

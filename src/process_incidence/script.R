@@ -6,10 +6,10 @@ analysis_level <- multi.utils::analysis_level()
 
 df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
 prev <- read_csv("depends/prev-district-sexbehav-logit.csv")
-naomi3 <- readRDS("depends/naomi3.rds")
+naomi <- readRDS("depends/naomi.rds")
 areas <- readRDS("depends/areas.rds")
 
-naomi3 <- naomi3 %>%
+naomi <- naomi %>%
   pivot_wider(
     names_from = indicator,
     values_from = estimate
@@ -45,7 +45,7 @@ df_3p1 <- df_3p1 %>%
 
 df <- df_3p1 %>%
   left_join(
-    naomi3,
+    naomi,
     by = c("area_id", "age_group")
   ) %>%
   left_join(
