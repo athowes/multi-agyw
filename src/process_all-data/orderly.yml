@@ -78,7 +78,7 @@ depends:
       use:
         depends/swz_areas.geojson: swz_areas.geojson
   - tza_data_areas:
-      id: 20201130-150758-409ee8ac
+      id: latest
       use:
         depends/tza_areas.geojson: tza_areas.geojson
   - uga_data_areas:

@@ -20,7 +20,7 @@ packages:
 
 depends:
   tza_data_areas:
-    id: 20201130-150758-409ee8ac
+    id: latest
     use:
       depends/tza_areas.geojson: tza_areas.geojson
   tza_survey_phia:
