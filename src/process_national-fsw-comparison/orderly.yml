@@ -47,7 +47,7 @@ depends:
   process_all-data:
     id: latest
     use:
-      depends/naomi3.rds: naomi3.rds
+      depends/naomi3_pop.rds: naomi3_pop.rds
   process_age-disagg-fsw:
     id: latest
     use:

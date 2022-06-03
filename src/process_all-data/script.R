@@ -253,3 +253,24 @@ naomi3 <- naomi3 %>%
   select(-new_area_id)
 
 saveRDS(naomi3, "naomi3.rds")
+
+pop <- naomi3 %>%
+  filter(indicator == "Population") %>%
+  select(-indicator) %>%
+  rename(population = estimate) %>%
+  pivot_wider(
+    names_from = age_group,
+    values_from = population
+  ) %>%
+  mutate(
+    `25-49` = `25-29` + `30-34` + `35-39` + `40-44` + `45-49`,
+    `15-29` = `15-19` + `20-24` + `25-29`,
+  ) %>%
+  pivot_longer(
+    cols = -c(iso3, area_id, area_level),
+    names_to = "age_group",
+    values_to = "population"
+  )
+
+saveRDS(pop, "naomi3_pop.rds")
+
