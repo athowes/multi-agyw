@@ -1,0 +1,24 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Main paper
+      filenames:
+        - paper.pdf
+        - paper.tex
+  - data:
+      description: Appendix
+      filenames:
+        - appendix.pdf
+
+resources:
+  - paper.Rmd
+  - citations.bib
+  - PLOS-submission.eps
+  - appendix.Rmd
+
+packages:
+  - rmarkdown
+  - dplyr
+  - ggplot2
+  - forcats

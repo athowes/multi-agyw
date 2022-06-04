@@ -1,0 +1,6 @@
+---
+title: Appendix to "Spatio-temporal estimates of HIV risk group proportions for adolescent
+  girls and young women across 13 priority countries in sub-Saharan Africa"
+output: pdf_document
+
+---
