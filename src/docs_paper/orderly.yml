@@ -22,3 +22,13 @@ packages:
   - dplyr
   - ggplot2
   - forcats
+
+depends:
+  plot_available-surveys:
+    id: latest
+    use:
+      depends/available-surveys.png: available-surveys.png
+  plot-tikz_category-flowchart:
+    id: latest
+    use:
+      depends/category-flowchart.pdf: category-flowchart.pdf

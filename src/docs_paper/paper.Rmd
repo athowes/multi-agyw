@@ -3,19 +3,30 @@ title: Spatio-temporal estimates of HIV risk group proportions for adolescent gi
 author:
   - name: Adam Howes
     email: ath19@ic.ac.uk
-    affiliation: Imperial College London
+    affiliation: A
     corresponding: ath19@ic.ac.uk
 address:
-  - code: Imperial College London
-    address: Department of Mathematics
+  - code: A
+    address: Department of Mathematics, Imperial College London
+  - code: B
+    address: MRC Centre for Global Infectious Disease Analysis, School of Public Health, Imperial College London
+  - code: C
+    address: Department of Medical Social Sciences, Feinberg School of Medicine, Northwestern University
+  - code: D
+    address: Harvard T. H. Chan School of Public Health, Harvard University
+  - code: E
+    address: Joint United Nations Programme on HIV/AIDS, Geneva, Switzerland
+  - code: F
+    address: Department of Computer Science, University of Oxford
 abstract: |
   Abstract
-  
 author_summary: |
   Author summary
 
 bibliography: citations.bib
 output: rticles::plos_article
+header-includes:
+- \usepackage{tabularx}
 # plos.csl can be download and used locally
 csl: http://www.zotero.org/styles/plos
 ---
@@ -96,7 +107,7 @@ The best performing model was selected according to the conditional predictive o
 The \textsc{R} [@r] code used to implement the models and produce  results is available from `github.com/athowes/multi-agyw`.
 We used the `orderly` package [@orderly] for reproducible research.
 
-\subsection{Prevalence, incidence and new infections}
+## Prevalence, incidence and new infections
 
 We used the risk group proportion estimates to calculate HIV prevalence, PLHIV, HIV incidence and number of new HIV infections stratified according to district, age group and risk group by disaggregating estimates from the Naomi model (further details are provided in Appendix).
 
@@ -108,5 +119,110 @@ HIV incidence estimates were disaggregated by risk group on the linear scale usi
 Number of new HIV infections were calculated by multiplying HIV incidence by susceptible risk group population size. 
 We then calculated the number of new infections that would be found per person reached when prioritising according to incidence under each possible risk stratification.
 In doing so, we implicitly assumed it is possible to reach all members of a strata.
+
+# Results
+
+## Data
+
+We included 47 surveys in our analysis (Figure, Table), with a total sample size of 284,168 women aged 15-29 years (106,397 aged 15-19 years, 95,253 aged 20-24 years, and 82,518 aged 25-29 years).
+Of these, 13 surveys included a specific transactional sex question, with corresponding sample size 85,760 (31,752 aged 15-19 years, 29,167 aged 20-24 years, and 24,841 aged 25-29 years).
+The median number of surveys per country was four, ranging from one in Botswana and South Africa to six in Uganda.
+Direct estimates of the four risk group proportions from these surveys were highly correlated with our modelled estimates at a national-level (Figures).
+
+## Model selection
+
+The best fitting multinomial regression model included correlated spatial effects and first-order autoregressive temporal effects, but not spatio-temporal interactions.
+The best logistic regression model for transactional sex included correlated spatial effects and the proportion of men who reported ever paying for sex covariate.
+Model performance according to the CPO criteria for each of the considered models is provided in the appendix (Figures, Tables).
+
+Posterior mean estimates for our final model in the most recent year, 2018, are shown as choropleths (Figure) and dotplots (Figure).
+In the following results, all estimates refer to 2018, the most recent year included in our analysis, unless otherwise indicated.
+Posterior mean, median, upper (97.5\%) and lower (2.5\%) credible estimates for each district, age group and year from our final model are provided in the supplementary material.
+
+# Discussion
+
+We estimated sexual risk group proportions for AGYW at a district-level in 13 sub-Saharan African countries with pressing HIV prevention requirements.
+Our estimates will enable country and district-level planners to differentiate prevention programming according to risk behaviour, as outlined in the Global AIDS Strategy.
+
+<!-- Comment about how novel this would be if implemented -->
+
+By considering all possible risk stratification strategies, we showed that successful implementation of a risk-stratified approach would allow substantially more new infections to be found before they occur.
+A considerable proportion of these new infections are among FSW, supporting the case for HIV programming efforts focused on key population groups [@baral2012burden].
+We showed that there is substantial variation in the importance of prioritisation by age, location and behaviour within each country.
+This highlights the importance of understanding and tailoring HIV prevention efforts to country-specific contexts.
+By standardising our analysis across all 13 countries, we showed the additional efficiency benefits of resource allocation between countries.
+
+We found a geographic delineation in the proportion of women cohabiting between southern and eastern Africa, calling attention to a divide attributable to many cultural, social and economic factors.
+The delineation does not represent a boundary between predominately Christian and Muslim populations, which is further north.
+We also note that the high numbers of adolescent girls aged 15-19 cohabiting in Mozambique, reflecting existing concerns [@unicef].
+
+Our modelled estimates improve upon direct survey results for three reasons.
+First, by taking a modular modelling approach, we integrated all relevant survey information from multiple years, allowing estimation of the FSW proportion for surveys without a specific transactional sex question.
+Second, whereas direct estimates exhibit large sampling variability at a district level, we alleviated this issue using spatio-temporal smoothing (Figure).
+Third, we provide estimates in all settings, including districts without any survey clusters as well as years without surveys, allowing estimates to be consistently fed into further analysis and planning pipelines.
+
+To the best of our knowledge, the only previous research to geographically map AGYW HIV risk groups is @brugh2021characterizing, who use biomaker and behavioural data from the most recent surveys in Eswatini, Haiti and Mozambique to define and subsequently map risk groups.
+
+This work serves as a case-study in how to use the multinomial-Poisson transformation to efficiently specify and fit multinomial spatio-temporal models in `R-INLA`.
+We used Kronecker products over Gaussian Markov random fields to define appropriate category-specific spatio-temporal random effects.
+
+<!-- Paragraph about AGFS e.g. our results are consistent with age at first sex findings [@kinh2021trends]. -->
+
+## Limitations
+
+Our analysis of the number of infections that could be reached by each risk stratification strategy was based on simplifying assumptions and should be interpreted as illustrating the potentially obtainable benefits, rather than benefits that would be accrued from any specific intervention strategy.
+Factors we did not consider include the greater administrative burden of more complex strategies, variation in difficulty or feasibility of reaching individuals in each strata, variation in the range or effectiveness of interventions by strata, and changes in strata membership that may occur during the course of a year.
+
+<!-- Dependence of FSW on clustering and migration. -->
+
+Under-reporting of higher risk sexual behaviours amongst AGYW could affect the validity of our estimates.
+Due to social stigma or disapproval, respondents may be reluctant to report non-marital partners [@nnko2004secretive} or may bias their reporting of sexual debut [@zaba2004age; @wringe2009comparative; @kinh2021trends].
+For guidance of resource allocation, differing rates of under-reporting by country, district, year or age group are particularly concerning to the applicability of our results; and, while it may be reasonable to assume a constant rate over space-time, the same cannot be said for age, where aspects of under-reporting have been shown to decline as respondents age [@glynn2011assessing], suggesting that the elevated risks we found faced by younger women are likely a conservative estimate.
+Furthermore, our FSW estimates do not overcome the difficulties of sampling hard to reach groups; in particular, the possibility of being excluded from household sampling frames.
+
+<!-- I think the Nnko 2004 is a good cite. For biases in age at first sex as folks age: -->
+<!-- https://pubmed.ncbi.nlm.nih.gov/15572637/ -->
+<!-- https://pubmed.ncbi.nlm.nih.gov/19307342/ -->
+<!-- Then these are all about how methodological approaches can result in different estimates (I think): -->
+<!-- Hewett PC, Mensch BS, Erulkar AS. Consistency in the reporting of sexual behaviour by adolescent girls in Kenya: a comparison of interviewing methods. Sex Transm Infect. 2004;80 Suppl 2:ii43-8. -->
+<!-- Cleland J, Boerma JT, Carael M, Weir SS. Monitoring sexual behaviour in general populations: a synthesis of lessons of the past decade. Sex Transm Infect. 2004;80 Suppl 2:ii1-7. -->
+<!-- Helleringer S, Kohler HP, Kalilani-Phiri L, Mkandawire J, Armbruster B. The reliability of sexual partnership histories: implications for the measurement of partnership concurrency during surveys. AIDS. 2011;25(4):503-11.Mensch BS, Hewett PC, Erulkar AS. The reporting of sensitive behavior by adolescents: a methodological experiment in Kenya. Demography. 2003;40(2):247-68. -->
+<!-- Then there’s the option of discussing validity of self-reported sexual behaviour based on biomarker validation (e.g. https://academic.oup.com/ofid/article/6/2/ofz010/5285444, there are more like this) but I’m not super familiar with this literature to pull a reference that would be appropriate. -->
+
+The risk groups we analysed did not consider other important characteristics, such as condom usage or partner-specific risk, which contribute to heterogeneity within each risk group.
+Although the number of risk groups considered could be increased, capturing more of this heterogeneity, this inclination must be balanced with the benefits of parsimony.
+Our approach assumed that within risk group heterogeneity is small enough that the categories are meaningfully consistent across contexts.
+Additionally, the categories we used are not immediately actionable.
+For example, a program is designed to reach AGYW who are cohabiting, then it is not clear how to find these individuals within a community.
+As such it may be preferable to select risk groups based more amenable attributes, such as attendance of a particular service or facility.
+% e.g. school, healthcare
+
+Finally, our analysis focused only on females aged 15-29 years and therefore did not consider optimisation of prevention for the wider population of all adults of both sexes.
+By limiting our consideration to this group we didn't account for XX.X\% of all new infections [CITE: Katie, others].
+% Obtaining population size estimates for sexual risk behaviour in the general population is a crucial step toward greater understanding the dynamics of the HIV epidemic in sub-Saharan Africa, and would allow incidence models of greater fidelity to reality which include stratification of individuals by sexual risk.
+
+<!-- Likely over-reporting of never having had sex in the past year by young women, if we apply an RR of 0 to this group, to balance out the overall incidence rate, might be over-attributing risk to the other groups. -->
+<!-- Defining condom usage is challenging, particularly for those with multiple partners, and reporting is likely biased due to social desirability. -->
+<!-- Additionally, consistent condom usage is rare amongst those cohabiting, and as such likely only relevant for those with non-regular sexual partners.  -->
+
+## Conclusion
+
+We estimated the proportion of AGYW aged 15-19, 20-24 and 25-29 years in four sexual risk categories at a district-level in 13 priority countries.
+Using these estimates, we performed an analysis of the number of infections that could be reached by prioritisation based upon location, age and behaviour.
+Though subject to limitations, our results quantify the crucial importance of reaching the AGYW at highest risk.
+
+## Funding
+
+AH was supported by the EPSRC Centre for Doctoral Training in Modern Statistics and Statistical Machine Learning (EP/S023151/1).
+AH, VKN, KAR, JWE were supported by the Bill and Melinda Gates Foundation (OPP1190661, OPP1164897).
+TMW was supported by Imperial College London (President's PhD Scholarship).
+SF was supported by the EPSRC (EP/V002910/1).
+JWE was supported by UNAIDS and National Institute of Allergy and Infectious Disease of the National Institutes of Health (R01AI136664). 
+
+This research was supported by the MRC Centre for Global Infectious Disease Analysis (MR/R015600/1), jointly funded by the UK Medical Research Council (MRC) and the UK Foreign, Commonwealth \& Development Office (FCDO), under the MRC/FCDO Concordat program and is also part of the EDCTP2 programme supported by the European Union.
+
+## Disclaimer
+
+The findings and conclusions in this manuscript are those of the authors and do not necessarily represent the official position of the funding agencies.
 
 # References {#references .unnumbered}
