@@ -6,9 +6,6 @@ df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv") %>%
   filter(indicator != "sexnonregplus")
 pop <- readRDS("depends/naomi_pop.rds")
 
-df_3p1 %>% filter(iso3 == "Tanzania") %>% pull(area_id) %>% unique()
-pop %>% filter(iso3 == "TZA") %>% pull(area_id) %>% unique()
-
 #' Add population and updating naming
 df_3p1 <- df_3p1 %>%
   filter(
