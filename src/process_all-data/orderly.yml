@@ -6,6 +6,7 @@ artefacts:
       filenames:
         - areas.rds
         - areas.pdf
+        - area-levels.txt
   - data:
       description: All survey and HIV indicator datasets
       filenames:

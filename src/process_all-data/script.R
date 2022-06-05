@@ -15,7 +15,7 @@ plot(areas$geometry)
 dev.off()
 
 #' Check on the number of areas in each country
-areas %>%
+areas_df <- areas %>%
   st_drop_geometry() %>%
   select(area_id, area_level) %>%
   mutate(iso3 = substr(area_id, 1, 3)) %>%
@@ -26,7 +26,34 @@ areas %>%
   ) %>%
   filter(area_level == analysis_level) %>%
   group_by(iso3) %>%
-  summarise(n = n())
+  summarise(
+    n = n(),
+    analysis_level = analysis_level[1]
+  ) %>%
+  mutate(
+    country = fct_recode(iso3,
+      "Botswana" = "BWA",
+      "Cameroon" = "CMR",
+      "Kenya" = "KEN",
+      "Lesotho" = "LSO",
+      "Mozambique" = "MOZ",
+      "Malawi" = "MWI",
+      "Namibia" = "NAM",
+      "Eswatini" = "SWZ",
+      "Tanzania" = "TZA",
+      "Uganda" = "UGA",
+      "South Africa" = "ZAF",
+      "Zambia" = "ZMB",
+      "Zimbabwe" = "ZWE"
+    )
+  )
+
+areas_df %>%
+  select(Country = country, "Number of areas" = n, "Analysis level" = analysis_level) %>%
+  gt() %>%
+  as_latex() %>%
+  as.character() %>%
+  cat(file = "area-levels.txt")
 
 saveRDS(areas, "areas.rds")
 
