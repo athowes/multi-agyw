@@ -10,6 +10,12 @@ artefacts:
       description: Appendix
       filenames:
         - appendix.pdf
+        - appendix.tex
+  - data:
+      description: Figures and tables
+      filenames:
+        - tables-figures.pdf
+        - tables-figures.tex
 
 resources:
   - paper.Rmd
@@ -32,3 +38,20 @@ depends:
     id: latest
     use:
       depends/category-flowchart.pdf: category-flowchart.pdf
+  fit_fsw-logit-sae:
+    id: latest
+    use:
+      depends/fsw-logit-information-criteria.pdf: fsw-logit-information-criteria.pdf
+  process_prevalence:
+    id: latest
+    use:
+      depends/prev-district-sexbehav-logit.pdf: prev-district-sexbehav-logit.pdf
+  process_incidence:
+    id: latest
+    use:
+      depends/incidence-district-sexbehav.pdf: incidence-district-sexbehav.pdf
+      depends/infections-district-sexbehav.pdf: infections-district-sexbehav.pdf
+  # plot_infections-reached:
+  #   id: latest
+  #   use:
+  #     depends/infections-reached.pdf: infections-reached.pdf

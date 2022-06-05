@@ -3,8 +3,30 @@ title: Spatio-temporal estimates of HIV risk group proportions for adolescent gi
 author:
   - name: Adam Howes
     email: ath19@ic.ac.uk
-    affiliation: A
+    affiliation: [A, B]
     corresponding: ath19@ic.ac.uk
+  - name: Kathryn A. Risher 
+    affiliation: [C, B]
+  - name: Van Kính Nguyen
+    affiliation: B
+  - name: Oliver Stevens
+    affiliation: B
+  - name: Katherine M. Jia
+    affiliation: D
+  - name: Timothy M. Wolock
+    affiliation: [A, B]
+  - name: Lycias Zembe
+    affiliation: E
+  - name: Ian Wanyeki
+    affiliation: E
+  - name:  Mary Mahy
+    affiliation: E
+  - name: Clemens Benedikt
+    affiliation: E
+  - name: Seth R. Flaxman
+    affiliation: F
+  - name: Jeff W. Eaton
+    affiliation: B
 address:
   - code: A
     address: Department of Mathematics, Imperial College London
@@ -19,7 +41,25 @@ address:
   - code: F
     address: Department of Computer Science, University of Oxford
 abstract: |
-  Abstract
+  **Background:**
+  The Global AIDS Strategy 2021-2026 identifies adolescent girls and young women (AGYW) as a priority population for   HIV prevention and recommends differentiating intervention portfolios geographically based on local HIV incidence   and individual risk behaviours.
+
+  **Methods:**
+  We analysed 47 geospatially referenced national household surveys conducted between 1999-2018 across 13 Global   Fund priority countries in sub-Saharan Africa.
+  Female survey respondents aged 15-29 years were classified into four risk groups (not sexually active, cohabiting, non-regular partner[s] and female sex workers) based on reported sexual partnerships.
+  We used a Bayesian spatio-temporal multinomial regression model to estimate the proportion of AGYW in each risk group stratified by district, year and five-year age group.
+  We then assessed the efficiency of prioritising interventions according to these risk groups.
+
+  **Results:**
+  Data consisted of $291,465$ female survey respondents aged 15-29.
+  Risk group proportions varied substantially across age groups (44.6\% of variation), countries (28.7\%), and between districts within each country (20.6\%), but changed little over time (1.6\%).
+  Among women aged 20-29, we found a geographic delineation, north of which in eastern Africa, cohabiting (69.5\%) is more common than non-regular partner(s) (13.3\%), and south of which, non-regular partner(s) (52.6\%) are more common than cohabiting (27.9\%).
+  Prioritisation based on behavioural risk, on top of location and age based prioritisation, reduced the proportion of population that must be reached to find half of all new infections from 20.1\% to 10.4\%.
+  Female sex workers were 2.4\% of the at risk population but 15.9\% of all new infections.
+
+  **Conclusions:**
+  Our risk group estimates provide data for HIV programmes to implement a differentiated prevention approach and set targets according to the Global AIDS Strategy.
+  Successfully implementing this approach would result in finding substantially more infections, particularly among female sex workers.
 author_summary: |
   Author summary
 
@@ -27,14 +67,14 @@ bibliography: citations.bib
 output: rticles::plos_article
 header-includes:
 - \usepackage{tabularx}
-# plos.csl can be download and used locally
-csl: http://www.zotero.org/styles/plos
+# # plos.csl can be download and used locally
+# csl: http://www.zotero.org/styles/plos
 ---
 
 # Introduction
 
-In sub-Saharan Africa, adolescent girls and young women (AGYW) aged 15-29 are XX.X\% of the population but XX.X\% of new HIV infections [@unaids2021update].
-HIV incidence amongst AGYW is X.X times higher than among similarly aged males due to younger age at first sex, age patterns of sexual mixing, structural vulnerability and power imbalances, and increased susceptibility to HIV infection [@joint2016hiv].
+In sub-Saharan Africa, adolescent girls and young women (AGYW) aged 15-29 are `r "num"`\% of the population but `r "num"`\% of new HIV infections [@unaids2021update].
+HIV incidence amongst AGYW is `r "num"` times higher than among similarly aged males due to younger age at first sex, age patterns of sexual mixing, structural vulnerability and power imbalances, and increased susceptibility to HIV infection [@joint2016hiv].
 AGYW have therefore been identified as a priority population for HIV primary prevention, and significant investments have been made in prevention programming [@saul2018dreams; @global2018measurement].
 
 HIV prevention for AGYW is typically comprised of basic programming which is made available to all, together with additional, more intensified, programming which is differentiated on the basis of risk [@joint2016hiv, birdthistle2018evaluating].
@@ -124,8 +164,8 @@ In doing so, we implicitly assumed it is possible to reach all members of a stra
 
 ## Data
 
-We included 47 surveys in our analysis (Figure, Table), with a total sample size of 284,168 women aged 15-29 years (106,397 aged 15-19 years, 95,253 aged 20-24 years, and 82,518 aged 25-29 years).
-Of these, 13 surveys included a specific transactional sex question, with corresponding sample size 85,760 (31,752 aged 15-19 years, 29,167 aged 20-24 years, and 24,841 aged 25-29 years).
+We included 47 surveys in our analysis (Figure, Table), with a total sample size of `r "num"` women aged 15-29 years (`r "num"` aged 15-19 years, `r "num"` aged 20-24 years, and `r "num"` aged 25-29 years).
+Of these, 13 surveys included a specific transactional sex question, with corresponding sample size `r "num"` (`r "num"` aged 15-19 years, `r "num"` aged 20-24 years, and `r "num"` aged 25-29 years).
 The median number of surveys per country was four, ranging from one in Botswana and South Africa to six in Uganda.
 Direct estimates of the four risk group proportions from these surveys were highly correlated with our modelled estimates at a national-level (Figures).
 
@@ -138,6 +178,38 @@ Model performance according to the CPO criteria for each of the considered model
 Posterior mean estimates for our final model in the most recent year, 2018, are shown as choropleths (Figure) and dotplots (Figure).
 In the following results, all estimates refer to 2018, the most recent year included in our analysis, unless otherwise indicated.
 Posterior mean, median, upper (97.5\%) and lower (2.5\%) credible estimates for each district, age group and year from our final model are provided in the supplementary material.
+
+## Spatial, temporal and age trends
+
+In most districts (`r "num"`\%; 95\% credible interval [CI] `r "num"`--`r "num"`\%) adolescent girls aged 15-19 were not sexually active.
+The exception was Mozambique, where the majority (`r "num"`\%; 95\% CI `r "num"`--`r "num"`\%) were sexually active in the past year and close to a third (`r "num"`\%; 95\% CI `r "num"`--`r "num"`\%) were cohabiting with a partner.
+
+In the 20-24 and 25-29 year age groups, the majority (`r "num"`\%; 95\% CI `r "num"`--`r "num"`\%) of women were either cohabiting or had non-regular partner(s).
+Countries in east and central Africa (Cameroon, Kenya, Malawi, Mozambique, Tanzania, Uganda, Zambia and Zimbabwe) had a higher proportion of women in these age groups cohabiting (`r "num"`\%, as compared with `r "num"`\% with non-regular partner[s]) and countries in southern Africa (Botswana, Eswatini, Lesotho, Namibia and South Africa) had a higher proportion with non-regular partner(s) (`r "num"`\%, as compared with `r "num"`\% cohabiting).
+There was a clear geographic delineation along the border of Mozambique, through the interior of Zimbabwe and along the border of Zambia.
+
+The median proportion of FSW nationally was `r "num"`\% (95\% CI `r "num"`--`r "num"`\%) for the 15-19 age group, compared with $2.4\%$ (95\% CI `r "num"`--`r "num"`\%) and `r "num"`\% (95\% CI `r "num"`--`r "num"`\%) for the 20-24 and 25-29 age groups respectively.
+This age pattern, reflecting the lower proportion sexually active among those aged 15-19 years, was the foremost effect of adjusting our estimates to match [@johnston2022deriving]; in contrast, our initial estimates of transactional sex were close to constant by age (Figure~\ref{fig:fsw-within-between-country-variation}).
+
+##
+
+Age explained `r "num"`\% (95\% CI `r "num"`--`r "num"`\%) of the variation in risk group proportions, country explained `r "num"`\% (95\% CI `r "num"`--`r "num"`\%), and district explained `r "num"`\% (95\% CI `r "num"`--`r "num"`\%).
+The temporal effects only explained `r "num"`\% (95\% CI `r "num"`--`r "num"`\%) of variation, indicating very little change in risk group proportions over time, with the remaining `r "num"`\% (95\% CI `r "num"`--`r "num"`\%) attributable to the category random effects.
+We observed similar variance decomposition results fitting each country individually (Figure~\ref{fig:aaa-variance-proportions}) or using other model specifications.
+
+<!-- Can you please write another paragraph here calling out some examples of the amount of variation? -->
+<!-- Awaiting additional results: https://github.com/athowes/multi-agyw/issues/95 -->
+
+## Infections reached
+
+For any given fraction of AGYW prioritised, substantially more new infections were reached by strategies that included behavioural risk stratification.
+Reaching half of all new infections required reaching 20.1\% of the population when stratifying by area and age, but only 10.4\% when behavioural stratification was included (Figure~\ref{fig:infections-reached}).
+The majority of this benefit came from reaching FSW, who were 2.4\% of the population but 15.9\% of all new infections.
+
+Efficiency was reduced if prioritisation was done separately by country.
+On average, reaching half of new infections in a country required reaching 15.7\% (range 7.8-23.4\%) of the population when stratifying by area and age, reducing to 5.1\% (range 1.3-9.2\%) when behaviour was included.
+The importance of stratifying risk upon age, location and behaviour within a country varied (Figure~\ref{fig:infections-reached-country-1}--Figure~\ref{fig:infections-reached-country-13}), analogous to the varying contribution of each to the total variance (Section~\ref{sec:variance-decomp}).
+For example, FSW in Tanzania were estimated to be 5.3\% of the population and close to half (41.4\%) of all new infections, whereas FSW in Namibia were just 0.3\% of the population and 2.7\% of all new infections.
 
 # Discussion
 
@@ -198,7 +270,7 @@ As such it may be preferable to select risk groups based more amenable attribute
 % e.g. school, healthcare
 
 Finally, our analysis focused only on females aged 15-29 years and therefore did not consider optimisation of prevention for the wider population of all adults of both sexes.
-By limiting our consideration to this group we didn't account for XX.X\% of all new infections [CITE: Katie, others].
+By limiting our consideration to this group we didn't account for `r "num"`\% of all new infections [CITE: Katie, others].
 % Obtaining population size estimates for sexual risk behaviour in the general population is a crucial step toward greater understanding the dynamics of the HIV epidemic in sub-Saharan Africa, and would allow incidence models of greater fidelity to reality which include stratification of individuals by sexual risk.
 
 <!-- Likely over-reporting of never having had sex in the past year by young women, if we apply an RR of 0 to this group, to balance out the overall incidence rate, might be over-attributing risk to the other groups. -->

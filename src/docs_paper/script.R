@@ -3,3 +3,4 @@
 
 rmarkdown::render("paper.Rmd")
 rmarkdown::render("appendix.Rmd")
+rmarkdown::render("tables-figures.Rmd")
