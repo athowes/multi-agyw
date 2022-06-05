@@ -44,6 +44,7 @@ packages:
   - stringr
   - Matrix
   - spud
+  - gt
 
 depends:
   - bwa_data_areas:

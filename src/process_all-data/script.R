@@ -50,8 +50,12 @@ areas_df <- areas %>%
 
 areas_df %>%
   select(Country = country, "Number of areas" = n, "Analysis level" = analysis_level) %>%
-  gt() %>%
-  as_latex() %>%
+  gt::gt() %>%
+  gt::cols_align(
+    align = "left",
+    columns = Country
+  ) %>%
+  gt::as_latex() %>%
   as.character() %>%
   cat(file = "area-levels.txt")
 

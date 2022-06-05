@@ -122,7 +122,7 @@ Total &  &  &  & $9826$ & $8563$ & $7347$ & $25736$ \\
 \midrule 
 Total &  &  &  & $106397$ & $95253$ & $82518$ & $284168$ \\ 
 \bottomrule
-\caption{All surveys that we used in our analysis.}
+\caption{All surveys that we used in our analysis and their sample sizes.}
 \label{tab:surveys-used}
 \end{longtable}
 
@@ -141,6 +141,28 @@ ZMB2002DHS & No GPS coordinates available to place survey clusters within distri
 \label{tab:surveys-excluded}
 \caption{All surveys excluded from our analysis.}
 \end{table}
+
+\newpage
+
+\begin{longtable}{lrr}
+\toprule
+Country & Number of areas & Analysis level \\ 
+\midrule
+Botswana & 27 & 3 \\ 
+Cameroon & 58 & 2 \\ 
+Kenya & 47 & 2 \\ 
+Lesotho & 10 & 1 \\ 
+Mozambique & 161 & 3 \\ 
+Malawi & 33 & 5 \\ 
+Namibia & 38 & 2 \\ 
+Eswatini & 4 & 1 \\ 
+Tanzania & 195 & 4 \\ 
+Uganda & 136 & 3 \\ 
+South Africa & 52 & 2 \\ 
+Zambia & 116 & 2 \\ 
+Zimbabwe & 63 & 2 \\ 
+\bottomrule
+\end{longtable}
 
 \clearpage
 
