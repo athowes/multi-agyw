@@ -145,13 +145,13 @@ dev.off()
 
 #' Sadly multi-page .png don't exist
 #' This is a bit clunky but unsure if there is a better option
-lapply(1:length(plotsA), function(i) {
-  ggsave(
-    paste0("incidence-district-sexbehav-", i, ".png"),
-    plotsA[[i]],
-    width = 6.25, height = 8, units = "in", dpi = 300
-  )
-})
+# lapply(1:length(plotsA), function(i) {
+#   ggsave(
+#     paste0("incidence-district-sexbehav-", i, ".png"),
+#     plotsA[[i]],
+#     width = 6.25, height = 8, units = "in", dpi = 300
+#   )
+# })
 
 pdf("infections-district-sexbehav.pdf", h = 8, w = 6.25)
 

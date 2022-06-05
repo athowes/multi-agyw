@@ -6,20 +6,20 @@ artefacts:
       filenames:
         - incidence-district-sexbehav.csv
         - incidence-district-sexbehav.pdf
-        - incidence-district-sexbehav-1.png
-        - incidence-district-sexbehav-2.png
-        - incidence-district-sexbehav-3.png
-        - incidence-district-sexbehav-4.png
-        - incidence-district-sexbehav-5.png
-        - incidence-district-sexbehav-6.png
-        - incidence-district-sexbehav-7.png
-        - incidence-district-sexbehav-8.png
-        - incidence-district-sexbehav-9.png
-        - incidence-district-sexbehav-10.png
-        - incidence-district-sexbehav-11.png
-        - incidence-district-sexbehav-12.png
-        - incidence-district-sexbehav-13.png
-        - infections-district-sexbehav-pdf
+        - infections-district-sexbehav.pdf
+        # - incidence-district-sexbehav-1.png
+        # - incidence-district-sexbehav-2.png
+        # - incidence-district-sexbehav-3.png
+        # - incidence-district-sexbehav-4.png
+        # - incidence-district-sexbehav-5.png
+        # - incidence-district-sexbehav-6.png
+        # - incidence-district-sexbehav-7.png
+        # - incidence-district-sexbehav-8.png
+        # - incidence-district-sexbehav-9.png
+        # - incidence-district-sexbehav-10.png
+        # - incidence-district-sexbehav-11.png
+        # - incidence-district-sexbehav-12.png
+        # - incidence-district-sexbehav-13.png
 
 packages:
   - dplyr
