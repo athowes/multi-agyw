@@ -46,6 +46,9 @@ packages:
   - spud
   - gt
 
+resources:
+  naomi_extract.rds
+
 depends:
   - bwa_data_areas:
       id: latest

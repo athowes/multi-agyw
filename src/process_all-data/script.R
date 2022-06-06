@@ -193,57 +193,17 @@ pop <- lapply(priority_iso3, function(x) read_csv(paste0("depends/", tolower(x),
 
 write_csv(pop, "interpolated_population.csv")
 
-#' Population option 2: Naomi population data from Sharepoint
-#' Get age-stratified population total sizes from (most recent) Naomi model outputs
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+naomi_extract <- readRDS("naomi_extract.rds")
 
-url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2022 naomi preliminary/r-extracts/indicators_adam.rds"
-path <- sharepoint$download(URLencode(url))
-naomi_output <- readRDS(path)
-
-url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2022 naomi preliminary/r-extracts/meta_area.rds"
-path <- sharepoint$download(URLencode(url))
-area_hierarchy <- readRDS(path)
-
-naomi_output <- naomi_output %>%
-  filter(
-    iso3 %in% priority_iso3,
-    indicator_label %in% c("Population", "PLHIV", "New infections"),
-    #' These are the age groups we are considering, plus those which are useful for disaggregation
-    age_group_label %in% c(
-      "15-19", "20-24", "25-29", "30-34", "35-39",
-      "40-44", "45-49", "15-24", "15-49"
-    ),
-    #' Only female
-    sex == "female"
-  ) %>%
-  #' The most recent estimates
-  group_by(iso3) %>%
-  filter(calendar_quarter == max(calendar_quarter)) %>%
-  ungroup() %>%
-  #' Merge with area hierarchy data
-  left_join(
-    select(area_hierarchy, area_id, parent_area_id),
-    by = "area_id"
-  ) %>%
+naomi <- naomi_extract %>%
   select(
     iso3, area_id, area_level, age_group = age_group_label,
     indicator = indicator_label, estimate = mean
   )
 
-naomi_national <- naomi_output %>%
-  group_by(iso3, age_group, indicator) %>%
-  summarise(estimate = sum(estimate)) %>%
-  mutate(
-    area_level = 0,
-    area_id = iso3
-  )
+saveRDS(naomi, "naomi.rds")
 
-naomi_output <- bind_rows(naomi_output, naomi_national)
-
-saveRDS(naomi_output, "naomi.rds")
-
-pop <- naomi_output %>%
+pop <- naomi %>%
   filter(indicator == "Population") %>%
   select(-indicator) %>%
   rename(population = estimate) %>%

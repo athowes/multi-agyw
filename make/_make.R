@@ -3,8 +3,8 @@ scr_here <- function(x) src(here::here(x))
 #' 1. Pull the Naomi area files
 src_here("make/pull_naomi_areas.R")
 
-#' 2.  Pull the population data from Oli's fertility repo
-src_here("make/pull_oli_population.R")
+#' 2.  Pull Naomi data
+src_here("make/pull_naomi.R")
 
 #' 3. Run each of the survey_behav scripts to prepare the data for modelling
 src_here("make/run_data_prep.R")
