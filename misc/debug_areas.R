@@ -30,6 +30,13 @@ pop %>%
 dev.off()
 
 pop %>%
+  filter(age_group == "15-49") %>%
+  group_by(iso3, area_level) %>%
+  summarise(n = n()) %>%
+  filter(n > 0, area_level > 0) %>%
+  View()
+
+pop %>%
   filter(
     area_level != 0,
     age_group == "15-49"
