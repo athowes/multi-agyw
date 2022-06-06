@@ -24,6 +24,6 @@ packages:
 
 depends:
   moz_data_areas:
-    id: latest
+    id: latest(parameter:version == 2022)
     use:
       depends/moz_areas.geojson: moz_areas.geojson

@@ -29,6 +29,6 @@ packages:
 
 depends:
   tza_data_areas:
-    id: latest
+    id: latest(parameter:version == 2022)
     use:
       depends/tza_areas.geojson: tza_areas.geojson
