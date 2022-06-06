@@ -51,11 +51,11 @@ abstract: |
   We then assessed the efficiency of prioritising interventions according to these risk groups.
 
   **Results:**
-  Data consisted of $291,465$ female survey respondents aged 15-29.
-  Risk group proportions varied substantially across age groups (44.6\% of variation), countries (28.7\%), and between districts within each country (20.6\%), but changed little over time (1.6\%).
-  Among women aged 20-29, we found a geographic delineation, north of which in eastern Africa, cohabiting (69.5\%) is more common than non-regular partner(s) (13.3\%), and south of which, non-regular partner(s) (52.6\%) are more common than cohabiting (27.9\%).
-  Prioritisation based on behavioural risk, on top of location and age based prioritisation, reduced the proportion of population that must be reached to find half of all new infections from 20.1\% to 10.4\%.
-  Female sex workers were 2.4\% of the at risk population but 15.9\% of all new infections.
+  Data consisted of `r "num"` female survey respondents aged 15-29.
+  Risk group proportions varied substantially across age groups (`r "num"`\% of variation), countries (`r "num"`\%), and between districts within each country (`r "num"`\%), but changed little over time (`r "num"`\%).
+  Among women aged 20-29, we found a geographic delineation, north of which in eastern Africa, cohabiting (`r "num"`\%) is more common than non-regular partner(s) (`r "num"`\%), and south of which, non-regular partner(s) (`r "num"`\%) are more common than cohabiting (`r "num"`\%).
+  Prioritisation based on behavioural risk, in combiniation with location and age based prioritisation, reduced the proportion of population that must be reached to find half of all new infections from `r "num"`\% to `r "num"`\%.
+  Female sex workers were `r "num"`\% of the at risk population but `r "num"`\% of all new infections.
 
   **Conclusions:**
   Our risk group estimates provide data for HIV programmes to implement a differentiated prevention approach and set targets according to the Global AIDS Strategy.
@@ -67,14 +67,104 @@ bibliography: citations.bib
 output: rticles::plos_article
 header-includes:
 - \usepackage{tabularx}
-# # plos.csl can be download and used locally
-# csl: http://www.zotero.org/styles/plos
+# plos.csl can be download and used locally
+csl: http://www.zotero.org/styles/plos
 ---
+
+```{r echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+library(tidyverse)
+
+priority_iso3 <- multi.utils::priority_iso3()
+analysis_level <- multi.utils::analysis_level()
+admin1_level <- multi.utils::admin1_level()
+
+hiv_estimates <- readxl::read_excel(
+  "HIV2021Estimates_Global_PLWHV-NI-Pop_6June2022.xlsx", 
+  sheet = "Table"
+) %>%
+  filter(ISO3 %in% priority_iso3) %>%
+  select(-c(`...1`, "UN", "ISO2", `...5`, "Region"))
+
+population_comparison <- hiv_estimates %>%
+  select(
+    "ISO3",
+    "L- Population by age and sex 15-19 ; Female", 
+    "L- Population by age and sex 20-24 ; Female", 
+    "L- Population by age and sex 25-29 ; Female",
+    "L- Population aged 15-49 Male+Female"
+  ) %>%
+  mutate(pop_female_Y015_029 = `L- Population by age and sex 15-19 ; Female` +
+    `L- Population by age and sex 20-24 ; Female` + 
+    `L- Population by age and sex 25-29 ; Female`
+  ) %>%
+  summarise(
+    total = sum(`L- Population aged 15-49 Male+Female`),
+    subset = sum(pop_female_Y015_029)
+  )
+
+population_percent <- 100 * round(population_comparison$subset / population_comparison$total, digits = 2)
+
+infections_comparison <- hiv_estimates %>%
+  select(
+    "ISO3",
+    "L- New infections by age 15-19 ; Female", 
+    "L- New infections by age 20-24 ; Female", 
+    "L- New infections by age 25-29 ; Female",
+    "L- New HIV infections (15-49) Male+Female"
+  ) %>%
+  mutate(inf_female_Y015_029 = `L- New infections by age 15-19 ; Female` +
+    `L- New infections by age 20-24 ; Female` + 
+    `L- New infections by age 25-29 ; Female`
+  ) %>%
+  summarise(
+    total = sum(`L- New HIV infections (15-49) Male+Female`),
+    subset = sum(inf_female_Y015_029)
+  )
+
+infections_percent <- 100 * round(infections_comparison$subset / infections_comparison$total, digits = 2)
+
+inc_comparison <- hiv_estimates %>%
+  select(
+    "ISO3",
+    "L- New infections by age 15-19 ; Female", 
+    "L- New infections by age 20-24 ; Female", 
+    "L- New infections by age 25-29 ; Female",
+    "L- New infections by age 15-19 ; Male", 
+    "L- New infections by age 20-24 ; Male", 
+    "L- New infections by age 25-29 ; Male",
+    "L- Population by age and sex 15-19 ; Female", 
+    "L- Population by age and sex 20-24 ; Female", 
+    "L- Population by age and sex 25-29 ; Female",
+    "L- Population by age and sex 15-19 ; Male", 
+    "L- Population by age and sex 20-24 ; Male", 
+    "L- Population by age and sex 25-29 ; Male",
+  ) %>%
+  mutate(
+    inf_female_Y015_029 = `L- New infections by age 15-19 ; Female` +
+    `L- New infections by age 20-24 ; Female` + 
+    `L- New infections by age 25-29 ; Female`,
+    inf_male_Y015_029 = `L- New infections by age 15-19 ; Male` +
+    `L- New infections by age 20-24 ; Male` + 
+    `L- New infections by age 25-29 ; Male`,
+    pop_female_Y015_029 = `L- Population by age and sex 15-19 ; Female` +
+    `L- Population by age and sex 20-24 ; Female` + 
+    `L- Population by age and sex 25-29 ; Female`,
+    pop_male_Y015_029 = `L- Population by age and sex 15-19 ; Male` +
+    `L- Population by age and sex 20-24 ; Male` + 
+    `L- Population by age and sex 25-29 ; Male`
+  ) %>%
+  summarise(
+    inc_female_Y015_029 = sum(inf_female_Y015_029) / sum(pop_female_Y015_029),
+    inc_male_Y015_029 = sum(inf_male_Y015_029) / sum(pop_male_Y015_029)
+  )
+
+inc_ratio <- round(inc_comparison$inc_female_Y015_029 / inc_comparison$inc_male_Y015_029, digits = 1)
+```
 
 # Introduction
 
-In sub-Saharan Africa, adolescent girls and young women (AGYW) aged 15-29 are `r "num"`\% of the population but `r "num"`\% of new HIV infections [@unaids2021update].
-HIV incidence amongst AGYW is `r "num"` times higher than among similarly aged males due to younger age at first sex, age patterns of sexual mixing, structural vulnerability and power imbalances, and increased susceptibility to HIV infection [@joint2016hiv].
+In sub-Saharan Africa, adolescent girls and young women (AGYW) aged 15-29 are `r population_percent`\% of the population but `r infections_percent`\% of new HIV infections [@unaids2021update].
+HIV incidence amongst AGYW is `r inc_ratio` times higher than among similarly aged males due to younger age at first sex, age patterns of sexual mixing, structural vulnerability and power imbalances, and increased susceptibility to HIV infection [@joint2016hiv].
 AGYW have therefore been identified as a priority population for HIV primary prevention, and significant investments have been made in prevention programming [@saul2018dreams; @global2018measurement].
 
 HIV prevention for AGYW is typically comprised of basic programming which is made available to all, together with additional, more intensified, programming which is differentiated on the basis of risk [@joint2016hiv, birdthistle2018evaluating].
@@ -283,6 +373,11 @@ We estimated the proportion of AGYW aged 15-19, 20-24 and 25-29 years in four se
 Using these estimates, we performed an analysis of the number of infections that could be reached by prioritisation based upon location, age and behaviour.
 Though subject to limitations, our results quantify the crucial importance of reaching the AGYW at highest risk.
 
+## Supporting information
+
+**S1**: Appendix
+**S2**: Supplementary tables and figures
+
 ## Funding
 
 AH was supported by the EPSRC Centre for Doctoral Training in Modern Statistics and Statistical Machine Learning (EP/S023151/1).
@@ -296,5 +391,11 @@ This research was supported by the MRC Centre for Global Infectious Disease Anal
 ## Disclaimer
 
 The findings and conclusions in this manuscript are those of the authors and do not necessarily represent the official position of the funding agencies.
+
+# Tables
+
+# Figures
+
+
 
 # References {#references .unnumbered}

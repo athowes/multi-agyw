@@ -22,12 +22,14 @@ resources:
   - citations.bib
   - PLOS-submission.eps
   - appendix.Rmd
+  - HIV2021Estimates_Global_PLWHV-NI-Pop_6June2022.xlsx
 
 packages:
   - rmarkdown
   - dplyr
   - ggplot2
   - forcats
+  - tidyverse
 
 depends:
   plot_available-surveys:
