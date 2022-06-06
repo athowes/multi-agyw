@@ -3,9 +3,10 @@
 # setwd("src/plot_temporal-variation")
 
 df_3p1 <- read_csv("depends/best-3p1-multi-sexbehav-sae.csv") %>%
+  filter(indicator != "sexnonregplus") %>%
   multi.utils::update_naming()
 
-pdf("3p1-temporal-interpolation.pdf", h = 4, w = 6.25)
+pdf("temporal-interpolation.pdf", h = 4, w = 6.25)
 
 df_3p1 %>%
   split(.$iso3) %>%
@@ -16,7 +17,7 @@ df_3p1 %>%
 
 dev.off()
 
-pdf("3p1-temporal-interpolation-ribbon.pdf", h = 3.5, w = 6.25)
+pdf("temporal-interpolation-ribbon.pdf", h = 3.5, w = 6.25)
 
 df_3p1_ribbon <- df_3p1 %>%
   group_by(indicator, iso3, year, age_group) %>%
@@ -86,13 +87,13 @@ dev.off()
 
 #' Sadly multi-page .png don't exist
 #' This is a bit clunky but unsure if there is a better option
-lapply(1:length(plotsA), function(i) {
-  ggsave(
-    paste0("3p1-temporal-interpolation-ribbon-", i, ".png"),
-    plotsA[[i]],
-    width = 6.25, height = 3.5, units = "in", dpi = 300
-  )
-})
+# lapply(1:length(plotsA), function(i) {
+#   ggsave(
+#     paste0("temporal-interpolation-ribbon-", i, ".png"),
+#     plotsA[[i]],
+#     width = 6.25, height = 3.5, units = "in", dpi = 300
+#   )
+# })
 
 #' Checking estimates for one country (UGA)
 pdf("uga-check.pdf", h = 7, w = 6.25)

@@ -166,6 +166,101 @@ Zimbabwe & 63 & 2 \\
 
 \clearpage
 
+# National direct and modelled estimates comparison
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=1]{depends/temporal-interpolation-ribbon.pdf}}
+\caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Botswana. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
+\label{fig:temporal-interpolation-ribbon-1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=2]{depends/temporal-interpolation-ribbon.pdf}}
+\caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Cameroon. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
+\label{fig:temporal-interpolation-ribbon-2}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=3]{depends/temporal-interpolation-ribbon.pdf}}
+\caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Kenya. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
+\label{fig:temporal-interpolation-ribbon-3}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=4]{depends/temporal-interpolation-ribbon.pdf}}
+\caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Lesotho. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
+\label{fig:temporal-interpolation-ribbon-4}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=5]{depends/temporal-interpolation-ribbon.pdf}}
+\caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Mozambique. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
+\label{fig:temporal-interpolation-ribbon-5}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=6]{depends/temporal-interpolation-ribbon.pdf}}
+\caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Malawi. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
+\label{fig:temporal-interpolation-ribbon-6}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=7]{depends/temporal-interpolation-ribbon.pdf}}
+\caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Namibia. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
+\label{fig:temporal-interpolation-ribbon-7}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=8]{depends/temporal-interpolation-ribbon.pdf}}
+\caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Eswatini. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
+\label{fig:temporal-interpolation-ribbon-8}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=9]{depends/temporal-interpolation-ribbon.pdf}}
+\caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Tanzania. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
+\label{fig:temporal-interpolation-ribbon-9}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=10]{depends/temporal-interpolation-ribbon.pdf}}
+\caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Uganda. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
+\label{fig:temporal-interpolation-ribbon-10}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=11]{depends/temporal-interpolation-ribbon.pdf}}
+\caption{Comparison of modelled and direct national-level estimates in 1999-2018 in South Africa. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
+\label{fig:temporal-interpolation-ribbon-11}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=12]{depends/temporal-interpolation-ribbon.pdf}}
+\caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Zambia. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
+\label{fig:temporal-interpolation-ribbon-12}
+\end{figure}
+
+<!-- \begin{figure}[h] -->
+<!-- \centering -->
+<!-- \makebox[\textwidth][c]{\includegraphics[page=13]{depends/temporal-interpolation-ribbon.pdf}} -->
+<!-- \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Zimbabwe. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.} -->
+<!-- \label{fig:temporal-interpolation-ribbon-13} -->
+<!-- \end{figure} -->
+
+\clearpage
+
 # HIV incidence
 
 \begin{figure}[h]
@@ -260,6 +355,3 @@ Zimbabwe & 63 & 2 \\
 <!-- \end{figure} -->
 
 \clearpage
-
-
-# References {#references .unnumbered}

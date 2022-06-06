@@ -42,6 +42,10 @@ depends:
     id: latest
     use:
       depends/fsw-logit-information-criteria.pdf: fsw-logit-information-criteria.pdf
+  plot_temporal-variation:
+    id: latest
+    use:
+      depends/temporal-interpolation-ribbon.pdf: temporal-interpolation-ribbon.pdf
   process_prevalence:
     id: latest
     use:
