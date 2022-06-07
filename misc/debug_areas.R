@@ -23,9 +23,10 @@ pop %>%
     by = "area_id"
   ) %>%
   st_as_sf() %>%
-  ggplot(aes(fill = population)) +
+  ggplot(aes(fill = log(population))) +
     geom_sf() +
-    scale_fill_viridis_c(option = "C")
+    scale_fill_viridis_c(option = "C") +
+    theme_minimal()
 
 dev.off()
 
