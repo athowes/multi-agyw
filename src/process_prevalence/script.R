@@ -2,6 +2,7 @@
 # orderly::orderly_develop_start("process_prevalence")
 # setwd("src/process_prevalence")
 
+priority_iso3 <- multi.utils::priority_iso3()
 analysis_level <- multi.utils::analysis_level()
 
 df_3p1 <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv")
@@ -67,10 +68,19 @@ ind %>%
 dev.off()
 
 #' Imported from the prevalence ratio tab of Katie's spreadsheet
-katie_prev_pr <- read_csv("katie-prev-pr.csv")
+katie_prev_pr <- read_excel(
+  "Draft outline of size estimation approach v4.xlsx",
+  sheet = "Prev Ratios",
+  skip = 1
+) %>%
+  select(-`YWKPs*`)
+
+rg <- c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")
+names(katie_prev_pr) <- c("country", "iso3", paste0("prev_", rg), paste0("pr_", rg))
 
 katie_pr <- katie_prev_pr %>%
   select(iso3, starts_with("pr_")) %>%
+  filter(iso3 %in% priority_iso3) %>%
   pivot_longer(
     cols = starts_with("pr_"),
     names_to = c("indicator", "behav"),
@@ -91,6 +101,58 @@ ind %>%
     scale_color_manual(values = multi.utils::cbpalette()) +
     labs(x = "") +
     theme_minimal()
+
+dev.off()
+
+#' YWKP prevalence ratios
+katie_ywkp <- read_excel(
+  "Draft outline of size estimation approach v4.xlsx",
+  sheet = "HIV YWKPs",
+  col_names = FALSE,
+  col_types = c("text", "text", "text", "text",
+                "numeric", "numeric", "numeric",
+                "numeric", "numeric", "numeric",
+                "numeric", "numeric", "numeric",
+                "numeric"),
+  skip = 6
+) %>%
+  filter(!is.na(`...1`)) %>%
+  select(where(function(x) any(!is.na(x)))) %>%
+  select(-c(`...13`, `...14`))
+
+names(katie_ywkp) <- c(paste0("country", 1:4), "prev_ywkp_under25", "prev_ywkp", "prev_under25", "prev")
+
+#' Add log-odds (and put prevalences in [0, 1] rather than [0, 100])
+katie_ywkp <- katie_ywkp %>%
+  mutate(
+    across(prev_ywkp_under25:prev, ~ .x / 100, .names = "{.col}"),
+    across(prev_ywkp_under25:prev, ~ log(.x / (1 - .x)), .names = "{.col}_logodds"),
+    pr_ywkp_under25 = prev_ywkp_under25 / prev_under25,
+    pr_ywkp = prev_ywkp / prev,
+    lor_ywkp_under25 = prev_ywkp_under25_logodds / prev_under25_logodds,
+    lor_ywkp = prev_ywkp_logodds / prev_logodds
+  )
+
+pdf("ywkp-prev.pdf", h = 5, w = 6.25)
+
+katie_ywkp %>%
+  ggplot(aes(x = prev_logodds, y = prev_ywkp_logodds)) +
+    geom_point() +
+    geom_smooth(method = "lm") +
+    geom_smooth(method = "loess", col = "red") +
+    theme_minimal()
+
+katie_ywkp %>%
+  ggplot(aes(x = prev, y = lor_ywkp)) +
+  geom_point() +
+  geom_smooth(method = "loess") +
+  theme_minimal()
+
+katie_ywkp %>%
+  ggplot(aes(x = prev, y = pr_ywkp)) +
+  geom_point() +
+  geom_smooth(method = "loess") +
+  theme_minimal()
 
 dev.off()
 

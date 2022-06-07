@@ -6,6 +6,7 @@ artefacts:
       filenames:
         - prev-data.pdf
         - katie-comp.pdf
+        - ywkp-prev.pdf
         - prev-district-sexbehav-linear.csv
         - prev-district-sexbehav-logit.csv
         - prev-district-sexbehav-linear.pdf
@@ -31,6 +32,7 @@ packages:
   - INLA
   - naomi
   - readr
+  - readxl
   - scales
   - sf
   - spdep
@@ -38,7 +40,7 @@ packages:
   - tibble
 
 resources:
- - katie-prev-pr.csv
+ - Draft outline of size estimation approach v4.xlsx
 
 depends:
   - process_transactional-fsw-adjustment:
