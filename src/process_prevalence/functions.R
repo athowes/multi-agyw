@@ -10,21 +10,13 @@ odds <- function(p) p / (1 - p)
 calculate_ywkp_pr_lor <- function(prev, fit = ywkp_fit) {
   prev_logodds <- qlogis(prev)
   prev_ywkp_logodds <- predict(fit, data.frame(prev_logodds = prev_logodds))
+  #' Ensure that the LOR is above that of e.g. the sexnonreg risk group
+  prev_ywkp_logodds <- pmax(prev_ywkp_logodds, prev_logodds + 1.4)
   prev_ywkp <- plogis(prev_ywkp_logodds)
-
   #' Prevalence ratio
   pr <- prev_ywkp / prev
-
-  #' Fix it so that the PR is in [2.5, 20], and any zero prevalence PRs are set to 1
-  prev_ywkp[pr < 2.5] <- 2.5 * prev[pr < 2.5]
-  prev_ywkp[pr > 20] <- 20 * prev_ywkp[pr > 20]
-  pr[prev == 0] <- 1
-  prev_ywkp[prev_ywkp > 1] <- 1
-  pr <- prev_ywkp / prev
-
-  #' Log odds-ratio (fixed so that the PR is in [2.5, 20] as above)
-  lor <- log(odds(prev_ywkp) / odds(prev))
-
+  #' Log-odds ratio
+  lor <- prev_ywkp_logodds - prev_logodds
   return(list(pr = pr, lor = lor, prev = prev, prev_ywkp = prev_ywkp))
 }
 

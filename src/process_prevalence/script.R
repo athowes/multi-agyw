@@ -317,6 +317,9 @@ end_time <- Sys.time()
 
 end_time - start_time
 
+#' Check how the YWKP LORs look
+plot(df_3p1_logit$ywkp_lor)
+
 df_3p1_logit <- df_3p1_logit %>%
   unite("indicator", indicator, behav, sep = "_") %>%
   pivot_wider(
