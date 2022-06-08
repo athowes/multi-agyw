@@ -193,3 +193,45 @@ df %>%
   )
 
 dev.off()
+
+pdf("map-ian.pdf", h = 5, w = 6.25)
+
+df_ian <- df %>%
+  filter(age_group %in% c("Y015_019", "Y020_024")) %>%
+  group_by(area_id) %>%
+  summarise(
+    incidence_sexcohab = sum(incidence_sexcohab * population_sexcohab) / population_sexcohab,
+    incidence_sexnonreg = sum(incidence_sexnonreg * population_sexnonreg) / population_sexnonreg,
+    incidence_sexpaid12m = sum(incidence_sexpaid12m * population_sexpaid12m) / population_sexpaid12m,
+  ) %>%
+  pivot_longer(
+    cols = starts_with("incidence_sex"),
+    names_to = "indicator",
+    names_prefix = "incidence_",
+    values_to = "incidence",
+  ) %>%
+  mutate(age_group = "Y015_024") %>%
+  left_join(
+    select(areas, area_id),
+    by = "area_id"
+  ) %>%
+  st_as_sf()
+
+ggplot(df_ian, aes(fill = 100 * incidence)) +
+  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+  coord_sf(lims_method = "geometry_bbox") +
+  scale_fill_viridis_c(option = "C", limits = c(0, 5), oob = scales::squish) +
+  facet_grid(~indicator, labeller = labeller(indicator = label_wrap_gen(10))) +
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    strip.text = element_text(face = "bold"),
+    legend.position = "bottom",
+    legend.key.width = unit(4, "lines")
+  )
+
+dev.off()
+
+saveRDS(df_ian, "data-ian.rds")

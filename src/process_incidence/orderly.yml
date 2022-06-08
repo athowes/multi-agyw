@@ -20,6 +20,11 @@ artefacts:
         # - incidence-district-sexbehav-11.png
         # - incidence-district-sexbehav-12.png
         # - incidence-district-sexbehav-13.png
+  - data:
+      description: Files for Ian
+      filenames:
+        - map-ian.pdf
+        - data-ian.rds
 
 packages:
   - dplyr
