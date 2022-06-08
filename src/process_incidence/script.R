@@ -99,6 +99,10 @@ df <- df %>%
     infections_sexpaid12m = susceptible_sexpaid12m * incidence_sexpaid12m
   )
 
+#' Check that sum of disaggregated infections is the same as total infections
+sum_infections <- df$infections_nosex12m + df$infections_sexcohab + df$infections_sexnonreg + df$infections_sexpaid12m
+stopifnot(max(df$infections - sum_infections) < 10^{-9})
+
 write_csv(df, "incidence-district-sexbehav.csv")
 
 df_plot <- df %>%
@@ -204,16 +208,19 @@ df_ian <- df %>%
   filter(age_group %in% c("Y015_019", "Y020_024")) %>%
   group_by(area_id) %>%
   summarise(
-    incidence_sexcohab = sum(incidence_sexcohab * population_sexcohab) / sum(population_sexcohab),
-    incidence_sexnonreg = sum(incidence_sexnonreg * population_sexnonreg) / sum(population_sexnonreg),
-    incidence_sexpaid12m = sum(incidence_sexpaid12m * population_sexpaid12m) / sum(population_sexpaid12m),
+    infections_sexcohab = sum(infections_sexcohab),
+    infections_sexnonreg = sum(infections_sexnonreg),
+    infections_sexpaid12m = sum(infections_sexpaid12m),
+    incidence_sexcohab = infections_sexcohab / sum(susceptible_sexcohab),
+    incidence_sexnonreg = infections_sexnonreg / sum(susceptible_sexnonreg),
+    incidence_sexpaid12m = infections_sexpaid12m / sum(susceptible_sexpaid12m),
   ) %>%
   pivot_longer(
-    cols = starts_with("incidence_sex"),
+    cols = c(starts_with("incidence_"), starts_with("infections")),
     names_to = "indicator",
-    names_prefix = "incidence_",
-    values_to = "incidence",
+    values_to = "estimate",
   ) %>%
+  separate(indicator, into = c("indicator", "behav")) %>%
   mutate(age_group = "Y015_024") %>%
   left_join(
     select(areas, area_id),
@@ -221,11 +228,14 @@ df_ian <- df %>%
   ) %>%
   st_as_sf()
 
-ggplot(df_ian, aes(fill = 100 * incidence)) +
+df_ian %>%
+  filter(indicator == "incidence") %>%
+  ggplot(aes(fill = 100 * estimate)) +
   geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
   coord_sf(lims_method = "geometry_bbox") +
   scale_fill_viridis_c(option = "C", limits = c(0, 3), oob = scales::squish) +
-  facet_grid(~indicator, labeller = labeller(indicator = label_wrap_gen(10))) +
+  facet_grid(~behav, labeller = labeller(indicator = label_wrap_gen(10))) +
+  labs(fill = "Incidence (100PY)") +
   theme_minimal() +
   theme(
     axis.text = element_blank(),
