@@ -154,16 +154,30 @@ katie_ywkp %>%
   geom_smooth(method = "loess") +
   theme_minimal()
 
+katie_ywkp %>%
+  ggplot(aes(x = prev, y = prev_ywkp)) +
+  geom_point() +
+  geom_smooth(method = "loess") +
+  theme_minimal()
+
 dev.off()
 
-#' Extract YWKP prevalence log-odds ratio
-katie_prev <- katie_prev_pr %>%
-  select(iso3, starts_with("prev_"))
+ywkp_fit <- lm(prev_ywkp_logodds ~ prev_logodds, data = katie_ywkp)
 
-odds <- function(p) p / (1 - p)
+data.frame(
+  prev = seq(0, 0.3, by = 0.001),
+  pr_ywkp = calculate_ywkp_pr_lor(seq(0, 0.3, by = 0.001))$pr
+) %>%
+  ggplot(aes(x = prev, y = pr_ywkp)) +
+    geom_line() +
+    theme_minimal() +
+    labs(x = "General population prevalence", y = "PR (YWKP)")
 
+#' Alternative method for extracting average YWKP prevalence log-odds ratio
+katie_prev <- select(katie_prev_pr, iso3, starts_with("prev_"))
 lor_ywkp <- mean(log(odds(katie_prev$prev_sexpaid12m) / odds(katie_prev$prev_nosex12m)))
 
+#' Calculating the rest of the LOR with logisitic regression
 ind_inla <- ind %>%
   mutate(
     nosex12m_id = ifelse(behav == "nosex12m", 1, 0),
@@ -192,11 +206,11 @@ fixed_effects_idx <- contents$start[contents$tag != "Predictor"]
 samples <- inla.posterior.sample(n = 1000, fit)
 fixed_effects <-  lapply(samples, function(x) x$latent[fixed_effects_idx])
 fixed_effects <- matrix(unlist(fixed_effects), byrow = T, nrow = length(fixed_effects))
-odds <- colMeans(exp(fixed_effects))
+odds_estimate <- colMeans(exp(fixed_effects))
 exp(fit$summary.fixed$mean) #' This is what you'd get without sampling from the posterior
-or <- odds / odds[1] #' Odds ratio
-lor <- log(odds / odds[1]) #' Log odds ratio
-lor[4] <- lor_ywkp
+or <- odds_estimate / odds_estimate[1] #' Odds ratio
+lor <- log(odds_estimate / odds_estimate[1]) #' Log odds ratio
+lor[4] <- lor_ywkp #' This should be overwritten anyway
 
 #' Naomi estimates of PLHIV and population by district and age band
 naomi <- naomi %>%
@@ -265,27 +279,14 @@ df_3p1_linear <- df_3p1 %>%
 
 write_csv(df_3p1_linear, "prev-district-sexbehav-linear.csv")
 
-#' Calculate prevalence and PLHIV using logit-scale disaggregation
-
-#' @param lor Log odds-ratios
-#' @param N_fine Number of individuals in each group
-#' @param plhiv Total number of people living with HIV
-logit_scale_prev <- function(lor, N_fine, plhiv) {
-  #' theta represents prevalence in baseline risk group
-  #' plogis(lor + theta) is prevalence in each risk group
-  #' plogis(lor + theta) * N_fine is PLHIV in each risk group
-  optfn <- function(theta) (sum(plogis(lor + theta) * N_fine) - plhiv)^2
-  #' Optimisation for baseline risk group prevalence
-  #' On the logit scale should be more numerically stable
-  opt <- optimise(optfn, c(-10, 10), tol = .Machine$double.eps^0.5)
-  #' Return prevalence
-  plogis(lor + opt$minimum)
-}
-
 start_time <- Sys.time()
 
 df_3p1_logit <- df_3p1 %>%
-  select(-starts_with("pr_")) %>%
+  mutate(
+    gen_prev = plhiv / population,
+    ywkp_lor = calculate_ywkp_pr_lor(gen_prev, fit = ywkp_fit)$lor
+  ) %>%
+  select(-starts_with("pr_"), -gen_prev) %>%
   pivot_longer(
     cols = starts_with(c("population_", "prop_")),
     names_to = "indicator",
@@ -298,9 +299,11 @@ df_3p1_logit <- df_3p1 %>%
   filter(behav %in% c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")) %>%
   split(~ area_id + age_group) %>%
   lapply(function(x) {
-    population <- filter(x, indicator == "population")$estimate
+    population_fine <- filter(x, indicator == "population")$estimate
     plhiv <- x$plhiv[1]
-    prev <- logit_scale_prev(lor, population, plhiv)
+    ywkp_lor <- x$ywkp_lor[1]
+    lor[4] <- ywkp_lor
+    prev <- logit_scale_prev(lor, population_fine, plhiv)
     y <- filter(x, indicator == "prop") %>%
       mutate(
         indicator = "prev",
