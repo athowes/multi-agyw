@@ -84,15 +84,19 @@ df <- df %>%
     plhiv_sexcohab = population_sexcohab * prev_sexcohab,
     plhiv_sexnonreg = population_sexnonreg * prev_sexnonreg,
     plhiv_sexpaid12m = population_sexpaid12m * prev_sexpaid12m,
+    susceptible_nosex12m = population_nosex12m - plhiv_nosex12m,
+    susceptible_sexcohab = population_sexcohab - plhiv_sexcohab,
+    susceptible_sexnonreg = population_sexnonreg - plhiv_sexnonreg,
+    susceptible_sexpaid12m = population_sexpaid12m - plhiv_sexpaid12m,
     incidence_nosex12m = 0,
-    incidence_sexcohab = infections / (population_sexcohab +
-      rr_sexnonreg * population_sexnonreg + rr_sexpaid12m * population_sexpaid12m),
+    incidence_sexcohab = infections / (susceptible_sexcohab +
+      rr_sexnonreg * susceptible_sexnonreg + rr_sexpaid12m * susceptible_sexpaid12m),
     incidence_sexnonreg = incidence_sexcohab * rr_sexnonreg,
     incidence_sexpaid12m = incidence_sexcohab * rr_sexpaid12m,
     infections_nosex12m = 0,
-    infections_sexcohab = (population_sexcohab - plhiv_sexcohab) * incidence_sexcohab,
-    infections_sexnonreg = (population_sexnonreg - plhiv_sexnonreg) * incidence_sexnonreg,
-    infections_sexpaid12m = (population_sexpaid12m - plhiv_sexpaid12m) * incidence_sexpaid12m
+    infections_sexcohab = susceptible_sexcohab * incidence_sexcohab,
+    infections_sexnonreg = susceptible_sexnonreg * incidence_sexnonreg,
+    infections_sexpaid12m = susceptible_sexpaid12m * incidence_sexpaid12m
   )
 
 write_csv(df, "incidence-district-sexbehav.csv")
@@ -200,9 +204,9 @@ df_ian <- df %>%
   filter(age_group %in% c("Y015_019", "Y020_024")) %>%
   group_by(area_id) %>%
   summarise(
-    incidence_sexcohab = sum(incidence_sexcohab * population_sexcohab) / population_sexcohab,
-    incidence_sexnonreg = sum(incidence_sexnonreg * population_sexnonreg) / population_sexnonreg,
-    incidence_sexpaid12m = sum(incidence_sexpaid12m * population_sexpaid12m) / population_sexpaid12m,
+    incidence_sexcohab = sum(incidence_sexcohab * population_sexcohab) / sum(population_sexcohab),
+    incidence_sexnonreg = sum(incidence_sexnonreg * population_sexnonreg) / sum(population_sexnonreg),
+    incidence_sexpaid12m = sum(incidence_sexpaid12m * population_sexpaid12m) / sum(population_sexpaid12m),
   ) %>%
   pivot_longer(
     cols = starts_with("incidence_sex"),
@@ -220,7 +224,7 @@ df_ian <- df %>%
 ggplot(df_ian, aes(fill = 100 * incidence)) +
   geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
   coord_sf(lims_method = "geometry_bbox") +
-  scale_fill_viridis_c(option = "C", limits = c(0, 5), oob = scales::squish) +
+  scale_fill_viridis_c(option = "C", limits = c(0, 3), oob = scales::squish) +
   facet_grid(~indicator, labeller = labeller(indicator = label_wrap_gen(10))) +
   theme_minimal() +
   theme(
