@@ -174,7 +174,9 @@ data.frame(
     labs(x = "General population prevalence", y = "PR (YWKP)")
 
 #' Alternative method for extracting average YWKP prevalence log-odds ratio
-katie_prev <- select(katie_prev_pr, iso3, starts_with("prev_"))
+katie_prev <- select(katie_prev_pr, iso3, starts_with("prev_")) %>%
+  filter(!is.na(prev_nosex12m))
+
 lor_ywkp <- mean(log(odds(katie_prev$prev_sexpaid12m) / odds(katie_prev$prev_nosex12m)))
 
 #' Calculating the rest of the LOR with logisitic regression
@@ -210,7 +212,7 @@ odds_estimate <- colMeans(exp(fixed_effects))
 exp(fit$summary.fixed$mean) #' This is what you'd get without sampling from the posterior
 or <- odds_estimate / odds_estimate[1] #' Odds ratio
 lor <- log(odds_estimate / odds_estimate[1]) #' Log odds ratio
-lor[4] <- lor_ywkp #' This should be overwritten anyway
+lor[4] <- lor_ywkp #' This may be overwritten anyway
 
 #' Naomi estimates of PLHIV and population by district and age band
 naomi <- naomi %>%
@@ -301,8 +303,11 @@ df_3p1_logit <- df_3p1 %>%
   lapply(function(x) {
     population_fine <- filter(x, indicator == "population")$estimate
     plhiv <- x$plhiv[1]
-    ywkp_lor <- x$ywkp_lor[1]
-    lor[4] <- ywkp_lor
+
+    #' Commenting out this until fixed (needs to be nosex12m against sexpaid12m!)
+    # ywkp_lor <- x$ywkp_lor[1]
+    # lor[4] <- ywkp_lor
+
     prev <- logit_scale_prev(lor, population_fine, plhiv)
     y <- filter(x, indicator == "prop") %>%
       mutate(
