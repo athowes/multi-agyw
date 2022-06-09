@@ -157,55 +157,6 @@ df %>%
   as.character() %>%
   cat(file = "available-surveys.txt")
 
-#' What was the total number of surveys?
-df %>%
-  pull(survey_id) %>%
-  unique() %>%
-  length()
-
-#' How many AGYW, in total, were surveyed?
-df %>%
-  pull(Y015_029) %>%
-  sum()
-
-#' What was the total number of surveys including a transactional question?
-giftsvar_surveys <- df %>%
-  filter(giftsvar == 1) %>%
-  pull(survey_id)
-
-length(giftsvar_surveys)
-
-#' How many AGYW were sampled in these surveys?
-df %>%
-  filter(survey_id %in% giftsvar_surveys) %>%
-  pull(Y015_029) %>%
-  sum()
-
-#' What about disaggregating these AGYW by age?
-#' TODO: This isn't quite right because some 25-29 are not asked FSW question in DHS surveys
-#' Might fix this manually
-df %>%
-  filter(survey_id %in% giftsvar_surveys) %>%
-  summarise(
-    Y015_019 = sum(Y015_019),
-    Y020_024 = sum(Y020_024),
-    Y025_029 = sum(Y025_029)
-  )
-
-#' What was the median number of surveys by country, and the range?
-(number_of_surveys <- df %>%
-  group_by(iso3) %>%
-  summarise(
-    count = length(unique(survey_id))
-  ))
-
-number_of_surveys %>%
-  summarise(
-    min = min(count),
-    median = median(count),
-    max = max(count)
-  )
-
 #' What was the raw FSW proportion in surveys with and without a specific transactional question?
 lapply(files, function(file) {
   read_csv(file)

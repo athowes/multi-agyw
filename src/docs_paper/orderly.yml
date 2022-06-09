@@ -36,6 +36,7 @@ depends:
     id: latest
     use:
       depends/available-surveys.png: available-surveys.png
+      depends/available-surveys.csv: available-surveys.csv
   plot-tikz_category-flowchart:
     id: latest
     use:

@@ -165,24 +165,24 @@ inc_ratio <- round(inc_comparison$inc_female_Y015_029 / inc_comparison$inc_male_
 
 In sub-Saharan Africa, adolescent girls and young women (AGYW) aged 15-29 are `r population_percent`\% of the population but `r infections_percent`\% of new HIV infections [@unaids2021update].
 HIV incidence amongst AGYW is `r inc_ratio` times higher than among similarly aged males due to younger age at first sex, age patterns of sexual mixing, structural vulnerability and power imbalances, and increased susceptibility to HIV infection [@joint2016hiv].
-AGYW have therefore been identified as a priority population for HIV primary prevention, and significant investments have been made in prevention programming [@saul2018dreams; @global2018measurement].
+AGYW have therefore been identified as a priority population for HIV primary prevention, with significant investments being been made in prevention programming [@saul2018dreams; @global2018measurement].
 
-HIV prevention for AGYW is typically comprised of basic programming which is made available to all, together with additional, more intensified, programming which is differentiated on the basis of risk [@joint2016hiv, birdthistle2018evaluating].
-To maximize the impact of additional programming, often comprised of more costly interventions, delivery should be prioritised towards those at the highest risk level.
+HIV prevention for AGYW is typically comprised of: (1) basic programming which is made available to all (2) more intensified programming which is differentiated on the basis of risk [@joint2016hiv; @birdthistle2018evaluating].
+To maximize the impact of intensified programming delivery should be prioritised towards those at the highest risk level.
 As both community-level epidemic indicators and individual-level behaviours determine risk of acquiring HIV, it is important to consider both of these factors in tandem to enable more efficient prioritisation of prevention services [@anderson2014maximising; @mcgillen2016optimum; @kelly2018global; @jia2022risk].
 
-The Global AIDS Strategy 2021-2016 [@unaids2021global], adopted by the UN General Assembly in June 2021, proposed stratifying provision of HIV prevention to AGYW based on both population-level HIV incidence in the local population and individual-level sexual risk behaviour.
+The Global AIDS Strategy 2021-2016 [@unaids2021global], adopted by the UN General Assembly in June 2021, proposed stratifying provision of HIV prevention to AGYW based on both local population-level HIV incidence and individual-level sexual risk behaviour.
 Four prioritisation strata (Table) are defined based on: (1) subnational annual incidence (<0.3\%, 0.3-1\% and >3\%), and (2) self-reported high-risk behaviour or recent STI infection.
 The strategy encourages programmes to  define targets for the proportion of AGYW to be reached with a range of interventions (Table) based upon this prioritisation strata [@unaids2021global].
 These interventions may include STI screening and treatment, access to pre-exposure prophylaxis (PrEP), access to post-exposure prophylaxis (PEP), comprehensive sexuality education, and economic empowerment.
 
-Implementation of the strategy by national HIV programmes and stakeholders requires data on the population size and HIV incidence in each risk group, age group, and district to determine prioritisation for stratified HIV prevention.
+Implementation of the strategy by national HIV programmes and stakeholders requires data on the population size and HIV incidence in each risk group by location to determine prioritisation for stratified HIV prevention.
 We developed a multivariate Bayesian spatio-temporal model to estimate the proportion of AGYW aged 15-29 years in four behavioural risk groups, stratified by district, year, and five-year age group.
 We focused on 13 countries in sub-Saharan Africa which have been identified by by the Global Fund to Fight AIDS, TB, and Malaria [@global2018measurement] as priority countries for implementation of AGYW HIV prevention.
 Our methodology is standardised across countries, allowing prioritisation both within and between countries.
 We analysed the extent to which the risk group proportions varied across districts, age groups, between countries, and over time.
-Using our estimates, we calculated the number of new infections in each risk, age, and district strata using population size data, incidence rate ratios, and expected incidence projections.
-Finally, we quantified the increased efficiency in terms of the expected number of new infections that could be preemptively reached by stratified prioritisation of interventions.
+Using our estimates, we calculated the HIV prevalence, people living with HIV (PLHIV), HIV incidence, and number of new HIV infections in each risk, age, and district strata by disaggregating estimates from the Naomi model [@eaton2021naomi].
+Finally, we quantified the increased efficiency of HIV prevention, in terms of the expected number of new infections that could be preemptively reached, by stratified prioritisation of interventions.
 
 # Methodology
 
@@ -205,8 +205,7 @@ For this reason, we did not include surveys without a specific transactional sex
 
 We used estimates of population, people living with HIV (PLHIV) and new HIV infections stratified by district and age group from outputs of the Naomi model [@eaton2021naomi].
 The model synthesises data from multiple sources to produce consistent subnational estimates of indicators of interest, and has been used by countries as a part of the HIV estimates process supported by UNAIDS.
-The administrative area hierarchy and geographic boundaries we used correspond to those used in Naomi.
-In Cameroon and Kenya we used an analysis level one higher than used in Naomi.
+The administrative area hierarchy and geographic boundaries we used correspond to those used in Naomi, with the exception of Cameroon and Kenya where we used an analysis level one higher.
 
 ## Two-stage risk group proportion model
 
@@ -237,39 +236,109 @@ The best performing model was selected according to the conditional predictive o
 The \textsc{R} [@r] code used to implement the models and produce  results is available from `github.com/athowes/multi-agyw`.
 We used the `orderly` package [@orderly] for reproducible research.
 
-## Prevalence, incidence and new infections
+## HIV indicators and prevention prioritisation
 
-We used the risk group proportion estimates to calculate HIV prevalence, PLHIV, HIV incidence and number of new HIV infections stratified according to district, age group and risk group by disaggregating estimates from the Naomi model (further details are provided in Appendix).
+We used the risk group proportion estimates to calculate HIV prevalence, PLHIV, HIV incidence and number of new HIV infections stratified according to district, age group and risk group by disaggregating estimates from the Naomi model.
 
-We disaggregated HIV prevalence estimates by risk group on the logit scale using age-country prevalence log-odds ratios calculated from survey bio-marker data. 
-Logit scaling was preferred to linear scaling, as linear scaling resulted in some strata having prevalence above 100\%.
+### Prevalence and PLHIV
+
+To calculate HIV prevalence by risk group we disaggregated on the logit scale using age-country prevalence log-odds ratios calculated from survey bio-marker data. 
+Logit scaling was used because linear scaling resulted in some strata having prevalence above 100\%.
 PLHIV were calculated by multiplying HIV prevalence by risk group population size.
 
-HIV incidence estimates were disaggregated by risk group on the linear scale using the HIV infection risk ratios given in Table.
-Number of new HIV infections were calculated by multiplying HIV incidence by susceptible risk group population size. 
-We then calculated the number of new infections that would be found per person reached when prioritising according to incidence under each possible risk stratification.
-In doing so, we implicitly assumed it is possible to reach all members of a strata.
+### Incidence and new infection
+
+We disaggregated HIV incidence by risk group linearly using the HIV infection risk ratios given in Table.
+Number of new HIV infections were calculated by multiplying HIV incidence by susceptible risk group population size.
+
+### Infections reached
+
+For each possible stratification of risk, we calculated the number of new infections that would be found per person reached when prioritising according to incidence.
+We assumed all members of every strata can be reached.
 
 # Results
 
 ## Data
 
-We included 47 surveys in our analysis (Figure, Table), with a total sample size of `r "num"` women aged 15-29 years (`r "num"` aged 15-19 years, `r "num"` aged 20-24 years, and `r "num"` aged 25-29 years).
-Of these, 13 surveys included a specific transactional sex question, with corresponding sample size `r "num"` (`r "num"` aged 15-19 years, `r "num"` aged 20-24 years, and `r "num"` aged 25-29 years).
+```{r echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+available_surveys <- read_csv("depends/available-surveys.csv")
+
+#' What was the total number of surveys?
+total_surveys <- available_surveys %>%
+  pull(survey_id) %>%
+  unique() %>%
+  length()
+
+#' How many AGYW, in total, were surveyed?
+agyw_surveyd <- available_surveys %>%
+  pull(Y015_029) %>%
+  sum()
+
+#' What about disaggregating these AGYW by age?
+agyw_surveyed_age <- available_surveys %>%
+  summarise(
+    Y015_019 = sum(Y015_019),
+    Y020_024 = sum(Y020_024),
+    Y025_029 = sum(Y025_029)
+  )
+
+#' What was the total number of surveys including a transactional question?
+giftsvar_surveys <- available_surveys %>%
+  filter(giftsvar == 1) %>%
+  pull(survey_id)
+
+length(giftsvar_surveys)
+
+#' How many AGYW were sampled in these surveys?
+agyw_surveyed_giftsvar <- available_surveys %>%
+  filter(survey_id %in% giftsvar_surveys) %>%
+  pull(Y015_029) %>%
+  sum()
+
+#' Disaggregated by age
+#' TODO: This isn't quite right because some 25-29 are not asked FSW question in DHS surveys
+agyw_surveyed_giftsvar_age <- available_surveys %>%
+  filter(survey_id %in% giftsvar_surveys) %>%
+  summarise(
+    Y015_019 = sum(Y015_019),
+    Y020_024 = sum(Y020_024),
+    Y025_029 = sum(Y025_029)
+  )
+
+#' What was the median number of surveys by country, and the range?
+number_of_surveys <- available_surveys %>%
+  group_by(iso3) %>%
+  summarise(
+    count = length(unique(survey_id))
+  )
+
+number_of_surveys %>%
+  summarise(
+    min = min(count),
+    median = median(count),
+    max = max(count)
+  )
+```
+
+
+We included `r total_surveys` surveys in our analysis (Figure, Table), with a total sample size of `r agyw_surveyd` women aged 15-29 years (`r agyw_surveyed_age$Y015_019` aged 15-19 years, `r agyw_surveyed_age$Y020_024` aged 20-24 years, and `r agyw_surveyed_age$Y025_029` aged 25-29 years).
+Of these, `r length(giftsvar_surveys)` surveys included a specific transactional sex question, with corresponding sample size `r agyw_surveyed_giftsvar` (`r agyw_surveyed_giftsvar_age$Y015_019` aged 15-19 years, `r agyw_surveyed_giftsvar_age$Y020_024` aged 20-24 years, and `r agyw_surveyed_giftsvar_age$Y025_029` aged 25-29 years).
 The median number of surveys per country was four, ranging from one in Botswana and South Africa to six in Uganda.
-Direct estimates of the four risk group proportions from these surveys were highly correlated with our modelled estimates at a national-level (Figures).
 
 ## Model selection
 
 The best fitting multinomial regression model included correlated spatial effects and first-order autoregressive temporal effects, but not spatio-temporal interactions.
 The best logistic regression model for transactional sex included correlated spatial effects and the proportion of men who reported ever paying for sex covariate.
-Model performance according to the CPO criteria for each of the considered models is provided in the appendix (Figures, Tables).
+Model performance according to the CPO criteria is provided in the appendix (Figures, Tables) for all considered models.
+
+## Risk group estimates
 
 Posterior mean estimates for our final model in the most recent year, 2018, are shown as choropleths (Figure) and dotplots (Figure).
-In the following results, all estimates refer to 2018, the most recent year included in our analysis, unless otherwise indicated.
+Direct estimates of the four risk group proportions from these surveys were highly correlated with our modelled estimates at a national-level (Figures).
 Posterior mean, median, upper (97.5\%) and lower (2.5\%) credible estimates for each district, age group and year from our final model are provided in the supplementary material.
+In the sections to follow, all estimates refer to 2018, the most recent year included in our analysis, unless otherwise indicated.
 
-## Spatial, temporal and age trends
+### Spatial, temporal and age trends
 
 In most districts (`r "num"`\%; 95\% credible interval [CI] `r "num"`--`r "num"`\%) adolescent girls aged 15-19 were not sexually active.
 The exception was Mozambique, where the majority (`r "num"`\%; 95\% CI `r "num"`--`r "num"`\%) were sexually active in the past year and close to a third (`r "num"`\%; 95\% CI `r "num"`--`r "num"`\%) were cohabiting with a partner.
@@ -281,7 +350,7 @@ There was a clear geographic delineation along the border of Mozambique, through
 The median proportion of FSW nationally was `r "num"`\% (95\% CI `r "num"`--`r "num"`\%) for the 15-19 age group, compared with $2.4\%$ (95\% CI `r "num"`--`r "num"`\%) and `r "num"`\% (95\% CI `r "num"`--`r "num"`\%) for the 20-24 and 25-29 age groups respectively.
 This age pattern, reflecting the lower proportion sexually active among those aged 15-19 years, was the foremost effect of adjusting our estimates to match [@johnston2022deriving]; in contrast, our initial estimates of transactional sex were close to constant by age (Figure~\ref{fig:fsw-within-between-country-variation}).
 
-##
+### Analysis of variance
 
 Age explained `r "num"`\% (95\% CI `r "num"`--`r "num"`\%) of the variation in risk group proportions, country explained `r "num"`\% (95\% CI `r "num"`--`r "num"`\%), and district explained `r "num"`\% (95\% CI `r "num"`--`r "num"`\%).
 The temporal effects only explained `r "num"`\% (95\% CI `r "num"`--`r "num"`\%) of variation, indicating very little change in risk group proportions over time, with the remaining `r "num"`\% (95\% CI `r "num"`--`r "num"`\%) attributable to the category random effects.
