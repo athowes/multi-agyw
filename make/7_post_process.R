@@ -26,7 +26,7 @@ run_commit_push("process_variance-proportions") #' [/]
 run_commit_push("process_coverage") #' [ ]
 
 #' Calculate and plot HIV prevalence by risk group
-run_commit_push("process_prevalence") #' [ ]
+run_commit_push("process_prevalence") #' [x]
 
 #' Calculate and plot HIV incidence by risk group
 run_commit_push("process_incidence") #' [ ]

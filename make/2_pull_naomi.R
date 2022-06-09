@@ -15,12 +15,10 @@ naomi_extract <- naomi_output %>%
     #' These are the age groups we are considering, plus those which are useful for disaggregation
     age_group_label %in% c("15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "15-24", "15-49"),
     #' Only female
-    sex == "female"
+    sex == "female",
+    #' Value being used in the global report (there is no CY2021Q4 in ZAF)
+    ifelse(iso3 != "ZAF", calendar_quarter == "CY2021Q4", calendar_quarter == "CY2021Q3")
   ) %>%
-  #' The most recent estimates
-  group_by(iso3) %>%
-  filter(calendar_quarter == max(calendar_quarter)) %>%
-  ungroup() %>%
   left_join(
     as.data.frame(analysis_level) %>%
       tibble::rownames_to_column("iso3"),

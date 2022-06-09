@@ -202,7 +202,7 @@ df %>%
 
 dev.off()
 
-pdf("map-ian.pdf", h = 5, w = 6.25)
+pdf("map-ian.pdf", h = 6, w = 6.25)
 
 df_ian <- df %>%
   filter(age_group %in% c("Y015_019", "Y020_024")) %>%
@@ -211,9 +211,9 @@ df_ian <- df %>%
     infections_sexcohab = sum(infections_sexcohab),
     infections_sexnonreg = sum(infections_sexnonreg),
     infections_sexpaid12m = sum(infections_sexpaid12m),
-    incidence_sexcohab = infections_sexcohab / sum(susceptible_sexcohab),
-    incidence_sexnonreg = infections_sexnonreg / sum(susceptible_sexnonreg),
-    incidence_sexpaid12m = infections_sexpaid12m / sum(susceptible_sexpaid12m),
+    incidence_sexcohab = 100 * infections_sexcohab / sum(susceptible_sexcohab),
+    incidence_sexnonreg = 100 * infections_sexnonreg / sum(susceptible_sexnonreg),
+    incidence_sexpaid12m = 100 * infections_sexpaid12m / sum(susceptible_sexpaid12m),
   ) %>%
   pivot_longer(
     cols = c(starts_with("incidence_"), starts_with("infections")),
@@ -221,31 +221,58 @@ df_ian <- df %>%
     values_to = "estimate",
   ) %>%
   separate(indicator, into = c("indicator", "behav")) %>%
-  mutate(age_group = "Y015_024") %>%
+  mutate(age_group = "Y015_024")
+
+naomi_aggregate <- naomi %>%
+  filter(age_group == "Y015_024") %>%
+  select(area_id, age_group, incidence, infections) %>%
+  pivot_longer(
+    cols = c("incidence", "infections"),
+    values_to = "estimate",
+    names_to = "indicator"
+  ) %>%
+  mutate(behav = "all")
+
+df_ian <- bind_rows(df_ian, naomi_aggregate)
+
+df_ian_sf <- df_ian %>%
   left_join(
     select(areas, area_id),
     by = "area_id"
   ) %>%
   st_as_sf()
 
-df_ian %>%
+df_ian_sf %>%
+  mutate(
+    behav = fct_recode(behav,
+      "All" = "all",
+      "Cohabiting" = "sexcohab",
+      "Non-regular partner(s)" = "sexnonreg",
+      "YWKPs" = "sexpaid12m")
+  ) %>%
   filter(indicator == "incidence") %>%
-  ggplot(aes(fill = 100 * estimate)) +
+  ggplot(aes(fill = estimate)) +
   geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
   coord_sf(lims_method = "geometry_bbox") +
-  scale_fill_viridis_c(option = "C", limits = c(0, 3), oob = scales::squish) +
-  facet_grid(~behav, labeller = labeller(indicator = label_wrap_gen(10))) +
-  labs(fill = "Incidence (100PY)") +
+  scale_fill_gradient2(
+    midpoint = 1, limits = c(0, 3), oob = scales::squish,
+    breaks = c(0, 1, 3), labels=c("0", "1", "3+"),
+    low = viridis::plasma(3, direction = -1)[1],
+    mid = viridis::plasma(3, direction = -1)[2],
+    high = viridis::plasma(3, direction = -1)[3]
+  ) +
+  # scale_fill_viridis_c(option = "C", limits = c(0, 3), oob = scales::squish) +
+  facet_wrap(~behav, labeller = labeller(indicator = label_wrap_gen(10)), nrow = 2) +
+  labs(fill = "Incidence rate \n(per 100 PYAR)") +
   theme_minimal() +
   theme(
     axis.text = element_blank(),
     axis.ticks = element_blank(),
     panel.grid = element_blank(),
     strip.text = element_text(face = "bold"),
-    legend.position = "bottom",
-    legend.key.width = unit(4, "lines")
+    legend.position = "right"
   )
 
 dev.off()
 
-saveRDS(df_ian, "data-ian.rds")
+saveRDS(df_ian_sf, "data-ian.rds")
