@@ -13,12 +13,14 @@ prev <- read_csv("depends/hiv_indicators_sexbehav.csv")
 prev_wide <- prev %>%
   filter(
     (nosex12m != 0) & (sexcohab != 0) & (sexnonreg != 0) & (sexpaid12m != 0),
-    age_group != "Y015_024"
+    age_group != "Y015_024",
+    indicator == "prevalence"
   ) %>%
   mutate(
     behav = case_when(
       nosex12m == 1 ~ "nosex12m", sexcohab == 1 ~ "sexcohab",
-      sexnonreg == 1 ~ "sexnonreg", sexpaid12m == 1 ~ "sexpaid12m"
+      sexnonreg == 1 ~ "sexnonreg", sexpaid12m == 1 ~ "sexpaid12m",
+      TRUE ~ "all"
     ), .after = indicator
   ) %>%
   select(indicator, behav, survey_id, area_id, age_group, estimate) %>%
@@ -30,18 +32,18 @@ prev_wide <- prev %>%
 ind <- prev_wide %>%
   mutate(
     #' Calculate the odds
-    across(nosex12m:sexpaid12m, ~ .x / (1 - .x), .names = "{.col}_odds"),
+    across(nosex12m:all, ~ .x / (1 - .x), .names = "{.col}_odds"),
     #' Log odds
-    across(nosex12m:sexpaid12m, ~ log(.x / (1 - .x)), .names = "{.col}_logodds"),
+    across(nosex12m:all, ~ log(.x / (1 - .x)), .names = "{.col}_logodds"),
     #' Prevalence ratios
-    across(nosex12m:sexpaid12m, ~ .x / nosex12m, .names = "{.col}_pr"),
+    across(nosex12m:all, ~ .x / all, .names = "{.col}_pr"),
     #' Odds ratios
-    across(nosex12m:sexpaid12m, ~ (.x / (1 - .x)) / (nosex12m / (1 - nosex12m)), .names = "{.col}_or")
+    across(nosex12m:all, ~ (.x / (1 - .x)) / all_odds, .names = "{.col}_or")
   ) %>%
-  rename_with(.cols = nosex12m:sexpaid12m, ~ paste0(.x, "_prevalence")) %>%
+  rename_with(.cols = nosex12m:all, ~ paste0(.x, "_prevalence")) %>%
   select(-indicator) %>%
   pivot_longer(
-    cols = starts_with(c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")),
+    cols = starts_with(c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m", "all")),
     names_to = "indicator",
     values_to = "estimate"
   ) %>%
@@ -173,26 +175,21 @@ data.frame(
     theme_minimal() +
     labs(x = "General population prevalence", y = "PR (YWKP)")
 
-#' Alternative method for extracting average YWKP prevalence log-odds ratio
-katie_prev <- select(katie_prev_pr, iso3, starts_with("prev_")) %>%
-  filter(!is.na(prev_nosex12m))
-
-lor_ywkp <- mean(log(odds(katie_prev$prev_sexpaid12m) / odds(katie_prev$prev_nosex12m)))
-
 #' Calculating the rest of the LOR with logisitic regression
 ind_inla <- ind %>%
   mutate(
     nosex12m_id = ifelse(behav == "nosex12m", 1, 0),
     sexcohab_id = ifelse(behav == "sexcohab", 1, 0),
     sexnonreg_id = ifelse(behav == "sexnonreg", 1, 0),
-    sexpaid12m_id = ifelse(behav == "sexpaid12m", 1, 0)
+    sexpaid12m_id = ifelse(behav == "sexpaid12m", 1, 0),
+    all_id = ifelse(behav == "all", 1, 0)
   ) %>%
   filter(
     indicator == "prevalence",
     !is.na(estimate)
   )
 
-formula_baseline <- estimate ~ 1 + sexcohab_id + sexnonreg_id + sexpaid12m_id
+formula_baseline <- estimate ~ -1 + all_id + nosex12m_id + sexcohab_id + sexnonreg_id + sexpaid12m_id
 
 fit <- inla(
   formula_baseline,
@@ -212,7 +209,7 @@ odds_estimate <- colMeans(exp(fixed_effects))
 exp(fit$summary.fixed$mean) #' This is what you'd get without sampling from the posterior
 or <- odds_estimate / odds_estimate[1] #' Odds ratio
 lor <- log(odds_estimate / odds_estimate[1]) #' Log odds ratio
-lor[4] <- lor_ywkp #' This may be overwritten anyway
+lor <- lor[-1] #' Don't need leading zero (baseline all)
 
 #' Naomi estimates of PLHIV and population by district and age band
 naomi <- naomi %>%
@@ -303,11 +300,8 @@ df_3p1_logit <- df_3p1 %>%
   lapply(function(x) {
     population_fine <- filter(x, indicator == "population")$estimate
     plhiv <- x$plhiv[1]
-
-    #' Commenting out this until fixed (needs to be nosex12m against sexpaid12m!)
-    # ywkp_lor <- x$ywkp_lor[1]
-    # lor[4] <- ywkp_lor
-
+    ywkp_lor <- x$ywkp_lor[1]
+    lor[4] <- ywkp_lor
     prev <- logit_scale_prev(lor, population_fine, plhiv)
     y <- filter(x, indicator == "prop") %>%
       mutate(

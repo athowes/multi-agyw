@@ -236,6 +236,7 @@ naomi_aggregate <- naomi %>%
 df_ian <- bind_rows(df_ian, naomi_aggregate)
 
 df_ian_sf <- df_ian %>%
+  mutate(iso3 = substr(area_id, 1, 3)) %>%
   left_join(
     select(areas, area_id),
     by = "area_id"

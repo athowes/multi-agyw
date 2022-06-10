@@ -170,7 +170,7 @@ hiv_indicators <- bind_rows(hiv_indicators, phia_hiv_indicators)
 #' Keep only the stratifications with "all" in everything but the indicator itself
 hiv_indicators <- hiv_indicators %>%
   filter(
-    rowSums(across(.cols = nosex12m:sexpaid12m, ~ .x == "all")) == 4 - 1 &
+    rowSums(across(.cols = nosex12m:sexpaid12m, ~ .x == "all")) == c(3, 4) &
       rowSums(across(.cols = nosex12m:sexpaid12m, ~ is.na(.x))) == 0
   )
 

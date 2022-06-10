@@ -11,7 +11,7 @@ calculate_ywkp_pr_lor <- function(prev, fit = ywkp_fit) {
   prev_logodds <- qlogis(prev)
   prev_ywkp_logodds <- predict(fit, data.frame(prev_logodds = prev_logodds))
   #' Ensure that the LOR is above that of e.g. the sexnonreg risk group
-  prev_ywkp_logodds <- pmax(prev_ywkp_logodds, prev_logodds + 1.4)
+  prev_ywkp_logodds <- pmax(prev_ywkp_logodds, prev_logodds + 0.25)
   prev_ywkp <- plogis(prev_ywkp_logodds)
   #' Prevalence ratio
   pr <- prev_ywkp / prev
