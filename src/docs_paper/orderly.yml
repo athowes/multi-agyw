@@ -35,7 +35,7 @@ depends:
   plot_available-surveys:
     id: latest
     use:
-      depends/available-surveys.png: available-surveys.png
+      depends/available-surveys.pdf: available-surveys.pdf
       depends/available-surveys.csv: available-surveys.csv
   plot-tikz_category-flowchart:
     id: latest
@@ -58,7 +58,7 @@ depends:
     use:
       depends/incidence-district-sexbehav.pdf: incidence-district-sexbehav.pdf
       depends/infections-district-sexbehav.pdf: infections-district-sexbehav.pdf
-  # plot_infections-reached:
-  #   id: latest
-  #   use:
-  #     depends/infections-reached.pdf: infections-reached.pdf
+  plot_infections-reached:
+    id: latest
+    use:
+      depends/infections-reached.pdf: infections-reached.pdf

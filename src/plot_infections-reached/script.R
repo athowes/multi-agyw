@@ -16,7 +16,7 @@ df_area_age_behav <- df %>%
     names_sep = "_"
   ) %>%
   pivot_wider(
-    id_cols = c("iso3", "area_id", "age_group", "indicator", "category"),
+    id_cols = c("iso3", "area_id", "age_group", "category"),
     names_from = "indicator",
     values_from = "value"
   )
@@ -103,13 +103,13 @@ dev.off()
 
 #' Sadly multi-page .png don't exist
 #' This is a bit clunky but unsure if there is a better option
-lapply(1:length(plotsA), function(i) {
-  ggsave(
-    paste0("infections-reached-country-", i, ".png"),
-    plotsA[[i]],
-    width = 6.25, height = 3.5, units = "in", dpi = 300
-  )
-})
+# lapply(1:length(plotsA), function(i) {
+#   ggsave(
+#     paste0("infections-reached-country-", i, ".png"),
+#     plotsA[[i]],
+#     width = 6.25, height = 3.5, units = "in", dpi = 300
+#   )
+# })
 
 #' Quantification of points discussed
 
