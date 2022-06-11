@@ -12,6 +12,8 @@ artefacts:
         - fsw-within-between-country-variation.pdf
         - fsw-within-between-country-variation.png
         - cohabiting-girls.pdf
+        - df_3p1_subnational.csv
+        - df_3p1_national.csv
 
 packages:
   - dplyr

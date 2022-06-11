@@ -45,10 +45,24 @@ depends:
     id: latest
     use:
       depends/fsw-logit-information-criteria.pdf: fsw-logit-information-criteria.pdf
+  process_variance-proportions:
+    id: latest
+    use:
+      depends/variance-proportions-uncertainty.csv: variance-proportions-uncertainty.csv
   plot_temporal-variation:
     id: latest
     use:
       depends/temporal-interpolation-ribbon.pdf: temporal-interpolation-ribbon.pdf
+  plot_continental-map:
+    id: latest
+    use:
+      depends/3p1-continental-map.pdf: 3p1-continental-map.pdf
+  plot_within-between-country-variation:
+    id: latest
+    use:
+      depends/3p1-within-between-country-variation.pdf: 3p1-within-between-country-variation.pdf
+      depends/df_3p1_subnational.csv: df_3p1_subnational.csv
+      depends/df_3p1_national.csv: df_3p1_national.csv
   process_prevalence:
     id: latest
     use:
