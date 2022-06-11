@@ -76,3 +76,5 @@ depends:
     id: latest
     use:
       depends/infections-reached.pdf: infections-reached.pdf
+      depends/infections-reached-country.pdf: infections-reached-country.pdf
+

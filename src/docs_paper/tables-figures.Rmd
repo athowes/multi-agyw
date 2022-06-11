@@ -3,6 +3,7 @@ title: Supplementary tables and figures for "Spatio-temporal estimates of HIV ri
   girls and young women across 13 priority countries in sub-Saharan Africa"
 output:
   pdf_document:
+    toc: true
     keep_tex: true
     includes:
       in_header: preamble.tex
@@ -11,7 +12,44 @@ bibliography: citations.bib
 
 \newpage
 
-# Data
+# The Global AIDS Strategy
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+Prioritisation strata & Criterion \\
+\midrule
+Low & 0.3-1\% incidence AND low-risk behaviour OR $<$0.3\% incidence AND high-risk behaviour \\
+Moderate & 1-3\% incidence AND low-risk behaviour OR 0.3-1\% incidence AND high-risk behaviour \\
+High & 1-3\% incidence AND high-risk behaviour \\
+Very high & $>$3\% incidence \\
+\bottomrule
+\end{tabularx}
+\caption{Prioritisation strata.}
+\label{tab:unaids-strategy-prioritisation}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+Intervention & Details \\
+\midrule
+STI screening and treatment & (Remain to be filled in: describe targets and commitments in terms of each prioritisation strata) \\
+PrEP use & (As above) \\
+Access to PEP & (As above) \\
+Comprehensive sexuality education & (As above) \\
+Economic empowerment & (As above) \\
+\bottomrule
+\end{tabularx}
+\caption{Targets and commitments.}
+\label{tab:unaids-strategy-targets}
+\end{table}
+
+\clearpage
+
+# Survey data
 
 \begin{longtable}{rlrcrrrr}
 \toprule
@@ -142,9 +180,9 @@ ZMB2002DHS & No GPS coordinates available to place survey clusters within distri
 \caption{All surveys excluded from our analysis.}
 \end{table}
 
-\newpage
-
-\begin{longtable}{lrr}
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{lXX}
 \toprule
 Country & Number of areas & Analysis level \\ 
 \midrule
@@ -162,7 +200,57 @@ South Africa & 52 & 2 \\
 Zambia & 116 & 2 \\ 
 Zimbabwe & 63 & 2 \\ 
 \bottomrule
-\end{longtable}
+\end{tabularx}
+\label{tab:area-levels}
+\caption{The numer of areas and analysis levels used in our analysis.}
+\end{table}
+
+\clearpage
+
+# Survey questions and risk group allocation
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+Variable(s) & Description \\
+\midrule
+\texttt{v501} & Current marital status of the respondent. \\
+\texttt{v529} & Computed time since last sexual intercourse. \\
+\texttt{v531} & Age at first sexual intercourse--imputed. \\
+\texttt{v766b} & Number of sexual partners during the last 12 months (including husband). \\
+\texttt{v767[a, b, c]} & Relationship with last three sexual partners. Options are: spouse, boyfriend not living with respondent, other friend, casual acquaintance, relative, commercial sex worker, live-in partner, other. \\
+\texttt{v791a} & Had sex in return for gifts, cash or anything else in the past 12 months. Asked only to women 15-24 who are not in a union. \\
+\bottomrule
+\end{tabularx}
+\caption{AIS, BAIS and DHS survey questions.}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+Variable(s) & Description \\
+\midrule
+\texttt{part12monum} & Number of sexual partners during the last 12 months (including husband). \\
+\texttt{part12modkr} & Reason for leaving \texttt{part12monum} blank. \\
+\texttt{partlivew[1, 2, 3]} & Does the person you had sex with live in this household? \\
+\texttt{partrelation[1, 2, 3]} & Relationship with last three sexual partners. Options are: husband, live-in partner, partner (not living with), ex-spouse/partner, friend/acquaintance, sex worker, sex worker client, stranger, other, don't know, refused. \\
+\texttt{sellsx12mo} & Had sex for money and/or gifts in the last 12 months. \\
+\texttt{buysx12mo} & Paid money or given gifts for sex in the last 12 months. \\
+\bottomrule
+\end{tabularx}
+\caption{PHIA survey questions.}
+\end{table}
+
+\newpage
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics{depends/category-flowchart.pdf}
+    \caption{Flowchart describing allocation of respondents to risk groups.}
+    \label{fig:category-flowchart}
+\end{figure}
 
 \clearpage
 
@@ -261,7 +349,11 @@ Zimbabwe & 63 & 2 \\
 
 \clearpage
 
-# HIV incidence
+# Cloropleths
+
+## HIV prevalence
+
+## HIV incidence
 
 \begin{figure}[h]
     \centering
@@ -347,11 +439,105 @@ Zimbabwe & 63 & 2 \\
     \label{fig:incidence-district-sexbehav-12}
 \end{figure}
 
-<!-- \begin{figure}[h] -->
-<!--     \centering -->
-<!--     \makebox[\textwidth][c]{\includegraphics[page=13]{depends/incidence-district-sexbehav.pdf}} -->
-<!--     \caption{District level incidence for each of the risk groups in 2018 in Zimbabwe.} -->
-<!--     \label{fig:incidence-district-sexbehav-13} -->
-<!-- \end{figure} -->
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[page=13]{depends/incidence-district-sexbehav.pdf}}
+    \caption{District level incidence for each of the risk groups in 2018 in Zimbabwe.}
+    \label{fig:incidence-district-sexbehav-13}
+\end{figure}
 
 \clearpage
+
+
+# Infections reached
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=1]{depends/infections-reached-country.pdf}}
+\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Botswana.}
+\label{fig:infections-reached-country-1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=2]{depends/infections-reached-country.pdf}}
+\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Cameroon.}
+\label{fig:infections-reached-country-2}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=3]{depends/infections-reached-country.pdf}}
+\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Kenya.}
+\label{fig:infections-reached-country-3}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=4]{depends/infections-reached-country.pdf}}
+\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Lesotho.}
+\label{fig:infections-reached-country-4}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=5]{depends/infections-reached-country.pdf}}
+\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Mozambique.}
+\label{fig:infections-reached-country-5}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=6]{depends/infections-reached-country.pdf}}
+\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Malawi.}
+\label{fig:infections-reached-country-6}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=7]{depends/infections-reached-country.pdf}}
+\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Namibia.}
+\label{fig:infections-reached-country-7}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=8]{depends/infections-reached-country.pdf}}
+\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Eswatini.}
+\label{fig:infections-reached-country-8}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=9]{depends/infections-reached-country.pdf}}
+\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Tanzania.}
+\label{fig:infections-reached-country-9}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=10]{depends/infections-reached-country.pdf}}
+\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Uganda.}
+\label{fig:infections-reached-country-10}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=11]{depends/infections-reached-country.pdf}}
+\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in South Africa.}
+\label{fig:infections-reached-country-11}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=12]{depends/infections-reached-country.pdf}}
+\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Zambia.}
+\label{fig:infections-reached-country-12}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=13]{depends/infections-reached-country.pdf}}
+\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Zimbabwe.}
+\label{fig:infections-reached-country-13}
+\end{figure}
