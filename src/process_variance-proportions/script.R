@@ -76,8 +76,8 @@ single_survey <- df_aaa %>%
 
 model_selector <- function(iso3, model) {
   case_when(
-    iso3 %in% single_survey ~ model == "Model 3",
-    T ~ model == "Model 6"
+    iso3 %in% single_survey ~ model == "Model 2",
+    T ~ model == "Model 4"
   )
 }
 
@@ -178,7 +178,7 @@ df %>%
   mutate(across(everything(), ~ 100 * round(.x, 3)))
 
 #' The uncertainty on that?
-S <- 10
+S <- 100
 full_samples <- readRDS("depends/multi-sexbehav-sae-samples.rds")
 
 #' Just the hyperparameters
@@ -188,7 +188,7 @@ precision_samples_df <- data.frame(t(precision_samples_matrix))
 names(precision_samples_df) <- names(precision_samples[[1]][[1]])
 variance_samples_df <- 1 / precision_samples_df
 
-variance_samples_df %>%
+variance_samples_df <- variance_samples_df %>%
   select(starts_with("Precision")) %>%
   rename_all(list(~ stringr::str_replace(., "Precision for ", "variance_"))) %>%
   mutate(total_variance = rowSums(., na.rm = TRUE)) %>%
@@ -212,7 +212,15 @@ variance_samples_df %>%
     names_prefix = "percentage_variance_",
     names_to = "variable",
     values_to = "percentage_variance"
+  ) %>%
+  separate(variable, into = c("variable", "idx", "type")) %>%
+  select(-idx) %>%
+  pivot_wider(
+    names_from = type,
+    values_from = percentage_variance
   )
+
+write_csv(variance_samples_df, "variance-proportions-uncertainty.csv")
 
 #' Now to try the alternative method for looking within country when the model is fit jointly between all countries
 #' Probably there is a better way to do this
@@ -236,10 +244,10 @@ idx_dictionary <- read_csv("depends/multi-sexbehav-sae.csv") %>%
   )
 
 cat_df <- fit$summary.random$cat_idx
-age_df <- rownames_to_column(fit$summary.random$age_idx) %>% mutate(rowname = as.numeric(rowname))
-iso3_df <- rownames_to_column(fit$summary.random$iso3_idx) %>% mutate(rowname = as.numeric(rowname))
-area_df <- rownames_to_column(fit$summary.random$area_idx) %>% mutate(rowname = as.numeric(rowname))
-year_df <- rownames_to_column(fit$summary.random$year_idx) %>% mutate(rowname = as.numeric(rowname))
+age_df <- tibble::rownames_to_column(fit$summary.random$age_idx) %>% mutate(rowname = as.numeric(rowname))
+iso3_df <- tibble::rownames_to_column(fit$summary.random$iso3_idx) %>% mutate(rowname = as.numeric(rowname))
+area_df <- tibble::rownames_to_column(fit$summary.random$area_idx) %>% mutate(rowname = as.numeric(rowname))
+year_df <- tibble::rownames_to_column(fit$summary.random$year_idx) %>% mutate(rowname = as.numeric(rowname))
 
 re_df <-idx_dictionary %>%
   left_join(

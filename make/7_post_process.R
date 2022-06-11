@@ -20,7 +20,7 @@ run_commit_push("plot_model-direct-benefits") #' [ ]
 run_commit_push("process_information-criteria") #' [/]
 
 #' Variance based sensitivity analysis
-run_commit_push("process_variance-proportions") #' [/]
+run_commit_push("process_variance-proportions") #' [x]
 
 #' Posterior predictive sampling to generate coverage estimates
 run_commit_push("process_coverage") #' [ ]
