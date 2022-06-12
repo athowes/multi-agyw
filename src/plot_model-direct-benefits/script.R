@@ -9,7 +9,7 @@ df <- df %>%
   filter(
     survey_id == "TZA2010DHS",
     age_group == "Y020_024",
-    model == "Model 6",
+    model == "Model 4",
     area_id != "TZA",
     indicator == "sexcohab"
   ) %>%
@@ -25,7 +25,7 @@ df <- df %>%
   mutate(
     source = fct_recode(source,
       "Direct" = "raw",
-      "Modeled" = "smoothed"
+      "Modelled" = "smoothed"
     )
   ) %>%
   left_join( #' Use this to make it an sf again

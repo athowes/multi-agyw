@@ -53,6 +53,10 @@ depends:
     id: latest
     use:
       depends/temporal-interpolation-ribbon.pdf: temporal-interpolation-ribbon.pdf
+  plot_model-direct-benefits:
+    id: latest
+    use:
+      depends/model-direct-benefits.pdf: model-direct-benefits.pdf
   plot_continental-map:
     id: latest
     use:

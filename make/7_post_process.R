@@ -14,7 +14,7 @@ run_commit_push("plot_continental-map") #' [x]
 run_commit_push("plot_aids-abstract") #' [x]
 
 #' Choropleth contrasting direct estimates with modeled estimates, and illustrating benefits of the later
-run_commit_push("plot_model-direct-benefits") #' [ ]
+run_commit_push("plot_model-direct-benefits") #' [x]
 
 #' Barplot of the information criteria (DIC, WAIC, CPO) for each model
 run_commit_push("process_information-criteria") #' [/]

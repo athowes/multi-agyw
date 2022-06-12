@@ -10,6 +10,19 @@ output:
 bibliography: citations.bib
 ---
 
+\clearpage
+
+# Additional figures
+
+<!-- Might find a home for these. -->
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics{depends/model-direct-benefits.pdf}}
+\caption{Illustration our model results for AGYW 20-24 in Tanzania in 2010 in the cohabiting risk group. Compared to the direct survey results, our spatio-temporally smoothed estimates more plausibly represent district level heterogeneity, as well as imputing any districts with missing data.}
+\label{fig:model-direct-benefits}
+\end{figure}
+
 \newpage
 
 # The Global AIDS Strategy
