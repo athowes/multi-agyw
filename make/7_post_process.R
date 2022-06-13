@@ -29,7 +29,7 @@ run_commit_push("process_coverage") #' [ ]
 run_commit_push("process_prevalence") #' [x]
 
 #' Calculate and plot HIV incidence by risk group
-run_commit_push("process_incidence") #' [ ]
+run_commit_push("process_incidence") #' [x]
 
 #' Analysis and plots of number of infections reached by different prioritisation strategies
-run_commit_push("plot_infections-reached") #' [ ]
+run_commit_push("plot_infections-reached") #' [x]
