@@ -7,9 +7,11 @@ artefacts:
   - data:
       description: Plot showing the number of infections reached using our estimates
       filenames:
+        - infections-reached.csv
         - infections-reached.pdf
         - infections-reached.png
         - infections-reached-country.pdf
+        - infections-reached-country.rds # As .rds because it's a list
         - infections-reached-above-baseline.pdf
         - infections-reached-above-baseline.png
         - infections-reached-above-baseline-country.pdf
