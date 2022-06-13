@@ -61,8 +61,9 @@ abstract: |
   Our risk group estimates provide data for HIV programmes to implement a differentiated prevention approach and set targets according to the Global AIDS Strategy.
   Successfully implementing this approach would result in finding substantially more infections, particularly among female sex workers.
 author_summary: |
-  The risk HIV poses to adolescent girls and young women depends on the extent of HIV in the local community and their individual sexual behaviour.
-  To help policy makers identify and provide services to those at highest risk, we geographically mapped HIV risk using behavioural data from household surveys.
+  The risk HIV poses to adolescent girls and young women depends on the extent of HIV in the local community as well as individual sexual behaviour.
+  To help policy makers identify and provide services to those at highest risk, we geographically mapped HIV risk groups using behavioural data from household surveys.
+  Doing so also allowed us to estimate the the proportion of people living with HIV in each risk group, as well as the rate of new infections in each risk group.
 bibliography: citations.bib
 output:
   rticles::plos_article:
@@ -213,14 +214,12 @@ Low & One cohabiting sexual partner & 1 \\
 High & Non-regular sexual partner(s) & 1.72 \\
 Very high & Female sex workers & {
 \begin{tabularx}{\linewidth}{ll}
-\hline
 District-level HIV incidence & Risk ratio\\
 $>$3.0\% & 3 \\
 1.0-3.0\% & 6 \\
 0.3-1.0\% & 9 \\
 0.1-0.3\% & 13 \\
 $<$0.1\% & 25 \\
-\hline
 \end{tabularx}
 } \\
 \bottomrule
@@ -237,9 +236,9 @@ We included surveys conducted in these countries in the years 1999-2018 in which
 Demographic and Health Surveys (DHS), AIDS Indicator Surveys (AIS), Population-based HIV Impact Assessment (PHIA) surveys, and the Botswana HIV/AIDS Impact Survey 2013 (BAIS) were included.
 
 For each survey, we classified respondents into one of four behavioural risk groups according to reported sexual risk behaviour in the past 12 months.
-These risk groups were: not sexually active, one cohabiting sexual partner, at least one non-regular sexual partner, and AGYW who are female sex workers (FSW) (Table, Fig).
+These risk groups were: not sexually active, one cohabiting sexual partner, at least one non-regular sexual partner, and AGYW who are female sex workers (FSW) (Table \ref{tab:risk-groups}).
 In the case of inconsistent responses, women were categorised according to the highest risk group they fell into, ensuring that the categories were mutually exclusive.
-Exact survey questions varied to a limited extent between surveys, as described in Appendix.
+Exact survey questions varied to a limited extent between surveys (Appendix B).
 Questions captured information about if the respondent had been sexually active in the past twelve months, and if so how with many partners.
 For their three most recent partners, respondents were also asked about the type of partnership (spouse, cohabiting partner, partner not cohabiting with respondent, friend, sex worker, sex work client, and other).
 
@@ -249,7 +248,7 @@ For this reason, we did not include surveys without a specific transactional sex
 
 We used estimates of population, people living with HIV (PLHIV) and new HIV infections stratified by district and age group from outputs of the Naomi model [@eaton2021naomi].
 The model synthesises data from multiple sources to produce consistent subnational estimates of indicators of interest, and has been used by countries as a part of the HIV estimates process supported by UNAIDS.
-The administrative area hierarchy and geographic boundaries we used correspond to those used in Naomi, with the exception of Cameroon and Kenya where we used an analysis level one higher.
+The administrative area hierarchy and geographic boundaries we used correspond to those used in Naomi, with the exception of Cameroon and Kenya where we used an analysis level one higher (Appendix B).
 
 ## Two-stage risk group proportion model
 
@@ -264,13 +263,13 @@ To do so, we disaggregated national 15-49 FSW population size estimates from @st
 
 <!-- \text{Gamma}(\alpha = 10.4, \beta = 0.36)$ FSW age distribution -->
 
-We considered eight model specifications for the space-age-time multinomial model for the three risk groups (Table).
+We considered eight model specifications for the space-age-time multinomial model for the three risk groups (Appendix A).
 All models included intercepts for each risk group, age, country, and age-country effects, a spatial effect allowing variation by district, and a temporal effect allowing variation over time.
 Alternative models varied the specification for the spatial effect between independent spatial effects versus spatially correlated effects and independent temporal effects versus first-order auto-regressive temporal effects.
 Each alternative was considered with an additional spatio-temporal interaction term allowing the temporal trend to vary across districts.
 To understand the importance of each part of the model we undertook a variance-based sensitivity analysis using the random effect variance parameters.
 
-For the logistic regression model for the proportion engaging in transactional sex among those with non-regular partner(s), we considered six specifications (Table).
+For the logistic regression model for the proportion engaging in transactional sex among those with non-regular partner(s), we considered six specifications (Appendix A).
 Each included an intercept, age and country effects, and a spatial effect allowing district level variation.
 Both independent and spatially correlated spatial effects were considered.
 To improve estimation with sparse data, we considered model alternatives with national-level covariates for either the proportion of men who reported ever having paid for sex or having paid for sex in the last twelve months, available from @hodgins2022population.
@@ -283,6 +282,7 @@ We used the `orderly` package [@orderly] for reproducible research.
 ## HIV indicators and prevention prioritisation
 
 We used the risk group proportion estimates to calculate HIV prevalence, PLHIV, HIV incidence and number of new HIV infections stratified according to district, age group and risk group by disaggregating estimates from the Naomi model.
+Further details are provided in Appendix A.
 
 ### Prevalence and PLHIV
 
@@ -379,7 +379,7 @@ The median number of surveys per country was four, ranging from one in Botswana 
 
 The best fitting multinomial regression model included correlated spatial effects and first-order autoregressive temporal effects, but not spatio-temporal interactions.
 The best logistic regression model for transactional sex included correlated spatial effects and the proportion of men who reported ever paying for sex covariate.
-Model performance according to the CPO criteria is provided in the appendix (Figs, Tables) for all considered models.
+Model performance according to the CPO criteria is provided in Appendix A for all considered models.
 
 ## Risk group estimates
 
@@ -394,11 +394,9 @@ knitr::include_graphics("depends/3p1-within-between-country-variation.pdf")
 Posterior mean estimates from our final model are shown as choropleths (Fig \ref{fig:continental-map}) and dotplots (Fig \ref{fig:within-between-country-variation}).
 Direct estimates of the four risk group proportions from these surveys were highly correlated with our modelled estimates at a national-level.
 Posterior mean, median, upper (97.5\%) and lower (2.5\%) credible estimates for each district, age group and year from our final model are provided in the supplementary material.
-In the sections to follow, all estimates refer to 2018, the most recent year included in our analysis, unless otherwise indicated.
+In the writing to follow, all estimates refer to 2018, the most recent year included in our analysis, unless otherwise indicated.
 
-### Spatial, temporal and age trends
-
-```{r}
+```{r echo=FALSE}
 df_3p1_subnational <- read_csv("depends/df_3p1_subnational.csv")
 df_3p1_national <- read_csv("depends/df_3p1_national.csv")
 
@@ -442,66 +440,79 @@ moz_Y015_019_nosex12m <- filter(moz_Y015_019, indicator == "No sex")
 moz_Y015_019_sexcohab <- filter(moz_Y015_019, indicator == "Cohabiting partner")
 moz_Y015_019_sexnonreg <- filter(moz_Y015_019, indicator == "Non regular partner(s)")
 
-# #' In which countries are the majority of 15-19 year-olds not sexually active?
-# #' (Just MOZ!)
-# df_3p1_national %>%
-#   filter(
-#     age_group == "15-19",
-#     indicator == "No sex"
-#   ) %>%
-#   mutate(estimate_smoothed = 100 * estimate_smoothed) %>%
-#   filter(estimate_smoothed < 50)
-# 
-# #' What proportion of 20-29 year-olds are cohabiting versus with nonregular partner(s),
-# #' above and below the south / east dividing border (UN geoscheme)?
-# df_3p1_subnational %>%
-#   mutate(
-#     border = ifelse(region %in% c("East", "Middle"), "Above", "Below")
-#   ) %>%
-#   select(iso3, area_id, indicator, age_group, border, estimate_smoothed, population_mean) %>%
-#   filter(
-#     indicator %in% c("Cohabiting partner", "Nonregular partner(s)"),
-#     age_group %in% c("20-24", "25-29")
-#   ) %>%
-#   group_by(area_id, indicator) %>%
-#   summarise(
-#     estimate_smoothed = sum(estimate_smoothed * population_mean) / sum(population_mean),
-#     border = max(border) #' Should just be a way to keep border column
-#   ) %>%
-#   ungroup() %>%
-#   group_by(border, indicator) %>%
-#   summarise(
-#     lower = 100 * quantile(estimate_smoothed, probs = 0.025, na.rm = TRUE),
-#     median = 100 * median(estimate_smoothed, na.rm = TRUE),
-#     upper = 100 * quantile(estimate_smoothed, probs = 0.975, na.rm = TRUE)
-#   ) %>%
-#   ungroup() %>%
-#   mutate(across(lower:upper, ~signif(.x, digits = 3)))
-# 
-# #' What's the average FSW proportion by age?
-# fsw_age <- df_3p1_subnational %>%
-#   filter(indicator == "FSW") %>%
-#   group_by(iso3, age_group) %>%
-#   summarise(estimate_smoothed = sum(estimate_smoothed * population_mean, na.rm = TRUE) / sum(population_mean, na.rm = TRUE)) %>%
-#   group_by(age_group) %>%
-#   summarise(
-#     lower = 100 * quantile(estimate_smoothed, probs = 0.025, na.rm = TRUE),
-#     median = 100 * median(estimate_smoothed, na.rm = TRUE),
-#     upper = 100 * quantile(estimate_smoothed, probs = 0.975, na.rm = TRUE)
-#   ) %>%
-#   mutate(across(lower:upper, ~signif(.x, digits = 3)))
-# 
-# #' What about by country?
-# fsw_iso3 <- df_3p1_subnational %>%
-#   filter(indicator == "FSW") %>%
-#   group_by(iso3) %>%
-#   summarise(estimate_smoothed = sum(estimate_smoothed * population_mean, na.rm = TRUE) / sum(population_mean, na.rm = TRUE))
+#' In which countries are the majority of 15-19 year-olds not sexually active?
+#' (Just MOZ!)
+df_3p1_national %>%
+  filter(
+    age_group == "15-19",
+    indicator == "No sex"
+  ) %>%
+  mutate(estimate_smoothed = 100 * estimate_smoothed) %>%
+  filter(estimate_smoothed < 50)
+ 
+#' What proportion of 20-29 year-olds are cohabiting versus with nonregular partner(s),
+#' above and below the south / east dividing border (UN geoscheme)?
+dividing_border <- df_3p1_subnational %>%
+  mutate(
+    border = ifelse(region %in% c("Eastern", "Central"), "Above", "Below")
+  ) %>%
+  select(iso3, area_id, indicator, age_group, border, estimate_smoothed, population_mean) %>%
+  filter(
+    indicator %in% c("Cohabiting partner", "Nonregular partner(s)"),
+    age_group %in% c("20-24", "25-29")
+  ) %>%
+  group_by(area_id, indicator) %>%
+  summarise(
+    estimate_smoothed = sum(estimate_smoothed * population_mean) / sum(population_mean),
+    border = max(border) #' Should just be a way to keep border column
+  ) %>%
+  ungroup() %>%
+  group_by(border, indicator) %>%
+  summarise(
+    lower = 100 * quantile(estimate_smoothed, probs = 0.025, na.rm = TRUE),
+    median = 100 * median(estimate_smoothed, na.rm = TRUE),
+    upper = 100 * quantile(estimate_smoothed, probs = 0.975, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  mutate(across(lower:upper, ~signif(.x, digits = 3)))
+
+dividing_border_above_sexcohab <- filter(dividing_border, border == "Above", indicator == "Cohabiting partner")
+dividing_border_above_sexnonreg <- filter(dividing_border, border == "Above", indicator == "Nonregular partner(s)")
+dividing_border_below_sexcohab <- filter(dividing_border, border == "Below", indicator == "Cohabiting partner")
+dividing_border_below_sexnonreg <- filter(dividing_border, border == "Below", indicator == "Nonregular partner(s)")
+
+#' What's the average FSW proportion by age?
+fsw_age <- df_3p1_subnational %>%
+  filter(indicator == "FSW") %>%
+  group_by(iso3, age_group) %>%
+  summarise(estimate_smoothed = sum(estimate_smoothed * population_mean, na.rm = TRUE) / sum(population_mean, na.rm = TRUE)) %>%
+  group_by(age_group) %>%
+  summarise(
+    lower = 100 * quantile(estimate_smoothed, probs = 0.025, na.rm = TRUE),
+    median = 100 * median(estimate_smoothed, na.rm = TRUE),
+    upper = 100 * quantile(estimate_smoothed, probs = 0.975, na.rm = TRUE)
+  ) %>%
+  mutate(across(lower:upper, ~signif(.x, digits = 3)))
+
+fsw_age_Y015_019 <- filter(fsw_age, age_group == "15-19")
+fsw_age_Y020_024 <- filter(fsw_age, age_group == "20-24")
+fsw_age_Y025_029 <- filter(fsw_age, age_group == "25-29")
+
+#' What about by country?
+fsw_iso3 <- df_3p1_subnational %>%
+  filter(indicator == "FSW") %>%
+  group_by(iso3) %>%
+  summarise(estimate_smoothed = sum(estimate_smoothed * population_mean, na.rm = TRUE) / sum(population_mean, na.rm = TRUE))
 ```
 
-In most districts (`r round(district_Y015_019_nosex12m_quantiles$median, 1)`\%; 95\% credible interval [CI] `r round(district_Y015_019_nosex12m_quantiles$lower, 1)`--`r round(district_Y015_019_nosex12m_quantiles$upper, 1)`\%) adolescent girls aged 15-19 were not sexually active.
-The exception was Mozambique, where the majority (`r 100 - round(moz_Y015_019_nosex12m$estimate_smoothed, 2)`\%; 95\% CI `r "num"`--`r "num"`\%) were sexually active in the past year and close to a third (`r round(moz_Y015_019_sexcohab$estimate_smoothed, 2)`\%; 95\% CI `r "num"`--`r "num"`\%) were cohabiting with a partner.
+The median proportion of FSW nationally was `r fsw_age_Y015_019$median`\% (95\% CI `r fsw_age_Y015_019$lower`--`r fsw_age_Y015_019$upper`\%) for the 15-19 age group, `r fsw_age_Y020_024$median`\% (95\% CI `r fsw_age_Y020_024$lower`--`r fsw_age_Y020_024$upper`\%) for the 20-24 age group and `r fsw_age_Y025_029$median`\% (95\% CI `r fsw_age_Y025_029$lower`--`r fsw_age_Y025_029$upper`\%) for the 25-29 age group.
 
-### Analysis of variance {#sec:analysis-of-variance}
+In the 20-24 and 25-29 year age groups, the majority of women were either cohabiting or had non-regular partner(s).
+Countries in eastern and central Africa (Cameroon, Kenya, Malawi, Mozambique, Tanzania, Uganda, Zambia and Zimbabwe) had a higher proportion of women in these age groups cohabiting (`r dividing_border_above_sexcohab$median`\% [95\% CI `r dividing_border_above_sexcohab$lower`--`r dividing_border_above_sexcohab$upper`\%] as compared with `r dividing_border_above_sexnonreg$median`\% [95\% CI `r dividing_border_above_sexnonreg$lower`--`r dividing_border_above_sexnonreg$upper`\%] with non-regular partner[s]) and countries in southern Africa (Botswana, Eswatini, Lesotho, Namibia and South Africa) had a higher proportion with non-regular partner(s) (`r dividing_border_below_sexnonreg$median`\% [95\% CI `r dividing_border_below_sexnonreg$lower`--`r dividing_border_below_sexnonreg$upper`\%], as compared with `r dividing_border_below_sexcohab$median`\% [95\% CI `r dividing_border_below_sexcohab$lower`--`r dividing_border_below_sexcohab$upper`\%] cohabiting).
+This clear geographic delineation passes along the border of Mozambique, through the interior of Zimbabwe and along the border of Zambia (Fig \ref{fig:continental-map}).
+
+In most districts (`r round(district_Y015_019_nosex12m_quantiles$median, 1)`\%; 95\% credible interval [CI] `r round(district_Y015_019_nosex12m_quantiles$lower, 1)`--`r round(district_Y015_019_nosex12m_quantiles$upper, 1)`\%) adolescent girls aged 15-19 were not sexually active.
+The exception was Mozambique, where the majority (`r 100 - round(moz_Y015_019_nosex12m$estimate_smoothed, 2)`\%) were sexually active in the past year and close to a third (`r round(moz_Y015_019_sexcohab$estimate_smoothed, 2)`\%) were cohabiting with a partner.
 
 ```{r}
 variance_proportions <- read_csv("depends/variance-proportions-uncertainty.csv")
@@ -608,8 +619,8 @@ Though subject to limitations, our results quantify the crucial importance of re
 
 ## Supporting information
 
-**S1**: Appendix
-**S2**: Supplementary tables and figures
+**Appendix A**: Statistical modelling
+**Appendix B**: Supplementary tables and figures
 
 ## Funding
 
