@@ -19,10 +19,12 @@ artefacts:
 
 resources:
   - paper.Rmd
+  - tables-figures.Rmd
+  - appendix.Rmd
   - citations.bib
   - PLOS-submission.eps
-  - appendix.Rmd
   - HIV2021Estimates_Global_PLWHV-NI-Pop_6June2022.xlsx
+  - preamble.tex
 
 packages:
   - rmarkdown
@@ -60,7 +62,7 @@ depends:
   plot_continental-map:
     id: latest
     use:
-      depends/3p1-continental-map.pdf: 3p1-continental-map.pdf
+      depends/3p1-continental-map.png: 3p1-continental-map.png
   plot_within-between-country-variation:
     id: latest
     use:
@@ -81,4 +83,5 @@ depends:
     use:
       depends/infections-reached.pdf: infections-reached.pdf
       depends/infections-reached-country.pdf: infections-reached-country.pdf
-
+      depends/infections-reached.csv: infections-reached.csv
+      depends/infections-reached-country.rds: infections-reached-country.rds

@@ -42,26 +42,28 @@ address:
     address: Department of Computer Science, University of Oxford
 abstract: |
   **Background:**
-  The Global AIDS Strategy 2021-2026 identifies adolescent girls and young women (AGYW) as a priority population for   HIV prevention and recommends differentiating intervention portfolios geographically based on local HIV incidence   and individual risk behaviours.
+  The Global AIDS Strategy 2021-2026 identifies adolescent girls and young women (AGYW) as a priority population for HIV prevention, and recommends differentiating intervention portfolios geographically based on local HIV incidence and individual risk behaviours.
+  We aimed to estimate occurance of HIV risk behaviours and associated HIV incidence at a small spatial scale among AGYW living in 13 countries in sub-Saharan Africa.
 
   **Methods:**
   We analysed 47 geospatially referenced national household surveys conducted between 1999-2018 across 13 Global   Fund priority countries in sub-Saharan Africa.
-  Female survey respondents aged 15-29 years were classified into four risk groups (not sexually active, cohabiting, non-regular partner[s] and female sex workers) based on reported sexual partnerships.
-  We used a Bayesian spatio-temporal multinomial regression model to estimate the proportion of AGYW in each risk group stratified by district, year and five-year age group.
-  We then assessed the efficiency of prioritising interventions according to these risk groups.
+  Female survey respondents aged 15-29 years were classified into four risk groups (not sexually active, cohabiting, non-regular partner[s] and female sex workers) based on reported sexual behaviour.
+  We used a Bayesian spatio-temporal multinomial regression model to estimate the proportion of AGYW in each risk group stratified by district, year, and five-year age group.
+  Using the UNAIDS Naomi modelled district-level estimates of HIV prevalence and incidence, we then estimated new HIV infections and incidence in each risk group and assessed the efficiency of prioritising interventions according to risk group.
 
   **Results:**
   Data consisted of `r "num"` female survey respondents aged 15-29.
   Risk group proportions varied substantially across age groups (`r "num"`\% of variation), countries (`r "num"`\%), and between districts within each country (`r "num"`\%), but changed little over time (`r "num"`\%).
-  Among women aged 20-29, we found a geographic delineation, north of which in eastern Africa, cohabiting (`r "num"`\%) is more common than non-regular partner(s) (`r "num"`\%), and south of which, non-regular partner(s) (`r "num"`\%) are more common than cohabiting (`r "num"`\%).
-  Prioritisation based on behavioural risk, in combiniation with location and age based prioritisation, reduced the proportion of population that must be reached to find half of all new infections from `r "num"`\% to `r "num"`\%.
+  Among women aged 20-29, we found a geographic delineation, north of which, in eastern Africa, cohabiting (`r "num"`\%) is more common than non-regular partner(s) (`r "num"`\%), and south of which, non-regular partner(s) (`r "num"`\%) are more common than cohabiting (`r "num"`\%).
+  Prioritisation based on behavioural risk, in combination with location- and age-based prioritisation, reduced the proportion of population that must be reached to find half of all new infections from `r "num"`\% to `r "num"`\%.
   Female sex workers were `r "num"`\% of the at risk population but `r "num"`\% of all new infections.
 
   **Conclusions:**
   Our risk group estimates provide data for HIV programmes to implement a differentiated prevention approach and set targets according to the Global AIDS Strategy.
   Successfully implementing this approach would result in finding substantially more infections, particularly among female sex workers.
 author_summary: |
-  The risk HIV poses to adolescent girls and young women depends on the extent of HIV in the local community as well as individual sexual behaviour.
+  The risk HIV poses to adolescent girls and young women depends on individual sexual behaviour as well as the extent of HIV in the local community.
+  The same sexual behaviour is more or less likely to result in HIV acquisiton depending on the scale of the epidemic in the community.
   To help policy makers identify and provide services to those at highest risk, we geographically mapped HIV risk groups using behavioural data from household surveys.
   Doing so also allowed us to estimate the the proportion of people living with HIV in each risk group, as well as the rate of new infections in each risk group.
 bibliography: citations.bib
@@ -307,11 +309,11 @@ We assumed all members of every strata can be reached.
 
 ## Data
 
-```{r echo=FALSE, fig.cap="Surveys used in our analysis by year, survey type, sample size, and whether the survey included a transactional sex question. \\label{fig:available-surveys}"}
+```{r fig.cap="Surveys used in our analysis by year, survey type, sample size, and whether the survey included a transactional sex question. \\label{fig:available-surveys}"}
 knitr::include_graphics("depends/available-surveys.pdf")
 ```
 
-```{r echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+```{r results='hide', warning=FALSE, message=FALSE}
 available_surveys <- read_csv("depends/available-surveys.csv")
 
 #' What was the total number of surveys?
@@ -383,11 +385,11 @@ Model performance according to the CPO criteria is provided in Appendix A for al
 
 ## Risk group estimates
 
-```{r continental-map, echo=FALSE, fig.cap="Choropleths of the posterior mean proportion of AGYW in each risk group in 2018. Countries in grey are included to show Cameroon (upper left) in relation to the other twelve spatially-contiguous countries (lower right). \\label{fig:continental-map}"}
-knitr::include_graphics("depends/3p1-continental-map.pdf")
+```{r continental-map, fig.cap="Choropleths of the posterior mean proportion of AGYW in each risk group in 2018. Countries in grey are included to show Cameroon (upper left) in relation to the other twelve spatially-contiguous countries (lower right). \\label{fig:continental-map}"}
+knitr::include_graphics("depends/3p1-continental-map.png")
 ```
 
-```{r within-between-country-variation, echo=FALSE, fig.cap="National (in white) and subnational (in color) posterior means of the risk group proportions. We used regions of sub-Saharan Africa defined according to the UN geocode (M49). \\ref{fig:within-between-country-variation}"}
+```{r within-between-country-variation, fig.cap="National (in white) and subnational (in color) posterior means of the risk group proportions. We used regions of sub-Saharan Africa defined according to the UN geocode (M49). \\label{fig:within-between-country-variation}"}
 knitr::include_graphics("depends/3p1-within-between-country-variation.pdf")
 ```
 
@@ -396,7 +398,7 @@ Direct estimates of the four risk group proportions from these surveys were high
 Posterior mean, median, upper (97.5\%) and lower (2.5\%) credible estimates for each district, age group and year from our final model are provided in the supplementary material.
 In the writing to follow, all estimates refer to 2018, the most recent year included in our analysis, unless otherwise indicated.
 
-```{r echo=FALSE}
+```{r results=FALSE}
 df_3p1_subnational <- read_csv("depends/df_3p1_subnational.csv")
 df_3p1_national <- read_csv("depends/df_3p1_national.csv")
 
@@ -442,7 +444,7 @@ moz_Y015_019_sexnonreg <- filter(moz_Y015_019, indicator == "Non regular partner
 
 #' In which countries are the majority of 15-19 year-olds not sexually active?
 #' (Just MOZ!)
-df_3p1_national %>%
+majority_claim_moz <- df_3p1_national %>%
   filter(
     age_group == "15-19",
     indicator == "No sex"
@@ -533,18 +535,75 @@ We observed similar variance decomposition results fitting each country individu
 
 ## Infections reached
 
-```{r echo=FALSE, fig.cap="Percentage of new infections reached across all 13 countries, taking a variety of risk stratification approaches, against the percentage of at risk population reached. \\ref{fig:infections-reached}"}
+```{r fig.cap="Percentage of new infections reached across all 13 countries, taking a variety of risk stratification approaches, against the percentage of at risk population reached. \\label{fig:infections-reached}"}
 knitr::include_graphics("depends/infections-reached.pdf")
 ```
 
-For any given fraction of AGYW prioritised, substantially more new infections were reached by strategies that included behavioural risk stratification.
-Reaching half of all new infections required reaching `r "num"`\% of the population when stratifying by area and age, but only `r "num"`\% when behavioural stratification was included (Fig \ref{fig:infections-reached}).
-The majority of this benefit came from reaching FSW, who were `r "num"`\% of the population but `r "num"`\% of all new infections.
+```{r results=FALSE}
+inf <- read_csv("depends/infections-reached.csv")
+inf_country <- readRDS("depends/infections-reached-country.rds")
 
-Efficiency was reduced if prioritisation was done separately by country.
-On average, reaching half of new infections in a country required reaching `r "num"`\% (range `r "num"`-`r "num"`\%) of the population when stratifying by area and age, reducing to `r "num"`\% (range `r "num"`-`r "num"`\%) when behaviour was included.
-The importance of stratifying risk upon age, location and behaviour within a country varied, analogous to the varying contribution of each to the total variance (Sec \@ref(analysis-of-variance)).
-For example, FSW in Tanzania were estimated to be `r "num"`\% of the population and close to half (`r "num"`\%) of all new infections, whereas FSW in Namibia were just `r "num"`\% of the population and `r "num"`\% of all new infections.
+#' What is the minimum proportion of the population to reach in order to
+#' achieve reaching over q \in [0, 1] proportion of the new infections?
+min_pop_reached <- function(inf, q) {
+  inf %>%
+    filter(prop_infections_averted_cumulative > q) %>%
+    group_by(stratification) %>%
+    filter(prop_population_cumulative == min(prop_population_cumulative)) %>%
+    select(stratification, prop_infections_averted_cumulative, prop_population_cumulative)
+}
+
+inf_quarter <- min_pop_reached(inf, 0.25)
+inf_half <- min_pop_reached(inf, 0.5)
+
+inf_half_with_behaviour <- round(100 * filter(inf_half, stratification == "Area, age, behaviour")$prop_population_cumulative, 1)
+inf_half_without_behaviour <- round(100 * filter(inf_half, stratification == "Area, age")$prop_population_cumulative, 1)
+
+#' At a national level
+country_min_pop <- lapply(inf_country, function(x) min_pop_reached(x, q = 0.25)) %>%
+  bind_rows(.id = "country") %>%
+  filter(stratification %in% c("Area, age, behaviour", "Area, age"))
+
+inf_country_half <- country_min_pop %>%
+  group_by(stratification) %>%
+  summarise(
+    max = 100 * round(max(prop_population_cumulative), 3),
+    median = 100 * round(median(prop_population_cumulative), 3),
+    min = 100 * round(min(prop_population_cumulative), 3)
+  )
+
+inf_country_half_with_behaviour <- filter(inf_country_half, stratification == "Area, age, behaviour")
+inf_country_half_without_behaviour <- filter(inf_country_half, stratification == "Area, age")
+
+#' What proportion of new infections are among FSW as compared with the proportion the population that are FSW?
+inf_fsw <- inf %>%
+  filter(
+    stratification == "Behaviour",
+    category == "sexpaid12m"
+  ) %>%
+  select(prop_infections_averted_cumulative, prop_population_cumulative) %>%
+  mutate(across(everything(), ~ 100 * signif(.x, digits = 3)))
+
+#' What about by country?
+inf_fsw_country <- lapply(inf_country, function(x)
+  x %>%
+    filter(stratification == "Behaviour", category == "sexpaid12m") %>%
+    select(prop_infections_averted_cumulative, prop_population_cumulative) %>%
+      mutate(across(prop_infections_averted_cumulative:prop_population_cumulative, ~ 100 * signif(.x, digits = 3)))
+) %>%
+  bind_rows(.id = "country")
+
+inf_fsw_kenya <- filter(inf_fsw_country, country == "Kenya")
+inf_fsw_tanzania <- filter(inf_fsw_country, country == "Tanzania")
+```
+
+For any given fraction of AGYW prioritised, substantially more new infections were reached by strategies that included behavioural risk stratification.
+Reaching half of all new infections required reaching `r inf_half_without_behaviour`\% of the population when stratifying by area and age, but only `r inf_half_with_behaviour`\% when behavioural stratification was included (Fig \ref{fig:infections-reached}).
+The majority of this benefit came from reaching FSW, who were `r inf_fsw$prop_population_cumulative`\% of the population but `r inf_fsw$prop_infections_averted_cumulative`\% of all new infections.
+
+Considering each country separately, on average, reaching half of new infections required reaching `r inf_country_half_without_behaviour$median`\% (range `r inf_country_half_without_behaviour$min`-`r inf_country_half_without_behaviour$max`\%) of the population when stratifying by area and age, reducing to `r inf_country_half_with_behaviour$median`\% (range `r inf_country_half_with_behaviour$min`-`r inf_country_half_with_behaviour$max`\%) when behaviour was included.
+The importance of stratifying risk upon age, location and behaviour within a country varied, analogous to the varying contribution of each to the total variance (Appendix B).
+For example, FSW in Kenya were estimated to be `r inf_fsw_kenya$prop_population_cumulative`\% of the population and close to a third (`r inf_fsw_kenya$prop_infections_averted_cumulative`\%) of all new infections, whereas FSW in Tanzania were just `r inf_fsw_tanzania$prop_population_cumulative`\% of the population and `r inf_fsw_tanzania$prop_infections_averted_cumulative`\% of all new infections.
 
 # Discussion
 
@@ -567,10 +626,11 @@ First, by taking a modular modelling approach, we integrated all relevant survey
 Second, whereas direct estimates exhibit large sampling variability at a district level, we alleviated this issue using spatio-temporal smoothing (Fig).
 Third, we provide estimates in all settings, including districts without any survey clusters as well as years without surveys, allowing estimates to be consistently fed into further analysis and planning pipelines.
 
-To the best of our knowledge, the only previous research to geographically map AGYW HIV risk groups is @brugh2021characterizing, who use biomaker and behavioural data from the most recent surveys in Eswatini, Haiti and Mozambique to define and subsequently map risk groups.
+To the best of our knowledge, the only previous research to geographically map AGYW HIV risk groups is @brugh2021characterizing, who use biomaker and behavioural data from the most recent surveys in Eswatini, Haiti and Mozambique to define and subsequently map risk groups using a range of machine learning techniques.
+Our work builds on [@brugh2021characterizing] by including more countries, integrating a greater number of surveys, and connecting risk group proportions with HIV epidemic indicators to help inform policy.
 
-This work serves as a case-study in how to use the multinomial-Poisson transformation to efficiently specify and fit multinomial spatio-temporal models in `R-INLA`.
-We used Kronecker products over Gaussian Markov random fields to define appropriate category-specific spatio-temporal random effects.
+As well, this work serves as a case-study in how to use the multinomial-Poisson transformation to efficiently specify and fit multinomial spatio-temporal models in `R-INLA`.
+Specifically, we used Kronecker products over Gaussian Markov random fields to define appropriate category-specific spatio-temporal random effects.
 
 <!-- Paragraph about AGFS e.g. our results are consistent with age at first sex findings [@kinh2021trends]. -->
 
@@ -619,7 +679,7 @@ Though subject to limitations, our results quantify the crucial importance of re
 
 ## Supporting information
 
-**Appendix A**: Statistical modelling
+**Appendix A**: Statistical modelling \newline
 **Appendix B**: Supplementary tables and figures
 
 ## Funding
@@ -629,7 +689,6 @@ AH, VKN, KAR, JWE were supported by the Bill and Melinda Gates Foundation (OPP11
 TMW was supported by Imperial College London (President's PhD Scholarship).
 SF was supported by the EPSRC (EP/V002910/1).
 JWE was supported by UNAIDS and National Institute of Allergy and Infectious Disease of the National Institutes of Health (R01AI136664). 
-
 This research was supported by the MRC Centre for Global Infectious Disease Analysis (MR/R015600/1), jointly funded by the UK Medical Research Council (MRC) and the UK Foreign, Commonwealth \& Development Office (FCDO), under the MRC/FCDO Concordat program and is also part of the EDCTP2 programme supported by the European Union.
 
 ## Disclaimer
