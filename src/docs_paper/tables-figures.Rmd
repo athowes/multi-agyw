@@ -18,19 +18,6 @@ bibliography: citations.bib
 \setcounter{figure}{0} 
 \renewcommand{\thefigure}{B.\arabic{figure}}
 
-# Additional figures
-
-<!-- Might find a home for these. -->
-
-\begin{figure}[h]
-\centering
-\makebox[\textwidth][c]{\includegraphics{depends/model-direct-benefits.pdf}}
-\caption{Illustration our model results for AGYW 20-24 in Tanzania in 2010 in the cohabiting risk group. Compared to the direct survey results, our spatio-temporally smoothed estimates more plausibly represent district level heterogeneity, as well as imputing any districts with missing data.}
-\label{fig:model-direct-benefits}
-\end{figure}
-
-\newpage
-
 # The Global AIDS Strategy
 
 \begin{table}[h]
@@ -39,10 +26,10 @@ bibliography: citations.bib
 \toprule
 Prioritisation strata & Criterion \\
 \midrule
-Low & 0.3-1\% incidence AND low-risk behaviour OR $<$0.3\% incidence AND high-risk behaviour \\
-Moderate & 1-3\% incidence AND low-risk behaviour OR 0.3-1\% incidence AND high-risk behaviour \\
-High & 1-3\% incidence AND high-risk behaviour \\
-Very high & $>$3\% incidence \\
+Low & 0.3-1.0\% incidence and low-risk behaviour, or $<$0.3\% incidence and high-risk behaviour \\
+Moderate & 1.0-3.0\% incidence and low-risk behaviour, or 0.3-1.0\% incidence and high-risk behaviour \\
+High & 1.0-3.0\% incidence and high-risk behaviour \\
+Very high & $>$3.0\% incidence \\
 \bottomrule
 \end{tabularx}
 \caption{Prioritisation strata.}
@@ -68,7 +55,9 @@ Economic empowerment & (As above) \\
 
 \clearpage
 
-# Survey data
+# Household survey data
+
+## Included surveys
 
 \begin{longtable}{rlrcrrrr}
 \toprule
@@ -179,7 +168,7 @@ Total &  &  &  & $9826$ & $8563$ & $7347$ & $25736$ \\
 \midrule 
 Total &  &  &  & $106397$ & $95253$ & $82518$ & $284168$ \\ 
 \bottomrule
-\caption{All surveys that we used in our analysis and their sample sizes.}
+\caption{All of the surveys that we used in our analysis and their sample sizes, disaggregated by respondent age.}
 \label{tab:surveys-used}
 \end{longtable}
 
@@ -196,8 +185,12 @@ ZMB2002DHS & No GPS coordinates available to place survey clusters within distri
 \bottomrule
 \end{tabularx}
 \label{tab:surveys-excluded}
-\caption{All surveys excluded from our analysis.}
+\caption{All of that surveys that were excluded from our analysis.}
 \end{table}
+
+\clearpage
+
+## Spatial analysis levels
 
 \begin{table}[h]
 \centering
@@ -221,12 +214,12 @@ Zimbabwe & 63 & 2 \\
 \bottomrule
 \end{tabularx}
 \label{tab:area-levels}
-\caption{The numer of areas and analysis levels used in our analysis.}
+\caption{The numer of areas and analysis levels for each country that were used in our analysis.}
 \end{table}
 
 \clearpage
 
-# Survey questions and risk group allocation
+## Survey questions
 
 \begin{table}[h]
 \centering
@@ -262,6 +255,8 @@ Variable(s) & Description \\
 \caption{PHIA survey questions.}
 \end{table}
 
+## Risk group allocation
+
 \newpage
 
 \begin{figure}[h!]
@@ -273,7 +268,29 @@ Variable(s) & Description \\
 
 \clearpage
 
-# National direct and modelled estimates comparison
+# Miscellaneous figures
+
+<!-- Might find a home for these. -->
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics{depends/model-direct-benefits.pdf}}
+\caption{Illustration our model results for AGYW 20-24 in Tanzania in 2010 in the cohabiting risk group. Compared to the direct survey results, our spatio-temporally smoothed estimates more plausibly represent district-level heterogeneity, as well as imputing any districts with missing data.}
+\label{fig:model-direct-benefits}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics{depends/aaa-variance-proportions.pdf}}
+    \caption{Proportion of variance explained by each random effect (Sobol' indices) when the multinomial regression model is fit to each country individually. In this setting, country-category random effects are not included in the model and year-category random effects are replaced by survey-category random effects (for countries with surveys in multiple years). Countries are ordered by the proportion of their variance which is explained by the area-category random effects.}
+\label{fig:aaa-variance-proportions}
+\end{figure}
+
+\clearpage
+
+# Country-specific figures
+
+## Comparison of direct and modelled risk group estimates
 
 \begin{figure}[h]
 \centering
@@ -368,195 +385,285 @@ Variable(s) & Description \\
 
 \clearpage
 
-# Cloropleths
-
 ## HIV prevalence
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[page=1]{depends/prev-district-sexbehav-logit.pdf}}
+    \caption{District-level HIV prevalence for each of the risk groups in 2018 in Botswana.}
+    \label{fig:prevalence-district-sexbehav-1}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[page=2]{depends/prev-district-sexbehav-logit.pdf}}
+    \caption{District-level HIV prevalence for each of the risk groups in 2018 in Cameroon.}
+    \label{fig:prevalence-district-sexbehav-2}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[page=3]{depends/prev-district-sexbehav-logit.pdf}}
+    \caption{District-level HIV prevalence for each of the risk groups in 2018 in Kenya.}
+    \label{fig:prevalence-district-sexbehav-3}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[page=4]{depends/prev-district-sexbehav-logit.pdf}}
+    \caption{District-level HIV prevalence for each of the risk groups in 2018 in Lesotho.}
+    \label{fig:prevalence-district-sexbehav-4}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[page=5]{depends/prev-district-sexbehav-logit.pdf}}
+    \caption{District-level HIV prevalence for each of the risk groups in 2018 in Mozambique.}
+    \label{fig:prevalence-district-sexbehav-5}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[page=6]{depends/prev-district-sexbehav-logit.pdf}}
+    \caption{District-level HIV prevalence for each of the risk groups in 2018 in Malawi.}
+    \label{fig:prevalence-district-sexbehav-6}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[page=7]{depends/prev-district-sexbehav-logit.pdf}}
+    \caption{District-level HIV prevalence for each of the risk groups in 2018 in Namibia.}
+    \label{fig:prevalence-district-sexbehav-7}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[page=8]{depends/prev-district-sexbehav-logit.pdf}}
+    \caption{District-level HIV prevalence for each of the risk groups in 2018 in Eswatini.}
+    \label{fig:prevalence-district-sexbehav-8}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[page=9]{depends/prev-district-sexbehav-logit.pdf}}
+    \caption{District-level HIV prevalence for each of the risk groups in 2018 in Tanzania.}
+    \label{fig:prevalence-district-sexbehav-9}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[page=10]{depends/prev-district-sexbehav-logit.pdf}}
+    \caption{District-level HIV prevalence for each of the risk groups in 2018 in Uganda.}
+    \label{fig:prevalence-district-sexbehav-10}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[page=11]{depends/prev-district-sexbehav-logit.pdf}}
+    \caption{District-level HIV prevalence for each of the risk groups in 2018 in South Africa.}
+    \label{fig:prevalence-district-sexbehav-11}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[page=12]{depends/prev-district-sexbehav-logit.pdf}}
+    \caption{District-level HIV prevalence for each of the risk groups in 2018 in Zambia.}
+    \label{fig:prevalence-district-sexbehav-12}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[page=13]{depends/prev-district-sexbehav-logit.pdf}}
+    \caption{District-level HIV prevalence for each of the risk groups in 2018 in Zimbabwe.}
+    \label{fig:prevalence-district-sexbehav-13}
+\end{figure}
+
+\clearpage
 
 ## HIV incidence
 
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics[page=1]{depends/incidence-district-sexbehav.pdf}}
-    \caption{District level incidence for each of the risk groups in 2018 in Botswana.}
+    \caption{District-level HIV incidence for each of the risk groups in 2018 in Botswana.}
     \label{fig:incidence-district-sexbehav-1}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics[page=2]{depends/incidence-district-sexbehav.pdf}}
-    \caption{District level incidence for each of the risk groups in 2018 in Cameroon.}
+    \caption{District-level HIV incidence for each of the risk groups in 2018 in Cameroon.}
     \label{fig:incidence-district-sexbehav-2}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics[page=3]{depends/incidence-district-sexbehav.pdf}}
-    \caption{District level incidence for each of the risk groups in 2018 in Kenya.}
+    \caption{District-level HIV incidence for each of the risk groups in 2018 in Kenya.}
     \label{fig:incidence-district-sexbehav-3}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics[page=4]{depends/incidence-district-sexbehav.pdf}}
-    \caption{District level incidence for each of the risk groups in 2018 in Lesotho.}
+    \caption{District-level HIV incidence for each of the risk groups in 2018 in Lesotho.}
     \label{fig:incidence-district-sexbehav-4}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics[page=5]{depends/incidence-district-sexbehav.pdf}}
-    \caption{District level incidence for each of the risk groups in 2018 in Mozambique.}
+    \caption{District-level HIV incidence for each of the risk groups in 2018 in Mozambique.}
     \label{fig:incidence-district-sexbehav-5}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics[page=6]{depends/incidence-district-sexbehav.pdf}}
-    \caption{District level incidence for each of the risk groups in 2018 in Malawi.}
+    \caption{District-level HIV incidence for each of the risk groups in 2018 in Malawi.}
     \label{fig:incidence-district-sexbehav-6}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics[page=7]{depends/incidence-district-sexbehav.pdf}}
-    \caption{District level incidence for each of the risk groups in 2018 in Namibia.}
+    \caption{District-level HIV incidence for each of the risk groups in 2018 in Namibia.}
     \label{fig:incidence-district-sexbehav-7}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics[page=8]{depends/incidence-district-sexbehav.pdf}}
-    \caption{District level incidence for each of the risk groups in 2018 in Eswatini.}
+    \caption{District-level HIV incidence for each of the risk groups in 2018 in Eswatini.}
     \label{fig:incidence-district-sexbehav-8}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics[page=9]{depends/incidence-district-sexbehav.pdf}}
-    \caption{District level incidence for each of the risk groups in 2018 in Tanzania.}
+    \caption{District-level HIV incidence for each of the risk groups in 2018 in Tanzania.}
     \label{fig:incidence-district-sexbehav-9}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics[page=10]{depends/incidence-district-sexbehav.pdf}}
-    \caption{District level incidence for each of the risk groups in 2018 in Uganda.}
+    \caption{District-level HIV incidence for each of the risk groups in 2018 in Uganda.}
     \label{fig:incidence-district-sexbehav-10}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics[page=11]{depends/incidence-district-sexbehav.pdf}}
-    \caption{District level incidence for each of the risk groups in 2018 in South Africa.}
+    \caption{District-level HIV incidence for each of the risk groups in 2018 in South Africa.}
     \label{fig:incidence-district-sexbehav-11}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics[page=12]{depends/incidence-district-sexbehav.pdf}}
-    \caption{District level incidence for each of the risk groups in 2018 in Zambia.}
+    \caption{District-level HIV incidence for each of the risk groups in 2018 in Zambia.}
     \label{fig:incidence-district-sexbehav-12}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics[page=13]{depends/incidence-district-sexbehav.pdf}}
-    \caption{District level incidence for each of the risk groups in 2018 in Zimbabwe.}
+    \caption{District-level HIV incidence for each of the risk groups in 2018 in Zimbabwe.}
     \label{fig:incidence-district-sexbehav-13}
 \end{figure}
 
 \clearpage
 
-
-# Infections reached
+## Expected new infections reached
 
 \begin{figure}[h]
 \centering
 \makebox[\textwidth][c]{\includegraphics[page=1]{depends/infections-reached-country.pdf}}
-\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Botswana.}
+\caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Botswana.}
 \label{fig:infections-reached-country-1}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \makebox[\textwidth][c]{\includegraphics[page=2]{depends/infections-reached-country.pdf}}
-\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Cameroon.}
+\caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Cameroon.}
 \label{fig:infections-reached-country-2}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \makebox[\textwidth][c]{\includegraphics[page=3]{depends/infections-reached-country.pdf}}
-\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Kenya.}
+\caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Kenya.}
 \label{fig:infections-reached-country-3}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \makebox[\textwidth][c]{\includegraphics[page=4]{depends/infections-reached-country.pdf}}
-\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Lesotho.}
+\caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Lesotho.}
 \label{fig:infections-reached-country-4}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \makebox[\textwidth][c]{\includegraphics[page=5]{depends/infections-reached-country.pdf}}
-\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Mozambique.}
+\caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Mozambique.}
 \label{fig:infections-reached-country-5}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \makebox[\textwidth][c]{\includegraphics[page=6]{depends/infections-reached-country.pdf}}
-\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Malawi.}
+\caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Malawi.}
 \label{fig:infections-reached-country-6}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \makebox[\textwidth][c]{\includegraphics[page=7]{depends/infections-reached-country.pdf}}
-\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Namibia.}
+\caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Namibia.}
 \label{fig:infections-reached-country-7}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \makebox[\textwidth][c]{\includegraphics[page=8]{depends/infections-reached-country.pdf}}
-\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Eswatini.}
+\caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Eswatini.}
 \label{fig:infections-reached-country-8}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \makebox[\textwidth][c]{\includegraphics[page=9]{depends/infections-reached-country.pdf}}
-\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Tanzania.}
+\caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Tanzania.}
 \label{fig:infections-reached-country-9}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \makebox[\textwidth][c]{\includegraphics[page=10]{depends/infections-reached-country.pdf}}
-\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Uganda.}
+\caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Uganda.}
 \label{fig:infections-reached-country-10}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \makebox[\textwidth][c]{\includegraphics[page=11]{depends/infections-reached-country.pdf}}
-\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in South Africa.}
+\caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in South Africa.}
 \label{fig:infections-reached-country-11}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \makebox[\textwidth][c]{\includegraphics[page=12]{depends/infections-reached-country.pdf}}
-\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Zambia.}
+\caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Zambia.}
 \label{fig:infections-reached-country-12}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \makebox[\textwidth][c]{\includegraphics[page=13]{depends/infections-reached-country.pdf}}
-\caption{Percentage of new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Zimbabwe.}
+\caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Zimbabwe.}
 \label{fig:infections-reached-country-13}
 \end{figure}
