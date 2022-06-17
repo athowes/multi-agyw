@@ -12,6 +12,12 @@ bibliography: citations.bib
 
 \clearpage
 
+<!-- So that the tables and figures in this appendix are prefixed by "B." -->
+\setcounter{table}{0}  
+\renewcommand{\thetable}{B.\arabic{table}} 
+\setcounter{figure}{0} 
+\renewcommand{\thefigure}{B.\arabic{figure}}
+
 # Additional figures
 
 <!-- Might find a home for these. -->

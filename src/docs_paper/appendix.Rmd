@@ -13,6 +13,12 @@ bibliography: citations.bib
 
 \newpage
 
+<!-- So that the tables and figures in this appendix are prefixed by "A." -->
+\setcounter{table}{0}  
+\renewcommand{\thetable}{A.\arabic{table}} 
+\setcounter{figure}{0} 
+\renewcommand{\thefigure}{A.\arabic{figure}}
+
 # Modelling of risk group proportions {#modelling-of-risk-group-proportions}
 
 ## Overview
