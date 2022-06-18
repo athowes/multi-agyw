@@ -376,12 +376,12 @@ Variable(s) & Description \\
 \label{fig:temporal-interpolation-ribbon-12}
 \end{figure}
 
-<!-- \begin{figure}[h] -->
-<!-- \centering -->
-<!-- \makebox[\textwidth][c]{\includegraphics[page=13]{depends/temporal-interpolation-ribbon.pdf}} -->
-<!-- \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Zimbabwe. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.} -->
-<!-- \label{fig:temporal-interpolation-ribbon-13} -->
-<!-- \end{figure} -->
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[page=13]{depends/temporal-interpolation-ribbon.pdf}}
+\caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Zimbabwe. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
+\label{fig:temporal-interpolation-ribbon-13}
+\end{figure}
 
 \clearpage
 
