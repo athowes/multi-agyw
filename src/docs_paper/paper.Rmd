@@ -243,8 +243,6 @@ To ensure that after adjustment the risk group proportions still sum to one, we 
 FSW population size estimates were obtained by disaggregating national 15-49 FSW population size estimates [@stevens2022estimating] using the FSW age distribution in South Africa from the Thembisa model [@johnson2020thembisa] in combination with country-specific age at first sex distributions [@kinh2021trends].
 Technical details of the models used are in Appendix A.
 
-<!-- \text{Gamma}(\alpha = 10.4, \beta = 0.36)$ FSW age distribution -->
-
 We considered eight model specifications for the space-age-time multinomial model for the three risk groups (Appendix A.X).
 All models included intercepts for each risk group, age, country, and age-country effects, a spatial effect allowing variation by district, and a temporal effect allowing variation over time.
 Alternative models varied the specification for the spatial effect between independent spatial effects versus spatially correlated effects and independent temporal effects versus first-order auto-regressive temporal effects.

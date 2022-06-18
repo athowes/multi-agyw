@@ -281,31 +281,41 @@ CPO & 950 (15) & 969 (15) & 951 (15) & 970 (15) & 950 (15) & 970 (15) \\
 
 # FSW population size estimation {#fsw-population-size-estimation}
 
-We obtained estimates of adult (15-49) FSW population size from @stevens2022estimating.
+To estimate the number of FSW by age group and country, we disaggregated country-specific estimates of adult (15-49) FSW population size from @stevens2022estimating by age.
+
+First, we calculated the total sexually debuted population in each age group, in each country.
+To descibe the distribution of age at first sex, we used skew logistic distributions [@kinh2021trends] with cumulative distribution function given by
+\begin{equation}
+F(x) = \left(1 + \exp(\kappa_c (\mu_c - x)) \right)^{- \gamma_c},
+\end{equation}
+where $\kappa_c, \mu_c, \gamma_c > 0$ are the country-specific shape, shape and skewness parameters respectively.
+
+<!-- \text{Gamma}(\alpha = 10.4, \beta = 0.36)$ FSW age distribution -->
 
 \clearpage
 
-# Prevalence, incidence and new infections reached analysis {#hiv-indicators}
+# Prevalence, incidence and expected new infections reached {#hiv-indicators}
 
 ## Calculation of prevalence and PLHIV
 
-We calculated HIV prevalence $\rho_{iak}$ and number of people living with HIV (PLHIV) $H_{iak} = \rho_{iak} N_{iak}$ stratified according to district, age group and risk group by disaggregation on the logit scale.
-\begin{align}
-    H_{ia} &= \sum_k H_{iak} = \sum_k \rho_{iak} N_{iak} \\
-    &= \rho_{ia1} N_{ia1} + \rho_{ia1} \text{PR}_2 N_{ia2} + \rho_{ia1} \text{PR}_3 N_{ia3} + \rho_{ia1} \text{PR}_4 N_{ia4} \\
-    &= \rho_{ia1} \left(N_{ia1} + \text{PR}_2 N_{ia2} + \text{PR}_3 N_{ia3} + \text{PR}_4 N_{ia4} \right).
-\end{align}
-Risk group specific prevalence estimates are then given by
-\begin{align}
-    \rho_{ia1} &= H_{ia} / \left(N_{ia1} + \text{PR}_2 N_{ia2} + \text{PR}_3 N_{ia3} + \text{PR}_4 N_{ia4} \right), \\
-    \rho_{ia2} &= \rho_{ia1} \text{PR}_2,\\
-    \rho_{ia3} &= \rho_{ia1} \text{PR}_3,\\
-    \rho_{ia4} &= \rho_{ia1} \text{PR}_4,
-\end{align}
-which we evaluated using Naomi model estimates of PLHIV $H_{ia} = \rho_{ia} N_{ia}$, prevalence ratios $\{\text{PR}_k\}$ as described below, and risk group population sizes $N_{iak} = p_{iak} N_{ia}$ based on our 2018 risk group estimates together with population size estimates from the Naomi model.
-To obtain the prevalence ratios, we...
+We calculated HIV prevalence $\rho_{iak}$ and number of people living with HIV (PLHIV) $H_{iak}$ stratified according to district, age group and risk group by disaggregating Naomi estimates by risk group.
 
-## Calculation of incidence and number of new infections
+To do so, we estimated HIV prevalence log odds ratios relative to the general population using age, country and risk group specific HIV prevalence bio-marker survey data.
+We also included general population HIV prevalence data, allowing us to fit a logistic regression model including indicator functions for each risk group, and an indicator for being in the general population.
+The regression coefficients in this model correspond to log odds, such that log odds ratios may be easily obtained by taking the difference.
+
+To allow the log odds ratio for the highest risk group to vary based on general population prevalence we fit a linear regression of the FSW log odds against the general population log odds.
+<!-- TODO: Include the data source that was used for this. -->
+We ensured that the log odds ratio for the highest risk group was at least as large as that of the second highest risk group.
+
+Given the fitted log odds ratios $\log(\text{OR}_k)$, we disaggregated Naomi estimates of PLHIV $H_{ia}$ on the logit scale using numerically optimisation to obtain the value of $\theta$ minimising the function
+\begin{equation}
+\hat \theta = \argmin_{\theta \in [-10, 10]} \left( \sum_{k} \left( \text{logistic}(\theta + \log(\text{OR}_k)) \cdot N_{iak} \right) - H_{ia} \right)^2
+\end{equation}
+where $\text{logistic}(x) = \exp(x) / (1 + \exp(x))$ such that $\text{logistic}(\hat \theta + \log(\text{OR}_k)) = \rho_{iak}$.
+The number of PLHIV are then obtained by $H_{iak} = \rho_{iak} N_{iak}$, where $N_{iak}$ is the risk group population size.
+
+## Calculation of incidence and expected number of new infections
 
 We calculated HIV incidence $\lambda_{iak}$ and number of new HIV infections $I_{iak}$ stratified according to district, age group and risk group by linear disaggregation
 \begin{align}
@@ -313,18 +323,18 @@ We calculated HIV incidence $\lambda_{iak}$ and number of new HIV infections $I_
     &= 0 + \lambda_{ia2} N_{ia2} + \lambda_{ia3} N_{ia3} + \lambda_{ia4} N_{ia4} \\
     &= \lambda_{ia2} \left(N_{ia2}  + \text{RR}_{3} N_{ia3} + \text{RR}_4(\lambda_{ia}) N_{ia4}  \right).
 \end{align}
-Risk group specific incidence estimates are then given by
+Risk group specific HIV incidence estimates are then given by
 \begin{align}
     \lambda_{ia1} &= 0, \\
     \lambda_{ia2} &= I_{ia} / \left(N_{ia2} + \text{RR}_{3} N_{ia3} + \text{RR}_4(\lambda_{ia}) N_{ia4}\right), \\
     \lambda_{ia3} &= \text{RR}_{3} \lambda_{ia2}, \\
     \lambda_{ia4} &= \text{RR}_4(\lambda_{ia}) \lambda_{ia2}.
 \end{align}
-which we evaluated using Naomi model estimates of the number of new HIV infections $I_{ia} = \lambda_{ia} N_{ia}$, HIV infection risk ratios $\{\text{RR}_3, \text{RR}_4(\lambda_{ia})\}$, and 2018 risk group population sizes as above.
-The risk ratio $\text{RR}_4(\lambda_{ia})$ is defined as a function of general population incidence.
-Using these estimates $\{\lambda_{iak}\}$, the number of new HIV infections is then $I_{iak} = \lambda_{iak} N_{iak}$.
+which we evaluated using Naomi model estimates of the number of new HIV infections $I_{ia} = \lambda_{ia} N_{ia}$, HIV infection risk ratios $\{\text{RR}_3, \text{RR}_4(\lambda_{ia})\}$, and risk group population sizes as above.
+The risk ratio $\text{RR}_4(\lambda_{ia})$ was defined as a function of general population incidence.
+The number of new HIV infections are then $I_{iak} = \lambda_{iak} N_{iak}$.
 
-## Analysis of new infections reached
+## Calculation of expected new infections reached
 
 We calculated the number of new infections that would be reached prioritising according to each possible stratification of the population--that is for all $2^3 = 8$ possible combinations of stratification by location, age, and risk group. 
 As an illustration, for stratification just by age, we aggregated the number of new HIV infections and HIV incidence as such 
@@ -333,8 +343,10 @@ As an illustration, for stratification just by age, we aggregated the number of 
     \lambda_a &= I_a / \sum_{ik} N_{iak}.
 \end{align}
 Under this stratification, individuals in each age group $a$ are prioritised according to the highest HIV incidence $\lambda_a$.
-By cumulatively summing the expected infections, we calculated for each fraction of the total population reached, the fraction of total new infections that would be reached.
-This analysis was relatively simple: more involved analyses might consider prioritisation of a hypothetical interventions which has some, possibly varying, probability of preventing HIV acquistion together with the costs associated to its roll-out.
+By cumulatively summing the expected infections, for each fraction of the total population reached we calculated the fraction of total expected new infections that would be reached.
+
+This analysis was relatively simple.
+More involved analyses might consider prioritisation of a hypothetical intervention which has some, possibly varying, probability of preventing HIV acquisition, and the costs associated to its roll-out.
 
 \newpage
 
