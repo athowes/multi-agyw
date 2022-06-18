@@ -284,7 +284,7 @@ CPO & 950 (15) & 969 (15) & 951 (15) & 970 (15) & 950 (15) & 970 (15) \\
 To estimate the number of FSW by age group and country, we disaggregated country-specific estimates of adult (15-49) FSW population size from @stevens2022estimating by age.
 
 First, we calculated the total sexually debuted population in each age group, in each country.
-To descibe the distribution of age at first sex, we used skew logistic distributions [@kinh2021trends] with cumulative distribution function given by
+To descibe the distribution of age at first sex, we used skew logistic distributions [@nguyen2022trends] with cumulative distribution function given by
 \begin{equation}
 F(x) = \left(1 + \exp(\kappa_c (\mu_c - x)) \right)^{- \gamma_c},
 \end{equation}
