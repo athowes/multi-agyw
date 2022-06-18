@@ -15,19 +15,6 @@ artefacts:
         - infections-reached-above-baseline.pdf
         - infections-reached-above-baseline.png
         - infections-reached-above-baseline-country.pdf
-        # - infections-reached-country-1.png
-        # - infections-reached-country-2.png
-        # - infections-reached-country-3.png
-        # - infections-reached-country-4.png
-        # - infections-reached-country-5.png
-        # - infections-reached-country-6.png
-        # - infections-reached-country-7.png
-        # - infections-reached-country-8.png
-        # - infections-reached-country-9.png
-        # - infections-reached-country-10.png
-        # - infections-reached-country-11.png
-        # - infections-reached-country-12.png
-        # - infections-reached-country-13.png
 
 packages:
   - dplyr

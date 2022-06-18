@@ -49,7 +49,7 @@ ind <- prev_wide %>%
   ) %>%
   separate(indicator, into = c("behav", "indicator"))
 
-pdf("prev-data.pdf", h = 8, w = 6.25)
+pdf("prev-data.pdf", h = 7, w = 6.25)
 
 ind %>%
   split(.$indicator) %>%
@@ -92,7 +92,7 @@ katie_pr <- katie_prev_pr %>%
   rename(area_id = iso3)
 
 #' Compare to prevalence ratios from this analysis
-pdf("katie-comp.pdf", h = 8, w = 6.25)
+pdf("katie-comp.pdf", h = 7, w = 6.25)
 
 ind %>%
   filter(indicator == "pr") %>%
@@ -329,7 +329,7 @@ df_3p1_logit <- df_3p1_logit %>%
 write_csv(df_3p1_logit, "prev-district-sexbehav-logit.csv")
 
 #' Artefact: Cloropleths
-pdf("prev-district-sexbehav-linear.pdf", h = 8, w = 6.25)
+pdf("prev-district-sexbehav-linear.pdf", h = 7, w = 6.25)
 
 df_3p1_linear_plot <- df_3p1_linear %>%
   select(iso3, area_id, age_group, starts_with("prev_")) %>%
@@ -374,16 +374,7 @@ plotsA
 
 dev.off()
 
-#' Sadly multi-page .png don't exist
-# lapply(1:length(plotsA), function(i) {
-#   ggsave(
-#     paste0("prev-district-sexbehav-linear-", i, ".png"),
-#     plotsA[[i]],
-#     width = 6.25, height = 8, units = "in", dpi = 300
-#   )
-# })
-
-pdf("prev-district-sexbehav-logit.pdf", h = 8, w = 6.25)
+pdf("prev-district-sexbehav-logit.pdf", h = 7, w = 6.25)
 
 df_3p1_logit_plot <- df_3p1_logit %>%
   select(iso3, area_id, age_group, starts_with("prev_")) %>%

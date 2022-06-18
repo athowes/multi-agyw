@@ -120,7 +120,7 @@ df_plot <- df %>%
   st_as_sf()
 
 #' Artefact: Cloropleths
-pdf("incidence-district-sexbehav.pdf", h = 8, w = 6.25)
+pdf("incidence-district-sexbehav.pdf", h = 7, w = 6.25)
 
 plotsA <- df_plot %>%
   multi.utils::update_naming() %>%
@@ -151,17 +151,7 @@ plotsA
 
 dev.off()
 
-#' Sadly multi-page .png don't exist
-#' This is a bit clunky but unsure if there is a better option
-# lapply(1:length(plotsA), function(i) {
-#   ggsave(
-#     paste0("incidence-district-sexbehav-", i, ".png"),
-#     plotsA[[i]],
-#     width = 6.25, height = 8, units = "in", dpi = 300
-#   )
-# })
-
-pdf("infections-district-sexbehav.pdf", h = 8, w = 6.25)
+pdf("infections-district-sexbehav.pdf", h = 7, w = 6.25)
 
 df %>%
   select(iso3, area_id, age_group, starts_with("infections_sex")) %>%

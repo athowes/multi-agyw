@@ -101,15 +101,5 @@ plotsA
 
 dev.off()
 
-#' Sadly multi-page .png don't exist
-#' This is a bit clunky but unsure if there is a better option
-# lapply(1:length(plotsA), function(i) {
-#   ggsave(
-#     paste0("infections-reached-country-", i, ".png"),
-#     plotsA[[i]],
-#     width = 6.25, height = 3.5, units = "in", dpi = 300
-#   )
-# })
-
 write_csv(inf, "infections-reached.csv")
 saveRDS(inf_country, "infections-reached-country.rds")

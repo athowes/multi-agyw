@@ -14,19 +14,6 @@ artefacts:
         - prev-district-sexbehav-logit.csv
         - prev-district-sexbehav-linear.pdf
         - prev-district-sexbehav-logit.pdf
-        # - prev-district-sexbehav-linear-1.png
-        # - prev-district-sexbehav-linear-2.png
-        # - prev-district-sexbehav-linear-3.png
-        # - prev-district-sexbehav-linear-4.png
-        # - prev-district-sexbehav-linear-5.png
-        # - prev-district-sexbehav-linear-6.png
-        # - prev-district-sexbehav-linear-7.png
-        # - prev-district-sexbehav-linear-8.png
-        # - prev-district-sexbehav-linear-9.png
-        # - prev-district-sexbehav-linear-10.png
-        # - prev-district-sexbehav-linear-11.png
-        # - prev-district-sexbehav-linear-12.png
-        # - prev-district-sexbehav-linear-13.png
 
 packages:
   - dplyr
