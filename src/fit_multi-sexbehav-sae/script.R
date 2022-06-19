@@ -277,7 +277,7 @@ interaction_adjM_2x <- multi.utils::repeat_matrix(adjM, n = length(unique(df$yea
 #' * Model 2
 #' * space x year x category random effects (Besag x IID)
 formula2x <- update(formula2,
-  . ~ . + f(area_year_idx, model = "besag", graph = interaction_adjM_6x, scale.model = TRUE, group = cat_idx,
+  . ~ . + f(area_year_idx, model = "besag", graph = interaction_adjM_2x, scale.model = TRUE, group = cat_idx,
             control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
