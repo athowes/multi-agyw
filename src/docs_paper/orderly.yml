@@ -60,10 +60,14 @@ depends:
     id: latest
     use:
       depends/model-direct-benefits.pdf: model-direct-benefits.pdf
+  plot_age-variation:
+    id: latest
+    use:
+      depends/age-variation.pdf: age-variation.pdf
   plot_continental-map:
     id: latest
     use:
-      depends/3p1-continental-map.png: 3p1-continental-map.png
+      depends/3p1-continental-map.pdf: 3p1-continental-map.pdf
   plot_within-between-country-variation:
     id: latest
     use:

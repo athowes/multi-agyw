@@ -166,11 +166,12 @@ inc_ratio <- round(inc_comparison$inc_female_Y015_029 / inc_comparison$inc_male_
 
 In sub-Saharan Africa, adolescent girls and young women (AGYW) aged 15-29 are `r population_percent`\% of the population but `r infections_percent`\% of new HIV infections [@unaids2021update].
 HIV incidence amongst AGYW is `r inc_ratio` times higher than among similarly aged males due to younger age at first sex, age patterns of sexual mixing, structural vulnerability and power imbalances, and increased susceptibility to HIV infection [@joint2016hiv].
-AGYW have therefore been identified as a priority population for HIV primary prevention, with significant investments being been made in prevention programming [@saul2018dreams; @global2018measurement].
+AGYW have therefore been identified as a priority population for HIV primary prevention, with significant investments being made in prevention programming [@saul2018dreams; @global2018measurement].
 
-The Global AIDS Strategy 2021-2026 [@unaids2021global], adopted by the UN General Assembly in June 2021, proposed stratifying packages of HIV prevention provided to AGYW based on both local population-level HIV incidence and individual-level sexual risk behaviour to promote more efficient priorisation of prevention services [@anderson2014maximising; @mcgillen2016optimum; @kelly2018global; @jia2022risk].
-Four prioritisation strata (Table B.X) were defined based on: (1) subnational annual incidence (<0.3\%, 0.3-1.0\%, 1.0-3.0\% and >3.0\%), and (2) self-reported high-risk behaviour or recent STI infection.
-The strategy encourages programmes to  define targets for the proportion of AGYW to be reached with a range of interventions (Table B.X) based upon this prioritisation strata [@unaids2021global].
+The Global AIDS Strategy 2021-2026 [@unaids2021global], adopted by the UN General Assembly in June 2021, proposed stratifying packages of HIV prevention provided to AGYW based on both local population-level HIV incidence and individual-level sexual risk behaviour, to promote more efficient priorisation of prevention services [@anderson2014maximising; @mcgillen2016optimum; @kelly2018global; @jia2022risk].
+Four prioritisation strata (Table B.1) were defined based on: (1) subnational annual incidence (<0.3\%, 0.3-1.0\%, 1.0-3.0\% and >3.0\%), and (2) self-reported high-risk behaviour or recent STI infection.
+<!-- NB: Check again about the recent STI infection aspect. -->
+The strategy encourages programmes to  define targets for the proportion of AGYW to be reached with a range of interventions (Table B.2) based upon this prioritisation strata [@unaids2021global].
 All AGYW are recommended to have access to a basic package of HIV prevention, while those with with high risk behaviours in moderate incidence settings and all AGYW in very high incidence settings are recommended to have access to enhanced intervention packages [@joint2016hiv; @birdthistle2018evaluating].
 <!-- TODO: Add "basic package of HIV prevention consisting of... -->
 These interventions may include STI screening and treatment, access to pre-exposure prophylaxis (PrEP), access to post-exposure prophylaxis (PEP), comprehensive sexuality education, and economic empowerment.
@@ -180,29 +181,29 @@ We developed a multinomial Bayesian spatio-temporal model to estimate the propor
 We focused on 13 countries in sub-Saharan Africa which have been identified by the Global Fund to Fight AIDS, TB, and Malaria [@global2018measurement] as priority countries for implementation of AGYW HIV prevention.
 Our methodology is standardised across countries, allowing prioritisation both within and between countries.
 We analysed the extent to which the risk group proportions varied across districts, age groups, between countries, and over time.
-Using our estimates, we calculated the HIV prevalence, people living with HIV (PLHIV), HIV incidence, and number of new HIV infections in each risk group by disaggregating district-level estimates from the Naomi model [@eaton2021naomi].
-Finally, we quantified the increased efficiency of HIV prevention, in terms of the expected number of new infections that could be preemptively reached, by stratified prioritisation of interventions.
+Using our estimates, we calculated the HIV prevalence, people living with HIV (PLHIV), HIV incidence, and expected number of new HIV infections in each risk group by disaggregating district-level estimates from the Naomi model [@eaton2021naomi].
+Finally, we quantified the increased efficiency of HIV prevention, in terms of the expected number of new infections that could be preemptively reached, by stratified prioritisation of interventions by risk group, location and age group.
 
 # Methodology
 
 \begin{table}[htb]
 \small
 \centering
-\begin{tabularx}{\textwidth}{llll}
+\begin{tabularx}{\textwidth}{lp{5cm}ll}
 \toprule
 Risk group & Description & Local HIV incidence & Incidence ratio \\
 \midrule
 None & Not sexually active & -- & 0.0 \\
 Low & One cohabiting partner & -- & 1.0 (Baseline) \\
 High & Non-regular or multiple partner(s) & -- & 1.72 \\
-Very high & Female sex workers & $<$0.1\% & 25.0 \\
+Very high & Transactional sex & $<$0.1\% & 25.0 \\
  & & 0.1-0.3\% & 13.0 \\
  & & 0.3-1.0\% & 9.0 \\
  & & 1.0-3.0\% & 6.0 \\
  & & $>$3.0\% & 3.0 \\
 \bottomrule
 \end{tabularx}
-\caption{HIV risk groups and assumed HIV incidence rate ratio for each risk group relative to AGYW with one cohabiting sexual partner. Among FSW, the incidence rate ratio depended on the level of HIV incidence among the general population. The incidence rate ratio for women with non-regular or multiple sexual partner(s) was derived from analysis of ALPHA network data. The incidence rate ratios among FSW were dervied based on patterns of relative HIV prevalence among FSW compared to general population prevalence.}
+\caption{HIV risk groups and assumed HIV incidence rate ratio for each risk group relative to AGYW with one cohabiting sexual partner. Among FSW, the incidence rate ratio depended on the level of HIV incidence among the general population. The incidence rate ratio for women with non-regular or multiple sexual partner(s) was derived from analysis of ALPHA network data. The transactional sex risk group is adjusted during analysis to correspond to female sex worker, and incidence rate ratios among FSW were dervied based on patterns of relative HIV prevalence among FSW compared to general population prevalence. }
 \label{tab:risk-groups}
 \small
 \end{table}
@@ -221,14 +222,16 @@ Exact survey questions varied slightly across survey types and between survey ph
 Questions captured information about whether the respondent had been sexually active in the past twelve months, and if so how with many partners.
 For their three most recent partners, respondents were also asked about the type of partnership (spouse, cohabiting partner, partner not cohabiting with respondent, friend, sex worker, sex work client, and other).
 
-Some surveys included a specific question asking if the respondent had received or given money or gifts for sex in the past twelve months; in these surveys, 2.64\% of women reported transactional sex.
-In surveys without that question, women almost never (0.01\%) answered that one of their three most recent partners was a sex work client.
-Because of this incomparably across surveys, we did not include surveys without a specific transactional sex question when estimating the proportion of the population who engaged in transactional sex.
+Some surveys included a specific question asking if the respondent had received or given money or gifts for sex in the past twelve months.
+In these surveys, 2.64\% of women reported transactional sex.
+In surveys without such a question, women almost never (0.01\%) answered that one of their three most recent partners was a sex work client.
+Due to this incomparably across surveys, we did not include surveys without a specific transactional sex question when estimating the proportion of the population who engaged in transactional sex.
 We focused on estimating the proportion of women who reported transactional sex at a district level, and subsequently adjusted these proportions to align to national estimates for the number of female sex workers.
 
 We used estimates of population, people living with HIV (PLHIV) and new HIV infections stratified by district and age group from HIV estimates published by UNAIDS that were developed using the Naomi model [@eaton2021naomi].
 The model synthesises data from multiple sources to produce subnational estimates of indicators of interest, and has been used by countries as a part of the HIV estimates process supported by UNAIDS.
-The administrative area hierarchy and geographic boundaries we used correspond to those used for health service planning in UNAIDS Naomi estimates, except for Cameroon and Kenya where we conducted analysis one level higher at the department and county levels, respectively (Appendix B).
+<!-- and so far has been used by X countries could be better (adds some information that it's widely used) -->
+The administrative area hierarchy and geographic boundaries we used correspond to those used for health service planning in UNAIDS Naomi estimates, exceptions being Cameroon and Kenya where we conducted analysis one level higher at the department and county levels, respectively (Table B.5).
 
 ## Two-stage model for sexual risk group proportions
 
@@ -289,7 +292,7 @@ We assumed it was possible to reach all members of every strata.
 ## Data
 
 ```{r fig.cap="Surveys used in our analysis by year, survey type, sample size, and whether the survey included a question about transactional sex. \\label{fig:available-surveys}"}
-knitr::include_graphics("depends/available-surveys.pdf")
+knitr::include_graphics("depends/available-surveys.jpeg")
 ```
 
 ```{r results='hide', warning=FALSE, message=FALSE}
@@ -366,11 +369,11 @@ Direct estimates of the four risk group proportions from these surveys were high
 ## Risk group estimates
 
 ```{r continental-map, fig.cap="Choropleths of the posterior mean proportion of AGYW in each risk group in 2018. Countries in grey are included to show Cameroon (upper left) in relation to the other twelve spatially-contiguous countries (lower right). \\label{fig:continental-map}"}
-knitr::include_graphics("depends/3p1-continental-map.png")
+knitr::include_graphics("depends/3p1-continental-map.jpeg")
 ```
 
 ```{r within-between-country-variation, fig.cap="National (in white) and subnational (in color) posterior means of the risk group proportions. We used regions of sub-Saharan Africa defined according to the UN geocode (M49). \\label{fig:within-between-country-variation}"}
-knitr::include_graphics("depends/3p1-within-between-country-variation.pdf")
+knitr::include_graphics("depends/3p1-within-between-country-variation.jpeg")
 ```
 
 Fig \ref{fig:continental-map} and Fig \ref{fig:within-between-country-variation} show posterior mean estimates for the proportion in each risk group from our final model.
@@ -514,13 +517,13 @@ We observed similar variance decomposition results fitting each country individu
 
 <!-- Are these results presented? (A reviewer might ask for it if referencing here; but fine to leave as this statement for now.) -->
 
-<!-- Write another paragraph here calling out some examples of the amount of variation -->
+<!-- TODO: Write another paragraph here calling out some examples of the amount of variation -->
 <!-- Awaiting additional results: https://github.com/athowes/multi-agyw/issues/95 -->
 
 ## Expected infections reached
 
 ```{r fig.cap="Percentage of new infections reached across all 13 countries, taking a variety of risk stratification approaches, against the percentage of at risk population required to be reached. \\label{fig:infections-reached}"}
-knitr::include_graphics("depends/infections-reached.pdf")
+knitr::include_graphics("depends/infections-reached.jpeg")
 ```
 
 ```{r results=FALSE}

@@ -1,6 +1,8 @@
 ---
 title: Mathematical appendix to "Spatio-temporal estimates of HIV risk group proportions for adolescent
   girls and young women across 13 priority countries in sub-Saharan Africa"
+subtitle: |
+  Corresponding author: Adam Howes (`ath19@ic.ac.uk`)
 output:
   pdf_document:
     toc: true
@@ -221,6 +223,13 @@ as implemented by `family = "xPoisson"` in `R-INLA`.
 
 To fill: table and figure.
 
+<!-- \begin{figure} -->
+<!--   \centering -->
+<!--   \makebox[\textwidth][c]{\includegraphics{figures/coverage.jpeg}} -->
+<!--   \caption{Probability integral transform (PIT) histograms (top row) and empirical cumulative distribution function (ECDF) difference plots (bottom row) for the selected models. These plots are adapted from \citet{sailynoja2021graphical} and are an example of posterior predictive checks, see e.g. \citet[Chapter 6.1]{gelman2020bayesian}.} -->
+<!--   \label{fig:coverage} -->
+<!-- \end{figure} -->
+
 ## Logistic regression model
 
 \begin{table}[htb]
@@ -277,7 +286,7 @@ CPO & 950 (15) & 969 (15) & 951 (15) & 970 (15) & 950 (15) & 970 (15) \\
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/fsw-logit-information-criteria.pdf}}
+    \makebox[\textwidth][c]{\includegraphics{depends/fsw-logit-information-criteria.jpeg}}
     \caption{Logistic regression model performance.}
     \label{fig:logistic-model-performance}
 \end{figure}

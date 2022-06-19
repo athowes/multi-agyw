@@ -4,7 +4,10 @@
 
 df <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv") %>%
   multi.utils::update_naming() %>%
-  filter(age_group != "15-24")
+  filter(
+    age_group != "15-24",
+    indicator != "Nonregular partners(s) +"
+  )
 
 #' Add region column
 #' Defined based on the UN geoscheme for Africa
