@@ -244,15 +244,15 @@ We combined the two models using 1000 samples from each posterior distribution t
 Finally, we adjusted the samples from the transactional sex category to match age- and country-specific FSW population size estimates.
 To ensure that after adjustment the risk group proportions still sum to one, we made appropriate modifications to the samples from the non-regular or multiple partner(s) category.
 FSW population size estimates were obtained by disaggregating national 15-49 FSW population size estimates [@stevens2022estimating] using the FSW age distribution in South Africa from the Thembisa model [@johnson2020thembisa] in combination with country-specific age at first sex distributions [@nguyen2022trends].
-Technical details of the models used are in Appendix A.
+Technical details of the models we used are in Appendix A.1.
 
-We considered eight model specifications for the space-age-time multinomial model for the three risk groups (Appendix A.X).
+We considered eight model specifications for the space-age-time multinomial model for the three risk groups (Appendix A.1.2).
 All models included intercepts for each risk group, age, country, and age-country effects, a spatial effect allowing variation by district, and a temporal effect allowing variation over time.
 Alternative models varied the specification for the spatial effect between independent spatial effects versus spatially correlated effects and independent temporal effects versus first-order auto-regressive temporal effects.
 Each alternative was considered with an additional spatio-temporal interaction term allowing the temporal trend to vary across districts.
 To understand the importance of each part of the model we analysed the relative sizes of the variance parameters for each effect.
 
-For the logistic regression model of the proportion engaging in transactional sex among those with non-regular or multiple partner(s), we considered six specifications (Appendix A.X).
+For the logistic regression model of the proportion engaging in transactional sex among those with non-regular or multiple partner(s), we considered six specifications (Appendix A.1.3).
 Each included an intercept, age and country effects, and a spatial effect allowing district-level variation.
 Both independent and spatially correlated spatial effects were considered.
 To improve estimation with sparse data, during model selection we considered alternatives with national-level covariates for either the proportion of men who reported ever having paid for sex or having paid for sex in the last twelve months [@hodgins2022population].
@@ -265,7 +265,7 @@ We used `sf` [@pebesma2018sf] for handling of spatial data, `orderly` [@orderly]
 ## HIV indicators and prevention prioritisation
 
 Using risk group proportion estimates, and Naomi model estimates, we calculated HIV prevalence, PLHIV, HIV incidence and number of new HIV infections stratified by district, age group and risk group.
-Further details are provided in Appendix A.X.
+Further details are provided in Appendix A.2.
 
 ### Prevalence and PLHIV
 
@@ -331,7 +331,7 @@ agyw_surveyed_giftsvar <- available_surveys %>%
   sum()
 
 #' Disaggregated by age
-#' TODO: This isn't quite right because some 25-29 are not asked FSW question in DHS surveys
+#' This isn't quite right because some 25-29 are not asked FSW question in DHS surveys, which I fix below
 agyw_surveyed_giftsvar_age <- available_surveys %>%
   filter(survey_id %in% giftsvar_surveys) %>%
   summarise(
@@ -340,6 +340,18 @@ agyw_surveyed_giftsvar_age <- available_surveys %>%
     Y025_029 = sum(Y025_029)
   )
 
+#' These surveys excluded AGYW 25-29 for the transactional sex question
+#' I've quickly hard-coded this by looking at data-check.pdf from fit_fsw-logit-sae
+#' In future it could be automatically updated based on that report instead
+giftsvar_exclude_Y025_029 <- c("CMR2018DHS", "MWI2015DHS", "UGA2016DHS", "ZAF2016DHS", "ZMB2018DHS", "ZWE2015DHS")
+
+giftsvar_Y025_029_overcount <- available_surveys %>%
+  filter(
+    survey_id %in% giftsvar_exclude_Y025_029,
+  ) %>%
+  pull(Y025_029) %>%
+  sum()
+  
 #' What was the median number of surveys by country, and the range?
 number_of_surveys <- available_surveys %>%
   group_by(iso3) %>%
@@ -355,15 +367,15 @@ number_of_surveys %>%
   )
 ```
 
-We included `r total_surveys` surveys in our analysis (Fig \ref{fig:available-surveys}, Table B.X), with a total sample size of `r comma(agyw_surveyed)` women aged 15-29 years (`r comma(agyw_surveyed_age$Y015_019)` aged 15-19 years, `r comma(agyw_surveyed_age$Y020_024)` aged 20-24 years, and `r agyw_surveyed_age$Y025_029` aged 25-29 years).
-Of these, `r length(giftsvar_surveys)` surveys included a specific transactional sex question, with a total sample size in these surveys of `r comma(agyw_surveyed_giftsvar)` (`r comma(agyw_surveyed_giftsvar_age$Y015_019)` aged 15-19 years, `r comma(agyw_surveyed_giftsvar_age$Y020_024)` aged 20-24 years, and `r comma(agyw_surveyed_giftsvar_age$Y025_029)` aged 25-29 years).
+We included `r total_surveys` surveys in our analysis (Fig \ref{fig:available-surveys}, Table B.3), with a total sample size of `r comma(agyw_surveyed)` women aged 15-29 years (`r comma(agyw_surveyed_age$Y015_019)` aged 15-19 years, `r comma(agyw_surveyed_age$Y020_024)` aged 20-24 years, and `r agyw_surveyed_age$Y025_029` aged 25-29 years).
+Of these, `r length(giftsvar_surveys)` surveys included a specific transactional sex question, with a total sample size of `r comma(agyw_surveyed_giftsvar - giftsvar_Y025_029_overcount)` (`r comma(agyw_surveyed_giftsvar_age$Y015_019)` aged 15-19 years, `r comma(agyw_surveyed_giftsvar_age$Y020_024)` aged 20-24 years, and `r comma(agyw_surveyed_giftsvar_age$Y025_029 - giftsvar_Y025_029_overcount)` aged 25-29 years^[There were `r length(giftsvar_exclude_Y025_029)` DHS surveys which excluded women 25-29 from the transactional sex survey question.]).
 The median number of surveys per country was four, ranging from one in Botswana and South Africa to six in Uganda.
 
 ## Model selection and model fit
 
 The best fitting multinomial regression model included correlated spatial effects and first-order autoregressive temporal effects, but not spatio-temporal interactions.
 The best logistic regression model for transactional sex included correlated spatial effects and the proportion of men who reported ever paying for sex covariate.
-Model performance according to the CPO criteria is provided in Appendix A.X for all considered models.
+Model performance according to the CPO criteria is provided in Appendix A.1.2.4 for all considered models.
 Direct estimates of the four risk group proportions from these surveys were highly correlated with our modelled estimates at a national-level.
 
 ## Risk group estimates
@@ -613,8 +625,8 @@ abstract: |
   Data consisted of `r comma(agyw_surveyed)` female survey respondents aged 15-29.
   Risk group proportions varied substantially across age groups (`r variance_proportions_age$mean`\% of total variation), countries (`r variance_proportions_iso3$mean`\%), and between districts within each country (`r variance_proportions_area$mean`\%), but changed little over time (`r variance_proportions_year$mean`\%).
   Among women aged 20-29, cohabiting (`r dividing_border_above_sexcohab$median`\%) was more common in eastern Africa than non-regular or multiple partner(s) (`r dividing_border_above_sexnonreg$median`\%), while in southern countries non-regular or multiple partner(s) (`r dividing_border_below_sexnonreg$median`\%) were more common than cohabiting (`r dividing_border_below_sexcohab$median`\%).
-  Prioritisation based on behavioural risk, in combination with location- and age-based prioritisation, reduced the proportion of population that must be reached to find half of all new infections from `r inf_half_without_behaviour`\% to `r inf_half_with_behaviour`\%.
-  Female sex workers were `r inf_fsw$prop_population_cumulative`\% of the at risk population but `r inf_fsw$prop_infections_averted_cumulative`\% of all new infections.
+  Prioritisation based on behavioural risk, in combination with location- and age-based prioritisation, reduced the proportion of population that must be reached to find half of all expected new infections from `r inf_half_without_behaviour`\% to `r inf_half_with_behaviour`\%.
+  Female sex workers were `r inf_fsw$prop_population_cumulative`\% of the population but `r inf_fsw$prop_infections_averted_cumulative`\% of all expected new infections.
 
   **Conclusions:**
   Our risk group estimates provide data for HIV programmes to set targets and implement differentiated prevention strategies outlined in the Global AIDS Strategy.
@@ -624,9 +636,8 @@ author_summary: |
   Exposure to HIV among adolescent girls and young women depends on individual sexual behaviour and the level of HIV in the local community among potential sexual partners.
   To support HIV programmes in identifying and providing services to those at highest risk, we geographically mapped HIV risk groups using sexual risk behaviour data from household surveys and estimated the proportion of people living with HIV in each risk group, and the rate of infections in each risk group.
   Doing so also allowed us to estimate the the proportion of people living with HIV in each risk group, as well as the rate of new infections in each risk group.
+  We found that prioritising HIV prevention using behavioural risk groups almost halved the proportion of the population that would need to be reached to find half of all expected new infections.
 ---
-
-<!-- TODO: Include key conclusions in author summary. -->
 
 # Discussion
 
@@ -667,21 +678,13 @@ For example, a program is designed to reach AGYW who are cohabiting, then it is 
 It may be preferable to select risk groups based more amenable attributes, such as attendance of a particular service or facility.
 <!-- e.g. school, healthcare -->
 
-Under-reporting of higher risk sexual behaviours amongst AGYW could affect the validity of our risk group proportion estimates.
-Due to social stigma or disapproval, respondents may be reluctant to report non-marital partners [@nnko2004secretive} or may bias their reporting of sexual debut [@zaba2004age; @wringe2009comparative; @nguyen2022trends].
+Under-reporting of higher risk sexual behaviours among AGYW could affect the validity of our risk group proportion estimates.
+Due to social stigma or disapproval, respondents may be reluctant to report non-marital partners [@nnko2004secretive, @helleringer2011reliability] or may bias their reporting of sexual debut [@zaba2004age; @wringe2009comparative; @nguyen2022trends].
 For guidance of resource allocation, differing rates of under-reporting by country, district, year or age group are particularly concerning to the applicability of our results; and, while it may be reasonable to assume a constant rate over space-time, the same cannot be said for age, where aspects of under-reporting have been shown to decline as respondents age [@glynn2011assessing], suggesting that the elevated risks we found faced by younger women are likely a conservative estimate.
+These reporting biases will also have distortied of our estimates of infection risk ratios and prevalence ratios, likely over-attributing risk to higher risk groups.
 
 Our FSW estimates do not overcome the difficulties of sampling hard to reach groups.
 We did not consider seasonal migration patterns, which may particularly effect FSW population sizes.
-
-The extent to which the efficiencies from risk-stratified prioritisation depends on the ability of programmes to identify and efficiently reach those in each risk category. In practice, this is likely to result in substantially less efficiency in the number of potential infections averted for a given proportion of the population reached compared to the 'best-case' frontier analysis in which we assumed those in each risk category could be perfectly reached. These results therefore be interpreted as illustrating the potential
-maximal benefits, rather than benefits that would be accrued from any
-specific intervention strategy. Factors we did not consider include the
-greater administrative burden of more complex strategies, variation in
-difficulty or feasibility of reaching individuals in each strata,
-variation in the range or effectiveness of interventions by strata, and
-changes in strata membership that may occur during the course of a year. Empirical evaluations of risk screening tools to stratify individual HIV infection risk have found only moderate discriminatory ability [CITE Jia et al.] and risk behaviour may change rapidly among young populations, further increasing the challenge to effectively deliver prevention packages to those at risk at the right times.
-
 The efficiency of each stratified prevention strategy depends on the ability of programmes to identify and effectively reach those in each strata.
 Our analysis assumed a "best-case" scenario where AGYW of every strata are reached perfectly, and should therefore be interpreted as illustrating the potentially obtainable benefits rather than benefits which would be obtained from any specific intervention strategy.
 In practice, stratified prevention strategies are likely to be substantially less efficient than this best-case scenario.
@@ -689,20 +692,11 @@ Factors we did not consider include the greater administrative burden of more co
 Identifying and reaching behavioural strata may be particularly challenging.
 Empirical evaluations of behavioural risk screening tools have found only moderate discriminatory ability [@jia2022risk], and risk behaviour may change rapidly among young populations, increasing the challenge to effectively deliver appropriately timed prevention packages.
 
-<!-- I think the Nnko 2004 is a good cite. For biases in age at first sex as folks age: -->
-<!-- https://pubmed.ncbi.nlm.nih.gov/15572637/ -->
-<!-- https://pubmed.ncbi.nlm.nih.gov/19307342/ -->
-<!-- Then these are all about how methodological approaches can result in different estimates (I think): -->
-<!-- Hewett PC, Mensch BS, Erulkar AS. Consistency in the reporting of sexual behaviour by adolescent girls in Kenya: a comparison of interviewing methods. Sex Transm Infect. 2004;80 Suppl 2:ii43-8. -->
-<!-- Cleland J, Boerma JT, Carael M, Weir SS. Monitoring sexual behaviour in general populations: a synthesis of lessons of the past decade. Sex Transm Infect. 2004;80 Suppl 2:ii1-7. -->
-<!-- Helleringer S, Kohler HP, Kalilani-Phiri L, Mkandawire J, Armbruster B. The reliability of sexual partnership histories: implications for the measurement of partnership concurrency during surveys. AIDS. 2011;25(4):503-11.Mensch BS, Hewett PC, Erulkar AS. The reporting of sensitive behavior by adolescents: a methodological experiment in Kenya. Demography. 2003;40(2):247-68. -->
-<!-- Then there’s the option of discussing validity of self-reported sexual behaviour based on biomarker validation (e.g. https://academic.oup.com/ofid/article/6/2/ofz010/5285444, there are more like this) but I’m not super familiar with this literature to pull a reference that would be appropriate. -->
-
 Finally, our analysis focused only on females aged 15-29 years and therefore did not consider optimisation of prevention for the broader population.
 By limiting our consideration to this group we did not account for `r 100 - infections_percent`\% of new infections in adults 15-49.
 Obtaining population size estimates for sexual risk behaviour in the general population would be a crucial step toward greater understanding the dynamics of the HIV epidemic in sub-Saharan Africa, and would allow incidence models of greater fidelity to reality which include stratification of individuals by sexual risk.
 
-<!-- Likely over-reporting of never having had sex in the past year by young women, if we apply an RR of 0 to this group, to balance out the overall incidence rate, might be over-attributing risk to the other groups. -->
+<!-- Reasons why we didn't include condom usage: -->
 <!-- Defining condom usage is challenging, particularly for those with multiple partners, and reporting is likely biased due to social desirability. -->
 <!-- Additionally, consistent condom usage is rare amongst those cohabiting, and as such likely only relevant for those with non-regular sexual partners.  -->
 
