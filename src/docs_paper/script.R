@@ -20,6 +20,7 @@ convert_pdf_jpeg("infections-reached")
 
 #' For appendix.Rmd
 convert_pdf_jpeg("fsw-logit-information-criteria")
+convert_pdf_jpeg("coverage")
 
 #' For tables-figures.Rmd
 convert_pdf_jpeg("category-flowchart")

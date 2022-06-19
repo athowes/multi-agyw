@@ -223,13 +223,6 @@ as implemented by `family = "xPoisson"` in `R-INLA`.
 
 To fill: table and figure.
 
-<!-- \begin{figure} -->
-<!--   \centering -->
-<!--   \makebox[\textwidth][c]{\includegraphics{figures/coverage.jpeg}} -->
-<!--   \caption{Probability integral transform (PIT) histograms (top row) and empirical cumulative distribution function (ECDF) difference plots (bottom row) for the selected models. These plots are adapted from \citet{sailynoja2021graphical} and are an example of posterior predictive checks, see e.g. \citet[Chapter 6.1]{gelman2020bayesian}.} -->
-<!--   \label{fig:coverage} -->
-<!-- \end{figure} -->
-
 ## Logistic regression model
 
 \begin{table}[htb]
@@ -269,6 +262,8 @@ to extend the binomial distribution to non-integer weighted counts and sample si
 
 ### Model selection
 
+To fill: explanation of Table \ref{tab:logistic-model-performance} and Figure \ref{fig:logistic-model-performance}.
+
 \begin{table}[h]
 \centering
 \begin{tabularx}{0.82\textwidth}{lllllll}
@@ -289,6 +284,17 @@ CPO & 950 (15) & 969 (15) & 951 (15) & 970 (15) & 950 (15) & 970 (15) \\
     \makebox[\textwidth][c]{\includegraphics{depends/fsw-logit-information-criteria.jpeg}}
     \caption{Logistic regression model performance.}
     \label{fig:logistic-model-performance}
+\end{figure}
+
+## Coverage assessment
+
+To fill: explanation of Figure \ref{fig:coverage}.
+
+\begin{figure}
+  \centering
+  \makebox[\textwidth][c]{\includegraphics{depends/coverage.jpeg}}
+  \caption{Probability integral transform (PIT) histograms (top row) and empirical cumulative distribution function (ECDF) difference plots (bottom row) for the final selected models. These plots are adapted from \citet{sailynoja2021graphical} and are an example of posterior predictive checks, see for example \citet[Chapter 6.1]{gelman2020bayesian}.}
+  \label{fig:coverage}
 \end{figure}
 
 \clearpage

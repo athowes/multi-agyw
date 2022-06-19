@@ -8,12 +8,14 @@ df <- df %>%
   multi.utils::update_naming() %>%
   filter(
     age_group %in% c("15-19", "20-24", "25-29"),
+    indicator != "Nonregular partners(s) +",
     !is.na(estimate_raw)
-  )
+  ) %>%
+  droplevels()
 
 pdf("coverage.pdf", h = 4, w = 6.25)
 
-S <- 10 #' Number of Monte Carlo samples
+S <- 100 #' Number of Monte Carlo samples
 bins <- 20
 alpha <- 0.05
 
@@ -54,7 +56,7 @@ ecdf_diff <- df %>%
   }) %>%
   purrr::map_df(~as.data.frame(.x), .id = "indicator") %>%
   ggplot(aes(x = nominal_coverage, y = ecdf_diff)) +
-  facet_grid(~factor(indicator, levels = c("No sex", "Cohabiting partner", "Nonregular partner(s)", "Nonregular partners(s) +", "FSW")),
+  facet_grid(~factor(indicator, levels = c("No sex", "Cohabiting partner", "Nonregular partner(s)", "FSW")),
              drop = TRUE, scales = "free") +
   geom_line(col = "#009E73") +
   geom_step(aes(x = nominal_coverage, y = ecdf_diff_upper), alpha = 0.7, col = "grey50") +

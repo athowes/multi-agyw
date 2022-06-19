@@ -64,6 +64,10 @@ depends:
     id: latest
     use:
       depends/age-variation.pdf: age-variation.pdf
+  process_coverage:
+    id: latest
+    use:
+      depends/coverage.pdf: coverage.pdf
   plot_continental-map:
     id: latest
     use:
