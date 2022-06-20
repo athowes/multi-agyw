@@ -271,6 +271,8 @@ formula2 <- update(formula_baseline,
 
 #' Create Besag x IID interaction adjacency matrix
 #' Check the resulting matrix with image()
+#' N.B. This method is very slow. Might there be something faster?
+#' It involves using a huge adjacency graph -- perhaps something can be done with replicate instead
 interaction_adjM_2x <- multi.utils::repeat_matrix(adjM, n = length(unique(df$year_idx)))
 
 #' Model 2x:
