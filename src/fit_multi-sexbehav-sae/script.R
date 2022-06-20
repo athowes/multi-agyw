@@ -328,8 +328,13 @@ formula4x <- update(formula4,
             constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
-formulas <- list(formula1, formula1x, formula2, formula2x, formula3, formula3x, formula4, formula4x)
-models <- list("Model 1", "Model 1x", "Model 2", "Model 2x", "Model 3", "Model 3x", "Model 4", "Model 4x")
+if(include_interactions) {
+  formulas <- list(formula1, formula1x, formula2, formula2x, formula3, formula3x, formula4, formula4x)
+  models <- list("Model 1", "Model 1x", "Model 2", "Model 2x", "Model 3", "Model 3x", "Model 4", "Model 4x")
+} else {
+  formulas <- list(formula1, formula2, formula3, formula4)
+  models <- list("Model 1", "Model 2", "Model 3", "Model 4")
+}
 
 #' Fit the models
 

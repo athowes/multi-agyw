@@ -8,10 +8,10 @@ id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(lightweig
 orderly::orderly_commit(id) #' [x]
 
 id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(fewer_countries = TRUE))
-orderly::orderly_commit(id) #' [/] (Old: R crash on 4x; haven't tried new)
+orderly::orderly_commit(id) #' [ ]
 
 id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE))
 orderly::orderly_commit(id) #' [x]
 
-id <- orderly::orderly_run("fit_multi-sexbehav-sae")
-orderly::orderly_commit(id) #' [ ]
+id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(include_interactions = FALSE))
+orderly::orderly_commit(id) #' [x]
