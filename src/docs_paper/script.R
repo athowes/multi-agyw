@@ -7,7 +7,7 @@ Sys.setenv(PATH = paste(Sys.getenv("PATH"), "/opt/homebrew/bin", sep = ":"))
 convert_pdf_jpeg <- function(name) {
   command <- paste0(
     "convert -density 300 depends/", name, ".pdf -scene 1 -background white",
-    " -alpha remove -alpha off -quality 90 depends/", name, ".jpeg"
+    " -alpha remove -alpha off -quality 80 depends/", name, ".jpeg"
   )
   system(command)
 }
