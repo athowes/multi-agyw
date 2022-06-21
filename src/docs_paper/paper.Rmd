@@ -176,10 +176,11 @@ All AGYW are recommended to have access to a basic package of HIV prevention, wh
 <!-- TODO: Add "basic package of HIV prevention consisting of... -->
 These interventions may include STI screening and treatment, access to pre-exposure prophylaxis (PrEP), access to post-exposure prophylaxis (PEP), comprehensive sexuality education, and economic empowerment.
 
-Implementation of the strategy by national HIV programmes and stakeholders requires data on the population size and HIV incidence in each risk group by location to determine prioritisation for stratified HIV prevention.
+Implementation of a stratified HIV prevention strategy by national HIV programmes and stakeholders requires data on the population size and HIV incidence in each risk group by location.
 We developed a multinomial Bayesian spatio-temporal model to estimate the proportion of AGYW aged 15-29 years in four behavioural risk groups, stratified by district, year, and five-year age group.
 We focused on 13 countries in sub-Saharan Africa which have been identified by the Global Fund to Fight AIDS, TB, and Malaria [@global2018measurement] as priority countries for implementation of AGYW HIV prevention.
 Our methodology is standardised across countries, allowing prioritisation both within and between countries.
+<!-- Note: Above sentence borrowed from TOR document. To back it up, needs more between country analysis in results section. -->
 We analysed the extent to which the risk group proportions varied across districts, age groups, between countries, and over time.
 Using our estimates, we calculated the HIV prevalence, people living with HIV (PLHIV), HIV incidence, and expected number of new HIV infections in each risk group by disaggregating district-level estimates from the Naomi model [@eaton2021naomi].
 Finally, we quantified the increased efficiency of HIV prevention, in terms of the expected number of new infections that could be preemptively reached, by stratified prioritisation of interventions by risk group, location and age group.
@@ -258,6 +259,8 @@ Both independent and spatially correlated spatial effects were considered.
 To improve estimation with sparse data, during model selection we considered alternatives with national-level covariates for either the proportion of men who reported ever having paid for sex or having paid for sex in the last twelve months [@hodgins2022population].
 
 We performed inference using integrated nested Laplace approximation [@rue2009approximate] via the `R-INLA` package [@martins2013bayesian].
+It is not possible to directly fit multinomial logistic regression models in `R-INLA`, so we used the multinomial-Poisson transformation [@baker1994multinomial].
+Details of this approach, including how we used Kronecker products over Gaussian Markov random fields to define appropriate random effects, are provided in Appendix A.1.2.
 The best performing model was selected according to the conditional predictive ordinate (CPO) criteria, a measure of leave-one-out model performance that can be calculated directly in `R-INLA` without explicit model refitting [@held2010posterior].
 The \textsc{R} [@r] code used to implement the models and produce  results is available from `github.com/athowes/multi-agyw`.
 We used `sf` [@pebesma2018sf] for handling of spatial data, `orderly` [@orderly] for reproducible research, `ggplot2` for data visualisation [@wickham2016ggplot2] and `rticles` [@allaire2022rticles] for reporting via `rmarkdown` [@allaire2022rmarkdown].
@@ -381,6 +384,7 @@ Direct estimates of the four risk group proportions from these surveys were high
 ## Risk group estimates
 
 ```{r continental-map, fig.cap="Choropleths of the posterior mean proportion of AGYW in each risk group in 2018. Countries in grey are included to show Cameroon (upper left) in relation to the other twelve spatially-contiguous countries (lower right). \\label{fig:continental-map}"}
+#' Note that the subnational borders look a bit overpowering when the quality of this is reduced
 knitr::include_graphics("depends/3p1-continental-map.jpeg")
 ```
 
@@ -588,7 +592,7 @@ inf_fsw_country <- lapply(inf_country, function(x)
   x %>%
     filter(stratification == "Behaviour", category == "sexpaid12m") %>%
     select(prop_infections_averted_cumulative, prop_population_cumulative) %>%
-      mutate(across(prop_infections_averted_cumulative:prop_population_cumulative, ~ 100 * signif(.x, digits = 3)))
+      mutate(across(prop_infections_averted_cumulative:prop_population_cumulative, ~ 100 * round(.x, 3)))
 ) %>%
   bind_rows(.id = "country")
 
@@ -658,15 +662,14 @@ We also note that the high numbers of adolescent girls aged 15-19 cohabiting in 
 Our modelled estimates improve upon direct survey results for three reasons.
 First, by taking a modular modelling approach, we integrated all relevant survey information from multiple years, allowing estimation of the FSW proportion for surveys without a specific transactional sex question.
 Second, whereas direct estimates exhibit large sampling variability at a district level, we alleviated this issue using spatio-temporal smoothing (Fig).
-Third, we provide estimates in all settings, including districts without any survey clusters as well as years without surveys, allowing estimates to be consistently fed into further analysis and planning pipelines.
+Third, we provide estimates in all district-years, including those not directly sampled by surveys, allowing estimates to be consistently fed into further analysis and planning pipelines.
 
 @brugh2021characterizing previously geographically mapped AGYW HIV risk groups using biomaker and behavioural data from the most recent surveys in Eswatini, Haiti and Mozambique to define and subsequently map risk groups with a range of machine learning techniques.
 Our work builds on [@brugh2021characterizing] by including more countries, integrating a greater number of surveys, and connecting risk group proportions with HIV epidemic indicators to help inform programming.
 
-As well, this work serves as a case-study in how to use the multinomial-Poisson transformation to efficiently specify and fit multinomial spatio-temporal models in `R-INLA`.
-Specifically, we used Kronecker products over Gaussian Markov random fields to define appropriate category-specific spatio-temporal random effects.
-
 <!-- Paragraph about AGFS e.g. our results are consistent with age at first sex findings [@nguyen2022trends]. -->
+
+<!-- TWM: Consider adding a note about last data point being in 2018. There is so little change over time it shouldn't make a difference, but 2018 is starting to sound like a long time ago -->
 
 ## Limitations
 
@@ -681,7 +684,7 @@ It may be preferable to select risk groups based more amenable attributes, such 
 Under-reporting of higher risk sexual behaviours among AGYW could affect the validity of our risk group proportion estimates.
 Due to social stigma or disapproval, respondents may be reluctant to report non-marital partners [@nnko2004secretive, @helleringer2011reliability] or may bias their reporting of sexual debut [@zaba2004age; @wringe2009comparative; @nguyen2022trends].
 For guidance of resource allocation, differing rates of under-reporting by country, district, year or age group are particularly concerning to the applicability of our results; and, while it may be reasonable to assume a constant rate over space-time, the same cannot be said for age, where aspects of under-reporting have been shown to decline as respondents age [@glynn2011assessing], suggesting that the elevated risks we found faced by younger women are likely a conservative estimate.
-These reporting biases will also have distortied of our estimates of infection risk ratios and prevalence ratios, likely over-attributing risk to higher risk groups.
+These reporting biases will also have distorted of our estimates of infection risk ratios and prevalence ratios, likely over-attributing risk to higher risk groups.
 
 Our FSW estimates do not overcome the difficulties of sampling hard to reach groups.
 We did not consider seasonal migration patterns, which may particularly effect FSW population sizes.
