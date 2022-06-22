@@ -28,7 +28,7 @@ bibliography: citations.bib
 Let $i \in \{1, \ldots, n\}$ denote subnational units (Table B.5) which partition the 13 studied AGYW priority countries $c[i] \in \{1, \ldots, 13\}$.
 We considered the years 1999-2018 denoted as $t \in \{1, \ldots, T\}$ and age groups $a \in \{\text{15--19}, \text{20--24}, \text{25--29}\}$
 Let the four risk groups be $k \in \{1, 2, 3, 4\}$ and denote being in either the third or fourth risk group by $k = 3^{+}$.
-We modelled the probability of being in each risk group $k \in \{1, 2, 3^{+}\}$ using a multinomial logisitic regression model.
+We used a multinomial logistic regression model to infer the proportion of AGYW in the risk groups $k \in \{1, 2, 3^{+}\}$.
 Typically, this model would be specified using a multinomial likelihood
 \begin{equation}
     \y_{ita} = (y_{ita1}, \ldots, y_{ita3^{+}})^\top \sim \text{Multinomial}(m_{ita}; \, p_{ita1}, \ldots, p_{ita3^{+}}),
@@ -122,7 +122,7 @@ $$
 \eta_{ita} = \theta_{ita} + \beta_k + \alpha_{ak} + \zeta_{c[i]k} + \phi_{ik} + \gamma_{tk} + \delta_{itk}.
 $$
 As described above, we included observation random effects in all models we considered, and set $\theta_{ita} \sim \mathcal{N}(0, \tau_\theta^{-1})$, with fixed precision $\tau_\theta = 0.000001$ (or a standard deviation of $\sigma_\theta = 1000$).
-To capture country-specific proportion estimates for each category, we included category random effects $\beta_k \sim \mathcal{N}(0, \tau_\beta^{-1})$ and country-category random effects $\zeta_{c[i]k} \sim \mathcal{N}(0, \tau_\zeta^{-1})$.
+To capture country-specific proportion estimates for each category, we included category random effects $\beta_k \sim \mathcal{N}(0, \tau_\beta^{-1})$ and country-category random effects $\zeta_{ck} \sim \mathcal{N}(0, \tau_\zeta^{-1})$.
 Heterogeneity in risk group proportions by age was allowed by including age-country-category random effects $\alpha_{ack} \sim \mathcal{N}(0, \tau_\alpha^{-1})$.
 We considered two specifications, independent and identically distributed (IID) and Besag, for the space-category $\phi_{ik}$ random effects (Section \ref{sec:spatial-random-effects}) and two specifications, IID and first order autoregressive (AR1), for the year-category $\gamma_{tk}$ random effects (Section \ref{sec:temporal-random-effects}).
 We also considered separable space-year-category interactions $\delta_{itk}$ with corresponding Kronecker product structure (Section \ref{sec:spatio-temporal-random-effects}).
@@ -230,7 +230,7 @@ To fill: table and figure.
 \centering
 \begin{tabularx}{\textwidth}{llllll}
 \midrule
-Model ID & Intercept ($\beta_0$) & Age ($\alpha_a$) & Country ($\zeta_c$) & Spatial ($\phi_i$) & Covariates \\ 
+Model ID & Intercept ($\beta_0$) & Age ($\alpha_a$) & Country ($\zeta_{c}$) & Spatial ($\phi_i$) & Covariates \\ 
 \midrule
 L1 & Constant & IID & IID & IID & \xmark \\
 L2 & Constant & IID & IID & Besag & \xmark \\
@@ -245,7 +245,7 @@ L6 & Constant & IID & IID & Besag & \texttt{cfswrecent} \\
 \small
 \end{table}
 
-We considered six logistic regression models (Table \ref{tab:logistic-models}) each including a constant $\beta_0 \sim \mathcal{N}(-2, 1^2)$, age random effects $\alpha_a \sim \mathcal{N}(0, \tau_\alpha^{-1})$ and country random effects $\zeta_c \sim \mathcal{N}(0, \tau_\zeta^{-1})$.
+We considered six logistic regression models (Table \ref{tab:logistic-models}) each including a constant $\beta_0 \sim \mathcal{N}(-2, 1^2)$, age random effects $\alpha_a \sim \mathcal{N}(0, \tau_\alpha^{-1})$ and country random effects $\zeta_{c} \sim \mathcal{N}(0, \tau_\zeta^{-1})$.
 We considered two specifications (IID, Besag) for the spatial random effects $\phi_i$.
 To aid estimation with sparse data, we also considered national-level covariates for the proportion of men who have paid for sex ever \texttt{cfswever} or in the last twelve months \texttt{cfswrecent}, available from @hodgins2022population.
 For both random effect precision parameters $\tau \in \{\tau_\alpha, \tau_\zeta\}$ we used the PC prior with base model $\sigma = 0$ and $\mathbb{P}(\sigma > 2.5 = 0.01)$.
