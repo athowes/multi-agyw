@@ -25,7 +25,7 @@ bibliography: citations.bib
 
 ## Overview
 
-Let $c \in \{1, \ldots, 13\}$ denote the 13 studied AGYW priority countries, partitioned into subnational units $i \in \{1, \ldots, n\}$ according to Table B.5.
+Let $i \in \{1, \ldots, n\}$ denote subnational units (Table B.5) which partition the 13 studied AGYW priority countries $c[i] \in \{1, \ldots, 13\}$.
 We considered the years 1999-2018 denoted as $t \in \{1, \ldots, T\}$ and age groups $a \in \{\text{15--19}, \text{20--24}, \text{25--29}\}$
 Let the four risk groups be $k \in \{1, 2, 3, 4\}$ and denote being in either the third or fourth risk group by $k = 3^{+}$.
 We modelled the probability of being in each risk group $k \in \{1, 2, 3^{+}\}$ using a multinomial logisitic regression model.
