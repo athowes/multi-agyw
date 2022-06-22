@@ -88,7 +88,7 @@ p(\mathbf{y}_{ita}, m_{ita}) &= \exp(-\kappa_{ita}) \frac{(\kappa_{ita})^{m_{ita
 &= \prod_k \text{Poisson} \left( y_{itak} \, | \, \kappa_{itak} \right). \label{eq:prodpoisson}
 \end{align}
 corresponding to the product of independent Poisson likelihoods as in Equation \ref{eq:poisson}.
-This model, including random sample sizes, is equivalent to the multinomial logisitc regression only when these normalisation constants are recovered exactly.
+This model, including random sample sizes, is equivalent to the multinomial logistic regression only when these normalisation constants are recovered exactly.
 To ensure that this is the case, one approach is to include observation-specific random effects $\theta_{ita}$ in the equation for the linear predictor.
 Multiplying each of $\{\kappa_{itak}\}_{k = 1}^{3^+}$ by $\exp(\theta_{ita})$ has no effect on the category probabilities, but does provide the necessary flexibility for $\kappa_{ita}$ to recover $m_{ita}$ exactly.
 Although in theory an improper prior $\theta_{ita} \propto 1$ should be used, in practise, by keeping $\eta_{ita}$ otherwise small using appropriate constraints, so that arbitrarily large values of $\theta_{ita}$ are not required, it is sufficient (and practically preferable for inference) to instead use a vague prior.
@@ -119,10 +119,10 @@ M4x & IID & IID & IID & Besag & AR1 & Besag $\otimes$ AR1 \\
 
 We considered eight models (Table \ref{tab:multinomial-models}) for $\eta_{ita}$ of the form
 $$
-\eta_{ita} = \theta_{ita} + \beta_k + \alpha_{ak} + \zeta_{ck} + \phi_{ik} + \gamma_{tk} + \delta_{itk}.
+\eta_{ita} = \theta_{ita} + \beta_k + \alpha_{ak} + \zeta_{c[i]k} + \phi_{ik} + \gamma_{tk} + \delta_{itk}.
 $$
 As described above, we included observation random effects in all models we considered, and set $\theta_{ita} \sim \mathcal{N}(0, \tau_\theta^{-1})$, with fixed precision $\tau_\theta = 0.000001$ (or a standard deviation of $\sigma_\theta = 1000$).
-To capture country-specific proportion estimates for each category, we included category random effects $\beta_k \sim \mathcal{N}(0, \tau_\beta^{-1})$ and country-category random effects $\zeta_{ck} \sim \mathcal{N}(0, \tau_\zeta^{-1})$.
+To capture country-specific proportion estimates for each category, we included category random effects $\beta_k \sim \mathcal{N}(0, \tau_\beta^{-1})$ and country-category random effects $\zeta_{c[i]k} \sim \mathcal{N}(0, \tau_\zeta^{-1})$.
 Heterogeneity in risk group proportions by age was allowed by including age-country-category random effects $\alpha_{ack} \sim \mathcal{N}(0, \tau_\alpha^{-1})$.
 We considered two specifications, independent and identically distributed (IID) and Besag, for the space-category $\phi_{ik}$ random effects (Section \ref{sec:spatial-random-effects}) and two specifications, IID and first order autoregressive (AR1), for the year-category $\gamma_{tk}$ random effects (Section \ref{sec:temporal-random-effects}).
 We also considered separable space-year-category interactions $\delta_{itk}$ with corresponding Kronecker product structure (Section \ref{sec:spatio-temporal-random-effects}).
@@ -135,7 +135,7 @@ The specifications we considered were IID $\phi_{ik} \sim \mathcal{N}(0, \tau_\p
 $$
 \bphi = (\phi_{11}, \ldots, \phi_{n1}, \ldots, \phi_{13^{+}}, \ldots \phi_{n3^{+}})^\top \sim \mathcal{N}(\mathbf{0}, (\tau_\phi \mathbf{R}^\star_\phi)^{-})
 $$
-where the scaled structure matrix $\mathbf{R}^\star_\phi = \mathbf{R}^\star_b \otimes \mathbf{I}$ is given by the Kronecker product of the scaled Besag structure matrix $\mathbf{R}^\star_b$ and the identity matrix $\mathbf{I}$.
+where the scaled structure matrix $\mathbf{R}^\star_\phi = \mathbf{R}^\star_b \otimes \mathbf{I}$ is given by the Kronecker product of the scaled Besag structure matrix $\mathbf{R}^\star_b$ and the identity matrix $\mathbf{I}$, and ${-}$ denotes the generalised matrix inverse.
 Scaling of the structure matrix to have generalised variance one ensures interpretable priors may be placed on the precision parameter [@sorbye2014scaling].
 We followed the further recommendations of @freni2018note with regard to disconnected adjacency graphs, singletons and constraints.
 The Besag structure matrix $\mathbf{R}_b$ is obtained by the precision matrix of the random effects $\mathbf{b} = (b_1, \ldots, b_n)^\top$ with the full conditionals
@@ -192,7 +192,7 @@ Together, these were:
 \begin{enumerate}
     \item Category $\sum_k \beta_k = 0$
     \item Country $\sum_c \zeta_{ck} = 0, \, \forall \, k$
-    \item Age-country $\sum_a \alpha_{ack} = 0, \, \forall \, k \quad \text{TODO}$,
+    \item Age-country $\sum_a \alpha_{ack} = 0, \, \forall \, c, k$,
     \item Spatial $\sum_i \phi_{ik} = 0, \, \forall \, k$
     \item Temporal $\sum_t \gamma_{tk} = 0, \, \forall \, k$
     \item Spatio-temporal\footnote{The constraints for the space-year-category random effects were unable to be implemented fully, though this only effects the variance components interpretation.} $\sum_i \delta_{itk} = 0, \, \forall \, t, k;
