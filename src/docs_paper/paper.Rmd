@@ -164,6 +164,8 @@ inc_ratio <- round(inc_comparison$inc_female_Y015_029 / inc_comparison$inc_male_
 <!-- TODO: Follow up with Clemens r.e. FSW group name: -->
 <!-- There are a couple of options: female sex workers, young women from key populations (and clarify in the text that you mean sex work), AGYW who sell sex. Many people who do this work all the time use "FSW" so likely fine, but there's also a move away from defining someone by their job making "who sell sex" possibly the preferred option. -->
 
+<!-- IW notes that AGYW typically refers to 15-24 -->
+<!-- Feels clunky to me to say AGYW and women 25-29 -->
 In sub-Saharan Africa, adolescent girls and young women (AGYW) aged 15-29 are `r population_percent`\% of the population but `r infections_percent`\% of new HIV infections [@unaids2021update].
 HIV incidence amongst AGYW is `r inc_ratio` times higher than among similarly aged males due to younger age at first sex, age patterns of sexual mixing, structural vulnerability and power imbalances, and increased susceptibility to HIV infection [@joint2016hiv].
 AGYW have therefore been identified as a priority population for HIV primary prevention, with significant investments being made in prevention programming [@saul2018dreams; @global2018measurement].
@@ -267,7 +269,7 @@ We used `sf` [@pebesma2018sf] for handling of spatial data, `orderly` [@orderly]
 
 ## HIV indicators and prevention prioritisation
 
-Using risk group proportion estimates, and Naomi model estimates, we calculated HIV prevalence, PLHIV, HIV incidence and number of new HIV infections stratified by district, age group and risk group.
+Using risk group proportion estimates, and subnational estimates developed using the Naomi model, we calculated HIV prevalence, PLHIV, HIV incidence and number of new HIV infections stratified by district, age group and risk group.
 Further details are provided in Appendix A.2.
 
 ### Prevalence and PLHIV
@@ -657,7 +659,7 @@ By standardising our analysis across all 13 countries, we showed the additional 
 
 We found a geographic delineation in the proportion of women cohabiting between southern and eastern Africa, calling attention to a divide attributable to many cultural, social and economic factors.
 The delineation does not represent a boundary between predominately Christian and Muslim populations, which is further north.
-We also note that the high numbers of adolescent girls aged 15-19 cohabiting in Mozambique [@unicef].
+We also note the high numbers of adolescent girls aged 15-19 cohabiting in Mozambique [@unicef].
 
 Our modelled estimates improve upon direct survey results for three reasons.
 First, by taking a modular modelling approach, we integrated all relevant survey information from multiple years, allowing estimation of the FSW proportion for surveys without a specific transactional sex question.
