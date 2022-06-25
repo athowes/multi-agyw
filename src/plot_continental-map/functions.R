@@ -44,7 +44,7 @@ continental_map <- function(df, areas, national_areas) {
     geom_sf(data = filter(national_areas, area_id %in% c(priority_iso3, missing_iso3)),
             aes(geometry = geometry), fill = NA, size = 0.2) +
     scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
-    facet_grid(age_group ~ indicator) +
+    facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
     labs(fill = "Estimated proportion") +
     theme_minimal() +
     theme(

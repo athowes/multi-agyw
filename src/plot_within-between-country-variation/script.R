@@ -33,7 +33,7 @@ plotA <- df_3p1_subnational %>%
     geom_jitter(width = 0.1, alpha = 0.6, shape = 20) +
     geom_point(data = df_3p1_national, aes(x = fct_rev(iso3), y = estimate_smoothed),
                shape = 21, size = 2, fill = "white", col = "black", alpha = 0.9) +
-    facet_grid(age_group ~  indicator, labeller = labeller(indicator = label_wrap_gen(10))) +
+    facet_grid(age_group ~  indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
     scale_color_manual(values = multi.utils::cbpalette()) +
     scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
     coord_flip() +
@@ -67,7 +67,7 @@ df_3p1_subnational %>%
   mutate(iso3 = reorder(iso3, iso3_sort_order)) %>%
   filter(
     age_group == "15-19",
-    indicator == "Cohabiting partner"
+    indicator == "One cohabiting partner"
   ) %>%
   mutate(
     moz_indicator = factor(ifelse(iso3 == "Mozambique", 1, 0))
@@ -81,7 +81,7 @@ df_3p1_subnational %>%
   scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
   coord_flip() +
   labs(x = "", y = "Proportion of girls 15-19 cohabiting", col = "") +
-  guides(colour = FALSE) +
+  guides(colour = "none") +
   theme_minimal() +
   theme(
     panel.spacing = unit(0.5, "lines"),
