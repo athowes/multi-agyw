@@ -66,12 +66,12 @@ fct_reorg <- function(fac, ...) {
   fct_recode(fct_relevel(fac, ...), ...)
 }
 
-#' When there is only one survey, we want to select Model 3, and when there are multiple, we want to select Model 6
+#' When there is only one survey, we want to select Model 2, and when there are multiple, we want to select Model 4
 single_survey <- df_aaa %>%
   group_by(iso3) %>%
   summarise(max = max(model)) %>%
   select(iso3, max) %>%
-  filter(max == "Model 3") %>%
+  filter(max == "Model 2") %>%
   pull(iso3)
 
 model_selector <- function(iso3, model) {
@@ -169,114 +169,116 @@ df_aaa %>%
   arrange(desc(percentage_variance_area_idx)) %>%
   mutate(percentage_variance_area_idx = signif(100 * percentage_variance_area_idx, 3))
 
-#' Joint country fitting
-df <- read_csv("depends/variance-proportions.csv")
+#' The below is still in development
 
-#' What's the proportion of variance explained?
-df %>%
-  select(starts_with("percentage_")) %>%
-  mutate(across(everything(), ~ 100 * round(.x, 3)))
-
-#' The uncertainty on that?
-S <- 100
-full_samples <- readRDS("depends/multi-sexbehav-sae-samples.rds")
-
-#' Just the hyperparameters
-precision_samples <- lapply(full_samples, "[", "hyperpar")
-precision_samples_matrix <- matrix(unlist(precision_samples), ncol = S)
-precision_samples_df <- data.frame(t(precision_samples_matrix))
-names(precision_samples_df) <- names(precision_samples[[1]][[1]])
-variance_samples_df <- 1 / precision_samples_df
-
-variance_samples_df <- variance_samples_df %>%
-  select(starts_with("Precision")) %>%
-  rename_all(list(~ stringr::str_replace(., "Precision for ", "variance_"))) %>%
-  mutate(total_variance = rowSums(., na.rm = TRUE)) %>%
-  #' Create new columns with the percentage variance
-  mutate(
-    across(
-      .cols = starts_with("variance"),
-      .fns = list(percentage = ~ . / total_variance),
-      .names = "{fn}_{col}"
-    )
-  ) %>%
-  select(starts_with("percentage_")) %>%
-  summarise(
-    across(
-      .cols = everything(),
-      .fns = list(mean = mean, lower = ~ quantile(.x, probs = 0.025), upper = ~ quantile(.x, probs = 0.975))
-    )
-  ) %>%
-  pivot_longer(
-    cols = everything(),
-    names_prefix = "percentage_variance_",
-    names_to = "variable",
-    values_to = "percentage_variance"
-  ) %>%
-  separate(variable, into = c("variable", "idx", "type")) %>%
-  select(-idx) %>%
-  pivot_wider(
-    names_from = type,
-    values_from = percentage_variance
-  )
-
-write_csv(variance_samples_df, "variance-proportions-uncertainty.csv")
-
-#' Now to try the alternative method for looking within country when the model is fit jointly between all countries
-#' Probably there is a better way to do this
-
-fits <- readRDS("depends/multi-sexbehav-sae-fits.rds")
-fit <- fits[[1]]
-
-#' Use the results from the model as dictionary for variable to idx correspondence
-#' * indicator: cat_idx
-#' * iso3: iso3_idx
-#' * year: year_idx
-#' * area_id: area_idx
-#' * age_group: age_idx
-idx_dictionary <- read_csv("depends/multi-sexbehav-sae.csv") %>%
-  select(indicator, cat_idx, age_group, age_idx, iso3, iso3_idx,  area_id, area_idx, year, year_idx) %>%
-  mutate(
-    age_idx_rowname = age_idx * cat_idx,
-    iso3_idx_rowname = iso3_idx * cat_idx,
-    area_idx_rowname = area_idx * cat_idx,
-    year_idx_rowname = year_idx * cat_idx
-  )
-
-cat_df <- fit$summary.random$cat_idx
-age_df <- tibble::rownames_to_column(fit$summary.random$age_idx) %>% mutate(rowname = as.numeric(rowname))
-iso3_df <- tibble::rownames_to_column(fit$summary.random$iso3_idx) %>% mutate(rowname = as.numeric(rowname))
-area_df <- tibble::rownames_to_column(fit$summary.random$area_idx) %>% mutate(rowname = as.numeric(rowname))
-year_df <- tibble::rownames_to_column(fit$summary.random$year_idx) %>% mutate(rowname = as.numeric(rowname))
-
-re_df <-idx_dictionary %>%
-  left_join(
-    select(cat_df, cat_idx = ID, cat_val = mean),
-    by = "cat_idx"
-  ) %>%
-  left_join(
-    select(age_df, age_idx_rowname = rowname, age_val = mean),
-    by = "age_idx_rowname"
-  ) %>%
-  left_join(
-    select(iso3_df, iso3_idx_rowname = rowname, iso3_val = mean),
-    by = "iso3_idx_rowname"
-  ) %>%
-  left_join(
-    select(area_df, area_idx_rowname = rowname, area_val = mean),
-    by = "area_idx_rowname"
-  ) %>%
-  left_join(
-    select(year_df, year_idx_rowname = rowname, year_val = mean),
-    by = "year_idx_rowname"
-  )
-
-re_df %>%
-  group_by(iso3) %>%
-  summarise(
-    cat_idx = mean(abs(cat_val)),
-    age_idx = mean(abs(age_val)),
-    iso3_idx = mean(abs(iso3_val)),
-    area_idx = mean(abs(area_val)),
-    year_idx = mean(abs(year_val))
-  )
+#' #' Joint country fitting
+#' df <- read_csv("depends/variance-proportions.csv")
+#'
+#' #' What's the proportion of variance explained?
+#' df %>%
+#'   select(starts_with("percentage_")) %>%
+#'   mutate(across(everything(), ~ 100 * round(.x, 3)))
+#'
+#' #' The uncertainty on that?
+#' S <- 100
+#' full_samples <- readRDS("depends/multi-sexbehav-sae-samples.rds")
+#'
+#' #' Just the hyperparameters
+#' precision_samples <- lapply(full_samples, "[", "hyperpar")
+#' precision_samples_matrix <- matrix(unlist(precision_samples), ncol = S)
+#' precision_samples_df <- data.frame(t(precision_samples_matrix))
+#' names(precision_samples_df) <- names(precision_samples[[1]][[1]])
+#' variance_samples_df <- 1 / precision_samples_df
+#'
+#' variance_samples_df <- variance_samples_df %>%
+#'   select(starts_with("Precision")) %>%
+#'   rename_all(list(~ stringr::str_replace(., "Precision for ", "variance_"))) %>%
+#'   mutate(total_variance = rowSums(., na.rm = TRUE)) %>%
+#'   #' Create new columns with the percentage variance
+#'   mutate(
+#'     across(
+#'       .cols = starts_with("variance"),
+#'       .fns = list(percentage = ~ . / total_variance),
+#'       .names = "{fn}_{col}"
+#'     )
+#'   ) %>%
+#'   select(starts_with("percentage_")) %>%
+#'   summarise(
+#'     across(
+#'       .cols = everything(),
+#'       .fns = list(mean = mean, lower = ~ quantile(.x, probs = 0.025), upper = ~ quantile(.x, probs = 0.975))
+#'     )
+#'   ) %>%
+#'   pivot_longer(
+#'     cols = everything(),
+#'     names_prefix = "percentage_variance_",
+#'     names_to = "variable",
+#'     values_to = "percentage_variance"
+#'   ) %>%
+#'   separate(variable, into = c("variable", "idx", "type")) %>%
+#'   select(-idx) %>%
+#'   pivot_wider(
+#'     names_from = type,
+#'     values_from = percentage_variance
+#'   )
+#'
+#' write_csv(variance_samples_df, "variance-proportions-uncertainty.csv")
+#'
+#' #' Now to try the alternative method for looking within country when the model is fit jointly between all countries
+#' #' Probably there is a better way to do this
+#'
+#' fits <- readRDS("depends/multi-sexbehav-sae-fits.rds")
+#' fit <- fits[[1]]
+#'
+#' #' Use the results from the model as dictionary for variable to idx correspondence
+#' #' * indicator: cat_idx
+#' #' * iso3: iso3_idx
+#' #' * year: year_idx
+#' #' * area_id: area_idx
+#' #' * age_group: age_idx
+#' idx_dictionary <- read_csv("depends/multi-sexbehav-sae.csv") %>%
+#'   select(indicator, cat_idx, age_group, age_idx, iso3, iso3_idx,  area_id, area_idx, year, year_idx) %>%
+#'   mutate(
+#'     age_idx_rowname = age_idx * cat_idx,
+#'     iso3_idx_rowname = iso3_idx * cat_idx,
+#'     area_idx_rowname = area_idx * cat_idx,
+#'     year_idx_rowname = year_idx * cat_idx
+#'   )
+#'
+#' cat_df <- fit$summary.random$cat_idx
+#' age_df <- tibble::rownames_to_column(fit$summary.random$age_idx) %>% mutate(rowname = as.numeric(rowname))
+#' iso3_df <- tibble::rownames_to_column(fit$summary.random$iso3_idx) %>% mutate(rowname = as.numeric(rowname))
+#' area_df <- tibble::rownames_to_column(fit$summary.random$area_idx) %>% mutate(rowname = as.numeric(rowname))
+#' year_df <- tibble::rownames_to_column(fit$summary.random$year_idx) %>% mutate(rowname = as.numeric(rowname))
+#'
+#' re_df <-idx_dictionary %>%
+#'   left_join(
+#'     select(cat_df, cat_idx = ID, cat_val = mean),
+#'     by = "cat_idx"
+#'   ) %>%
+#'   left_join(
+#'     select(age_df, age_idx_rowname = rowname, age_val = mean),
+#'     by = "age_idx_rowname"
+#'   ) %>%
+#'   left_join(
+#'     select(iso3_df, iso3_idx_rowname = rowname, iso3_val = mean),
+#'     by = "iso3_idx_rowname"
+#'   ) %>%
+#'   left_join(
+#'     select(area_df, area_idx_rowname = rowname, area_val = mean),
+#'     by = "area_idx_rowname"
+#'   ) %>%
+#'   left_join(
+#'     select(year_df, year_idx_rowname = rowname, year_val = mean),
+#'     by = "year_idx_rowname"
+#'   )
+#'
+#' re_df %>%
+#'   group_by(iso3) %>%
+#'   summarise(
+#'     cat_idx = mean(abs(cat_val)),
+#'     age_idx = mean(abs(age_val)),
+#'     iso3_idx = mean(abs(iso3_val)),
+#'     area_idx = mean(abs(area_val)),
+#'     year_idx = mean(abs(year_val))
+#'   )

@@ -23,7 +23,7 @@ run_commit_push("process_information-criteria") #' [/]
 run_commit_push("process_variance-proportions") #' [x]
 
 #' Posterior predictive sampling to generate coverage estimates
-run_commit_push("process_coverage") #' [ ]
+run_commit_push("process_coverage") #' [x]
 
 #' Calculate and plot HIV prevalence by risk group
 run_commit_push("process_prevalence") #' [x]
