@@ -1,33 +1,3 @@
-update_naming <- function(df) {
-  df <- df %>%
-    mutate(
-      model = fct_recode(
-        model,
-        "1" = "Model 1", "2" = "Model 2", "3" = "Model 3",
-        "4" = "Model 4", "5" = "Model 5", "6" = "Model 6",
-        "7" = "Model 7", "8" = "Model 8", "9" = "Model 9",
-        "5x" = "Model 5x", "6x" = "Model 6x",
-        "8x" = "Model 8x", "9x" = "Model 9x"
-      ),
-      country = fct_recode(
-        iso3,
-        "Botswana" = "BWA",
-        "Cameroon" = "CMR",
-        "Kenya" = "KEN",
-        "Lesotho" = "LSO",
-        "Mozambique" = "MOZ",
-        "Malawi" = "MWI",
-        "Namibia" = "NAM",
-        "Eswatini" = "SWZ",
-        "Tanzania" = "TZA",
-        "Uganda" = "UGA",
-        "South Africa" = "ZAF",
-        "Zambia" = "ZMB",
-        "Zimbabwe" = "ZWE"
-      )
-    )
-}
-
 ic_plot <- function(df, ic = "dic") {
   df %>%
     group_by(iso3) %>%

@@ -4,6 +4,113 @@
 
 available_surveys <- read_csv("depends/available-surveys.csv")
 
+#' Fitting countries jointly
+
+#' Multinomial model
+
+df <- read_csv("depends/information-criteria.csv")
+
+pdf("information-criteria.pdf", h = 3, w = 6.25)
+
+df %>%
+  rename("dic_mean" = "dic", "waic_mean" = "waic", "cpo_mean" = "cpo") %>%
+  pivot_longer(
+    cols = starts_with(c("dic", "waic", "cpo")),
+    names_to = "name",
+    values_to = "value"
+  ) %>%
+  separate(name, into = c("metric", "type"), extra = "merge", fill = "left") %>%
+  pivot_wider(
+    names_from = "type",
+    values_from = "value"
+  ) %>%
+  mutate(
+    metric = fct_recode(metric,
+                        "DIC" = "dic",
+                        "WAIC" = "waic",
+                        "CPO" = "cpo"
+    ),
+    model = fct_recode(model,
+                       "M1: IID spatial, IID temporal" = "Model 1",
+                       "M1x: IID spatial, IID temporal, with interaction" = "Model 1x",
+                       "M2: Besag spatial, IID temporal" = "Model 2",
+                       "M2x: IID spatial, IID temporal, with interaction" = "Model 2x",
+                       "M3: IID spatial, AR1 temporal" = "Model 3",
+                       "M3x: IID spatial, IID temporal, with interaction" = "Model 3x",
+                       "M4: Besag spatial, AR1 temporal" = "Model 4",
+                       "M4x: IID spatial, IID temporal, with interaction" = "Model 4x",
+    )
+  ) %>%
+  split(.$metric) %>%
+  lapply(function(x)
+    x %>%
+      mutate(
+        min_idx = (mean == min(mean, na.rm = TRUE)),
+        max_idx = (mean == max(mean, na.rm = TRUE)),
+        best_idx = ifelse(metric %in% c("WAIC", "DIC"), min_idx, max_idx)
+      )
+  ) %>%
+  bind_rows() %>%
+  ggplot(aes(x = model, y = mean, col = model, shape = best_idx)) +
+  geom_point(size = 3) +
+  geom_errorbar(
+    aes(ymin = mean - se, ymax = mean + se),
+    stat = "identity", position = "dodge", alpha = 0.4, col = "black", width = 0
+  ) +
+  facet_wrap(~metric, scales = "free") +
+  scale_color_manual(values = multi.utils::cbpalette()) +
+  scale_shape_manual(values = c(16, 15)) +
+  guides(shape = "none") +
+  labs(y = "Value", x = "", col = "") +
+  guides(col = guide_legend(nrow = 2, byrow = TRUE)) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.title = element_text(size = 9),
+    legend.text = element_text(size = 9),
+    legend.margin = margin(0, 0, 0, 0)
+  )
+
+dev.off()
+
+#' Logistic model
+
+df_prop <- read_csv("depends/fsw-logit-information-criteria.csv")
+
+df_prop %>%
+  mutate(
+    dic = paste0(dic, " (", dic_se, ")"),
+    waic = paste0(waic, " (", waic_se, ")"),
+    cpo = paste0(cpo, " (", cpo_se, ")"),
+  ) %>%
+  select(-contains("se")) %>%
+  rename_with(~toupper(.), .cols = any_of(c("dic", "waic", "cpo"))) %>%
+  rename_with(~str_to_title(.), .cols = any_of(c("model", "country"))) %>%
+  select(-any_of(c("iso3"))) %>%
+  pivot_longer(
+    cols = c("DIC", "WAIC", "CPO"),
+    names_to = "Criteria"
+  ) %>%
+  pivot_wider(
+    names_from = "Model",
+    values_from = "value"
+  ) %>%
+  gt() %>%
+  fmt_missing(columns = everything(), rows = everything(), missing_text = "-") %>%
+  #' It's clear from context that these are the criteria
+  #' (such that the label is not required)
+  cols_label(
+    Criteria = "",
+  ) %>%
+  tab_stubhead(label = "") %>%
+  as_latex() %>%
+  as.character() %>%
+  cat(file = "fsw-logit-model-comparison.txt")
+
+#' Fitting countries individually
+
 #' Four categories
 
 #' All surveys with a transactional sex question
@@ -12,7 +119,9 @@ giftsvar_surveys <- available_surveys %>%
 
 files <- paste0("depends/", tolower(unique(giftsvar_surveys$iso3)), "_4-information-criteria.csv")
 df_4 <- bind_rows(lapply(files, function(file) read_csv(file))) %>%
-  update_naming()
+  mutate(age_group = "placeholder", indicator = "placeholder") %>%
+  multi.utils::update_naming() %>%
+  select(-age_group, -indicator)
 
 #' Countries with only one survey with a transactional sex question
 iso3_4_single <- giftsvar_surveys %>%
@@ -35,7 +144,7 @@ stopifnot(
 
 #' Four category
 
-#' Currently all the four category models are just spatial, no temporal
+#' Currently all the four category models are just spatial
 
 write_csv(df_4, "4-model-comparison.csv", na = "")
 
@@ -133,36 +242,3 @@ cowplot::plot_grid(
 )
 
 dev.off()
-
-#' Logistic regression model
-df_prop <- read_csv("depends/fsw-logit-information-criteria.csv")
-
-df_prop %>%
-  mutate(
-    dic = paste0(dic, " (", dic_se, ")"),
-    waic = paste0(waic, " (", waic_se, ")"),
-    cpo = paste0(cpo, " (", cpo_se, ")"),
-  ) %>%
-  select(-contains("se")) %>%
-  rename_with(~toupper(.), .cols = any_of(c("dic", "waic", "cpo"))) %>%
-  rename_with(~str_to_title(.), .cols = any_of(c("model", "country"))) %>%
-  select(-any_of(c("iso3"))) %>%
-  pivot_longer(
-    cols = c("DIC", "WAIC", "CPO"),
-    names_to = "Criteria"
-  ) %>%
-  pivot_wider(
-    names_from = "Model",
-    values_from = "value"
-  ) %>%
-  gt() %>%
-  fmt_missing(columns = everything(), rows = everything(), missing_text = "-") %>%
-  #' It's clear from context that these are the criteria
-  #' (such that the label is not required)
-  cols_label(
-    Criteria = "",
-  ) %>%
-  tab_stubhead(label = "") %>%
-  as_latex() %>%
-  as.character() %>%
-  cat(file = "fsw-logit-model-comparison.txt")
