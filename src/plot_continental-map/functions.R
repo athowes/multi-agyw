@@ -40,7 +40,7 @@ continental_map <- function(df, areas, national_areas) {
   )
 
   ggplot(df_subnational, aes(fill = estimate_smoothed)) +
-    geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+    geom_sf(size = 0.05, colour = scales::alpha("grey", 0.1)) +
     geom_sf(data = filter(national_areas, area_id %in% c(priority_iso3, missing_iso3)),
             aes(geometry = geometry), fill = NA, size = 0.2) +
     scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
