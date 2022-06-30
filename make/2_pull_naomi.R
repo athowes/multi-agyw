@@ -4,7 +4,7 @@ analysis_level <- multi.utils::analysis_level()
 
 sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
 
-url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2022 naomi preliminary/r-extracts/indicators.rds"
+url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2022 naomi preliminary/r-extracts/indicators_with-moz2021.rds"
 path <- sharepoint$download(URLencode(url))
 naomi_output <- readRDS(path)
 
