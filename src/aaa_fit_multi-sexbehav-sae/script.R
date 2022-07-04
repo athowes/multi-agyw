@@ -262,15 +262,16 @@ if(include_interactions & include_temporal) {
               constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 
+  #' (This approach is defunct: not computationally efficient!)
   #' Create Besag x IID interaction adjacency matrix
   #' Check the resulting matrix with image()
-  interaction_adjM_2x <- multi.utils::repeat_matrix(adjM, n = length(unique(df$sur_idx)))
+  # interaction_adjM_2x <- multi.utils::repeat_matrix(adjM, n = length(unique(df$sur_idx)))
 
   #' Model 2x:
   #' * Model 2
   #' * space x survey x category random effects (Besag x IID)
   formula2x <- update(formula2,
-    . ~ . + f(area_sur_idx, model = "besag", graph = interaction_adjM_6x, scale.model = TRUE, group = cat_idx,
+    . ~ . + f(area_idx_copy, model = "besag", graph = adjM, scale.model = TRUE, group = sur_idx, replicate = cat_idx,
               control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
   )
 

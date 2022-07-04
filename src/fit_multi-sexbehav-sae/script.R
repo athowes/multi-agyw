@@ -269,17 +269,16 @@ formula2 <- update(formula_baseline,
             constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
+#' (This approach is defunct: not computationally efficient!)
 #' Create Besag x IID interaction adjacency matrix
 #' Check the resulting matrix with image()
-#' N.B. This method is very slow. Might there be something faster?
-#' It involves using a huge adjacency graph -- perhaps something can be done with replicate instead
-interaction_adjM_2x <- multi.utils::repeat_matrix(adjM, n = length(unique(df$year_idx)))
+# interaction_adjM_2x <- multi.utils::repeat_matrix(adjM, n = length(unique(df$year_idx)))
 
 #' Model 2x:
 #' * Model 2
 #' * space x year x category random effects (Besag x IID)
 formula2x <- update(formula2,
-  . ~ . + f(area_year_idx, model = "besag", graph = interaction_adjM_2x, scale.model = TRUE, group = cat_idx,
+  . ~ . + f(area_idx_copy, model = "besag", graph = adjM, scale.model = TRUE, group = year_idx, replicate = cat_idx,
             control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
 )
 
