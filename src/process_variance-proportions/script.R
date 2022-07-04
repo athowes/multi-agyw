@@ -169,61 +169,60 @@ df_aaa %>%
   arrange(desc(percentage_variance_area_idx)) %>%
   mutate(percentage_variance_area_idx = signif(100 * percentage_variance_area_idx, 3))
 
-#' The below is still in development
+#' Joint country fitting
+df <- read_csv("depends/variance-proportions.csv")
 
-#' #' Joint country fitting
-#' df <- read_csv("depends/variance-proportions.csv")
-#'
-#' #' What's the proportion of variance explained?
-#' df %>%
-#'   select(starts_with("percentage_")) %>%
-#'   mutate(across(everything(), ~ 100 * round(.x, 3)))
-#'
-#' #' The uncertainty on that?
-#' S <- 100
-#' full_samples <- readRDS("depends/multi-sexbehav-sae-samples.rds")
-#'
-#' #' Just the hyperparameters
-#' precision_samples <- lapply(full_samples, "[", "hyperpar")
-#' precision_samples_matrix <- matrix(unlist(precision_samples), ncol = S)
-#' precision_samples_df <- data.frame(t(precision_samples_matrix))
-#' names(precision_samples_df) <- names(precision_samples[[1]][[1]])
-#' variance_samples_df <- 1 / precision_samples_df
-#'
-#' variance_samples_df <- variance_samples_df %>%
-#'   select(starts_with("Precision")) %>%
-#'   rename_all(list(~ stringr::str_replace(., "Precision for ", "variance_"))) %>%
-#'   mutate(total_variance = rowSums(., na.rm = TRUE)) %>%
-#'   #' Create new columns with the percentage variance
-#'   mutate(
-#'     across(
-#'       .cols = starts_with("variance"),
-#'       .fns = list(percentage = ~ . / total_variance),
-#'       .names = "{fn}_{col}"
-#'     )
-#'   ) %>%
-#'   select(starts_with("percentage_")) %>%
-#'   summarise(
-#'     across(
-#'       .cols = everything(),
-#'       .fns = list(mean = mean, lower = ~ quantile(.x, probs = 0.025), upper = ~ quantile(.x, probs = 0.975))
-#'     )
-#'   ) %>%
-#'   pivot_longer(
-#'     cols = everything(),
-#'     names_prefix = "percentage_variance_",
-#'     names_to = "variable",
-#'     values_to = "percentage_variance"
-#'   ) %>%
-#'   separate(variable, into = c("variable", "idx", "type")) %>%
-#'   select(-idx) %>%
-#'   pivot_wider(
-#'     names_from = type,
-#'     values_from = percentage_variance
-#'   )
-#'
-#' write_csv(variance_samples_df, "variance-proportions-uncertainty.csv")
-#'
+#' What's the proportion of variance explained?
+df %>%
+  select(starts_with("percentage_")) %>%
+  mutate(across(everything(), ~ 100 * round(.x, 3)))
+
+#' The uncertainty on that?
+S <- 100
+full_samples <- readRDS("depends/multi-sexbehav-sae-samples.rds")
+
+#' Just the hyperparameters
+precision_samples <- lapply(full_samples, "[", "hyperpar")
+precision_samples_matrix <- matrix(unlist(precision_samples), ncol = S)
+precision_samples_df <- data.frame(t(precision_samples_matrix))
+names(precision_samples_df) <- names(precision_samples[[1]][[1]])
+variance_samples_df <- 1 / precision_samples_df
+
+variance_samples_df <- variance_samples_df %>%
+  select(starts_with("Precision")) %>%
+  rename_all(list(~ stringr::str_replace(., "Precision for ", "variance_"))) %>%
+  mutate(total_variance = rowSums(., na.rm = TRUE)) %>%
+  #' Create new columns with the percentage variance
+  mutate(
+    across(
+      .cols = starts_with("variance"),
+      .fns = list(percentage = ~ . / total_variance),
+      .names = "{fn}_{col}"
+    )
+  ) %>%
+  select(starts_with("percentage_")) %>%
+  summarise(
+    across(
+      .cols = everything(),
+      .fns = list(mean = mean, lower = ~ quantile(.x, probs = 0.025), upper = ~ quantile(.x, probs = 0.975))
+    )
+  ) %>%
+  pivot_longer(
+    cols = everything(),
+    names_prefix = "percentage_variance_",
+    names_to = "variable",
+    values_to = "percentage_variance"
+  ) %>%
+  separate(variable, into = c("variable", "idx", "type")) %>%
+  select(-idx) %>%
+  pivot_wider(
+    names_from = type,
+    values_from = percentage_variance
+  )
+
+write_csv(variance_samples_df, "variance-proportions-uncertainty.csv")
+
+#' #' The below is still in development
 #' #' Now to try the alternative method for looking within country when the model is fit jointly between all countries
 #' #' Probably there is a better way to do this
 #'

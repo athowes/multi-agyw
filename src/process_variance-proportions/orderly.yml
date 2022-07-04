@@ -9,7 +9,7 @@ artefacts:
         - aaa-variance-proportions.png
         - aaa-variance-proportions.txt
         - aaa-average-variance-proportions.csv
-        # - variance-proportions-uncertainty.csv
+        - variance-proportions-uncertainty.csv
 
 packages:
   - dplyr
