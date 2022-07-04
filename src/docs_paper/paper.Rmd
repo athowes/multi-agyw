@@ -241,13 +241,13 @@ The administrative area hierarchy and geographic boundaries we used correspond t
 To estimate the proportion of AGYW in each risk group we took a two-stage modelling approach.
 First, we fit a spatio-temporal multinomial model stratified by district, year (1999-2018) and five-year age group (15-19, 20-24 and 25-29) for the proportion of AGYW in three categories: (1) not sexually active, (2) one cohabiting partner, and (3) either non-regular or multiple partner(s), or transactional sex.
 Combining the two highest risk groups (high and very high) in this way allowed data from all surveys to be included in this first stage model.
-Second, we fit a spatial logistic regression model separating those who have non-regular or multiple partner(s) or multiple partners from those who reported transactional sex, stratified by district, and five-year age group, and using only data from the surveys with a specific transactional sex question.
+Second, we fit a spatial logistic regression model separating those who have non-regular or multiple partner(s) from those who reported transactional sex, stratified by district, and five-year age group, and using only data from the surveys with a specific transactional sex question.
 As surveys were only available in the years 2013-2018, we assumed the proportion in the very high risk group among those in the two highest risk groups was constant over time.
 We combined the two models using 1000 samples from each posterior distribution to produce samples for all four risk groups.
 Finally, we adjusted the samples from the transactional sex category to match age- and country-specific FSW population size estimates.
-To ensure that after adjustment the risk group proportions still sum to one, we made appropriate modifications to the samples from the non-regular or multiple partner(s) category.
+We modified the samples from the non-regular or multiple partner(s) risk group to ensure that after adjustment the risk group proportions still summed to one.
 FSW population size estimates by age were obtained by disaggregating national 15-49 FSW population size estimates [@stevens2022estimating] using the FSW age distribution in South Africa from the Thembisa model [@johnson2020thembisa] in combination with country-specific age at first sex distributions [@nguyen2022trends].
-Technical details of the models we used are in Appendix A.1.
+Further technical details are in Appendix A.1.
 
 We considered eight model specifications for the space-age-time multinomial model for the three risk groups (Appendix A.1.2).
 All models included intercepts for each risk group, age, country, and age-country effects, a spatial effect allowing variation by district, and a temporal effect allowing variation over time.
@@ -390,7 +390,7 @@ Direct estimates of the four risk group proportions from these surveys were high
 
 ## Risk group estimates
 
-```{r continental-map, fig.cap="Choropleths of the posterior mean proportion of AGYW in each risk group in 2018. Countries in grey are included to show Cameroon (upper left) in relation to the other twelve spatially-contiguous countries (lower right). \\label{fig:continental-map}"}
+```{r continental-map, fig.cap="The spatial distribution (posterior mean) of the AGYW risk group proportions in 2018. Countries in grey are included to show Cameroon (upper left) in relation to the other twelve spatially-contiguous countries (lower right). \\label{fig:continental-map}"}
 #' Note that the subnational borders look a bit overpowering when the quality of this is reduced
 knitr::include_graphics("depends/3p1-continental-map.jpeg")
 ```
@@ -512,7 +512,7 @@ fsw_iso3 <- df_3p1_subnational %>%
   summarise(estimate_smoothed = sum(estimate_smoothed * population_mean, na.rm = TRUE) / sum(population_mean, na.rm = TRUE))
 ```
 
-The median national FSW proportion was `r fsw_age_Y015_019$median`\% (95\% CI `r fsw_age_Y015_019$lower`--`r fsw_age_Y015_019$upper`\%) for the 15-19 age group, `r fsw_age_Y020_024$median`\% (95\% CI `r fsw_age_Y020_024$lower`--`r fsw_age_Y020_024$upper`\%) for the 20-24 age group and `r fsw_age_Y025_029$median`\% (95\% CI `r fsw_age_Y025_029$lower`--`r fsw_age_Y025_029$upper`\%) for the 25-29 age group.
+The median national FSW proportion was `r fsw_age_Y015_019$median`\% (95\% CI `r fsw_age_Y015_019$lower`--`r fsw_age_Y015_019$upper`) for the 15-19 age group, `r fsw_age_Y020_024$median`\% (95\% CI `r fsw_age_Y020_024$lower`--`r fsw_age_Y020_024$upper`) for the 20-24 age group and `r fsw_age_Y025_029$median`\% (95\% CI `r fsw_age_Y025_029$lower`--`r fsw_age_Y025_029$upper`) for the 25-29 age group.
 
 <!-- I would like some more quantitive results here comparing the amount of within-country variation vs. between country variation. -->
 
@@ -521,7 +521,7 @@ Countries in eastern and central Africa (Cameroon, Kenya, Malawi, Mozambique, Ta
 In contrast, countries in southern Africa (Botswana, Eswatini, Lesotho, Namibia and South Africa) had a higher proportion with non-regular or multiple partner(s) (`r dividing_border_below_sexnonreg$median`\% [95\% CI `r dividing_border_below_sexnonreg$lower`--`r dividing_border_below_sexnonreg$upper`\%], compared with `r dividing_border_below_sexcohab$median`\% [95\% CI `r dividing_border_below_sexcohab$lower`--`r dividing_border_below_sexcohab$upper`\%] cohabiting).
 This clear geographic delineation passes along the border of Mozambique, through the interior of Zimbabwe and along the border of Zambia (Fig \ref{fig:continental-map}).
 
-In most districts (`r round(district_Y015_019_nosex12m_quantiles$median, 1)`\%; 95\% credible interval [CI] `r round(district_Y015_019_nosex12m_quantiles$lower, 1)`--`r round(district_Y015_019_nosex12m_quantiles$upper, 1)`\%) adolescent girls aged 15-19 were not sexually active.
+In most districts (`r round(district_Y015_019_nosex12m_quantiles$median, 1)`\%; 95\% credible interval [CI] `r round(district_Y015_019_nosex12m_quantiles$lower, 1)`--`r round(district_Y015_019_nosex12m_quantiles$upper, 1)`) adolescent girls aged 15-19 were not sexually active.
 The exception was Mozambique, where the majority (`r 100 - round(moz_Y015_019_nosex12m$estimate_smoothed, 2)`\%) were sexually active in the past year and close to a third (`r round(moz_Y015_019_sexcohab$estimate_smoothed, 2)`\%) were cohabiting with a partner.
 
 ```{r}
@@ -533,9 +533,9 @@ variance_proportions_year <- 100 * filter(variance_proportions, variable == "yea
 variance_proportions_cat <- 100 * filter(variance_proportions, variable == "cat") %>% select(-variable) %>% round(digits = 3)
 ```
 
-Age explained `r variance_proportions_age$mean`\% (95\% CI `r variance_proportions_age$lower`--`r variance_proportions_age$upper`\%) of the variation in risk group proportions.
-Country-level differences explained `r variance_proportions_iso3$mean`\% (95\% CI `r variance_proportions_iso3$lower`--`r variance_proportions_iso3$upper`\%) of variation and district-level variation within countries explained `r variance_proportions_area$mean`\% (95\% CI `r variance_proportions_area$lower`--`r variance_proportions_area$upper`\%).
-Temporal changes only explained `r variance_proportions_year$mean`\% (95\% CI `r variance_proportions_year$lower`--`r variance_proportions_year$upper`\%) of variation, indicating very little change in risk group proportions over time.
+Age explained `r variance_proportions_age$mean`\% (95\% CI `r variance_proportions_age$lower`--`r variance_proportions_age$upper`) of the variation in risk group proportions.
+Country-level differences explained `r variance_proportions_iso3$mean`\% (95\% CI `r variance_proportions_iso3$lower`--`r variance_proportions_iso3$upper`) of variation and district-level variation within countries explained `r variance_proportions_area$mean`\% (95\% CI `r variance_proportions_area$lower`--`r variance_proportions_area$upper`).
+Temporal changes only explained `r variance_proportions_year$mean`\% (95\% CI `r variance_proportions_year$lower`--`r variance_proportions_year$upper`) of variation, indicating very little change in risk group proportions over time.
 We observed similar variance decomposition results fitting each country individually, and using other model specifications.
 
 <!-- Are these results presented? (A reviewer might ask for it if referencing here; but fine to leave as this statement for now.) -->

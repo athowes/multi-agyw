@@ -50,7 +50,7 @@ depends:
   process_variance-proportions:
     id: latest
     use:
-      # depends/variance-proportions-uncertainty.csv: variance-proportions-uncertainty.csv
+      depends/variance-proportions-uncertainty.csv: variance-proportions-uncertainty.csv
       depends/aaa-variance-proportions.pdf: aaa-variance-proportions.pdf
   plot_temporal-variation:
     id: latest
