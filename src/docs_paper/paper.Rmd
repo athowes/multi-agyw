@@ -235,6 +235,7 @@ We used estimates of population, people living with HIV (PLHIV) and new HIV infe
 The model synthesises data from multiple sources to produce subnational estimates of indicators of interest, and has been used by countries as a part of the HIV estimates process supported by UNAIDS.
 <!-- and so far has been used by X countries could be better (adds some information that it's widely used) -->
 The administrative area hierarchy and geographic boundaries we used correspond to those used for health service planning in UNAIDS Naomi estimates, exceptions being Cameroon and Kenya where we conducted analysis one level higher at the department and county levels, respectively (Table B.5).
+We used the most recent 2022 estimates for all countries, apart from Mozambique where, due to data accuracy concerns, we used the 2021 estimates (in which the Cabo Delgado province is excluded due to disruption by conflict).
 
 ## Two-stage model for sexual risk group proportions
 
