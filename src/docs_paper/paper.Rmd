@@ -206,7 +206,7 @@ Very high & Transactional sex (adjusted to correspond to female sex workers) & $
  & & $>$3.0\% & 3.0 \\
 \bottomrule
 \end{tabularx}
-\caption{HIV risk groups and assumed HIV incidence rate ratio for each risk group relative to AGYW with one cohabiting sexual partner. Among FSW, the incidence rate ratio depended on the level of HIV incidence among the general population. The incidence rate ratio for women with non-regular or multiple sexual partner(s) was derived from analysis of ALPHA network data. Non-regular partners are defined to be non cohabiting. The transactional sex risk group is adjusted during analysis to correspond to female sex worker, and incidence rate ratios among FSW were dervied based on patterns of relative HIV prevalence among FSW compared to general population prevalence. When the local HIV incidence in the general population is higher, the incidence rate ratio is lower.}
+\caption{HIV risk groups and assumed HIV incidence rate ratio for each risk group relative to AGYW with one cohabiting sexual partner. Among FSW, the incidence rate ratio depended on the level of HIV incidence among the general population. The incidence rate ratio for women with non-regular or multiple sexual partner(s) was derived from analysis of ALPHA network data. Non-regular partners are defined to be non cohabiting. The transactional sex risk group is adjusted during analysis to correspond to female sex worker, and incidence rate ratios among FSW were dervied based on patterns of relative HIV prevalence among FSW compared to general population prevalence. When the local HIV incidence in the general population is higher, the incidence rate ratio for FSW is lower.}
 \label{tab:risk-groups}
 \small
 \end{table}
@@ -654,11 +654,19 @@ author_summary: |
 
 <!-- Suggestions for other things to include in the discussion from Katie: -->
 <!-- *  Discussion of different interventions to be implemented in the different risk groups based on Global Strategy -->
-<!-- *  Possibly move section on "not including all variables" into discussion, and discuss all relevant variables, then say why we settled for the ones we did -->
 
-We estimated sexual risk group proportions for AGYW at a district-level in 13 sub-Saharan African countries with pressing HIV prevention requirements.
+We estimated sexual risk group proportions for AGYW at a district-level in 13 sub-Saharan African countries with high-priority HIV prevention requirements.
 Our estimates support consideration of differentiated prevention programming according to risk behaviour, as outlined in the Global AIDS Strategy.
 <!-- Some type of comment about how novel this would be if implemented -->
+
+We used risk group definitions based on individual sexual behaviour, the most proximal determinant of risk.
+Other factors, such as condom usage, could be considered for extending the risk group defintions, but the appeal of accounting for greater risk heterogenity must be balanced with the benefits of parsimony and measurement difficulties associated to any additional factors.
+<!-- Reasons why we didn't include condom usage: -->
+<!-- Defining condom usage is challenging, particularly for those with multiple partners, and reporting is likely biased due to social desirability. -->
+<!-- Additionally, consistent condom usage is rare amongst those cohabiting, and as such likely only relevant for those with non-regular sexual partners.  -->
+
+Brugh et al. [@brugh2021characterizing] previously geographically mapped AGYW HIV risk groups using biomarker and behavioural data from the most recent surveys in Eswatini, Haiti and Mozambique to define and subsequently map risk groups with a range of machine learning techniques.
+Our work builds on [@brugh2021characterizing] by including more countries, integrating a greater number of surveys, and connecting risk group proportions with HIV epidemic indicators to help inform programming.
 
 By considering a range of possible risk stratification strategies, we showed that successful implementation of a risk-stratified approach would allow substantially more of those at risk for infections to be identified before infection occurs.
 A considerable proportion of estimated new infections were among FSW, supporting the case for HIV programming efforts focused on key population groups [@baral2012burden].
@@ -670,52 +678,40 @@ We found a geographic delineation in the proportion of women cohabiting between 
 The delineation does not represent a boundary between predominately Christian and Muslim populations, which is further north.
 We also note that the high numbers of adolescent girls aged 15-19 cohabiting in Mozambique is markedly different from the other countries [@unicef].
 <!-- Source suggested by KJ on this: https://onlinelibrary.wiley.com/doi/10.1111/padr.12043 -->
-<!-- Widespread changes in sexual behaviour in eastern and southernAfrica: Challenges to achieving global HIV targets? Longitudinalanalyses of nationally representative surveys -->
+<!-- Widespread changes in sexual behaviour in eastern and southern Africa: Challenges to achieving global HIV targets? Longitudinal analyses of nationally representative surveys -->
+
+The final surveys included in our risk model model were conducted in 2018.
+We plan to update our analysis with more surveys as they become available, but do not anticipate that the risk group proportions will change substantially, as we found that they did not change significantly over time.
 
 Our modelled estimates improve upon direct survey results for three reasons.
 First, by taking a modular modelling approach, we integrated all relevant survey information from multiple years, allowing estimation of the FSW proportion for surveys without a specific transactional sex question.
 Second, whereas direct estimates exhibit large sampling variability at a district level, we alleviated this issue using spatio-temporal smoothing (Fig B.2).
 Third, we provided estimates in all district-years, including those not directly sampled by surveys, allowing estimates to be consistently fed into further analysis and planning pipelines.
 
-Brugh et al. [@brugh2021characterizing] previously geographically mapped AGYW HIV risk groups using biomarker and behavioural data from the most recent surveys in Eswatini, Haiti and Mozambique to define and subsequently map risk groups with a range of machine learning techniques.
-Our work builds on [@brugh2021characterizing] by including more countries, integrating a greater number of surveys, and connecting risk group proportions with HIV epidemic indicators to help inform programming.
+Our analysis focused only on females aged 15-29 years, and could be extended to consider optimisation of prevention for the broader population, accounting for the `r 100 - infections_percent`\% of new infections which occur in women 29-49 and men 15-49.
+Obtaining population size estimates for sexual risk behaviour in the general population would be a crucial step toward greater understanding the dynamics of the HIV epidemic in sub-Saharan Africa, and would allow incidence models to include stratification of individuals by sexual risk.
 
 <!-- Paragraph about AGFS e.g. our results are consistent with age at first sex findings [@nguyen2022trends]. -->
 
-<!-- TWM: Consider adding a note about last data point being in 2018. There is so little change over time it shouldn't make a difference, but 2018 is starting to sound like a long time ago -->
-
 ## Limitations
 
-<!-- Think it's a good idea to move the start of this to discussion. -->
-<!-- There are good reasons why we chose the risk groups that we did. -->
-The risk groups we analysed did not consider other important characteristics, such as condom usage or partner-specific risk, which contribute to heterogeneity within each risk group.
-Although the number of risk groups considered could be increased, capturing more of this heterogeneity, this inclination must be balanced with the benefits of parsimony.
-Our approach assumed that within risk group heterogeneity is small enough that the risk groups are meaningfully consistent across contexts.
-Additionally, it is not clear how to find those AGYW within the risk groups we defined in a community.
-It may be preferable to select risk groups based on other more easily observable attributes, such as attendance of a particular service or facility.
-<!-- e.g. school, healthcare -->
-
-Under-reporting of higher risk sexual behaviours among AGYW could affect the validity of our risk group proportion estimates.
+Our analysis was subject to challenges shared by almost approaches to monitoring sexual behaviour in the general population [@cleland2004monitoring].
+In particular, under-reporting of higher risk sexual behaviours among AGYW could affect the validity of our risk group proportion estimates.
 Due to social stigma or disapproval, respondents may be reluctant to report non-marital partners [@nnko2004secretive, @helleringer2011reliability] or may bias their reporting of sexual debut [@zaba2004age; @wringe2009comparative; @nguyen2022trends].
 For guidance of resource allocation, differing rates of under-reporting by country, district, year or age group are particularly concerning to the applicability of our results; and, while it may be reasonable to assume a constant rate over space-time, the same cannot be said for age, where aspects of under-reporting have been shown to decline as respondents age [@glynn2011assessing], suggesting that the elevated risks we found faced by younger women are likely a conservative estimate.
 If present, these reporting biases will also have distorted the estimates of infection risk ratios and prevalence ratios we used in our analysis, likely over-attributing risk to higher risk groups.
 
 Our FSW estimates do not overcome the difficulties of sampling hard to reach groups.
 We did not consider seasonal migration patterns, which may particularly effect FSW population sizes.
+
 The efficiency of each stratified prevention strategy depends on the ability of programmes to identify and effectively reach those in each strata.
 Our analysis assumed a "best-case" scenario where AGYW of every strata are reached perfectly, and should therefore be interpreted as illustrating the potentially obtainable benefits rather than benefits which would be obtained from any specific intervention strategy.
 In practice, stratified prevention strategies are likely to be substantially less efficient than this best-case scenario.
 Factors we did not consider include the greater administrative burden of more complex strategies, variation in difficulty or feasibility of reaching individuals in each strata, variation in the range or effectiveness of interventions by strata, and changes in strata membership that may occur during the course of a year.
 Identifying and reaching behavioural strata may be particularly challenging.
 Empirical evaluations of behavioural risk screening tools have found only moderate discriminatory ability [@jia2022risk], and risk behaviour may change rapidly among young populations, increasing the challenge to effectively deliver appropriately timed prevention packages.
+This consideration may motivate selecting risk groups based on easily observable attributes, such as attendance of a particular service or facility, rather than sexual behaviour.
 
-Finally, our analysis focused only on females aged 15-29 years and therefore did not consider optimisation of prevention for the broader population.
-By limiting our consideration to this group we did not account for `r 100 - infections_percent`\% of new infections in adults 15-49.
-Obtaining population size estimates for sexual risk behaviour in the general population would be a crucial step toward greater understanding the dynamics of the HIV epidemic in sub-Saharan Africa, and would allow incidence models to include stratification of individuals by sexual risk.
-
-<!-- Reasons why we didn't include condom usage: -->
-<!-- Defining condom usage is challenging, particularly for those with multiple partners, and reporting is likely biased due to social desirability. -->
-<!-- Additionally, consistent condom usage is rare amongst those cohabiting, and as such likely only relevant for those with non-regular sexual partners.  -->
 
 ## Conclusion
 
