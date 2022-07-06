@@ -168,7 +168,9 @@ create_latex_table(df_4, file_name = "4-model-comparison.txt")
 
 files <- paste0("depends/", tolower(unique(available_surveys$iso3)), "_3-information-criteria.csv")
 df_3 <- bind_rows(lapply(files, function(file) read_csv(file))) %>%
-  update_naming()
+  mutate(age_group = "placeholder", indicator = "placeholder") %>%
+  multi.utils::update_naming() %>%
+  select(-age_group, -indicator)
 
 #' Countries with only one survey
 iso3_3_single <- available_surveys %>%

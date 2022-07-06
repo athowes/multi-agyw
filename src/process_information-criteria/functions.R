@@ -106,8 +106,8 @@ create_latex_table <- function(df, file_name) {
     ) %>%
     select(-contains("se")) %>%
     rename_with(~toupper(.), .cols = any_of(c("dic", "waic", "cpo"))) %>%
+    rename(country = iso3) %>%
     rename_with(~str_to_title(.), .cols = any_of(c("model", "country"))) %>%
-    select(-any_of(c("iso3"))) %>%
     pivot_longer(
       cols = c("DIC", "WAIC", "CPO"),
       names_to = "Criteria"

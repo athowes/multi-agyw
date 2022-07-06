@@ -43,6 +43,10 @@ depends:
     id: latest
     use:
       depends/category-flowchart.pdf: category-flowchart.pdf
+  process_information-criteria:
+    id: latest
+    use:
+      depends/information-criteria.pdf: information-criteria.pdf
   fit_fsw-logit-sae:
     id: latest
     use:

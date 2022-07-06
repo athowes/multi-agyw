@@ -19,6 +19,7 @@ convert_pdf_jpeg("3p1-within-between-country-variation")
 convert_pdf_jpeg("infections-reached")
 
 #' For appendix.Rmd
+convert_pdf_jpeg("information-criteria")
 convert_pdf_jpeg("fsw-logit-information-criteria")
 convert_pdf_jpeg("coverage")
 

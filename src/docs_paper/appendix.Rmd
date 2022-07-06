@@ -220,7 +220,14 @@ as implemented by `family = "xPoisson"` in `R-INLA`.
 
 ### Model selection
 
-To fill: table and figure.
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics{depends/information-criteria.jpeg}}
+    \caption{Multinomial regression model performance, with the best performing model(s) according to each criteria shown as a square.}
+    \label{fig:multinomial-model-performance}
+\end{figure}
+
+To fill: table.
 
 ## Logistic regression model
 
