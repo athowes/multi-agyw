@@ -125,7 +125,7 @@ create_latex_table <- function(df, file_name) {
     apply(1, FUN = function(x) {
       cr <- sapply(x, stringr::word) %>%
         as.numeric()
-      return(which(cr == min(cr)) + 2)
+      return(which(cr == min(cr, na.rm = TRUE)) + 2)
     })
 
   #' The column(s) which have the maximum value of the criteria
@@ -136,7 +136,7 @@ create_latex_table <- function(df, file_name) {
     apply(1, FUN = function(x) {
       cr <- sapply(x, stringr::word) %>%
         as.numeric()
-      return(which(cr == max(cr)) + 2)
+      return(which(cr == max(cr, na.rm = TRUE)) + 2)
     })
 
   #' The column(s) which have the best value of the criteria

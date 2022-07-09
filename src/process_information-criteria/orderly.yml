@@ -13,22 +13,22 @@ artefacts:
         - fsw-logit-model-comparison.txt
         #' Separate country multinomial model
         #' All four category
-        - 4-model-comparison.csv
-        - 4-model-comparison.txt
-        - 4-model-comparison.pdf
-        - 4-rank-comparison.pdf
+        # - 4-model-comparison.csv
+        # - 4-model-comparison.txt
+        # - 4-model-comparison.pdf
+        # - 4-rank-comparison.pdf
         #' Three category one survey
-        - 3-single-model-comparison.csv
-        - 3-single-model-comparison.txt
-        - 3-single-model-comparison.pdf
-        - 3-single-rank-comparison.pdf
+        # - 3-single-model-comparison.csv
+        # - 3-single-model-comparison.txt
+        # - 3-single-model-comparison.pdf
+        # - 3-single-rank-comparison.pdf
         #' Three category multiple survey
-        - 3-multi-model-comparison.csv
-        - 3-multi-model-comparison.txt
-        - 3-multi-model-comparison.pdf
-        - 3-multi-rank-comparison.pdf
+        # - 3-multi-model-comparison.csv
+        # - 3-multi-model-comparison.txt
+        # - 3-multi-model-comparison.pdf
+        # - 3-multi-rank-comparison.pdf
         #' Joint single and multi plots
-        - 3-rank-comparison.pdf
+        # - 3-rank-comparison.pdf
 
 
 packages:
