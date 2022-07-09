@@ -64,6 +64,10 @@ depends:
     id: latest
     use:
       depends/model-direct-benefits.pdf: model-direct-benefits.pdf
+  process_age-disagg-fsw:
+    id: latest
+    use:
+      depends/age-disagg-fsw-line.pdf: age-disagg-fsw-line.pdf
   plot_age-variation:
     id: latest
     use:

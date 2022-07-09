@@ -30,6 +30,7 @@ convert_pdf_png("infections-reached")
 convert_pdf_png("model-comparison")
 convert_pdf_png("fsw-logit-information-criteria")
 convert_pdf_png("coverage")
+convert_pdf_png("age-disagg-fsw-line")
 
 #' For tables-figures.Rmd
 convert_pdf_png("category-flowchart")

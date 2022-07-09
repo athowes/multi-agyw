@@ -140,12 +140,13 @@ df %>%
 
 dev.off()
 
-pdf("age-disagg-fsw-line.pdf", h = 5, w = 6.25)
+pdf("age-disagg-fsw-line.pdf", h = 4, w = 6.25)
 
 df %>%
   filter(age_group != "Y015_049") %>%
   ggplot(aes(x = age_group, y = fsw_prop, group = area_id, col = area_id)) +
   geom_line() +
+  labs(x = "Age group", y = "FSW proportion", col = "ISO3") +
   theme_minimal()
 
 dev.off()

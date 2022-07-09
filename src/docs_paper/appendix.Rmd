@@ -322,19 +322,24 @@ Figure \ref{fig:coverage} shows the PIT histogram and ECDF difference plots for 
 
 # FSW population size estimation {#fsw-population-size-estimation}
 
-To estimate the number of FSW by age group and country, we disaggregated country-specific estimates of adult (15-49) FSW population size from @stevens2022estimating by age.
+To estimate the number of FSW by age group and country, we disaggregated country-specific estimates of adult (15-49) FSW population size from @stevens2022estimating by age group.
 
 First, we calculated the total sexually debuted population in each age group, in each country.
-To descibe the distribution of age at first sex, we used skew logistic distributions [@nguyen2022trends] with cumulative distribution function given by
+To describe the distribution of age at first sex, we used skew logistic distributions [@nguyen2022trends] with cumulative distribution function given by
 \begin{equation}
 F(x) = \left(1 + \exp(\kappa_c (\mu_c - x)) \right)^{- \gamma_c},
 \end{equation}
 where $\kappa_c, \mu_c, \gamma_c > 0$ are country-specific shape, shape and skewness parameters respectively.
 
 Next, we used the assumed $\text{Gamma}(\alpha = 10.4, \beta = 0.36)$ FSW age distribution in South Africa from the Thembisa model [@johnson2020thembisa] to calculate the implied ratio between the number of FSW and the sexually debuted population in each age group.
-We assumed that those ratios in South Africa were applicable to every country, and therefore calculated the number of FSW by age in all 13 countries.
+We assumed that those ratios in South Africa were applicable to every country, and thereby calculated the number of FSW by age group in all 13 countries (Figure \ref{fig:age-disagg-fsw-line}).
 
-To fill: plots and comparisons to other data sources.
+\begin{figure}
+  \centering
+  \makebox[\textwidth][c]{\includegraphics{depends/age-disagg-fsw-line.png}}
+  \caption{Proportion of FSW by age group (including the age groups 30-34, 35-39, 40-44 and 45-49) as produced by our disaggregation procedure.}
+  \label{fig:age-disagg-fsw-line}
+\end{figure}
 
 \clearpage
 
