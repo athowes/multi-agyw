@@ -12,26 +12,34 @@ convert_pdf_jpeg <- function(name) {
   system(command)
 }
 
+convert_pdf_png <- function(name) {
+  command <- paste0(
+    "convert -density 300 depends/", name, ".pdf -scene 1 -background white",
+    " -alpha remove -alpha off -quality 80 depends/", name, ".png"
+  )
+  system(command)
+}
+
 #' For paper.Rmd
-convert_pdf_jpeg("available-surveys")
-convert_pdf_jpeg("3p1-continental-map")
-convert_pdf_jpeg("3p1-within-between-country-variation")
-convert_pdf_jpeg("infections-reached")
+convert_pdf_png("available-surveys")
+convert_pdf_png("3p1-continental-map")
+convert_pdf_png("3p1-within-between-country-variation")
+convert_pdf_png("infections-reached")
 
 #' For appendix.Rmd
-convert_pdf_jpeg("information-criteria")
-convert_pdf_jpeg("fsw-logit-information-criteria")
-convert_pdf_jpeg("coverage")
+convert_pdf_png("model-comparison")
+convert_pdf_png("fsw-logit-information-criteria")
+convert_pdf_png("coverage")
 
 #' For tables-figures.Rmd
-convert_pdf_jpeg("category-flowchart")
-convert_pdf_jpeg("model-direct-benefits")
-convert_pdf_jpeg("aaa-variance-proportions")
-convert_pdf_jpeg("age-variation")
-convert_pdf_jpeg("temporal-interpolation-ribbon")
-convert_pdf_jpeg("prev-district-sexbehav-logit")
-convert_pdf_jpeg("incidence-district-sexbehav")
-convert_pdf_jpeg("infections-reached-country")
+convert_pdf_png("category-flowchart")
+convert_pdf_png("model-direct-benefits")
+convert_pdf_png("aaa-variance-proportions")
+convert_pdf_png("age-variation")
+convert_pdf_png("temporal-interpolation-ribbon")
+convert_pdf_png("prev-district-sexbehav-logit")
+convert_pdf_png("incidence-district-sexbehav")
+convert_pdf_png("infections-reached-country")
 
 #' Render documents
 rmarkdown::render("paper.Rmd")

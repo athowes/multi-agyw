@@ -303,7 +303,7 @@ We assumed it was possible to reach all members of every strata.
 ## Data
 
 ```{r fig.cap="Surveys used in our analysis by year, survey type, sample size, and whether the survey included a question about transactional sex. \\label{fig:available-surveys}"}
-knitr::include_graphics("depends/available-surveys.jpeg")
+knitr::include_graphics("depends/available-surveys.png")
 ```
 
 ```{r results='hide', warning=FALSE, message=FALSE}
@@ -393,11 +393,11 @@ Direct estimates of the four risk group proportions from these surveys were high
 
 ```{r continental-map, fig.cap="The spatial distribution (posterior mean) of the AGYW risk group proportions in 2018. Countries in grey were not included in our analysis. \\label{fig:continental-map}"}
 #' Note that the subnational borders look a bit overpowering when the quality of this is reduced
-knitr::include_graphics("depends/3p1-continental-map.jpeg")
+knitr::include_graphics("depends/3p1-continental-map.png")
 ```
 
 ```{r within-between-country-variation, fig.cap="National (in white) and subnational (in color) posterior means of the risk group proportions. We used regions of sub-Saharan Africa defined according to the UN geocode (M49). \\label{fig:within-between-country-variation}"}
-knitr::include_graphics("depends/3p1-within-between-country-variation.jpeg")
+knitr::include_graphics("depends/3p1-within-between-country-variation.png")
 ```
 
 Fig \ref{fig:continental-map} and Fig \ref{fig:within-between-country-variation} show posterior mean estimates for the proportion in each risk group from our final model.
@@ -550,7 +550,7 @@ We observed similar variance decomposition results fitting each country individu
 ## Expected infections reached
 
 ```{r fig.cap="Percentage of new infections reached across all 13 countries, taking a variety of risk stratification approaches, against the percentage of at risk population required to be reached. \\label{fig:infections-reached}"}
-knitr::include_graphics("depends/infections-reached.jpeg")
+knitr::include_graphics("depends/infections-reached.png")
 ```
 
 ```{r results=FALSE}

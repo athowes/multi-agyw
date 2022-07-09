@@ -259,7 +259,7 @@ Variable(s) & Description \\
 
 \begin{figure}[h]
     \centering
-    \includegraphics{depends/category-flowchart.jpeg}
+    \includegraphics{depends/category-flowchart.png}
     \caption{Flowchart describing allocation of respondents to risk groups.}
     \label{fig:category-flowchart}
 \end{figure}
@@ -272,14 +272,14 @@ Variable(s) & Description \\
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/model-direct-benefits.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/model-direct-benefits.png}}
 \caption{Illustration our model results for AGYW 20-24 in Tanzania in 2010 in the cohabiting risk group. Compared to the direct survey results, our spatio-temporally smoothed estimates more plausibly represent district-level heterogeneity, as well as imputing any districts with missing data.}
 \label{fig:model-direct-benefits}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/aaa-variance-proportions.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/aaa-variance-proportions.png}}
     \caption{Proportion of variance explained by each random effect (Sobol' indices) when the multinomial regression model is fit to each country individually. In this setting, country-category random effects are not included in the model and year-category random effects are replaced by survey-category random effects (for countries with surveys in multiple years). Countries are ordered by the proportion of their variance which is explained by the area-category random effects.}
 \label{fig:aaa-variance-proportions}
 \end{figure}
@@ -287,7 +287,7 @@ Variable(s) & Description \\
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/age-variation.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/age-variation.png}}
 \caption{The posterior density of national-level risk group proportions by age, illustrating the bi-modality of the cohabiting partner and non-regular and multiple partner(s) risk groups.}
 \label{fig:age-variation}
 \end{figure}
@@ -300,91 +300,91 @@ Variable(s) & Description \\
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-1.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-1.png}}
 \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Botswana. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
 \label{fig:temporal-interpolation-ribbon-1}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-2.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-2.png}}
 \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Cameroon. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
 \label{fig:temporal-interpolation-ribbon-2}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-3.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-3.png}}
 \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Kenya. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
 \label{fig:temporal-interpolation-ribbon-3}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-4.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-4.png}}
 \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Lesotho. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
 \label{fig:temporal-interpolation-ribbon-4}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-5.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-5.png}}
 \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Mozambique. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
 \label{fig:temporal-interpolation-ribbon-5}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-6.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-6.png}}
 \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Malawi. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
 \label{fig:temporal-interpolation-ribbon-6}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-7.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-7.png}}
 \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Namibia. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
 \label{fig:temporal-interpolation-ribbon-7}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-8.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-8.png}}
 \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Eswatini. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
 \label{fig:temporal-interpolation-ribbon-8}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-9.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-9.png}}
 \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Tanzania. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
 \label{fig:temporal-interpolation-ribbon-9}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-10.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-10.png}}
 \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Uganda. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
 \label{fig:temporal-interpolation-ribbon-10}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-11.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-11.png}}
 \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in South Africa. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
 \label{fig:temporal-interpolation-ribbon-11}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-12.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-12.png}}
 \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Zambia. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
 \label{fig:temporal-interpolation-ribbon-12}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-13.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/temporal-interpolation-ribbon-13.png}}
 \caption{Comparison of modelled and direct national-level estimates in 1999-2018 in Zimbabwe. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.}
 \label{fig:temporal-interpolation-ribbon-13}
 \end{figure}
@@ -395,91 +395,91 @@ Variable(s) & Description \\
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-1.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-1.png}}
     \caption{District-level HIV prevalence for each of the risk groups in 2018 in Botswana.}
     \label{fig:prevalence-district-sexbehav-1}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-2.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-2.png}}
     \caption{District-level HIV prevalence for each of the risk groups in 2018 in Cameroon.}
     \label{fig:prevalence-district-sexbehav-2}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-3.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-3.png}}
     \caption{District-level HIV prevalence for each of the risk groups in 2018 in Kenya.}
     \label{fig:prevalence-district-sexbehav-3}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-4.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-4.png}}
     \caption{District-level HIV prevalence for each of the risk groups in 2018 in Lesotho.}
     \label{fig:prevalence-district-sexbehav-4}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-5.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-5.png}}
     \caption{District-level HIV prevalence for each of the risk groups in 2018 in Mozambique.}
     \label{fig:prevalence-district-sexbehav-5}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-6.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-6.png}}
     \caption{District-level HIV prevalence for each of the risk groups in 2018 in Malawi.}
     \label{fig:prevalence-district-sexbehav-6}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-7.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-7.png}}
     \caption{District-level HIV prevalence for each of the risk groups in 2018 in Namibia.}
     \label{fig:prevalence-district-sexbehav-7}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-8.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-8.png}}
     \caption{District-level HIV prevalence for each of the risk groups in 2018 in Eswatini.}
     \label{fig:prevalence-district-sexbehav-8}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-9.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-9.png}}
     \caption{District-level HIV prevalence for each of the risk groups in 2018 in Tanzania.}
     \label{fig:prevalence-district-sexbehav-9}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-10.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-10.png}}
     \caption{District-level HIV prevalence for each of the risk groups in 2018 in Uganda.}
     \label{fig:prevalence-district-sexbehav-10}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-11.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-11.png}}
     \caption{District-level HIV prevalence for each of the risk groups in 2018 in South Africa.}
     \label{fig:prevalence-district-sexbehav-11}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-12.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-12.png}}
     \caption{District-level HIV prevalence for each of the risk groups in 2018 in Zambia.}
     \label{fig:prevalence-district-sexbehav-12}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-13.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/prev-district-sexbehav-logit-13.png}}
     \caption{District-level HIV prevalence for each of the risk groups in 2018 in Zimbabwe.}
     \label{fig:prevalence-district-sexbehav-13}
 \end{figure}
@@ -490,91 +490,91 @@ Variable(s) & Description \\
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-1.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-1.png}}
     \caption{District-level HIV incidence for each of the risk groups in 2018 in Botswana.}
     \label{fig:incidence-district-sexbehav-1}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-2.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-2.png}}
     \caption{District-level HIV incidence for each of the risk groups in 2018 in Cameroon.}
     \label{fig:incidence-district-sexbehav-2}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-3.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-3.png}}
     \caption{District-level HIV incidence for each of the risk groups in 2018 in Kenya.}
     \label{fig:incidence-district-sexbehav-3}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-4.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-4.png}}
     \caption{District-level HIV incidence for each of the risk groups in 2018 in Lesotho.}
     \label{fig:incidence-district-sexbehav-4}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-5.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-5.png}}
     \caption{District-level HIV incidence for each of the risk groups in 2018 in Mozambique.}
     \label{fig:incidence-district-sexbehav-5}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-6.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-6.png}}
     \caption{District-level HIV incidence for each of the risk groups in 2018 in Malawi.}
     \label{fig:incidence-district-sexbehav-6}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-7.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-7.png}}
     \caption{District-level HIV incidence for each of the risk groups in 2018 in Namibia.}
     \label{fig:incidence-district-sexbehav-7}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-8.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-8.png}}
     \caption{District-level HIV incidence for each of the risk groups in 2018 in Eswatini.}
     \label{fig:incidence-district-sexbehav-8}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-9.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-9.png}}
     \caption{District-level HIV incidence for each of the risk groups in 2018 in Tanzania.}
     \label{fig:incidence-district-sexbehav-9}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-10.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-10.png}}
     \caption{District-level HIV incidence for each of the risk groups in 2018 in Uganda.}
     \label{fig:incidence-district-sexbehav-10}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-11.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-11.png}}
     \caption{District-level HIV incidence for each of the risk groups in 2018 in South Africa.}
     \label{fig:incidence-district-sexbehav-11}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-12.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-12.png}}
     \caption{District-level HIV incidence for each of the risk groups in 2018 in Zambia.}
     \label{fig:incidence-district-sexbehav-12}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-13.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/incidence-district-sexbehav-13.png}}
     \caption{District-level HIV incidence for each of the risk groups in 2018 in Zimbabwe.}
     \label{fig:incidence-district-sexbehav-13}
 \end{figure}
@@ -585,91 +585,91 @@ Variable(s) & Description \\
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-1.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-1.png}}
 \caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Botswana.}
 \label{fig:infections-reached-country-1}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-2.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-2.png}}
 \caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Cameroon.}
 \label{fig:infections-reached-country-2}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-3.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-3.png}}
 \caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Kenya.}
 \label{fig:infections-reached-country-3}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-4.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-4.png}}
 \caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Lesotho.}
 \label{fig:infections-reached-country-4}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-5.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-5.png}}
 \caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Mozambique.}
 \label{fig:infections-reached-country-5}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-6.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-6.png}}
 \caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Malawi.}
 \label{fig:infections-reached-country-6}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-7.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-7.png}}
 \caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Namibia.}
 \label{fig:infections-reached-country-7}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-8.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-8.png}}
 \caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Eswatini.}
 \label{fig:infections-reached-country-8}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-9.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-9.png}}
 \caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Tanzania.}
 \label{fig:infections-reached-country-9}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-10.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-10.png}}
 \caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Uganda.}
 \label{fig:infections-reached-country-10}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-11.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-11.png}}
 \caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in South Africa.}
 \label{fig:infections-reached-country-11}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-12.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-12.png}}
 \caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Zambia.}
 \label{fig:infections-reached-country-12}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-13.jpeg}}
+\makebox[\textwidth][c]{\includegraphics{depends/infections-reached-country-13.png}}
 \caption{Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Zimbabwe.}
 \label{fig:infections-reached-country-13}
 \end{figure}

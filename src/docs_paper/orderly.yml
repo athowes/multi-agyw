@@ -46,7 +46,7 @@ depends:
   process_information-criteria:
     id: latest
     use:
-      depends/information-criteria.pdf: information-criteria.pdf
+      depends/model-comparison.pdf: model-comparison.pdf
   fit_fsw-logit-sae:
     id: latest
     use:

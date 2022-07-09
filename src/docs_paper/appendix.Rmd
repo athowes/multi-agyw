@@ -222,7 +222,7 @@ as implemented by `family = "xPoisson"` in `R-INLA`.
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/information-criteria.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/model-comparison.png}}
     \caption{Multinomial regression model performance, with the best performing model(s) according to each criteria shown as a square.}
     \label{fig:multinomial-model-performance}
 \end{figure}
@@ -287,7 +287,7 @@ CPO & 950 (15) & 969 (15) & 951 (15) & 970 (15) & 950 (15) & 970 (15) \\
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/fsw-logit-information-criteria.jpeg}}
+    \makebox[\textwidth][c]{\includegraphics{depends/fsw-logit-information-criteria.png}}
     \caption{Logistic regression model performance, with the best performing model(s) according to each criteria shown as a square.}
     \label{fig:logistic-model-performance}
 \end{figure}
@@ -298,7 +298,7 @@ To fill: explanation of Figure \ref{fig:coverage}.
 
 \begin{figure}
   \centering
-  \makebox[\textwidth][c]{\includegraphics{depends/coverage.jpeg}}
+  \makebox[\textwidth][c]{\includegraphics{depends/coverage.png}}
   \caption{Probability integral transform (PIT) histograms (top row) and empirical cumulative distribution function (ECDF) difference plots (bottom row) for the final selected models. These plots are adapted from \citet{sailynoja2021graphical} and are an example of posterior predictive checks, see for example \citet[Chapter 6.1]{gelman2020bayesian}.}
   \label{fig:coverage}
 \end{figure}
