@@ -17,7 +17,7 @@ run_commit_push("plot_aids-abstract") #' [x]
 run_commit_push("plot_model-direct-benefits") #' [x]
 
 #' Barplot of the information criteria (DIC, WAIC, CPO) for each model
-run_commit_push("process_information-criteria") #' [/]
+run_commit_push("process_information-criteria") #' [x]
 
 #' Variance based sensitivity analysis
 run_commit_push("process_variance-proportions") #' [x]
