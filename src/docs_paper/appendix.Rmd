@@ -103,13 +103,13 @@ Although in theory an improper prior $\theta_{ita} \propto 1$ should be used, in
 Model ID & Category ($\beta_k$) & Age ($\alpha_{ak}$) & Country ($\zeta_{ck}$) & Spatial ($\phi_{ik}$) & Temporal ($\gamma_{tk}$) & Spatio-temporal ($\delta{itk}$) \\
 \midrule
 M1 & IID & IID & IID & IID & IID & Not included \\
-M1x & IID & IID & IID & IID & IID & IID $\otimes$ IID \\
+<!-- M1x & IID & IID & IID & IID & IID & IID $\otimes$ IID \\ -->
 M2 & IID & IID & IID & Besag & IID & Not included \\
-M2x & IID & IID & IID & Besag & IID  & Besag $\otimes$ IID \\
+<!-- M2x & IID & IID & IID & Besag & IID  & Besag $\otimes$ IID \\ -->
 M3 & IID & IID & IID & IID & AR1 & Not included \\
-M3x & IID & IID & IID & IID & AR1 & IID $\otimes$ AR1 \\
+<!-- M3x & IID & IID & IID & IID & AR1 & IID $\otimes$ AR1 \\ -->
 M4 & IID & IID & IID & Besag & AR1 & Not included \\
-M4x & IID & IID & IID & Besag & AR1 & Besag $\otimes$ AR1 \\
+<!-- M4x & IID & IID & IID & Besag & AR1 & Besag $\otimes$ AR1 \\ -->
 \midrule
 \end{tabularx}
 \caption{The multinomial regression models that we considered. Observation random effects $\theta_{ita}$ are omitted from this table.}
@@ -125,8 +125,9 @@ As described above, we included observation random effects $\theta_{ita} \sim \m
 To capture country-specific proportion estimates for each category, we included category random effects $\beta_k \sim \mathcal{N}(0, \tau_\beta^{-1})$ and country-category random effects $\zeta_{ck} \sim \mathcal{N}(0, \tau_\zeta^{-1})$.
 Heterogeneity in risk group proportions by age was allowed by including age-country-category random effects $\alpha_{ack} \sim \mathcal{N}(0, \tau_\alpha^{-1})$.
 We considered two specifications, independent and identically distributed (IID) and Besag [@besag1991bayesian], for the space-category $\phi_{ik}$ random effects (Section \ref{sec:spatial-random-effects}) and two specifications, IID and first order autoregressive (AR1), for the year-category $\gamma_{tk}$ random effects (Section \ref{sec:temporal-random-effects}).
-We also considered separable space-year-category interactions $\delta_{itk}$ with corresponding Kronecker product structure (Section \ref{sec:spatio-temporal-random-effects}).
-All random effect precision parameters $\tau \in \{\tau_\beta, \tau_\alpha, \tau_\zeta, \tau_\phi, \tau_\gamma\, \tau_\delta\}$ were given independent penalised complexity (PC) priors [@simpson2017penalising] with base model $\sigma = 0$ given by $p(\tau) = 0.5 \nu \tau^{-3/2} \exp \left( - \nu \tau^{-1/2} \right)$ where $\nu = - \ln(0.01) / 2.5$ such that  $\mathbb{P}(\sigma > 2.5) = 0.01$.
+<!-- We also considered separable space-year-category interactions $\delta_{itk}$ with corresponding Kronecker product structure (Section \ref{sec:spatio-temporal-random-effects}). -->
+All random effect precision parameters $\tau \in \{\tau_\beta, \tau_\alpha, \tau_\zeta, \tau_\phi, \tau_\gamma \}$ were given independent penalised complexity (PC) priors [@simpson2017penalising] with base model $\sigma = 0$ given by $p(\tau) = 0.5 \nu \tau^{-3/2} \exp \left( - \nu \tau^{-1/2} \right)$ where $\nu = - \ln(0.01) / 2.5$ such that  $\mathbb{P}(\sigma > 2.5) = 0.01$.
+<!-- \tau_\delta -->
 
 ### Spatial random effects \label{sec:spatial-random-effects}
 
@@ -171,22 +172,22 @@ where $\epsilon_t \sim \mathcal{N}(0, 1)$ and $|\rho| < 1$.
 For the lag-one correlation parameter $\rho$, we used the PC prior, as derived by @sorbye2017penalised, with base model $\rho = 1$ and condition $\mathbb{P}(\rho > 0 = 0.75)$.
 We chose the base model $\rho = 1$ corresponding to no change in behaviour over time, rather than the alternative $\rho = 0$ corresponding to no correlation in behaviour over time, as we judged the former to be more plausible a priori.
 
-### Spatio-temporal random effects \label{sec:spatio-temporal-random-effects}
+<!-- ### Spatio-temporal random effects \label{sec:spatio-temporal-random-effects} -->
 
-We used the specification
-\begin{equation}
-    \bm{\delta} = (\delta_{111}, \ldots, \delta_{nT3^{+}})^\top \sim \mathcal{N}(\mathbf{0}, (\tau_\delta \mathbf{R}^\star_\delta)^{-}),
-\end{equation}
-where $\mathbf{R}^\star_\delta$ is a Kronecker product of the relevant space, time and category structure matrices.
-In particular, for each of the four models including spatio-temporal interactions, these matrices are
+<!-- We used the specification -->
+<!-- \begin{equation} -->
+<!--     \bm{\delta} = (\delta_{111}, \ldots, \delta_{nT3^{+}})^\top \sim \mathcal{N}(\mathbf{0}, (\tau_\delta \mathbf{R}^\star_\delta)^{-}), -->
+<!-- \end{equation} -->
+<!-- where $\mathbf{R}^\star_\delta$ is a Kronecker product of the relevant space, time and category structure matrices. -->
+<!-- In particular, for each of the four models including spatio-temporal interactions, these matrices are -->
 
-1. No spatial or temporal structure (Type I) $\mathbf{R}^\star_\delta = \mathbf{I} \otimes \mathbf{I} \otimes \mathbf{I}$,
-2. Structured spatial and unstructured temporal (Type II) $\mathbf{R}^\star_\delta = \mathbf{R}^\star_b \otimes \mathbf{I} \otimes \mathbf{I}$,
-3. Unstructured spatial and structured temporal (Type III) $\mathbf{R}^\star_\delta = \mathbf{I} \otimes \mathbf{R}^\star_a \otimes \mathbf{I}$,
-4. Structured spatial and temporal (Type IV) $\mathbf{R}^\star_\delta = \mathbf{R}^\star_b \otimes \mathbf{R}^\star_a \otimes \mathbf{I}$,
+<!-- 1. No spatial or temporal structure (Type I) $\mathbf{R}^\star_\delta = \mathbf{I} \otimes \mathbf{I} \otimes \mathbf{I}$, -->
+<!-- 2. Structured spatial and unstructured temporal (Type II) $\mathbf{R}^\star_\delta = \mathbf{R}^\star_b \otimes \mathbf{I} \otimes \mathbf{I}$, -->
+<!-- 3. Unstructured spatial and structured temporal (Type III) $\mathbf{R}^\star_\delta = \mathbf{I} \otimes \mathbf{R}^\star_a \otimes \mathbf{I}$, -->
+<!-- 4. Structured spatial and temporal (Type IV) $\mathbf{R}^\star_\delta = \mathbf{R}^\star_b \otimes \mathbf{R}^\star_a \otimes \mathbf{I}$, -->
 
-where the first, second and third elements of the Kronecker product represent space, time and category strucutre matrices respectively.
-The interaction type in brackets (e.g. Type I) is given according to the @knorr2000bayesian framework.
+<!-- where the first, second and third elements of the Kronecker product represent space, time and category strucutre matrices respectively. -->
+<!-- The interaction type in brackets (e.g. Type I) is given according to the @knorr2000bayesian framework. -->
 
 ### Constraints
 
@@ -199,9 +200,9 @@ Together, these were:
 3. Age-country $\sum_a \alpha_{ack} = 0, \, \forall \, c, k$,
 4. Spatial $\sum_i \phi_{ik} = 0, \, \forall \, k$
 5. Temporal $\sum_t \gamma_{tk} = 0, \, \forall \, k$
-6. Spatio-temporal\footnote{It was not possible to fully implement these constraints in \texttt{R-INLA}. This only effects the variance components interpretation.} $\sum_i \delta_{itk} = 0, \, \forall \, t, k;
-\quad \sum_t \delta_{itk} = 0, \, \forall \, i, k;
-\quad \sum_k \delta_{itk} = 0, \, \forall \, i, t$
+<!-- 6. Spatio-temporal\footnote{It was not possible to fully implement these constraints in \texttt{R-INLA}. This only effects the variance components interpretation.} $\sum_i \delta_{itk} = 0, \, \forall \, t, k; -->
+<!-- \quad \sum_t \delta_{itk} = 0, \, \forall \, i, k; -->
+<!-- \quad \sum_k \delta_{itk} = 0, \, \forall \, i, t$ -->
 
 ### Survey weighted likelihood
 
