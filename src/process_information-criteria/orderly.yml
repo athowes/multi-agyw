@@ -9,6 +9,7 @@ artefacts:
       filenames:
         #' Joint multinomial model
         - model-comparison.pdf
+        - model-comparison.txt
         #' FSW logit model
         - fsw-logit-model-comparison.pdf
         - fsw-logit-model-comparison.txt
