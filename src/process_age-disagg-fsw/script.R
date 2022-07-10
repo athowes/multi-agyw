@@ -140,14 +140,25 @@ df %>%
 
 dev.off()
 
+extended_cbpalette <- colorRampPalette(multi.utils::cbpalette())
+
 pdf("age-disagg-fsw-line.pdf", h = 4, w = 6.25)
 
 df %>%
   filter(age_group != "Y015_049") %>%
   ggplot(aes(x = age_group, y = fsw_prop, group = area_id, col = area_id)) +
   geom_line() +
+  scale_color_manual(values = extended_cbpalette(n = 13)) +
   labs(x = "Age group", y = "FSW proportion", col = "ISO3") +
   theme_minimal()
+
+dev.off()
+
+pdf("palette-extension.pdf", h = 4, w = 4)
+
+scales::show_col(multi.utils::cbpalette())
+
+scales::show_col(extended_cbpalette(n = 13))
 
 dev.off()
 

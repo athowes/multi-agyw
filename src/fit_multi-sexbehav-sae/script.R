@@ -340,8 +340,8 @@ if(include_interactions) {
 #' If low on computational resources i.e. not on the cluster
 #' Just fit one model
 if(lightweight) {
-  formulas <- list(formula4)
-  models <- list("Model 4")
+  formulas <- list(formula2)
+  models <- list("Model 2")
 }
 
 #' tryCatch version for safety
@@ -362,7 +362,8 @@ res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
 names(res_fit) <- models
 
-best <- "Model 4"
+#' Which model has the highest CPO?
+best <- paste0("Model ", which.max(ic_df$cpo))
 
 #' Artefact: Fitted model objects
 saveRDS(res_fit, "multi-sexbehav-sae-fits.rds")

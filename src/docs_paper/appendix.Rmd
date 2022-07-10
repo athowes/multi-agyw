@@ -103,13 +103,9 @@ Although in theory an improper prior $\theta_{ita} \propto 1$ should be used, in
 Model ID & Category ($\beta_k$) & Age ($\alpha_{ak}$) & Country ($\zeta_{ck}$) & Spatial ($\phi_{ik}$) & Temporal ($\gamma_{tk}$) & Spatio-temporal ($\delta{itk}$) \\
 \midrule
 M1 & IID & IID & IID & IID & IID & Not included \\
-<!-- M1x & IID & IID & IID & IID & IID & IID $\otimes$ IID \\ -->
 M2 & IID & IID & IID & Besag & IID & Not included \\
-<!-- M2x & IID & IID & IID & Besag & IID  & Besag $\otimes$ IID \\ -->
 M3 & IID & IID & IID & IID & AR1 & Not included \\
-<!-- M3x & IID & IID & IID & IID & AR1 & IID $\otimes$ AR1 \\ -->
 M4 & IID & IID & IID & Besag & AR1 & Not included \\
-<!-- M4x & IID & IID & IID & Besag & AR1 & Besag $\otimes$ AR1 \\ -->
 \midrule
 \end{tabularx}
 \caption{The multinomial regression models that we considered. Observation random effects $\theta_{ita}$ are omitted from this table.}
@@ -117,10 +113,17 @@ M4 & IID & IID & IID & Besag & AR1 & Not included \\
 \small
 \end{table}
 
-We considered eight models (Table \ref{tab:multinomial-models}) for $\eta_{ita}$ of the form
+<!-- To add once they work: -->
+<!-- M1x & IID & IID & IID & IID & IID & IID $\otimes$ IID \\ -->
+<!-- M2x & IID & IID & IID & Besag & IID  & Besag $\otimes$ IID \\ -->
+<!-- M3x & IID & IID & IID & IID & AR1 & IID $\otimes$ AR1 \\ -->
+<!-- M4x & IID & IID & IID & Besag & AR1 & Besag $\otimes$ AR1 \\ -->
+
+We considered four models (Table \ref{tab:multinomial-models}) for $\eta_{ita}$ of the form
 $$
-\eta_{ita} = \theta_{ita} + \beta_k + \alpha_{ak} + \zeta_{c[i]k} + \phi_{ik} + \gamma_{tk} + \delta_{itk}.
+\eta_{ita} = \theta_{ita} + \beta_k + \alpha_{ak} + \zeta_{c[i]k} + \phi_{ik} + \gamma_{tk}.
 $$
+<!-- + \delta_{itk} -->
 As described above, we included observation random effects $\theta_{ita} \sim \mathcal{N}(0, 1000^2)$ in all models we considered.
 To capture country-specific proportion estimates for each category, we included category random effects $\beta_k \sim \mathcal{N}(0, \tau_\beta^{-1})$ and country-category random effects $\zeta_{ck} \sim \mathcal{N}(0, \tau_\zeta^{-1})$.
 Heterogeneity in risk group proportions by age was allowed by including age-country-category random effects $\alpha_{ack} \sim \mathcal{N}(0, \tau_\alpha^{-1})$.
@@ -226,14 +229,30 @@ as implemented by `family = "xPoisson"` in `R-INLA`, which accepts non-integer i
 
 ### Model selection
 
+We performed model selection on the basis of the conditional predictive ordinate (CPO) criterion [@pettit1990conditional].
+For comparison, we also calculated the deviance information criterion (DIC) [@spiegelhalter2002bayesian] and widely applicable information criterion (WAIC) [@watanabe2013widely].
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{0.65\textwidth}{lllll}
+\toprule
+ & M1 & M2 & M3 & M4 \\ 
+\midrule
+DIC & 100780 (300) & 101588 (317) & 100781 (300) & 101589 (317) \\ 
+WAIC & 103763 (358) & 105008 (383) & 103763 (358) & 105009 (383) \\ 
+CPO & 5573 (36) & 5772 (36) & 5574 (36) & 5771 (36) \\ 
+\bottomrule
+\end{tabularx}
+\caption{Multinomial regression model performance. For the CPO, higher values indicate better model performance. For the DIC and WAIC, lower values indicate better model performance.}
+\label{tab:multinomial-model-performance}
+\end{table}
+
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics{depends/model-comparison.png}}
-    \caption{Multinomial regression model performance, with the best performing model(s) according to each criteria shown as a square.}
+    \caption{Multinomial regression model performance, with the best performing model(s) according to each criterion shown as a square. For the CPO, higher values indicate better model performance for the CPO. For the DIC and WAIC, lower values indicate better model performance.}
     \label{fig:multinomial-model-performance}
 \end{figure}
-
-To fill: table.
 
 ## Logistic regression model
 
@@ -258,6 +277,7 @@ L6 & Constant & IID & IID & Besag & \texttt{cfswrecent} \\
 \end{table}
 
 We considered six logistic regression models (Table \ref{tab:logistic-models}) each including a constant $\beta_0 \sim \mathcal{N}(-2, 1^2)$, age random effects $\alpha_a \sim \mathcal{N}(0, \tau_\alpha^{-1})$ and country random effects $\zeta_{c} \sim \mathcal{N}(0, \tau_\zeta^{-1})$.
+The prior on $\beta_0$ placed 95\% prior probability on the range `r 100 * round(plogis(-4), 2)`-`r 100 * round(plogis(0), 2)`\% for the percentage of those with non-regular or multiple partners who report transactional sex.
 We considered two specifications (IID, Besag) for the spatial random effects $\phi_i$.
 To aid estimation with sparse data, we also considered national-level covariates for the proportion of men who have paid for sex ever \texttt{cfswever} or in the last twelve months \texttt{cfswrecent}, available from @hodgins2022population.
 For both random effect precision parameters $\tau \in \{\tau_\alpha, \tau_\zeta\}$ we used the PC prior with base model $\sigma = 0$ and $\mathbb{P}(\sigma > 2.5 = 0.01)$.
@@ -274,34 +294,39 @@ to extend the binomial distribution to non-integer weighted counts and sample si
 
 ### Model selection
 
-To fill: explanation of Table \ref{tab:logistic-model-performance} and Figure \ref{fig:logistic-model-performance}.
+We selected the best model according to the CPO statistic, which was model L6.
+CPO values, along with DIC and WAIC values for reference, are presented in Table \ref{tab:logistic-model-performance} and Figure \ref{fig:logistic-model-performance}.
+Inclusion of Besag spatial random effects, rather than IID, consistently improved performance.
+Benefits from inclusion of covariates were more marginal.
+That said, as some countries had no suitable surveys, we preferred to include covariate information such that the estimates in these countries are based on some country-specific data.
 
 \begin{table}[h]
 \centering
 \begin{tabularx}{0.82\textwidth}{lllllll}
 \toprule
- & Model 1 & Model 2 & Model 3 & Model 4 & Model 5 & Model 6 \\ 
+ & L1 & L2 & L3 & L4 & L5 & L6 \\ 
 \midrule
 DIC & 4662 (110) & 4605 (111) & 4662 (110) & 4605 (111) & 4662 (110) & 4605 (111) \\ 
 WAIC & 4692 (115) & 4624 (115) & 4692 (115) & 4624 (115) & 4692 (115) & 4624 (115) \\ 
 CPO & 950 (15) & 969 (15) & 951 (15) & 970 (15) & 950 (15) & 970 (15) \\ 
 \bottomrule
 \end{tabularx}
-\caption{Logistic regression model performance. For the CPO, higher values indicate better model performance for the CPO. For the DIC and WAIC, lower values indicate better model performance.}
+\caption{Logistic regression model performance. For the CPO, higher values indicate better model performance. For the DIC and WAIC, lower values indicate better model performance.}
 \label{tab:logistic-model-performance}
 \end{table}
 
 \begin{figure}[h]
     \centering
     \makebox[\textwidth][c]{\includegraphics{depends/fsw-logit-information-criteria.png}}
-    \caption{Logistic regression model performance, with the best performing model(s) according to each criteria shown as a square.}
+    \caption{Logistic regression model performance, with the best performing model(s) according to each criterion shown as a square.}
     \label{fig:logistic-model-performance}
 \end{figure}
 
 ## Coverage assessment
 
-To assess the calibration of our fitted model, we calculated the quantile $q$ of each observation within the posterior predictive distribution (that is, within the collection of samples generated from the posterior predictive distribution).
+To assess the calibration of our fitted model, we calculated the quantile $q$ of each observation within the posterior predictive distribution.
 For calibrated models, these quantiles, known as probability integral transform (PIT) values [@dawid1984present; @bosse2022scoringutils], should follow a uniform distribution $q \sim \mathcal{U}[0, 1]$.
+To generate samples from the posterior predictive distribution, we applied the multinomial likelihood to samples from the latent field, setting the sample size to be the floor of the Kish effective sample size.
 
 Using the PIT values, it is possible to calculate the empirical coverage of all $(1 - \alpha)100$\% (equal-tailed) posterior predictive credible intervals.
 These empirical coverages can be compared to the nominal coverage $(1 - \alpha)$ for each value of $\alpha \in [0, 1]$ to give empirical cumulative distribution function (ECDF) difference values.
@@ -363,6 +388,7 @@ Given the fitted log odds ratios $\log(\text{OR}_k)$, we disaggregated Naomi est
 \hat \theta = \argmin_{\theta \in [-10, 10]} \left( \sum_{k} \left( \text{logistic}(\theta + \log(\text{OR}_k)) \cdot N_{iak} \right) - H_{ia} \right)^2
 \end{equation}
 where $\text{logistic}(x) = \exp(x) / (1 + \exp(x))$ such that $\text{logistic}(\hat \theta + \log(\text{OR}_k)) = \rho_{iak}$.
+Figures B.18 - B.30 show the resulting HIV prevalence estimates by risk group in each country.
 The number of PLHIV are then obtained by $H_{iak} = \rho_{iak} N_{iak}$, where $N_{iak}$ is the risk group population size.
 
 ## Calculation of incidence and expected number of new infections
@@ -382,6 +408,7 @@ Risk group specific HIV incidence estimates are then given by
 \end{align}
 which we evaluated using Naomi model estimates of the number of new HIV infections $I_{ia} = \lambda_{ia} N_{ia}$, HIV infection risk ratios $\{\text{RR}_3, \text{RR}_4(\lambda_{ia})\}$, and risk group population sizes as above.
 The risk ratio $\text{RR}_4(\lambda_{ia})$ was defined as a function of general population incidence.
+Figures B.31 - B.43 show the resulting HIV incidence estimates by risk group in each country.
 The number of new HIV infections are then $I_{iak} = \lambda_{iak} N_{iak}$.
 
 ## Calculation of expected new infections reached
@@ -394,9 +421,10 @@ As an illustration, for stratification just by age, we aggregated the number of 
 \end{align}
 Under this stratification, individuals in each age group $a$ are prioritised according to the highest HIV incidence $\lambda_a$.
 By cumulatively summing the expected infections, for each fraction of the total population reached we calculated the fraction of total expected new infections that would be reached.
+Figures B.44 - B.56 show the percentage of new infections that would be reached prioritising according to each possible stratification within each country.
 
 This analysis was relatively simple.
-More involved analyses might consider prioritisation of a hypothetical intervention which has some, possibly varying, probability of preventing HIV acquisition, and the costs associated to its roll-out.
+More involved analyses might consider prioritisation of a hypothetical intervention which has some, possibly varying, probability of preventing HIV acquisition, as well as the costs associated to its roll-out.
 
 \newpage
 

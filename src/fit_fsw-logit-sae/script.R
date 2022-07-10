@@ -388,68 +388,6 @@ ic_df <- sapply(res_fit, function(fit) {
     .before = dic
   )
 
-pdf("fsw-logit-information-criteria.pdf", h = 3, w = 6.25)
-
-ic_df %>%
-  rename("dic_mean" = "dic", "waic_mean" = "waic", "cpo_mean" = "cpo") %>%
-  pivot_longer(
-    cols = starts_with(c("dic", "waic", "cpo")),
-    names_to = "name",
-    values_to = "value"
-  ) %>%
-  separate(name, into = c("metric", "type"), extra = "merge", fill = "left") %>%
-  pivot_wider(
-    names_from = "type",
-    values_from = "value"
-  ) %>%
-  mutate(
-    metric = fct_recode(metric,
-      "DIC" = "dic",
-      "WAIC" = "waic",
-      "CPO" = "cpo"
-    ),
-    model = fct_recode(model,
-      "L1: IID spatial" = "Model 1",
-      "L2: Besag spatial" = "Model 2",
-      "L3: IID spatial, cfswever" = "Model 3",
-      "L4: Besag spatial, cfswever" = "Model 4",
-      "L5: IID spatial, cfswrecent" = "Model 5",
-      "L6: Besag spatial, cfswrecent" = "Model 6",
-    )
-  ) %>%
-  split(.$metric) %>%
-  lapply(function(x)
-    x %>%
-      mutate(
-        min_idx = (mean == min(mean, na.rm = TRUE)),
-        max_idx = (mean == max(mean, na.rm = TRUE)),
-        best_idx = ifelse(metric %in% c("WAIC", "DIC"), min_idx, max_idx)
-      )
-  ) %>%
-  bind_rows() %>%
-  ggplot(aes(x = model, y = mean, col = model, shape = best_idx)) +
-    geom_point(size = 3) +
-    geom_errorbar(
-      aes(ymin = mean - se, ymax = mean + se),
-      stat = "identity", position = "dodge", alpha = 0.4, col = "black", width = 0
-    ) +
-    facet_wrap(~metric, scales = "free") +
-    scale_color_manual(values = multi.utils::cbpalette()) +
-    scale_shape_manual(values = c(16, 15)) +
-    guides(shape = "none") +
-    labs(y = "Value", x = "", col = "") +
-    theme_minimal() +
-    theme(
-      legend.position = "bottom",
-      axis.text.x = element_blank(),
-      axis.ticks.x = element_blank(),
-      legend.title = element_text(size = 9),
-      legend.text = element_text(size = 9),
-      legend.margin = margin(0, 0, 0, 0)
-    )
-
-dev.off()
-
 write_csv(ic_df, "fsw-logit-information-criteria.csv", na = "")
 
 #' Which model has the highest CPO?

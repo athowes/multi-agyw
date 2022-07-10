@@ -8,7 +8,9 @@ available_surveys <- read_csv("depends/available-surveys.csv")
 
 #' Multinomial model
 
-df <- read_csv("depends/information-criteria.csv")
+df <- read_csv("depends/information-criteria.csv") %>%
+  #' Round these to the nearest integer
+  mutate_at(2:7, round, 0)
 
 pdf("model-comparison.pdf", h = 3, w = 6.25)
 
@@ -75,9 +77,106 @@ df %>%
 
 dev.off()
 
+df %>%
+  mutate(
+    dic = paste0(dic, " (", dic_se, ")"),
+    waic = paste0(waic, " (", waic_se, ")"),
+    cpo = paste0(cpo, " (", cpo_se, ")"),
+  ) %>%
+  select(-contains("se")) %>%
+  mutate(
+    model = fct_recode(model,
+                       "M1" = "Model 1", "M2" = "Model 2",
+                       "M3" = "Model 3", "M4" = "Model 4")
+  ) %>%
+  rename_with(~toupper(.), .cols = any_of(c("dic", "waic", "cpo"))) %>%
+  rename_with(~str_to_title(.), .cols = any_of(c("model", "country"))) %>%
+  select(-any_of(c("iso3"))) %>%
+  pivot_longer(
+    cols = c("DIC", "WAIC", "CPO"),
+    names_to = "Criteria"
+  ) %>%
+  pivot_wider(
+    names_from = "Model",
+    values_from = "value"
+  ) %>%
+  gt() %>%
+  fmt_missing(columns = everything(), rows = everything(), missing_text = "-") %>%
+  #' It's clear from context that these are the criteria
+  #' (such that the label is not required)
+  cols_label(
+    Criteria = "",
+  ) %>%
+  tab_stubhead(label = "") %>%
+  as_latex() %>%
+  as.character() %>%
+  cat(file = "model-comparison.txt")
+
 #' Logistic model
 
 df_prop <- read_csv("depends/fsw-logit-information-criteria.csv")
+
+pdf("fsw-logit-model-comparison.pdf", h = 3, w = 6.25)
+
+df_prop %>%
+  rename("dic_mean" = "dic", "waic_mean" = "waic", "cpo_mean" = "cpo") %>%
+  pivot_longer(
+    cols = starts_with(c("dic", "waic", "cpo")),
+    names_to = "name",
+    values_to = "value"
+  ) %>%
+  separate(name, into = c("metric", "type"), extra = "merge", fill = "left") %>%
+  pivot_wider(
+    names_from = "type",
+    values_from = "value"
+  ) %>%
+  mutate(
+    metric = fct_recode(metric,
+                        "DIC" = "dic",
+                        "WAIC" = "waic",
+                        "CPO" = "cpo"
+    ),
+    model = fct_recode(model,
+                       "L1: IID spatial" = "Model 1",
+                       "L2: Besag spatial" = "Model 2",
+                       "L3: IID spatial, cfswever" = "Model 3",
+                       "L4: Besag spatial, cfswever" = "Model 4",
+                       "L5: IID spatial, cfswrecent" = "Model 5",
+                       "L6: Besag spatial, cfswrecent" = "Model 6",
+    )
+  ) %>%
+  split(.$metric) %>%
+  lapply(function(x)
+    x %>%
+      mutate(
+        min_idx = (mean == min(mean, na.rm = TRUE)),
+        max_idx = (mean == max(mean, na.rm = TRUE)),
+        best_idx = ifelse(metric %in% c("WAIC", "DIC"), min_idx, max_idx)
+      )
+  ) %>%
+  bind_rows() %>%
+  ggplot(aes(x = model, y = mean, col = model, shape = best_idx)) +
+  geom_point(size = 3) +
+  geom_errorbar(
+    aes(ymin = mean - se, ymax = mean + se),
+    stat = "identity", position = "dodge", alpha = 0.4, col = "black", width = 0
+  ) +
+  facet_wrap(~metric, scales = "free") +
+  scale_color_manual(values = multi.utils::cbpalette()) +
+  scale_shape_manual(values = c(16, 15)) +
+  guides(shape = "none") +
+  labs(y = "Value", x = "", col = "") +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.title = element_text(size = 9),
+    legend.text = element_text(size = 9),
+    legend.margin = margin(0, 0, 0, 0)
+  )
+
+dev.off()
 
 df_prop %>%
   mutate(
@@ -86,6 +185,11 @@ df_prop %>%
     cpo = paste0(cpo, " (", cpo_se, ")"),
   ) %>%
   select(-contains("se")) %>%
+  mutate(
+    model = fct_recode(model,
+                       "L1" = "Model 1", "L2" = "Model 2", "L3" = "Model 3",
+                       "L4" = "Model 4", "L5" = "Model 5", "L6" = "Model 6")
+  ) %>%
   rename_with(~toupper(.), .cols = any_of(c("dic", "waic", "cpo"))) %>%
   rename_with(~str_to_title(.), .cols = any_of(c("model", "country"))) %>%
   select(-any_of(c("iso3"))) %>%

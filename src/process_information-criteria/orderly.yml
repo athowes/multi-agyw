@@ -10,6 +10,7 @@ artefacts:
         #' Joint multinomial model
         - model-comparison.pdf
         #' FSW logit model
+        - fsw-logit-model-comparison.pdf
         - fsw-logit-model-comparison.txt
         #' Separate country multinomial model
         #' All four category

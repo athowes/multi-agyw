@@ -264,7 +264,7 @@ To improve estimation with sparse data, during model selection we considered alt
 We performed inference using integrated nested Laplace approximation [@rue2009approximate] via the `R-INLA` package [@martins2013bayesian].
 It is not possible to directly fit multinomial logistic regression models in `R-INLA`, so we used the multinomial-Poisson transformation [@baker1994multinomial].
 Details of this approach, including how we used Kronecker products over Gaussian Markov random fields to define appropriate random effects, are provided in Appendix A.1.2.
-The best performing model was selected according to the conditional predictive ordinate (CPO) criteria, a measure of leave-one-out model performance that can be calculated directly in `R-INLA` without explicit model refitting [@held2010posterior].
+The best performing model was selected according to the conditional predictive ordinate (CPO) criterion [@pettit1990conditional], a measure of leave-one-out model performance that can be calculated directly in `R-INLA` without explicit model refitting [@held2010posterior].
 The \textsc{R} [@r] code used to implement the models and produce  results is available from `github.com/athowes/multi-agyw`.
 We used `sf` [@pebesma2018sf] for handling of spatial data, `orderly` [@orderly] for reproducible research, `ggplot2` for data visualisation [@wickham2016ggplot2] and `rticles` [@allaire2022rticles] for reporting via `rmarkdown` [@allaire2022rmarkdown].
 
@@ -384,11 +384,11 @@ The median number of surveys per country was four, ranging from one in Botswana 
 
 ## Model selection and model fit
 
-The best fitting multinomial regression model included correlated spatial effects and first-order autoregressive temporal effects.
+The best fitting multinomial regression model included correlated spatial effects and independent and identically distributed temporal effects.
 <!-- but not spatio-temporal interactions. -->
 The best logistic regression model for transactional sex included correlated spatial effects and the proportion of men who reported ever paying for sex covariate.
-Model performance according to the CPO criteria is provided in Appendix A.1.2.4 for all considered models.
-Direct estimates of the four risk group proportions from these surveys were highly correlated with our modelled estimates at a national-level.
+Model performance according to the CPO criterion is provided in Appendix A.1 for all models we considered.
+Direct estimates of the four risk group proportions from these surveys were highly correlated with our modelled estimates at a national-level (Fig B.5 - B.17).
 
 ## Risk group estimates
 
@@ -666,7 +666,7 @@ Our estimates support consideration of differentiated prevention programming acc
 
 We defined four risk groups based on sexual behaviour, the most proximal determinant of risk.
 Other factors, such as condom usage or type of sexual act, may account for additional heterogeneity in risk from sexual behaviour.
-However, we did not include these factors in view of measurement difficulties, consistency across contexts, and the operational benefits of describing risk parsimoniously.
+However, we did not include these factors in view of measurement difficulties, concerns about consistency across contexts, and the operational benefits of describing risk parsimoniously.
 <!-- Reasons why we didn't include condom usage: -->
 <!-- Defining condom usage is challenging, particularly for those with multiple partners, and reporting is likely biased due to social desirability. -->
 <!-- Additionally, consistent condom usage is rare amongst those cohabiting, and as such likely only relevant for those with non-regular sexual partners.  -->
@@ -714,7 +714,8 @@ If present, these reporting biases will also have distorted the estimates of inf
 
 We have the least confidence in our estimates for the FSW risk group.
 As well as having the smallest sample sizes, our transactional sex estimates do not overcome the difficulties of sampling hard to reach groups.
-In adjusting our estimates of transactional sex to match national FSW estimates, we inherent their limitations. 
+We inherent any limitations of the national FSW estimates [@stevens2022estimating] which we adjust our estimates of transactional sex to match.
+<!-- (As presented by Oli's paper) -->
 Furthermore, we do not consider seasonal migration patterns, which may particularly effect FSW size.
 
 The efficiency of each stratified prevention strategy depends on the ability of programmes to identify and effectively reach those in each strata.
