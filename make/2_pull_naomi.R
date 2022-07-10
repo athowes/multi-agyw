@@ -8,6 +8,11 @@ url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/Spectrum files/2022 nao
 path <- sharepoint$download(URLencode(url))
 naomi_output <- readRDS(path)
 
+naomi_output %>%
+  filter(iso3 == "MOZ") %>%
+  pull(calendar_quarter) %>%
+  unique()
+
 naomi_extract <- naomi_output %>%
   filter(
     iso3 %in% priority_iso3,
@@ -17,7 +22,11 @@ naomi_extract <- naomi_output %>%
     #' Only female
     sex == "female",
     #' Value being used in the global report (there is no CY2021Q4 in ZAF)
-    ifelse(iso3 != "ZAF", calendar_quarter == "CY2021Q4", calendar_quarter == "CY2021Q3")
+    case_when(
+      iso3 == "ZAF" ~ calendar_quarter == "CY2021Q3",
+      iso3 == "MOZ" ~ calendar_quarter == "CY2020Q4",
+      TRUE ~ calendar_quarter == "CY2021Q4"
+    )
   ) %>%
   left_join(
     as.data.frame(analysis_level) %>%
