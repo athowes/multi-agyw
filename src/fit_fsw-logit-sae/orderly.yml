@@ -23,7 +23,6 @@ artefacts:
       description: Model selection information criteria for logistic regression models
       filenames:
         - fsw-logit-information-criteria.csv
-        - fsw-logit-information-criteria.pdf
   - data:
       description: Modelling checks
       filenames:

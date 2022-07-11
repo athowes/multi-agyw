@@ -13,7 +13,7 @@ orderly::orderly_commit(id) #' [x]
 id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE))
 orderly::orderly_commit(id) #' [x]
 
-id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(include_interactions = FALSE))
+id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(include_interactions = FALSE, fewer_countries = FALSE))
 orderly::orderly_commit(id) #' [x]
 
 #' The full version with interactions is too slow to run locally,

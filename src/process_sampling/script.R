@@ -2,8 +2,9 @@
 # orderly::orderly_develop_start("process_sampling")
 # setwd("src/process_sampling")
 
-#' Start with low number of samples
-S <- 100
+#' In testing, 100 samples can be used
+#' For the final results, 1000 samples should be used
+S <- 1000
 
 #' Multinomial regression model
 fit <- readRDS("depends/best-multi-sexbehav-sae-fit.rds")

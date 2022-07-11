@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE, fewer_countries = FALSE))
+# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = FALSE, fewer_countries = TRUE))
 # setwd("src/fit_multi-sexbehav-sae")
 
 sf_use_s2(FALSE)
@@ -362,13 +362,6 @@ res_df <- lapply(res, "[[", 1) %>% bind_rows()
 res_fit <- lapply(res, "[[", 2)
 names(res_fit) <- models
 
-#' Which model has the highest CPO?
-best <- paste0("Model ", which.max(ic_df$cpo))
-
-#' Artefact: Fitted model objects
-saveRDS(res_fit, "multi-sexbehav-sae-fits.rds")
-saveRDS(res_fit[[best]], "best-multi-sexbehav-sae-fit.rds")
-
 #' Add columns for local DIC, WAIC, CPO and PIT
 #' res_df has the 15-24 category too
 #' Add columns for local DIC, WAIC, CPO
@@ -399,12 +392,19 @@ ic_df <- res_df %>%
 
 write_csv(ic_df, "information-criteria.csv", na = "")
 
+#' Which model has the highest CPO?
+best <- paste0("Model ", which.max(ic_df$cpo))
+
+#' Artefact: Fitted model objects
+saveRDS(res_fit, "multi-sexbehav-sae-fits.rds")
+saveRDS(res_fit[[best]], "best-multi-sexbehav-sae-fit.rds")
+
 #' Artefact: Random effect variance parameter posterior means
 variance_df <- tryCatch(
   map(res_fit, function(fit)
     fit$marginals.hyperpar %>%
       #' Calculate the expectation of the variance
-      map_df(function(x) inla.emarginal(fun = function(y) 1/y, x)) %>%
+      map_df(function(x) inla.emarginal(fun = function(y) 1 / y, x)) %>%
       #' Rename Precision to variance
       rename_all(list(~ str_replace(., "Precision for ", "variance_")))
   ) %>%
