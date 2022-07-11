@@ -755,4 +755,21 @@ For the purpose of Open Access, the authors have applied a CC BY public copyrigh
 
 The findings and conclusions in this manuscript are those of the authors and do not necessarily represent the official position of the funding agencies.
 
+## Author contributions
+
+* Conceptualisation: JWE, KAR, CB
+* Data curation: AH, KAR, VKN, RE, OS, JWE
+* Formal analysis: AH
+* Funding acquisition: JWE
+* Investigation: AH
+* Methodology: AH, KAR, VKN, TMW, SRF, JWE
+* Project administration: JWE, KAR, CB
+* Software: AH, KAR
+* Supervision: JWE, SRF
+* Visualisation: AH
+* Writing - Original draft: AH
+* Writing - Review and Editing: AH, KAR, VKN, OS, KMJ, RE, LZ, IW, MM, CB, SRF, JWE
+
+\clearpage
+
 # References {#references .unnumbered}

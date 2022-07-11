@@ -47,10 +47,7 @@ depends:
     id: latest
     use:
       depends/model-comparison.pdf: model-comparison.pdf
-  fit_fsw-logit-sae:
-    id: latest
-    use:
-      depends/fsw-logit-information-criteria.pdf: fsw-logit-information-criteria.pdf
+      depends/fsw-logit-model-comparison.pdf: fsw-logit-model-comparison.pdf
   process_variance-proportions:
     id: latest
     use:
