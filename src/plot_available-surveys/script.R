@@ -85,7 +85,7 @@ plotA <- df %>%
   ) %>%
   ggplot(aes(x = year, y = fct_rev(country), col = type, size = sample_size_factor, shape = giftsvar)) +
   geom_point(alpha = 0.7) +
-  labs(x = "", y = "", col = "Survey type", shape = "Does the survey include\na specific transactional question?", size = "Sample size") +
+  labs(x = "", y = "", col = "Survey type", shape = "Does the survey include a specific\nquestion about transactional sex?", size = "Sample size") +
   scale_color_manual(values = multi.utils::cbpalette()[c(3, 7, 1, 2)]) +
   scale_x_continuous(breaks = min(df$year):max(df$year)) +
   scale_size_discrete(range = c(2, 5)) +
