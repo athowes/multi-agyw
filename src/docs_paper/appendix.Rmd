@@ -318,7 +318,7 @@ CPO & 950 (15) & 969 (15) & 951 (15) & 970 (15) & 950 (15) & 970 (15) \\
 
 \begin{figure}[h]
     \centering
-    \makebox[\textwidth][c]{\includegraphics{depends/fsw-logit-information-criteria.png}}
+    \makebox[\textwidth][c]{\includegraphics{depends/fsw-logit-model-comparison.png}}
     \caption{Logistic regression model performance, with the best performing model(s) according to each criterion shown as a square.}
     \label{fig:logistic-model-performance}
 \end{figure}

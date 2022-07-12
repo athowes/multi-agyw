@@ -65,7 +65,7 @@ plotsA <- df_3p1_ribbon %>%
         data = filter(df_3p1_raw, iso3 == x$iso3[1]),
         aes(x = year, y = mean_raw, col = type, shape = raw_replaced)
       ) +
-      facet_grid(age_group ~ indicator) +
+      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
       scale_color_manual(values = match_available_surveys_plot_palette) +
       scale_shape_manual(values = c(19, 1)) +
       lims(x = c(2000L, 2018L)) +
@@ -99,7 +99,7 @@ dev.off()
 pdf("uga-check.pdf", h = 7, w = 6.25)
 
 df_3p1 %>%
-  filter(iso3 == "Uganda", indicator == "Cohabiting partner") %>%
+  filter(iso3 == "Uganda", indicator == "One cohabiting partner") %>%
   select(year, age_group, estimate_raw, estimate_smoothed) %>%
   pivot_longer(
     cols = starts_with("estimate"),

@@ -21,7 +21,7 @@ convert_pdf_png <- function(name) {
 
 #' For appendix.Rmd
 convert_pdf_png("model-comparison")
-convert_pdf_png("fsw-logit-information-criteria")
+convert_pdf_png("fsw-logit-model-comparison")
 convert_pdf_png("coverage")
 convert_pdf_png("age-disagg-fsw-line")
 
