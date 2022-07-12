@@ -8,7 +8,7 @@ df <- df %>%
   multi.utils::update_naming() %>%
   filter(
     age_group %in% c("15-19", "20-24", "25-29"),
-    indicator != "Nonregular partners(s) +",
+    indicator != "Non-regular or multiple partners(s) +",
     !is.na(estimate_raw)
   ) %>%
   droplevels()
@@ -31,7 +31,7 @@ polygon_data <- data.frame(
 )
 
 histograms <- ggplot(df, aes(x = prob_predictive_quantile)) +
-  facet_grid(~indicator, drop = TRUE, scales = "free") +
+  facet_grid(~indicator, drop = TRUE, scales = "free", labeller = labeller(indicator = label_wrap_gen(20))) +
   geom_histogram(aes(y = (..count..) / tapply(..count..,..PANEL..,sum)[..PANEL..]),
                  breaks = seq(0, 1, length.out = bins + 1), fill = "#009E73", col = "black", alpha = 0.9) +
   geom_polygon(data = polygon_data, aes(x = x, y = y), fill = "grey75", color = "grey50", alpha = 0.6) +
@@ -55,9 +55,13 @@ ecdf_diff <- df %>%
       )
   }) %>%
   purrr::map_df(~as.data.frame(.x), .id = "indicator") %>%
+  mutate(
+    indicator = factor(indicator,
+      levels = c("Not sexually active", "One cohabiting partner",
+                 "Non-regular or multiple partner(s)", "FSW"))
+  ) %>%
   ggplot(aes(x = nominal_coverage, y = ecdf_diff)) +
-  facet_grid(~factor(indicator, levels = c("No sex", "Cohabiting partner", "Nonregular partner(s)", "FSW")),
-             drop = TRUE, scales = "free") +
+  facet_grid(~indicator, drop = TRUE, scales = "free", labeller = labeller(indicator = label_wrap_gen(20))) +
   geom_line(col = "#009E73") +
   geom_step(aes(x = nominal_coverage, y = ecdf_diff_upper), alpha = 0.7, col = "grey50") +
   geom_step(aes(x = nominal_coverage, y = ecdf_diff_lower), alpha = 0.7, col = "grey50") +
