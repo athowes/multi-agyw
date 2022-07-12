@@ -37,7 +37,7 @@ depends:
   plot_available-surveys:
     id: latest
     use:
-      depends/available-surveys.pdf: available-surveys.pdf
+      depends/available-surveys.png: available-surveys.png
       depends/available-surveys.csv: available-surveys.csv
   plot-tikz_category-flowchart:
     id: latest
@@ -76,11 +76,11 @@ depends:
   plot_continental-map:
     id: latest
     use:
-      depends/3p1-continental-map.pdf: 3p1-continental-map.pdf
+      depends/3p1-continental-map.png: 3p1-continental-map.png
   plot_within-between-country-variation:
     id: latest
     use:
-      depends/3p1-within-between-country-variation.pdf: 3p1-within-between-country-variation.pdf
+      depends/3p1-within-between-country-variation.png: 3p1-within-between-country-variation.png
       depends/df_3p1_subnational.csv: df_3p1_subnational.csv
       depends/df_3p1_national.csv: df_3p1_national.csv
   process_prevalence:
@@ -95,7 +95,7 @@ depends:
   plot_infections-reached:
     id: latest
     use:
-      depends/infections-reached.pdf: infections-reached.pdf
+      depends/infections-reached.png: infections-reached.png
       depends/infections-reached-country.pdf: infections-reached-country.pdf
       depends/infections-reached.csv: infections-reached.csv
       depends/infections-reached-country.rds: infections-reached-country.rds

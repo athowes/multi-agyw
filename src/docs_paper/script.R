@@ -4,14 +4,6 @@
 #' Conversion of figures from .pdf to .jpeg at specified resolution
 Sys.setenv(PATH = paste(Sys.getenv("PATH"), "/opt/homebrew/bin", sep = ":"))
 
-convert_pdf_jpeg <- function(name) {
-  command <- paste0(
-    "convert -density 300 depends/", name, ".pdf -scene 1 -background white",
-    " -alpha remove -alpha off -quality 80 depends/", name, ".jpeg"
-  )
-  system(command)
-}
-
 convert_pdf_png <- function(name) {
   command <- paste0(
     "convert -density 300 depends/", name, ".pdf -scene 1 -background white",
@@ -21,10 +13,11 @@ convert_pdf_png <- function(name) {
 }
 
 #' For paper.Rmd
-convert_pdf_png("available-surveys")
-convert_pdf_png("3p1-continental-map")
-convert_pdf_png("3p1-within-between-country-variation")
-convert_pdf_png("infections-reached")
+#' These are already .png
+# convert_pdf_png("available-surveys")
+# convert_pdf_png("3p1-continental-map")
+# convert_pdf_png("3p1-within-between-country-variation")
+# convert_pdf_png("infections-reached")
 
 #' For appendix.Rmd
 convert_pdf_png("model-comparison")
