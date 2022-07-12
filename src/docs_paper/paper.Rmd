@@ -725,6 +725,8 @@ Identifying and reaching behavioural strata may be particularly challenging.
 Empirical evaluations of behavioural risk screening tools have found only moderate discriminatory ability [@jia2022risk], and risk behaviour may change rapidly among young populations, increasing the challenge to effectively deliver appropriately timed prevention packages.
 This consideration may motivate selecting risk groups based on easily observable attributes, such as attendance of a particular service or facility, rather than sexual behaviour.
 
+<!-- RE notes that it could be worth talking about the age patterns of sexual mixing, that we didn't consider them, and how they might effect intervention planning. -->
+
 ## Conclusion
 
 We estimated the proportion of AGYW aged 15-19, 20-24 and 25-29 years in four sexual risk categories at a district-level in 13 priority countries.
