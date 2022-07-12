@@ -229,8 +229,9 @@ as implemented by `family = "xPoisson"` in `R-INLA`, which accepts non-integer i
 
 ### Model selection
 
-We performed model selection on the basis of the conditional predictive ordinate (CPO) criterion [@pettit1990conditional].
-For comparison, we also calculated the deviance information criterion (DIC) [@spiegelhalter2002bayesian] and widely applicable information criterion (WAIC) [@watanabe2013widely].
+We performed model selection on the basis of the conditional predictive ordinate (CPO) criterion [@pettit1990conditional], selecting model M2.
+This model included Besag spatial random effects and IID temporal random effects.
+The deviance information criterion (DIC) [@spiegelhalter2002bayesian] and widely applicable information criterion (WAIC) [@watanabe2013widely] are included for reference (Table \ref{tab:multinomial-model-performance} and Figure \ref{fig:multinomial-model-performance}).
 
 \begin{table}[h]
 \centering
