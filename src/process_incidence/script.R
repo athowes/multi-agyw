@@ -51,7 +51,13 @@ df <- df_3p1 %>%
   left_join(
     select(prev, "area_id", "age_group", starts_with("prev_")),
     by = c("area_id", "age_group")
-  )
+  ) %>%
+  #' Cabo Delgado Province in MOZ disrupted due to conflict, so no population data from Naomi
+  filter(!is.na(population))
+
+# df %>% filter(is.na(population)) %>%
+#   pull(area_id) %>%
+#   unique()
 
 rr_sexcohab <- 1
 rr_sexnonreg <- 1.72
@@ -131,7 +137,7 @@ plotsA <- df_plot %>%
       geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
       coord_sf(lims_method = "geometry_bbox") +
       scale_fill_viridis_c(option = "C", label = label_percent()) +
-      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(10))) +
+      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
       theme_minimal() +
       labs(
         title = paste0(x$iso3[1]),
@@ -174,7 +180,7 @@ df %>%
       geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
       coord_sf(lims_method = "geometry_bbox") +
       scale_fill_viridis_c(option = "C") +
-      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(10))) +
+      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
       theme_minimal() +
       labs(
         title = paste0(x$iso3[1]),

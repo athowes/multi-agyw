@@ -6,7 +6,7 @@ df <- read_csv("depends/adjust-best-3p1-multi-sexbehav-sae.csv") %>%
   multi.utils::update_naming() %>%
   filter(
     age_group != "15-24",
-    indicator != "Nonregular partners(s) +"
+    indicator != "Non-regular or multiple partners(s) +"
   )
 
 #' Add region column
@@ -51,7 +51,8 @@ plotA <- ggplot(df_age_country, aes(y = age_group, x = estimate_smoothed, fill =
   theme_minimal() +
   scale_x_continuous(labels = scales::percent, limits = c(0, 1)) +
   scale_y_discrete(expand = expansion(mult = c(0.05, 0))) +
-  labs(y = "Age group", x = "Proportion", fill = "Category") +
+  labs(y = "Age group", x = "Proportion", fill = "Risk group") +
+  guides(fill = guide_legend(nrow = 2, byrow = TRUE)) +
   theme(
     legend.position = "bottom",
     legend.key.width = unit(1, "lines"),

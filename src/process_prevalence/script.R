@@ -354,7 +354,7 @@ plotsA <- df_3p1_linear_plot %>%
       geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
       coord_sf(lims_method = "geometry_bbox") +
       scale_fill_viridis_c(option = "C", label = label_percent()) +
-      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(10))) +
+      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
       theme_minimal() +
       labs(
         title = paste0(x$iso3[1]),
@@ -399,7 +399,7 @@ plotsB <- df_3p1_logit_plot %>%
       geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
       coord_sf(lims_method = "geometry_bbox") +
       scale_fill_viridis_c(option = "C", label = label_percent()) +
-      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(10))) +
+      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
       theme_minimal() +
       labs(
         title = paste0(x$iso3[1]),
