@@ -16,11 +16,17 @@ artefacts:
       filenames:
         - tables-figures.pdf
         - tables-figures.tex
+  - data:
+      description: Cover letter
+      filenames:
+        - cover.pdf
+        - cover.html
 
 resources:
   - paper.Rmd
   - tables-figures.Rmd
   - appendix.Rmd
+  - cover.Rmd
   - citations.bib
   - PLOS-submission.eps
   - HIV2021Estimates_Global_PLWHV-NI-Pop_6June2022.xlsx

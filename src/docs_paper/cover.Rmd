@@ -1,0 +1,35 @@
+---
+title: "Cover letter"
+author: "Adam Howes"
+output:
+  pagedown::html_letter:
+    self_contained: false
+links-to-footnotes: true
+paged-footnotes: true
+# uncomment this line to produce HTML and PDF in RStudio:
+knit: pagedown::chrome_print
+---
+
+::: from
+Adam Howes    
+Email: ath19@ic.ac.uk     
+:::
+
+::: date
+13th July, 2022
+:::
+
+Dear editor,
+
+Please find attached our manuscript, entitled “Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa” for consideration for publication in PLOS Global Public Health.
+
+Adolescent girls and young women (AGYW) are at elevated risk of HIV acquisition.
+To inform implementation of HIV prevention for AGYW, we used a Bayesian statistical model to geographically map HIV risk group proportions defined based on sexual behaviour.
+We used these estimates to disaggregate HIV prevalence and HIV incidence by risk group, as well as calculating the expected number of new infections which could be reached according to different prioritisation strategies.
+Our approach is aligned with the Global AIDS Strategy 2021-2026, which recommends differentiating HIV prevention according to location and behavioural risk.
+
+All authors have approved this version of the manuscript for submission and the content of the manuscript has not been published or submitted elsewhere.
+
+With kind regards, on behalf of all the co-authors,
+
+Adam Howes
