@@ -2,6 +2,8 @@
 
 Code for the manuscript Howes *et al.* "Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa" (preprint on [medRxiv](https://www.medrxiv.org/content/10.1101/2022.07.12.22277551v1)).
 
+## Summary
+
 New HIV infections are disproportionately common in adolescent girls and young women.
 Accelerating provision of HIV prevention programming in this key population is a top priority, but funding is insufficient to reach everyone ([HIV Prevention Coalition, 2020](https://hivpreventioncoalition.unaids.org/wp-content/uploads/2020/06/Decision-making-aide-AGYW-investment-Version-March-2020-Final.pdf)).
 Small-area estimation of risk group population sizes enables countries to prioritise provision of services to those at greatest risk, taking into account both geographic and behavioral factors, as called for in the [Global AIDS Strategy 2021-2026](https://www.unaids.org/en/Global-AIDS-Strategy-2021-2026).
@@ -10,6 +12,20 @@ To enable inference with the `R-INLA` package, each model is reformulated as an 
 We use the resulting proportion estimates to disaggregate HIV prevalence and HIV incidence estimates from the [Naomi small-area estimation model](https://github.com/mrc-ide/naomi) according to risk group membership.
 
 ![This figure is produced by the report `plot_aids-abstract`](aids-abstract.png)
+
+## Citation
+
+If you would like to cite this work, please use:
+
+```
+@article{howes2022spatio,
+  title={Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa},
+  author={Howes, Adam and Risher, Kathryn A and Stevens, Oliver and Jia, Katherine M and Wolock, Timothy M and Esra, Rachel and Zembe, Lycias and Wanyeki, Ian and Mahy, Mary and Benedikt, Clemens and Flaxman, Seth R and Eaton, Jeffrey W},
+  journal={medRxiv},
+  year={2022},
+  publisher={Cold Spring Harbor Laboratory Press}
+}
+```
 
 ## File structure
 
