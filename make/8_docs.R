@@ -1,6 +1,7 @@
 run_commit_push("plot-tikz_category-flowchart")
 
 #' Presentations
+run_commit_push("docs_30-11-21-coverage")
 run_commit_push("docs_12-05-22-mrc-gida")
 
 #' Posters
