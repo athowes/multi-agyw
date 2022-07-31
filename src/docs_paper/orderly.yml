@@ -2,24 +2,21 @@ script: script.R
 
 artefacts:
   - data:
-      description: Main paper
+      description: Main paper, appendix and figures and tables .pdf files
       filenames:
         - paper.pdf
-        - paper.tex
-  - data:
-      description: Appendix
-      filenames:
         - appendix.pdf
-        - appendix.tex
-  - data:
-      description: Figures and tables
-      filenames:
         - tables-figures.pdf
+  - data:
+      description: Main paper, appendix and figures and tables .tex files
+      filenames:
+        - paper.tex
+        - appendix.tex
         - tables-figures.tex
   - data:
       description: Cover letter
       filenames:
-        - cover.pdf
+        # - cover.pdf
         - cover.html
 
 resources:
