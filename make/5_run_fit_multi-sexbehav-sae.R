@@ -22,7 +22,7 @@ orderly::orderly_commit(id) #' [x]
 #' A. On local machine:
 #' 1. Create bundle
 #' 2. Upload to sharepoint somewhere with spud
-#' B. On windows VM:
+#' B. On windows VM, or other drive connected to DIDEHPC:
 #' 1. Pull bundle
 #' 2. Run bundle
 #' 3. Upload to sharepoint
