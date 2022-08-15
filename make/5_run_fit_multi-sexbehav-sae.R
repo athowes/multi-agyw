@@ -72,13 +72,16 @@ config <- didehpc::didehpc_config(
 
 #' naomi sourced from Github (not on CRAN)
 #' multi.utils sourced from Github (not on CRAN)
-#' INLA (stable version) available from the URL below
 src <- conan::conan_sources(
-  c("github::mrc-ide/naomi", "github::athowes/multi.utils", "https://inla.r-inla-download.org/R/stable")
+  c("github::mrc-ide/naomi", "github::athowes/multi.utils")
 )
 
-#' Unsure if I need to be doing something like this:
-packages$loaded <- setdiff(packages$loaded, c("INLA", "naomi", "multi.utils"))
+#' Remove INLA for the time being
+#' Possible options for including:
+#' 1. github::hrue/r-inla/rinla [does not work]
+#' 2. "https://inla.r-inla-download.org/R/stable [does not work]
+#' 3. Download manually then provide path e.g. ./INLA_20.07.12.tar.gz
+packages$loaded <- setdiff(packages$loaded, c("INLA"))
 
 ctx <- context::context_save(
   "context",
@@ -88,8 +91,13 @@ ctx <- context::context_save(
 
 obj <- didehpc::queue_didehpc(ctx, config = config)
 
-t <- obj$enqueue(orderly::orderly_bundle_run(recent_bundle$name, "bundle-output"))
+#' Test that queue works correctly
+t <- obj$enqueue(sessionInfo())
+t$status()
+t$result()
 
+#' Run larger job
+t <- obj$enqueue(orderly::orderly_bundle_run(recent_bundle$name, "bundle-output"))
 t$status()
 t$result()
 
