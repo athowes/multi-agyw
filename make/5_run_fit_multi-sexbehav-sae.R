@@ -33,7 +33,7 @@ orderly::orderly_commit(id) #' [x]
 #' 2. Import into archive
 
 #' A1.
-path_bundles <- "bundle-input"
+path_bundles <- "bundles"
 
 bundle <- orderly::orderly_bundle_pack(
   path = path_bundles,
@@ -52,7 +52,7 @@ recent_bundle <- folder$list() %>%
 #' B1.
 folder$download(
   path = recent_bundle$name,
-  dest = paste0("bundle-input/", recent_bundle$name)
+  dest = file.path(root, path_bundles, recent_bundle$name)
 )
 
 #' B2.
@@ -72,16 +72,11 @@ config <- didehpc::didehpc_config(
 
 #' naomi sourced from Github (not on CRAN)
 #' multi.utils sourced from Github (not on CRAN)
+#' INLA available from URL
 src <- conan::conan_sources(
-  c("github::mrc-ide/naomi", "github::athowes/multi.utils")
+  packages = c("github::mrc-ide/naomi", "github::athowes/multi.utils"),
+  repos = "https://inla.r-inla-download.org/R/stable"
 )
-
-#' Remove INLA for the time being
-#' Possible options for including:
-#' 1. github::hrue/r-inla/rinla [does not work]
-#' 2. "https://inla.r-inla-download.org/R/stable [does not work]
-#' 3. Download manually then provide path e.g. ./INLA_20.07.12.tar.gz
-packages$loaded <- setdiff(packages$loaded, c("INLA"))
 
 ctx <- context::context_save(
   "context",
@@ -97,7 +92,14 @@ t$status()
 t$result()
 
 #' Run larger job
-t <- obj$enqueue(orderly::orderly_bundle_run(recent_bundle$name, "bundle-output"))
+path <- file.path(recent_bundle$name)
+output_path <- "output"
+
+t <- obj$enqueue(orderly::orderly_bundle_run(
+  path = path,
+  workdir = output_path
+))
+
 t$status()
 t$result()
 
