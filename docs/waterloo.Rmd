@@ -1,0 +1,19 @@
+---
+title: "Waterloo student conference abstract submission"
+author: "Adam Howes, Imperial College London"
+date: "16th September 2022"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+**Title**:
+A Bayesian multinomial spatio-temporal for HIV risk group proportions.
+
+**Abstract**:
+The Global AIDS Strategy 2021-2026 identifies adolescent girls and young women (AGYW) as a priority population for HIV prevention, and recommends differentiating intervention portfolios according to local HIV incidence, and individual risk behaviour.
+To help countries implement the strategy, we developed a Bayesian multinomial spatio-temporal model to estimate district-level HIV risk group proportions for AGYW across 13 high burden countries in sub-Saharan Africa.
+We used the multinomial-Poisson transformation to enable fast and accruate inference for the model via integrated nested Laplace approximations.
+Using our risk group proportions we estimated additional policy-relevant indicators including HIV prevalence and HIV incidence by risk group, as well as numbers of infections that could be averted using different intervention strategies.
+For more information, see [`athowes/multi-agyw`](https://github.com/athowes/multi-agyw).
