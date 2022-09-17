@@ -1,8 +1,12 @@
 ## Presentations
 
-* [09-09-21-three-category](https://athowes.github.io/multi-agyw/09-09-21-three-category.pdf): HIV inference group lab meeting presentation
-* [24-09-21-new-cohort](https://athowes.github.io/multi-agyw/24-09-21-new-cohort.pdf): StatML kick-off camp presentation for new cohort
-* [30-11-21-coverage](https://athowes.github.io/multi-agyw/30-11-21-coverage.pdf): HIV inference group lab meeting presentation
+* [09-09-21-three-category](https://athowes.github.io/multi-agyw/09-09-21-three-category.pdf): HIV inference group lab meeting
+* [24-09-21-new-cohort](https://athowes.github.io/multi-agyw/24-09-21-new-cohort.pdf): StatML kick-off camp for new cohort
+* [30-11-21-coverage](https://athowes.github.io/multi-agyw/30-11-21-coverage.pdf): HIV inference group lab meeting
+
+## Posters
+
+* [amazon-poster](https://athowes.github.io/multi-agyw/amazon-poster.pdf): [Amazon Berlin StatML workshop](https://www.amazon.science/latest-news/amazon-to-host-statml-oxford-imperial-ml-workshop-in-berlin-office)
 
 ## Manuscript
 
