@@ -19,4 +19,6 @@ archive_to_docs <- function(report) {
 archive_to_docs("docs_24-09-21-new-cohort")
 archive_to_docs("docs_09-09-21-three-category")
 archive_to_docs("docs_30-11-21-coverage")
+archive_to_docs("docs_04-01-22-update")
+archive_to_docs("docs_amazon-poster")
 archive_to_docs("docs_paper")
