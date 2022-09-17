@@ -41,29 +41,6 @@ output:
 
 1. Usual high variance from low counts problem, improved by spatio-temporal smoothing
 2. The raw proportions don't add up to one
-  * This is illustrated in the next slide
-  
-##
-
-:::: columns
-
-::: column
-
-```{r echo=FALSE}
-knitr::include_graphics("page1-check100.pdf")
-```
-
-:::
-
-::: column
-
-```{r echo=FALSE}
-knitr::include_graphics("page2-check100.pdf")
-```
-
-:::
-
-::::
 
 ## Multinomial likelihood
 
@@ -249,31 +226,6 @@ $$
 * Deal with this by using `xPoisson` (generalisation of the Poisson to non-integer data) rather than `Poisson`
 * Might be equivalent to weighted log-likelihood approach
 
-##
-
-:::: columns
-
-::: column
-
-```{r echo=FALSE}
-knitr::include_graphics("page-multi-sexbehav-sae.pdf")
-```
-
-:::
-
-::: column
-
-* A (difficult to see) example of what this looks like
-* Model 9 has BYM2 and AR1
-* Other notes
-  * Quantiles produced by manipulating `inla.posterior.sample`s
-  * Same samples used in combination with Naomi population data to produce aggregates (i.e. 15-24 age category)
-
-:::
-
-::::
-
-
 ## Data issues for `sexpaid12m` category
 
 * Two different questions asked in the DHS, and answered very differently
@@ -283,12 +235,6 @@ knitr::include_graphics("page-multi-sexbehav-sae.pdf")
   * Better answered but still has issues
     * Missing some FSW from survey sampling frame
     * Not all "gifts of money in exchange for sex" is sex work
-
-##
-
-```{r echo=FALSE}
-knitr::include_graphics("depends/sexpaid-survey-question.pdf")
-```
 
 ## Current approach
 

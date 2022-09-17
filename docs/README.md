@@ -1,5 +1,6 @@
 ## Presentations
 
+* [09-09-21-three-category](https://athowes.github.io/multi-agyw/09-09-21-three-category.pdf): HIV inference group lab meeting presentation
 * [24-09-21-new-cohort](https://athowes.github.io/multi-agyw/24-09-21-new-cohort.pdf): StatML kick-off camp presentation for new cohort
 * [30-11-21-coverage](https://athowes.github.io/multi-agyw/30-11-21-coverage.pdf): HIV inference group lab meeting presentation
 
