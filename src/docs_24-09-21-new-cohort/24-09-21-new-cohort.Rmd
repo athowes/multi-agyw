@@ -134,10 +134,4 @@ Temporal structure & T1 & T1 & T1 & T2 & T2 & T2 & T3 & T3 & T3 \\
 \label{tab:models}
 \end{table}
 
-##
-
-```{r echo=FALSE}
-knitr::include_graphics("depends/all-dhs-rank-comparison.pdf")
-```
-
 ## References {.allowframebreaks}

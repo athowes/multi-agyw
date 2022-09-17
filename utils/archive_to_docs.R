@@ -17,4 +17,5 @@ archive_to_docs <- function(report) {
 
 #' Names of the reports to move
 archive_to_docs("docs_30-11-21-coverage")
+archive_to_docs("docs_24-09-21-new-cohort")
 archive_to_docs("docs_paper")
