@@ -185,7 +185,7 @@ df_area_age_behav <- df %>%
     names_sep = "_"
   ) %>%
   pivot_wider(
-    id_cols = c("area_id", "age_group", "indicator", "category"),
+    id_cols = c("area_id", "age_group", "category"),
     names_from = "indicator",
     values_from = "value"
   )
@@ -223,13 +223,7 @@ df_area_age %>%
 ##
 
 ```{r echo=FALSE, out.width = "350px", fig.cap = "New infections reached prioritising according to different stratifications."}
-knitr::include_graphics("depends/infections-reached.png")
-```
-
-##
-
-```{r echo=FALSE, out.width = "350px", fig.cap = "As previous slide but specific to Mozambique."}
-knitr::include_graphics("depends/infections-reached-moz.png")
+knitr::include_graphics("depends/infections-reached.pdf")
 ```
 
 ##

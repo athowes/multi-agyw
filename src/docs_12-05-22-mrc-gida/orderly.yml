@@ -66,5 +66,4 @@ depends:
   plot_infections-reached:
     id: latest
     use:
-      depends/infections-reached.png: infections-reached.png
-      depends/infections-reached-moz.png: infections-reached-country-5.png
+      depends/infections-reached.pdf: infections-reached.pdf
