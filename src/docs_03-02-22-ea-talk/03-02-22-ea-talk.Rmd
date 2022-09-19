@@ -145,7 +145,7 @@ knitr::include_graphics("depends/aids-abstract-B.pdf")
 ##
 
 ```{r echo=FALSE}
-knitr::include_graphics("depends/model-direct-benefits-h.pdf")
+knitr::include_graphics("depends/model-direct-benefits.pdf")
 ```
 
 ## The Besag model
@@ -159,7 +159,8 @@ Mean of $\phi_i$ average of adjacent units and precision is proportional to $n_{
 ##
 
 ```{r echo=FALSE}
-knitr::include_graphics("geometry-graph-zwe.pdf")
+library(bsae)
+plot_graph(zw, add_geography = TRUE)
 ```
 
 ## Impact of this work
@@ -175,7 +176,7 @@ knitr::include_graphics("geometry-graph-zwe.pdf")
 ## 
 
 ```{r echo=FALSE}
-knitr::include_graphics("depends/infections-averted-country.pdf")
+knitr::include_graphics("depends/infections-reached-country.pdf")
 ```
 
 ## Some possible routes for the future

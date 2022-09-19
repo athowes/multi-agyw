@@ -10,12 +10,15 @@ resources:
   - 03-02-22-ea-talk.Rmd
   - preamble.tex
   - citations.bib
-  - geometry-graph-zwe.pdf
 
 packages:
   - rmarkdown
 
 depends:
+  plot_available-surveys:
+    id: latest
+    use:
+      depends/available-surveys.pdf: available-surveys.pdf
   plot-tikz_category-flowchart:
     id: latest
     use:
@@ -28,8 +31,8 @@ depends:
   plot_model-direct-benefits:
     id: latest
     use:
-      depends/model-direct-benefits-h.pdf: model-direct-benefits-h.pdf
-  analyze_infections-averted:
+      depends/model-direct-benefits.pdf: model-direct-benefits.pdf
+  plot_infections-reached:
     id: latest
     use:
-      depends/infections-averted-country.pdf: infections-averted-country.pdf
+      depends/infections-reached-country.pdf: infections-reached-country.pdf
