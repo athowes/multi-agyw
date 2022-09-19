@@ -6,6 +6,7 @@
 * [04-01-22-update](https://athowes.github.io/multi-agyw/04-01-22-update.pdf): HIV inference group lab meeting
 * [19-01-22-stats-epi-group](https://athowes.github.io/multi-agyw/19-01-22-stats-epi-group.odf): [Machine Learning & Global Health Network](https://mlgh.net/) group meeting
 * [03-02-22-ea-talk](https://athowes.github.io/multi-agyw/03-02-22-ea-talk.pdf): Imperial [Effective Altruism](https://www.effectivealtruism.org/) student group
+* [12-05-22-mrc-gida](https://athowes.github.io/multi-agyw/12-05-22-mrc-gida.pdf): [MRC GIDA](https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/) seminar
 
 ## Posters
 
