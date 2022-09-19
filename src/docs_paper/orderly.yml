@@ -16,7 +16,7 @@ artefacts:
   - data:
       description: Cover letter
       filenames:
-        # - cover.pdf
+        - cover.pdf
         - cover.html
 
 resources:
@@ -102,3 +102,7 @@ depends:
       depends/infections-reached-country.pdf: infections-reached-country.pdf
       depends/infections-reached.csv: infections-reached.csv
       depends/infections-reached-country.rds: infections-reached-country.rds
+  process_transactional-fsw-adjustment:
+    id: latest
+    use:
+      depends/multi-sexbehav-sae.csv: adjust-best-3p1-multi-sexbehav-sae.csv

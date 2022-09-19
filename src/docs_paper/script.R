@@ -40,6 +40,4 @@ rmarkdown::render("paper.Rmd")
 rmarkdown::render("appendix.Rmd")
 rmarkdown::render("tables-figures.Rmd")
 rmarkdown::render("cover.Rmd")
-
-# There is a chrome error with this, commenting out for now
-# pagedown::chrome_print("cover.html")
+pagedown::chrome_print("cover.html")

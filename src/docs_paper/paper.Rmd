@@ -4,7 +4,7 @@ author:
   - name: Adam Howes
     email: ath19@ic.ac.uk
     affiliation: [A, B]
-    corresponding: ath19@ic.ac.uk
+    corresponding: \texttt{ath19@ic.ac.uk}
   - name: Kathryn A. Risher 
     affiliation: [C, B]
   - name: Van Kính Nguyen
@@ -626,7 +626,7 @@ For example, FSW in Kenya were estimated to be `r inf_fsw_kenya$prop_population_
 ---
 abstract: |
   **Background:**
-  The Global AIDS Strategy 2021-2026 identifies adolescent girls and young women (AGYW) as a priority population for HIV prevention, and recommends differentiated intervention portfolios geographically based on local HIV incidence and individual risk behaviours.
+  The Global AIDS Strategy 2021-2026 identifies adolescent girls and young women (AGYW) as a priority population for HIV prevention, and recommends differentiating intervention portfolios geographically based on local HIV incidence and individual risk behaviours.
   We aimed to estimate prevalence of HIV risk behaviours and associated HIV incidence at a small spatial scale among AGYW living in 13 countries in sub-Saharan Africa.
 
   **Methods:**
