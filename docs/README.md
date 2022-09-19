@@ -6,7 +6,11 @@
 * [04-01-22-update](https://athowes.github.io/multi-agyw/04-01-22-update.pdf): HIV inference group lab meeting
 * [19-01-22-stats-epi-group](https://athowes.github.io/multi-agyw/19-01-22-stats-epi-group.odf): [Machine Learning & Global Health Network](https://mlgh.net/) group meeting
 * [03-02-22-ea-talk](https://athowes.github.io/multi-agyw/03-02-22-ea-talk.pdf): Imperial [Effective Altruism](https://www.effectivealtruism.org/) student group
-* [12-05-22-mrc-gida](https://athowes.github.io/multi-agyw/12-05-22-mrc-gida.pdf): [MRC GIDA](https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/) seminar
+* [12-05-22-mrc-gida](https://athowes.github.io/multi-agyw/12-05-22-mrc-gida.pdf): [MRC Global Infectious Disease Analysis](https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/) seminar
+* [28-09-22-toronto](https://athowes.github.io/multi-agyw/28-09-22-toronto): [Centre for Global Health Research](https://www.cghr.org/)
+* [xx-09-22-hdsl](https://athowes.github.io/multi-agyw/xx-09-22-hdsl.pdf): [Health Data Science Lab](https://uwaterloo.ca/health-data-science-lab/) seminar
+* [14-10-22-waterloo](https://athowes.github.io/multi-agyw/14-10-22-waterloo.pdf): [
+Waterloo Student Conference in Statistics, Actuarial Science and Finance](https://uwaterloo.ca/statistics-actuarial-science-finance-student-conference/)
 
 ## Posters
 
