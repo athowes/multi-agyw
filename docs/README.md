@@ -15,6 +15,7 @@ Waterloo Student Conference in Statistics, Actuarial Science and Finance](https:
 ## Posters
 
 * [amazon-poster](https://athowes.github.io/multi-agyw/amazon-poster.pdf): [Amazon Berlin StatML workshop](https://www.amazon.science/latest-news/amazon-to-host-statml-oxford-imperial-ml-workshop-in-berlin-office)
+* [aids22-poster](https://athowes.github.io/multi-agyw/aids22-poster.pdf): [AIDS 2022](https://aids2022.org/), Montreal
 
 ## Manuscript
 
