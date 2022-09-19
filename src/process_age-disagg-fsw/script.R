@@ -4,7 +4,12 @@
 
 priority_iso3 <- multi.utils::priority_iso3()
 
-pse <- read_csv("fsw_ntl_pse.csv")
+#' fsw_ntl_pse.csv are the old estimates from Oli
+#' fsw_ntl.csv are the newer estimates from Oli
+pse <- read_csv("fsw_ntl.csv") %>%
+  mutate(kp = "FSW", .before = "iso3") %>%
+  filter(indicator == "pse_count")
+
 afs <- readRDS("kinh-afs-dist.rds")
 pop <- readRDS("depends/naomi_pop.rds")
 
@@ -26,7 +31,7 @@ gamma_sd <- 9
 
 #' gamma_mean = alpha / beta
 #' gamma_variance = alpha / beta^2
-beta <- gamma_mean / gamma_sd^2 #'rate
+beta <- gamma_mean / gamma_sd^2 #' rate
 alpha <- gamma_mean * beta #' shape
 
 pdf("thembisa-fsw-age-dist.pdf", h = 5, w = 6.25)
@@ -136,6 +141,7 @@ df %>%
   facet_grid(~age_group) +
   scale_y_continuous(breaks = seq(0, 0.05, by = 0.025)) +
   coord_flip() +
+  labs(x = "FSW proportion", y = "ISO3") +
   theme_minimal()
 
 dev.off()

@@ -24,6 +24,7 @@ packages:
   - multi.utils
 
 resources:
+  - fsw_ntl.csv
   - fsw_ntl_pse.csv
   - kinh-afs-dist.rds
 
