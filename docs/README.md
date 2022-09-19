@@ -4,8 +4,8 @@
 * [24-09-21-new-cohort](https://athowes.github.io/multi-agyw/24-09-21-new-cohort.pdf): StatML kick-off camp for new cohort
 * [30-11-21-coverage](https://athowes.github.io/multi-agyw/30-11-21-coverage.pdf): HIV inference group lab meeting
 * [04-01-22-update](https://athowes.github.io/multi-agyw/04-01-22-update.pdf): HIV inference group lab meeting
-* [19-01-22-stats-epi-group](https://athowes.github.io/multi-agyw/19-01-22-stats-epi-group): [Machine Learning & Global Health Network](https://mlgh.net/) group meeting
-* [03-02-22-ea-talk](https://athowes.github.io/multi-agyw/19-01-22-stats-epi-group): Imperial [Effective Altruism](https://www.effectivealtruism.org/) student group
+* [19-01-22-stats-epi-group](https://athowes.github.io/multi-agyw/19-01-22-stats-epi-group.odf): [Machine Learning & Global Health Network](https://mlgh.net/) group meeting
+* [03-02-22-ea-talk](https://athowes.github.io/multi-agyw/03-02-22-ea-talk.pdf): Imperial [Effective Altruism](https://www.effectivealtruism.org/) student group
 
 ## Posters
 
