@@ -23,14 +23,10 @@ depends:
     id: latest
     use:
       depends/available-surveys.pdf: available-surveys.pdf
-  process_information-criteria:
-    id: latest
-    use:
-      depends/3-rank-comparison.pdf: 3-rank-comparison.pdf
   process_variance-proportions:
     id: latest
     use:
-      depends/variance-proportions.pdf: variance-proportions.pdf
+      depends/aaa-variance-proportions.pdf: aaa-variance-proportions.pdf
   plot_age-variation:
     id: latest
     use:
@@ -42,8 +38,4 @@ depends:
   plot_continental-map:
     id: latest
     use:
-      depends/continental-map.pdf: continental-map.pdf
-  plot_within-between-country-variation:
-    id: latest
-    use:
-      depends/within-between-country-variation.pdf: within-between-country-variation.pdf
+      depends/3-continental-map.pdf: 3-continental-map.pdf
