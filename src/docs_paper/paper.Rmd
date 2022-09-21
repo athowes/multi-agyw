@@ -15,7 +15,7 @@ author:
     affiliation: D
   - name: Timothy M. Wolock
     affiliation: [A, B]
-  - name: Rachel Esra
+  - name: Rachel T. Esra
     affiliation: B    
   - name: Lycias Zembe
     affiliation: E
@@ -650,7 +650,7 @@ abstract: |
 author_summary: |
   Exposure to HIV among adolescent girls and young women depends on the level of unsuppresed HIV in their local community among potential partners, and their individual sexual behaviour.
   To support HIV programmes in identifying and providing services to those at highest risk, we geographically mapped HIV risk groups using sexual risk behaviour data from household surveys and estimated the proportion of people living with HIV in each risk group, and the rate of infections in each risk group.
-  Doing so also allowed us to estimate the the proportion of people living with HIV in each risk group, as well as the rate of new infections in each risk group.
+  Doing so also allowed us to estimate the proportion of people living with HIV in each risk group, as well as the rate of new infections in each risk group.
   We found that prioritising HIV prevention using behavioural risk groups almost halved the proportion of the population that would need to be reached to find half of all expected new infections.
 ---
 
