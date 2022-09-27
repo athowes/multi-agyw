@@ -4,10 +4,10 @@
 * [24-09-21-new-cohort](https://athowes.github.io/multi-agyw/24-09-21-new-cohort.pdf): StatML kick-off camp for new cohort
 * [30-11-21-coverage](https://athowes.github.io/multi-agyw/30-11-21-coverage.pdf): HIV inference group lab meeting
 * [04-01-22-update](https://athowes.github.io/multi-agyw/04-01-22-update.pdf): HIV inference group lab meeting
-* [19-01-22-stats-epi-group](https://athowes.github.io/multi-agyw/19-01-22-stats-epi-group.odf): [Machine Learning & Global Health Network](https://mlgh.net/) group meeting
+* [19-01-22-stats-epi-group](https://athowes.github.io/multi-agyw/19-01-22-stats-epi-group.pdf): [Machine Learning & Global Health Network](https://mlgh.net/) group meeting
 * [03-02-22-ea-talk](https://athowes.github.io/multi-agyw/03-02-22-ea-talk.pdf): Imperial [Effective Altruism](https://www.effectivealtruism.org/) student group
 * [12-05-22-mrc-gida](https://athowes.github.io/multi-agyw/12-05-22-mrc-gida.pdf): [MRC Global Infectious Disease Analysis](https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/) seminar
-* [28-09-22-toronto](https://athowes.github.io/multi-agyw/28-09-22-toronto): [Centre for Global Health Research](https://www.cghr.org/)
+* [28-09-22-toronto](https://athowes.github.io/multi-agyw/28-09-22-toronto.pdf): [Centre for Global Health Research](https://www.cghr.org/)
 * [06-10-22-hdsl](https://athowes.github.io/multi-agyw/06-10-22-hdsl.pdf): [Health Data Science Lab](https://uwaterloo.ca/health-data-science-lab/) seminar
 * [14-10-22-waterloo](https://athowes.github.io/multi-agyw/14-10-22-waterloo.pdf): [
 Waterloo Student Conference in Statistics, Actuarial Science and Finance](https://uwaterloo.ca/statistics-actuarial-science-finance-student-conference/)
