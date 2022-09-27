@@ -4,9 +4,9 @@
 #' Conversion of figures from .pdf to .jpeg at specified resolution
 Sys.setenv(PATH = paste(Sys.getenv("PATH"), "/opt/homebrew/bin", sep = ":"))
 
-convert_pdf_png <- function(name) {
+convert_pdf_png <- function(name, dpi = 300) {
   command <- paste0(
-    "convert -density 300 depends/", name, ".pdf -scene 1 -background white",
+    "convert -density ", dpi, " depends/", name, ".pdf -scene 1 -background white",
     " -alpha remove -alpha off -quality 80 depends/", name, ".png"
   )
   system(command)
@@ -30,10 +30,10 @@ convert_pdf_png("category-flowchart")
 convert_pdf_png("model-direct-benefits")
 convert_pdf_png("aaa-variance-proportions")
 convert_pdf_png("age-variation")
-convert_pdf_png("temporal-interpolation-ribbon")
-convert_pdf_png("prev-district-sexbehav-logit")
-convert_pdf_png("incidence-district-sexbehav")
-convert_pdf_png("infections-reached-country")
+convert_pdf_png("temporal-interpolation-ribbon", dpi = 150)
+convert_pdf_png("prev-district-sexbehav-logit", dpi = 150)
+convert_pdf_png("incidence-district-sexbehav", dpi = 150)
+convert_pdf_png("infections-reached-country", dpi = 150)
 
 #' Render documents
 rmarkdown::render("paper.Rmd")
