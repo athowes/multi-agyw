@@ -100,7 +100,7 @@ Although in theory an improper prior $\theta_{ita} \propto 1$ should be used, in
 \centering
 \begin{tabularx}{\textwidth}{lllllll}
 \midrule
-Model ID & Category ($\beta_k$) & Age ($\alpha_{ak}$) & Country ($\zeta_{ck}$) & Spatial ($\phi_{ik}$) & Temporal ($\gamma_{tk}$) & Spatio-temporal ($\delta{itk}$) \\
+Model ID & Category ($\beta_k$) & Country ($\zeta_{ck}$) & Age ($\alpha_{ack}$) & Spatial ($\phi_{ik}$) & Temporal ($\gamma_{tk}$) & Spatio-temporal ($\delta{itk}$) \\
 \midrule
 M1 & IID & IID & IID & IID & IID & Not included \\
 M2 & IID & IID & IID & Besag & IID & Not included \\
@@ -121,7 +121,7 @@ M4 & IID & IID & IID & Besag & AR1 & Not included \\
 
 We considered four models (Table \ref{tab:multinomial-models}) for $\eta_{ita}$ of the form
 $$
-\eta_{ita} = \theta_{ita} + \beta_k + \alpha_{ak} + \zeta_{c[i]k} + \phi_{ik} + \gamma_{tk}.
+\eta_{ita} = \theta_{ita} + \beta_k + \zeta_{c[i]k} + \alpha_{ac[i]k} + \phi_{ik} + \gamma_{tk}.
 $$
 <!-- + \delta_{itk} -->
 As described above, we included observation random effects $\theta_{ita} \sim \mathcal{N}(0, 1000^2)$ in all models we considered.
@@ -129,7 +129,7 @@ To capture country-specific proportion estimates for each category, we included 
 Heterogeneity in risk group proportions by age was allowed by including age-country-category random effects $\alpha_{ack} \sim \mathcal{N}(0, \tau_\alpha^{-1})$.
 We considered two specifications, independent and identically distributed (IID) and Besag [@besag1991bayesian], for the space-category $\phi_{ik}$ random effects (Section \ref{sec:spatial-random-effects}) and two specifications, IID and first order autoregressive (AR1), for the year-category $\gamma_{tk}$ random effects (Section \ref{sec:temporal-random-effects}).
 <!-- We also considered separable space-year-category interactions $\delta_{itk}$ with corresponding Kronecker product structure (Section \ref{sec:spatio-temporal-random-effects}). -->
-All random effect precision parameters $\tau \in \{\tau_\beta, \tau_\alpha, \tau_\zeta, \tau_\phi, \tau_\gamma \}$ were given independent penalised complexity (PC) priors [@simpson2017penalising] with base model $\sigma = 0$ given by $p(\tau) = 0.5 \nu \tau^{-3/2} \exp \left( - \nu \tau^{-1/2} \right)$ where $\nu = - \ln(0.01) / 2.5$ such that  $\mathbb{P}(\sigma > 2.5) = 0.01$.
+All random effect precision parameters $\tau \in \{\tau_\beta, \tau_\zeta, \tau_\alpha, \tau_\phi, \tau_\gamma\}$ were given independent penalised complexity (PC) priors [@simpson2017penalising] with base model $\sigma = 0$ given by $p(\tau) = 0.5 \nu \tau^{-3/2} \exp \left( - \nu \tau^{-1/2} \right)$ where $\nu = - \ln(0.01) / 2.5$ such that  $\mathbb{P}(\sigma > 2.5) = 0.01$.
 <!-- \tau_\delta -->
 
 ### Spatial random effects \label{sec:spatial-random-effects}
@@ -287,9 +287,9 @@ For the regression parameters $\beta \in \{\beta_\texttt{cfswever}, \beta_\textt
 ### Survey weighted likelihood
 
 As with the multinomial regression model, we used survey weighted counts $\{y_{itak}^\star\}$ and sample sizes $\{m_{itak}^\star\}$.
-We used a generalised binomial pseudo-likelihood $y^\star \sim \text{xBinomial}(y^\star, m^\star)$, as implemented by \texttt{family = "xBinomial"} in \texttt{R-INLA}, given by
+We used a generalised binomial pseudo-likelihood $y^\star \sim \text{xBinomial}(m^\star, q)$, as implemented by \texttt{family = "xBinomial"} in \texttt{R-INLA}, given by
 \begin{equation}
-    p(y^\star \, | \, m^\star) =  \binom{\lfloor m^\star \rfloor}{\lfloor y^\star \rfloor} q^{y^\star} (1 - q)^{m^\star - y^\star}.
+    p(y^\star \, | \, m^\star, q) =  \binom{\lfloor m^\star \rfloor}{\lfloor y^\star \rfloor} q^{y^\star} (1 - q)^{m^\star - y^\star}.
 \end{equation}
 to extend the binomial distribution to non-integer weighted counts and sample sizes.
 
