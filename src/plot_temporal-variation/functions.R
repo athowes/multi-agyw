@@ -16,7 +16,7 @@ plot_temporal_interpolation <- function(df) {
     ) %>%
     ggplot(aes(x = year, y = estimate, col = source)) +
     geom_point(alpha = 0.5) +
-    facet_grid(age_group ~ indicator) +
+    facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
     labs(x = "Year of survey", y = "Estimate", col = "Country") +
     lims(x = c(2000L, 2018L)) +
     scale_color_manual(values = multi.utils::cbpalette()) +

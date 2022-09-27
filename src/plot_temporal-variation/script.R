@@ -59,7 +59,7 @@ plotsA <- df_3p1_ribbon %>%
   split(.$iso3) %>%
   lapply(function(x)
     ggplot(x, aes(x = year, y = mean_smoothed)) +
-      geom_ribbon(aes(ymin = lower_smoothed, ymax = upper_smoothed), alpha = 0.5) +
+      geom_ribbon(aes(ymin = lower_smoothed, ymax = upper_smoothed), alpha = 0.8, fill = "grey") +
       geom_line() +
       geom_point(
         data = filter(df_3p1_raw, iso3 == x$iso3[1]),
