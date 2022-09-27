@@ -262,7 +262,7 @@ CPO & 5573 (36) & 5772 (36) & 5574 (36) & 5771 (36) \\
 \centering
 \begin{tabularx}{\textwidth}{llllll}
 \midrule
-Model ID & Intercept ($\beta_0$) & Age ($\alpha_a$) & Country ($\zeta_{c}$) & Spatial ($\phi_i$) & Covariates \\ 
+Model ID & Intercept ($\beta_0$) & Country ($\zeta_{c}$) & Age ($\alpha_ca$) & Spatial ($\phi_i$) & Covariates \\ 
 \midrule
 L1 & Constant & IID & IID & IID & Not included \\
 L2 & Constant & IID & IID & Besag & Not included \\
@@ -277,7 +277,7 @@ L6 & Constant & IID & IID & Besag & \texttt{cfswrecent} \\
 \small
 \end{table}
 
-We considered six logistic regression models (Table \ref{tab:logistic-models}) each including a constant $\beta_0 \sim \mathcal{N}(-2, 1^2)$, age random effects $\alpha_a \sim \mathcal{N}(0, \tau_\alpha^{-1})$ and country random effects $\zeta_{c} \sim \mathcal{N}(0, \tau_\zeta^{-1})$.
+We considered six logistic regression models (Table \ref{tab:logistic-models}) each including a constant $\beta_0 \sim \mathcal{N}(-2, 1^2)$, country random effects $\zeta_{c} \sim \mathcal{N}(0, \tau_\zeta^{-1})$, and age-country random effects $\alpha_{ac} \sim \mathcal{N}(0, \tau_\alpha^{-1})$.
 The prior on $\beta_0$ placed 95\% prior probability on the range `r 100 * round(plogis(-4), 2)`-`r 100 * round(plogis(0), 2)`\% for the percentage of those with non-regular or multiple partners who report transactional sex.
 We considered two specifications (IID, Besag) for the spatial random effects $\phi_i$.
 To aid estimation with sparse data, we also considered national-level covariates for the proportion of men who have paid for sex ever \texttt{cfswever} or in the last twelve months \texttt{cfswrecent}, available from @hodgins2022population.
