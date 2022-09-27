@@ -3,7 +3,7 @@ title: Spatio-temporal estimates of HIV risk group proportions for adolescent gi
 subtitle: Centre for Global Health Research, UToronto
 author: Adam Howes
 institute: Imperial College London
-date: May 2022
+date: September 2022
 bibliography: citations.bib
 header-includes:
   - \widowpenalties 1 150
@@ -28,10 +28,10 @@ output:
   
 ## Prevention packages
 
-* Prevention
-  * Core package
-  * Intensified interventions
-* It's important to priorisite intensified interventions to those at highest risk
+* Prevention options can be divided into two:
+  1. Core package
+  2. Intensified interventions
+* There are not enough resources to offer the more costly intensified interventions to all AGYW, so it's important to prioritise those at highest risk
 
 ## Stratified prevention
 
@@ -39,10 +39,10 @@ output:
 
 :::: column
 
-The Global AIDS strategy 2021-2016 proposed stratifying HIV prevention for AGYW based upon
-
-1. Population-level HIV incidence
-2. Individual-level sexual risk behaviour
+* The Global AIDS strategy 2021-2016 proposed stratifying HIV prevention for AGYW based upon
+  1. Population-level HIV incidence
+  2. Individual-level sexual risk behaviour
+* Takes into account the two most proximal drivers of sexual transmission
 
 ::::
 
@@ -61,20 +61,20 @@ knitr::include_graphics("global-aids-strategy.png")
 ### Goals
 
 1. Enable implementation of prevention stratified by incidence and behaviour
-2. Assess the benefits of such approaches
+2. Assess the benefits of such approaches: is it worth it?
 
 ### Approach
 
 1. Estimate the proportion of AGYW in four behavioural risk groups at a district level (in 13 countries identified as priority by The Global Fund)
-2. Analyze numbers of new infections reached by stratified prevention strategies
+2. Analyze the new infections which could be reached by different stratified prevention strategies
 
 ## Data
 
-* We used sexual behaviour data from AIS, BAIS, DHS and PHIA household surveys to place respondents into four risk groups:
-  1. Not sexually active
-  2. One cohabiting sexual partner
-  3. Non-regular sexual partner(s)
-  4. Female sex workers
+* We used sexual behaviour data from AIS, BAIS, DHS and PHIA household surveys to place respondents into $K = 4$ risk groups:
+  1. $k = 1$ Not sexually active
+  2. $k = 2$ One cohabiting sexual partner
+  3. $k = 3$ Non-regular sexual partner(s)
+  4. $k = 4$ Female sex workers
 * District-level HIV incidence, prevalence, population size estimates from the Naomi model [@eaton2021naomi]
 * Risk ratios from ALPHA network analysis [@slaymaker2020croi] and UNAIDS analysis led by Keith Sabin
 
@@ -92,34 +92,72 @@ knitr::include_graphics("depends/available-surveys.png")
 
 ## Two-stage model for risk group proportions
 
-### Stage 1: $k = 1, 2, 3^{+}$
+* Only some of the surveys included a transactional sex question, required to differentiate between the $k = 3$ and $k = 4$ risk groups
+* Our approach was to fit a two-stage model
+  1. Spatio-temporal multinomial logistic regression model for the proportion of AGYW in the $k = 1, 2, 3^{+}$ risk groups, using all 47 surveys
+  2. Spatial logistic regression model for the proportion of those in the $k = 3^{+} = \{3, 4\}$ risk groups who are in the $k = 4$ risk group, using only the 13 surveys with a specific transactional sex question
 
-* Multinomial logistic regression model for the proportion of AGYW in the $k = 1, 2, 3^{+}$ risk groups, using all 47 surveys
-* Selected model (by CPO) included:
-  * Age country effects (IID)
-  * Country effects (IID)
-  * Correlated spatial effects (ICAR)
-  * Correlated temporal effects (AR1) 
-* Multinomial-Poisson transformation allowed use of `R-INLA` for inference
+## Notation
 
-## Two-stage model for risk group proportions
+* $k \in \{1, \ldots, 4\}$: risk groups
+* $i \in \{1, \ldots, n\}$: districts
+* $c[i] \in \{\text{Botswana}, \ldots, \text{Zimbabwe}\}$: country containing district $i$
+* $t \in \{1999, \ldots, 2018\}$: years
+* $a \in \{\text{15-19}, \text{20-24}, \text{25-29}\}$: age groups
+* $y_{ita}^\star = (y_{ita1}^\star, y_{ita2}^\star, y_{ita3}^\star, y_{ita4}^\star)$: survey weighted multinomial observations
+* $m_{ita}^\star$: survey weighted multinomial sample size
 
-### Stage 2: $k = 3, 4$
+## Multinomial logistic regression model
 
-* Logistic regression model for the proportion of those in the $k = 3^{+} = \{3, 4\}$ risk groups who are in the $k = 4$ risk group, using only the 13 surveys with a specific transactional sex question
-* Selected model (by CPO) included:
-  * Age country effects (IID)
-  * Country effects (IID)
-  * Correlated spatial effects (ICAR)
-  * Clients of FSW covariates [@hodgins2022population]
-* Used `R-INLA` for inference
+* Would like to use integrated nested Laplace approximations for fast, accurate inference, but `R-INLA` is not compatible with multinomial likelihoods because they depend on multiple elements of the latent field
+* Instead, use that multinomial logistic regression models can be recast as a Poisson log-linear models using the Poisson trick
+* Include observation-specific random effects $\theta_{ita} \sim \mathcal{N}(0, 1000^2)$ in any linear predictor $\eta_{itak} = \theta_{ita} + \cdots$ to ensure exact reproduction of $m_{ita}^\star$
 
-## Two-stage model for risk group proportions
+## Multinomial logistic regression model
 
-### Combination and FSW adjustment
+* Consider models of the form
+\begin{align}
+    y_{itak}^\star &\sim \text{xPoisson}(\lambda_{itak}) \\
+    \log(\lambda_{itak}) &= \theta_{ita} + \beta_k + \zeta_{c[i]k} + \alpha_{ac[i]k} + \phi_{ik} + \gamma_{tk} + \delta_{itk}.
+\end{align}
+* With the following random effects
+  * $\theta_{ita}$: observation (IID)
+  * $\beta_k$: category (IID)
+  * $\zeta_{ck}$: country-category (IID x IID) 
+  * $\alpha_{ack}$: age-country-category (IID x IID x IID)
+  * $\phi_{ik}$: space-category ({IID, **Besag**} x IID)
+  * $\gamma_{tk}$: year-category ({**IID**, AR1} x IID)
+  * $\delta_{itk}$: space-year-category (Implemented but crashing on cluster at the moment...)
+
+## Multinomial logistic regression model
+
+* Independent penalised complexity [@simpson2017penalising] priors on all standard deviation parameters with $\sigma = 0$ and $\mathbb{P}(\sigma > 2.5 = 0.01)$
+  * Sidenote, I'm interested as to if joint priors might be more suitable
+* Possible (but tricky) to define all these interactions in `R-INLA` by combination of the `group` and `replicate` options
+* Used sum-to-zero constraints to make posterior inferences interpretable
+  * Because we're interested in the contribution of each random effect to total variance
+* Model comparison via CPO statistic
+
+## Logistic regression model
+
+* Consider models of the form
+\begin{align}
+    y_{ia4}^\star &\sim \text{Binomial} \left( y_{ia3}^\star + y_{ia4}^\star, q_{ia} \right), \label{eq:logistic-regression} \\
+    q_{ia} &= \text{logit}^{-1} \left( \eta_{ia} \right), \\
+    \eta_{ia} &= \beta_0 +  \zeta_{c[i]} + \alpha_{ac[i]} + \phi_i + \beta_{\texttt{cfsw}} \texttt{cfsw}_{c[i]}.
+\end{align}
+* With the following terms:
+  * $\beta_0$: intercept
+  * $\zeta_{c[i]}$: country effects (IID)
+  * $\alpha_{ac[i]}$ age-country effects (IID)
+  * $\phi_i$: spatial effects (IID, **Besag**)
+  * Clients of FSW covariates ($\texttt{cfswever}$, $\texttt{cfswrecent}$) [@hodgins2022population]
+
+## Combination and FSW adjustment
 
 * Take 1000 samples from each model, then multiply suitably to generate estimates for all four risk groups
-* We adjusted the $k = 4$ risk group to match national FSW estimates from @johnston2022deriving 
+* We adjusted the $k = 4$ risk group to match age-country FSW estimates
+  * Obtained these by disaggregating @stevens2022estimating by age using estimates of sexually active population from @nguyen2022trends
 
 \begin{center}
 \begin{tcolorbox}[width=0.9\textwidth, colframe={title}, colback={white}, title={}]
