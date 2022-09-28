@@ -83,7 +83,7 @@ df_3p1_subnational <- df_3p1_subnational %>%
 #' For the AIDS abstract, filter down to only 20-29 and cohabiting or non-regular partners
 plotB <- df_3p1_subnational %>%
   filter(
-    indicator %in% c("Cohabiting partner", "Nonregular partner(s)")
+    indicator %in% c("One cohabiting partner", "Non-regular or multiple partner(s)")
   ) %>%
   mutate(
     iso3 = reorder(iso3, iso3_sort_order)
@@ -149,7 +149,7 @@ missing_national_areas <- national_areas %>%
   rename(iso3 = area_id)
 
 df_3p1_national_areas <- crossing(
-  indicator = as.factor(c("Cohabiting partner", "Nonregular partner(s)")),
+  indicator = as.factor(c("One cohabiting partner", "Non-regular or multiple partner(s)")),
   age_group = c("20-29"),
   iso3 = unique(missing_national_areas$iso3)
 ) %>%
@@ -161,7 +161,7 @@ df_3p1_subnational_sf <- bind_rows(
 )
 
 plotA <- df_3p1_subnational_sf %>%
-  filter(indicator %in% c("Cohabiting partner", "Nonregular partner(s)")) %>%
+  filter(indicator %in% c("One cohabiting partner", "Non-regular or multiple partner(s)")) %>%
   ggplot(aes(fill = estimate_smoothed)) +
     geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
     geom_sf(data = filter(national_areas, area_id %in% c(multi.utils::priority_iso3(), missing_iso3)),
