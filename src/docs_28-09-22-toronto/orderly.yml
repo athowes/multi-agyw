@@ -37,7 +37,7 @@ depends:
   process_variance-proportions:
     id: latest
     use:
-      depends/aaa-variance-proportions.png: aaa-variance-proportions.png
+      depends/aaa-variance-proportions.pdf: aaa-variance-proportions.pdf
   plot_age-variation:
     id: latest
     use:
@@ -67,3 +67,11 @@ depends:
     id: latest
     use:
       depends/infections-reached.pdf: infections-reached.pdf
+  process_age-disagg-fsw:
+    id: latest
+    use:
+      depends/age-disagg-fsw-line.pdf: age-disagg-fsw-line.pdf
+  process_coverage:
+    id: latest
+    use:
+      depends/coverage.pdf: coverage.pdf

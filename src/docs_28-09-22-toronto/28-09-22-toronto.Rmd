@@ -116,11 +116,11 @@ knitr::include_graphics("depends/available-surveys.png")
 ## Multinomial logistic regression model
 
 * Consider models of the form
-\begin{align}
+\begin{align*}
     y_{itak}^\star &\sim \text{xPoisson}(\lambda_{itak}) \\
     \log(\lambda_{itak}) &= \theta_{ita} + \beta_k + \zeta_{c[i]k} + \alpha_{ac[i]k} + \phi_{ik} + \gamma_{tk} + \delta_{itk}.
-\end{align}
-* With the following random effects
+\end{align*}
+* The terms are
   * $\theta_{ita}$: observation (IID)
   * $\beta_k$: category (IID)
   * $\zeta_{ck}$: country-category (IID x IID) 
@@ -141,22 +141,22 @@ knitr::include_graphics("depends/available-surveys.png")
 ## Logistic regression model
 
 * Consider models of the form
-\begin{align}
+\begin{align*}
     y_{ia4}^\star &\sim \text{Binomial} \left( y_{ia3}^\star + y_{ia4}^\star, q_{ia} \right), \label{eq:logistic-regression} \\
     q_{ia} &= \text{logit}^{-1} \left( \eta_{ia} \right), \\
     \eta_{ia} &= \beta_0 +  \zeta_{c[i]} + \alpha_{ac[i]} + \phi_i + \beta_{\texttt{cfsw}} \texttt{cfsw}_{c[i]}.
-\end{align}
-* With the following terms:
+\end{align*}
+* The terms are
   * $\beta_0$: intercept
   * $\zeta_{c[i]}$: country effects (IID)
   * $\alpha_{ac[i]}$ age-country effects (IID)
   * $\phi_i$: spatial effects (IID, **Besag**)
-  * Clients of FSW covariates ($\texttt{cfswever}$, $\texttt{cfswrecent}$) [@hodgins2022population]
+  * Clients of FSW covariates (`cfswever`, **`cfswrecent`**) [@hodgins2022population]
 
 ## Combination and FSW adjustment
 
-* Take 1000 samples from each model, then multiply suitably to generate estimates for all four risk groups
-* We adjusted the $k = 4$ risk group to match age-country FSW estimates
+* Take 1000 samples from each model, then manipulate suitably to generate estimates for all four risk groups
+* We adjusted the samples from the $k = 4$ risk group to match age-country FSW estimates, reallocating into non-regular partner(s)
   * Obtained these by disaggregating @stevens2022estimating by age using estimates of sexually active population from @nguyen2022trends
 
 \begin{center}
@@ -167,25 +167,43 @@ $\implies$ Estimates of risk group proportions $\rho_{itak}$ by district, year a
 
 ##
 
+```{r echo=FALSE, out.width="350px", fig.cap = "Results of FSW age disaggregation."}
+knitr::include_graphics("depends/age-disagg-fsw-line.pdf")
+```
+
+##
+
+```{r echo=FALSE, out.width="350px", fig.cap = "PIT histograms and ECDF difference plots."}
+knitr::include_graphics("depends/coverage.pdf")
+```
+
+##
+
 ```{r echo=FALSE, out.width="350px", fig.cap = "We found a geographic discontinuity in behaviour between Southern and Eastern Africa."}
 knitr::include_graphics("depends/aids-abstract-A.pdf")
 ```
 
 ##
 
-```{r echo=FALSE, out.width="350px", fig.cap = "Here is another view of the discontinuity."}
+```{r echo=FALSE, out.width="350px", fig.cap = "Viewing the discontinuity another way."}
 knitr::include_graphics("depends/aids-abstract-B.pdf")
+```
+
+##
+
+```{r echo=FALSE, out.width="350px", fig.cap = "Proportions of variance explained."}
+knitr::include_graphics("depends/aaa-variance-proportions.pdf")
 ```
 
 ## Benefits of our modelled risk group estimates
 
 * Integration of all relevant surveys
-  <!-- * Modular approach allowed estimating FSW proportion even for surveys without a specific transactional sex question -->
+  * Two-stage approach allowed estimating FSW proportion even for surveys without a specific transactional sex question
 * Alleivating small-sample sizes by borrowing information
-  <!-- * We borrowed information across space, between countries and over surveys so that our estimates more plausibly reflect spatial heterogeneity -->
+  * We borrowed information across space, between countries and over surveys so that our estimates more plausibly reflect spatial heterogeneity
 * Estimates where there isn't direct data
-  <!-- * Although some people think of this as "making up data", the data almost never "speak for themselves" (everything is a model) -->
-  <!-- * Uncertainty should be higher in regions with infilling: important to transparently communicate this -->
+  * Although some people think of this as "making up data", the data almost never "speak for themselves" (everything is a model)
+  * Uncertainty should be higher in regions with infilling: important to transparently communicate this
 
 ##
 
@@ -193,17 +211,15 @@ knitr::include_graphics("depends/aids-abstract-B.pdf")
 knitr::include_graphics("depends/model-direct-benefits.png")
 ```
 
-## HIV incidence by risk group
+## HIV prevalence and incidence by risk group
 
-* Risk group proportion estimates plus relative risk ratio estimates to disaggregate general population HIV incidence estimates
-\begin{align*}
-I_{ia} &= \sum_k \lambda_{iak} N_{iak} \\
-&= \sum_k \lambda_{ia2} \text{RR}_k N_{iak}.
-\end{align*}
+* We used our risk group proportion estimates together with incidence relative risk ratios and prevalence ratios to disaggregate general population HIV estimates in the most recent year
+* Disaggregated number of new infections on a linear scale, and people living with HIV (PLHIV) on a logit scale
+  * Using a linear scale for PLHIV resulted in prevalences outside $[0, 1]$
 
 \begin{center}
 \begin{tcolorbox}[width=0.9\textwidth, colframe={title}, colback={white}, title={}]
-$\implies$ Estimates of HIV incidence $\lambda_{iak}$ and number of new HIV infections $I_{iak}$ by district, age group and risk group
+$\implies$ Estimates of HIV incidence $\lambda_{iak}$, number of new HIV infections $I_{iak}$, HIV prevalence $\rho_{iak}$ and PLHIV $H_{iak}$ by district, age group and risk group
 \end{tcolorbox}
 \end{center}
 
@@ -264,28 +280,22 @@ df_area_age %>%
 knitr::include_graphics("depends/infections-reached.pdf")
 ```
 
-##
-
-```{r echo=FALSE, out.width = "300px", fig.cap = "Mozambique stands out."}
-knitr::include_graphics("depends/cohabiting-girls.pdf")
-```
-
 ## Limitations
 
 * Simplistic infections reached analysis
-  <!-- * No accounting for difficulty in reaching each strata -->
-  <!-- * Variable intervention effectiveness -->
-  <!-- * Change in strata membership -->
+  * No accounting for difficulty in reaching each strata
+  * Variable intervention effectiveness
+  * Change in strata membership
 * Under-reporting of high risk sexual behaviours
-  <!-- * Variation in under-reporting (likely by age, foremost, and location, less so) particularly concerning -->
+  * Variation in under-reporting (likely by age, foremost, and location, less so) particularly concerning
 * Risk groups definition justification not clear
-  <!-- * Didn't consider other important characteristics that may determine risk e.g. condom usage -->
+  * Didn't consider other important characteristics that may determine risk e.g. condom usage
 * Only focused on AGYW 15-29
-  <!-- * Could be extended to adults of both sexes aged 15-49 -->
+  * Could be extended to adults of both sexes aged 15-49
 
 ## Takeaways
 
-* Risk group estimates can help implement the Global AIDS Strategy; tool and user guide currently being prepared!
+* Risk group estimates can help implement the Global AIDS Strategy; tool and user guide currently being rolled out!
 * Importance of reaching FSW
 * Countries have different epidemic profiles
 
