@@ -9,7 +9,7 @@ run_commit_push("docs_19-01-22-stats-epi-group")
 run_commit_push("docs_03-02-22-ea-talk")
 run_commit_push("docs_12-05-22-mrc-gida")
 run_commit_push("docs_28-09-22-toronto")
-run_commit_push("docs_09-22-hdsl")
+run_commit_push("docs_06-10-22-hdsl")
 run_commit_push("docs_14-10-22-waterloo")
 
 #' Posters

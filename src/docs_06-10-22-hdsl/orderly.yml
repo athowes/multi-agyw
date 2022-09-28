@@ -1,0 +1,77 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Slides
+      filenames:
+        - 06-10-22-hdsl.pdf
+
+resources:
+  - 06-10-22-hdsl.Rmd
+  - preamble.tex
+  - citations.bib
+  - global-aids-strategy.png
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - tibble
+
+depends:
+  plot-tikz_category-flowchart:
+    id: latest
+    use:
+      depends/category-flowchart.pdf: category-flowchart.pdf
+  plot_available-surveys:
+    id: latest
+    use:
+      depends/available-surveys.png: available-surveys.png
+  process_variance-proportions:
+    id: latest
+    use:
+      depends/aaa-variance-proportions.pdf: aaa-variance-proportions.pdf
+  plot_age-variation:
+    id: latest
+    use:
+      depends/age-variation.png: age-variation.png
+  plot_model-direct-benefits:
+    id: latest
+    use:
+      depends/model-direct-benefits.png: model-direct-benefits.png
+  plot_aids-abstract:
+    id: latest
+    use:
+      depends/aids-abstract-A.pdf: aids-abstract-A.pdf
+      depends/aids-abstract-B.pdf: aids-abstract-B.pdf
+  # plot_continental-map:
+  #   id: latest
+  #   use:
+  #     depends/3p1-continental-map.png: 3p1-continental-map.png
+  plot_within-between-country-variation:
+    id: latest
+    use:
+      depends/cohabiting-girls.pdf: cohabiting-girls.pdf
+  process_incidence:
+    id: latest
+    use:
+      depends/incidence-district-sexbehav.csv: incidence-district-sexbehav.csv
+  plot_infections-reached:
+    id: latest
+    use:
+      depends/infections-reached.pdf: infections-reached.pdf
+  process_age-disagg-fsw:
+    id: latest
+    use:
+      depends/age-disagg-fsw-line.pdf: age-disagg-fsw-line.pdf
+  process_coverage:
+    id: latest
+    use:
+      depends/coverage.pdf: coverage.pdf

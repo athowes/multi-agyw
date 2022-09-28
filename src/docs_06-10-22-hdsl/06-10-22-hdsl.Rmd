@@ -1,0 +1,308 @@
+---
+title: Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa
+subtitle: Health Data Science Lab, UWaterloo
+author: Adam Howes
+institute: Imperial College London
+date: October 2022
+bibliography: citations.bib
+header-includes:
+  - \widowpenalties 1 150
+output:
+  beamer_presentation:
+    latex_engine: pdflatex
+    highlight: haddock
+    fig_width: 7 
+    fig_height: 3
+    includes:
+        in_header: preamble.tex
+---
+
+## Background
+
+* In sub-Saharan Africa, adolescent girls and young women (AGYW) aged 15-29 are disproportionately at risk of HIV infection
+* This disparity is because of:
+  1. Younger age at first sex
+  2. Age patterns of sexual mixing
+  3. Structural vulnerabilities and power imbalances
+  4. Increased susceptibility to HIV infection
+  
+## Prevention packages
+
+* Prevention options can be divided into two:
+  1. Core package
+  2. Intensified interventions
+* There are not enough resources to offer the more costly intensified interventions to all AGYW, so it's important to prioritise those at highest risk
+
+## Stratified prevention
+
+::: columns
+
+:::: column
+
+* The Global AIDS strategy 2021-2026 proposed stratifying HIV prevention for AGYW based upon
+  1. Population-level HIV incidence
+  2. Individual-level sexual risk behaviour
+* Takes into account the two most proximal drivers of sexual transmission
+
+::::
+
+:::: column
+
+```{r echo=FALSE, out.width = "125px", fig.cap="Global AIDS strategy"}
+knitr::include_graphics("global-aids-strategy.png")
+```
+
+::::
+
+:::
+
+## Scope for our work
+
+### Goals
+
+1. Enable implementation of prevention stratified by incidence and behaviour
+2. Assess the benefits of such approaches: is it worth it?
+
+### Approach
+
+1. Estimate the proportion of AGYW in four behavioural risk groups at a district level (in 13 countries identified as priority by The Global Fund)
+2. Analyze the new infections which could be reached by different stratified prevention strategies
+
+## Data
+
+* We used sexual behaviour data from AIS, BAIS, DHS and PHIA household surveys to place respondents into $K = 4$ risk groups:
+  1. $k = 1$ Not sexually active
+  2. $k = 2$ One cohabiting sexual partner
+  3. $k = 3$ Non-regular sexual partner(s)
+  4. $k = 4$ Female sex workers
+* District-level HIV incidence, prevalence, population size estimates from the Naomi model [@eaton2021naomi]
+* Risk ratios from ALPHA network analysis [@slaymaker2020croi] and UNAIDS analysis led by Keith Sabin
+
+##
+
+```{r echo=FALSE, out.width = "400px"}
+knitr::include_graphics("depends/category-flowchart.pdf")
+```
+
+##
+
+```{r echo=FALSE, out.width = "400px"}
+knitr::include_graphics("depends/available-surveys.png")
+```
+
+## Two-stage model for risk group proportions
+
+* Only some of the surveys included a transactional sex question, required to differentiate between the $k = 3$ and $k = 4$ risk groups
+* Our approach was to fit a two-stage model
+  1. Spatio-temporal multinomial logistic regression model for the proportion of AGYW in the $k = 1, 2, 3^{+}$ risk groups, using all 47 surveys
+  2. Spatial logistic regression model for the proportion of those in the $k = 3^{+} = \{3, 4\}$ risk groups who are in the $k = 4$ risk group, using only the 13 surveys with a specific transactional sex question
+
+## Notation
+
+* $k \in \{1, \ldots, 4\}$: risk groups
+* $i \in \{1, \ldots, n\}$: districts
+* $c[i] \in \{\text{Botswana}, \ldots, \text{Zimbabwe}\}$: country containing district $i$
+* $t \in \{1999, \ldots, 2018\}$: years
+* $a \in \{\text{15-19}, \text{20-24}, \text{25-29}\}$: age groups
+* $y_{ita}^\star = (y_{ita1}^\star, y_{ita2}^\star, y_{ita3}^\star, y_{ita4}^\star)$: survey weighted multinomial observations
+* $m_{ita}^\star$: survey weighted multinomial sample size
+
+## Multinomial logistic regression model
+
+* Would like to use integrated nested Laplace approximations for fast, accurate inference, but `R-INLA` is not compatible with multinomial likelihoods because they depend on multiple elements of the latent field
+* Instead, use that multinomial logistic regression models can be recast as a Poisson log-linear models using the Poisson trick
+* Include observation-specific random effects $\theta_{ita} \sim \mathcal{N}(0, 1000^2)$ in any linear predictor $\eta_{itak} = \theta_{ita} + \cdots$ to ensure exact reproduction of $m_{ita}^\star$
+
+## Multinomial logistic regression model
+
+* Consider models of the form
+\begin{align*}
+    y_{itak}^\star &\sim \text{xPoisson}(\lambda_{itak}) \\
+    \log(\lambda_{itak}) &= \theta_{ita} + \beta_k + \zeta_{c[i]k} + \alpha_{ac[i]k} + \phi_{ik} + \gamma_{tk} + \delta_{itk}.
+\end{align*}
+* The terms are
+  * $\theta_{ita}$: observation (IID)
+  * $\beta_k$: category (IID)
+  * $\zeta_{ck}$: country-category (IID x IID) 
+  * $\alpha_{ack}$: age-country-category (IID x IID x IID)
+  * $\phi_{ik}$: space-category ({IID, **Besag**} x IID)
+  * $\gamma_{tk}$: year-category ({**IID**, AR1} x IID)
+  * $\delta_{itk}$: space-year-category (Implemented but crashing on cluster at the moment...)
+
+## Multinomial logistic regression model
+
+* Independent penalised complexity [@simpson2017penalising] priors on all standard deviation parameters with $\sigma = 0$ and $\mathbb{P}(\sigma > 2.5 = 0.01)$
+  * Sidenote, I'm interested as to if joint priors might be more suitable
+* Possible (but tricky) to define all these interactions in `R-INLA` by combination of the `group` and `replicate` options
+* Used sum-to-zero constraints to make posterior inferences interpretable
+  * Because we're interested in the contribution of each random effect to total variance
+* Model comparison via CPO statistic
+
+## Logistic regression model
+
+* Consider models of the form
+\begin{align*}
+    y_{ia4}^\star &\sim \text{Binomial} \left( y_{ia3}^\star + y_{ia4}^\star, q_{ia} \right), \label{eq:logistic-regression} \\
+    q_{ia} &= \text{logit}^{-1} \left( \eta_{ia} \right), \\
+    \eta_{ia} &= \beta_0 +  \zeta_{c[i]} + \alpha_{ac[i]} + \phi_i + \beta_{\texttt{cfsw}} \texttt{cfsw}_{c[i]}.
+\end{align*}
+* The terms are
+  * $\beta_0$: intercept
+  * $\zeta_{c[i]}$: country effects (IID)
+  * $\alpha_{ac[i]}$ age-country effects (IID)
+  * $\phi_i$: spatial effects (IID, **Besag**)
+  * Clients of FSW covariates (`cfswever`, **`cfswrecent`**) [@hodgins2022population]
+
+## Combination and FSW adjustment
+
+* Take 1000 samples from each model, then manipulate suitably to generate estimates for all four risk groups
+* We adjusted the samples from the $k = 4$ risk group to match age-country FSW estimates, reallocating into non-regular partner(s)
+  * Obtained these by disaggregating @stevens2022estimating by age using estimates of sexually active population from @nguyen2022trends
+
+\begin{center}
+\begin{tcolorbox}[width=0.9\textwidth, colframe={title}, colback={white}, title={}]
+$\implies$ Estimates of risk group proportions $p_{itak}$ by district, year and age group
+\end{tcolorbox}
+\end{center}
+
+##
+
+```{r echo=FALSE, out.width="350px", fig.cap = "Results of FSW age disaggregation."}
+knitr::include_graphics("depends/age-disagg-fsw-line.pdf")
+```
+
+##
+
+```{r echo=FALSE, out.width="350px", fig.cap = "PIT histograms and ECDF difference plots."}
+knitr::include_graphics("depends/coverage.pdf")
+```
+
+##
+
+```{r echo=FALSE, out.width="350px", fig.cap = "We found a geographic discontinuity in behaviour between Southern and Eastern Africa."}
+knitr::include_graphics("depends/aids-abstract-A.pdf")
+```
+
+##
+
+```{r echo=FALSE, out.width="350px", fig.cap = "Viewing the discontinuity another way."}
+knitr::include_graphics("depends/aids-abstract-B.pdf")
+```
+
+##
+
+```{r echo=FALSE, out.width="350px", fig.cap = "Proportions of variance explained."}
+knitr::include_graphics("depends/aaa-variance-proportions.pdf")
+```
+
+## Benefits of our modelled risk group estimates
+
+* Integration of all relevant surveys
+  * Two-stage approach allowed estimating FSW proportion even for surveys without a specific transactional sex question
+* Alleivating small-sample sizes by borrowing information
+  * We borrowed information across space, between countries and over surveys so that our estimates more plausibly reflect spatial heterogeneity
+* Estimates where there isn't direct data
+  * Although some people think of this as "making up data", the data almost never "speak for themselves" (everything is a model)
+  * Uncertainty should be higher in regions with infilling: important to transparently communicate this
+
+##
+
+```{r echo=FALSE, out.width = "350px", fig.cap = "Illustration of the problem with direct survey estimates."}
+knitr::include_graphics("depends/model-direct-benefits.png")
+```
+
+## HIV prevalence and incidence by risk group
+
+* We used our risk group proportion estimates together with incidence relative risk ratios and prevalence ratios to disaggregate general population HIV estimates in the most recent year
+* Disaggregated number of new infections on a linear scale, and people living with HIV (PLHIV) on a logit scale
+  * Using a linear scale for PLHIV resulted in prevalences outside $[0, 1]$
+
+\begin{center}
+\begin{tcolorbox}[width=0.9\textwidth, colframe={title}, colback={white}, title={}]
+$\implies$ Estimates of HIV incidence $\lambda_{iak}$, number of new HIV infections $I_{iak}$, HIV prevalence $\rho_{iak}$ and PLHIV $H_{iak}$ by district, age group and risk group
+\end{tcolorbox}
+\end{center}
+
+## Prioritisation with risk group information
+
+* Suppose we have all of the information (district, age, and risk group)
+* Which are the strata with highest incidence?
+
+```{r include=FALSE}
+df <- readr::read_csv("depends/incidence-district-sexbehav.csv")
+
+df_area_age_behav <- df %>%
+  select(area_id, age_group, population_nosex12m, incidence_nosex12m, starts_with("population_sex"), starts_with("incidence_sex")) %>%
+  pivot_longer(
+    cols = starts_with("population") | starts_with("incidence"),
+    names_to = c("indicator", "category"),
+    names_sep = "_"
+  ) %>%
+  pivot_wider(
+    id_cols = c("area_id", "age_group", "category"),
+    names_from = "indicator",
+    values_from = "value"
+  )
+```
+
+```{r echo=FALSE}
+df_area_age_behav %>%
+  arrange(desc(incidence)) %>%
+  head() %>%
+  knitr::kable(digits = 2)
+```
+
+## Prioritisation without risk group information
+
+* What about if we lost the risk group information? Now what are the strata with the highest incidence?
+
+```{r include=FALSE}
+df_area_age <- df_area_age_behav %>%
+  group_by(area_id, age_group) %>%
+  summarise(
+    incidence = sum(incidence * population, na.rm = TRUE) / sum(population, na.rm = TRUE),
+    population = sum(population, na.rm = TRUE)
+  ) %>%
+  ungroup()
+```
+
+```{r echo=FALSE}
+df_area_age %>%
+  select(area_id, age_group, population, incidence) %>%
+  arrange(desc(incidence)) %>%
+  head() %>%
+  knitr::kable(digits = 2)
+```
+
+##
+
+```{r echo=FALSE, out.width = "350px", fig.cap = "New infections reached prioritising according to different stratifications."}
+knitr::include_graphics("depends/infections-reached.pdf")
+```
+
+## Limitations
+
+* Simplistic infections reached analysis
+  * No accounting for difficulty in reaching each strata
+  * Variable intervention effectiveness
+  * Change in strata membership
+* Under-reporting of high risk sexual behaviours
+  * Variation in under-reporting (likely by age, foremost, and location, less so) particularly concerning
+* Risk groups definition justification not clear
+  * Didn't consider other important characteristics that may determine risk e.g. condom usage
+* Only focused on AGYW 15-29
+  * Could be extended to adults of both sexes aged 15-49
+
+## Takeaways
+
+* Risk group estimates can help implement the Global AIDS Strategy; tool and user guide currently being rolled out!
+* Importance of reaching FSW
+* Countries have different epidemic profiles
+
+## Thanks for listening!
+
+* Joint work with members of the HIV inference group (`hiv-inference.org`) particularly Katie Risher and Jeff Eaton
+* The code for this project is at `github.com/athowes/multi-agyw`
+* You can find me online at `athowes.github.io`
+
+## Bibliography {.allowframebreaks}
