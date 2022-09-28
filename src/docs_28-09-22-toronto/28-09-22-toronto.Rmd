@@ -39,7 +39,7 @@ output:
 
 :::: column
 
-* The Global AIDS strategy 2021-2016 proposed stratifying HIV prevention for AGYW based upon
+* The Global AIDS strategy 2021-2026 proposed stratifying HIV prevention for AGYW based upon
   1. Population-level HIV incidence
   2. Individual-level sexual risk behaviour
 * Takes into account the two most proximal drivers of sexual transmission
@@ -161,7 +161,7 @@ knitr::include_graphics("depends/available-surveys.png")
 
 \begin{center}
 \begin{tcolorbox}[width=0.9\textwidth, colframe={title}, colback={white}, title={}]
-$\implies$ Estimates of risk group proportions $\rho_{itak}$ by district, year and age group
+$\implies$ Estimates of risk group proportions $p_{itak}$ by district, year and age group
 \end{tcolorbox}
 \end{center}
 
