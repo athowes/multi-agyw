@@ -19,13 +19,30 @@ output:
 
 ## Background
 
+::: columns
+
+:::: column
+
 * In sub-Saharan Africa, adolescent girls and young women (AGYW) aged 15-29 are disproportionately at risk of HIV infection
+  * 28% of population and 44% of new infections
 * This disparity is because of:
   1. Younger age at first sex
   2. Age patterns of sexual mixing
   3. Structural vulnerabilities and power imbalances
   4. Increased susceptibility to HIV infection
-  
+
+::::
+
+:::: column
+
+```{r echo=FALSE, out.width = "125px", fig.cap="Tweet from UNAIDS"}
+knitr::include_graphics("tweet.png")
+```
+
+::::
+
+:::
+
 ## Prevention packages
 
 * Prevention options can be divided into two:
@@ -76,8 +93,10 @@ knitr::include_graphics("global-aids-strategy.png")
   3. $k = 3$ Non-regular sexual partner(s)
   4. $k = 4$ Female sex workers
 * District-level HIV incidence, prevalence, population size estimates from the Naomi model [@eaton2021naomi]
+  * Combines survey and programmatic data to estimate indicators in the general population
 * Risk ratios from ALPHA network analysis [@slaymaker2020croi] and UNAIDS analysis led by Keith Sabin
-
+  * 10 longitudinal studies: https://alpha.lshtm.ac.uk/
+  
 ##
 
 ```{r echo=FALSE, out.width = "400px"}
@@ -111,7 +130,8 @@ knitr::include_graphics("depends/available-surveys.png")
 
 * Would like to use integrated nested Laplace approximations for fast, accurate inference, but `R-INLA` is not compatible with multinomial likelihoods because they depend on multiple elements of the latent field
 * Instead, use that multinomial logistic regression models can be recast as a Poisson log-linear models using the Poisson trick
-* Include observation-specific random effects $\theta_{ita} \sim \mathcal{N}(0, 1000^2)$ in any linear predictor $\eta_{itak} = \theta_{ita} + \cdots$ to ensure exact reproduction of $m_{ita}^\star$
+* This works because conditional on their sum, Poisson counts are jointly multinomially distributed
+* If you include observation-specific random effects $\theta_{ita} \sim \mathcal{N}(0, 1000^2)$ in the linear predictor $\eta_{itak} = \theta_{ita} + \cdots$ then the sample sizes $m_{ita}^\star$ can be exactly recovered, ensuring the models are actually the same
 
 ## Multinomial logistic regression model
 

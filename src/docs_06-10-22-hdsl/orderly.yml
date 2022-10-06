@@ -11,6 +11,7 @@ resources:
   - preamble.tex
   - citations.bib
   - global-aids-strategy.png
+  - tweet.png
 
 packages:
   - dplyr

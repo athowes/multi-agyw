@@ -93,7 +93,7 @@ plotB <- df_3p1_subnational %>%
   geom_point(
     data = df_3p1_national %>%
       filter(
-        indicator %in% c("Cohabiting partner", "Nonregular partner(s)")
+        indicator %in% c("One cohabiting partner", "Non-regular or multiple partner(s)")
       ),
     aes(x = fct_rev(iso3), y = estimate_smoothed),
     shape = 21,
