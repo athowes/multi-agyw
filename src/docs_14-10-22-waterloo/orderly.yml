@@ -52,10 +52,6 @@ depends:
     use:
       depends/aids-abstract-A.pdf: aids-abstract-A.pdf
       depends/aids-abstract-B.pdf: aids-abstract-B.pdf
-  # plot_continental-map:
-  #   id: latest
-  #   use:
-  #     depends/3p1-continental-map.png: 3p1-continental-map.png
   plot_within-between-country-variation:
     id: latest
     use:
@@ -76,3 +72,7 @@ depends:
     id: latest
     use:
       depends/coverage.pdf: coverage.pdf
+  zwe_data_areas:
+    id: latest
+    use:
+      depends/zwe_areas.geojson: zwe_areas.geojson

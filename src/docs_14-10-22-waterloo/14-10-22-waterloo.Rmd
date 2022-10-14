@@ -48,7 +48,13 @@ knitr::include_graphics("tweet.png")
 * Prevention options can be divided into two:
   1. Core package
   2. Intensified interventions
-* There are not enough resources to offer the more costly intensified interventions to all AGYW, so it's important to prioritise those at highest risk
+* Insufficient resources to offer the more costly intensified interventions to all AGYW
+
+\begin{center}
+\begin{tcolorbox}[width=0.9\textwidth, colframe={title}, colback={white}, title={}]
+$\implies$ How should interventions be prioritised to have the greatest impact?
+\end{tcolorbox}
+\end{center}
 
 ## Stratified prevention
 
@@ -56,10 +62,10 @@ knitr::include_graphics("tweet.png")
 
 :::: column
 
-* The Global AIDS strategy 2021-2026 proposed stratifying HIV prevention for AGYW based upon
+* Global AIDS strategy 2021-2026 proposed stratifying HIV prevention for AGYW based on
   1. Population-level HIV incidence
   2. Individual-level sexual risk behaviour
-* Takes into account the two most proximal drivers of sexual transmission
+* The two most proximal drivers of sexual transmission
 
 ::::
 
@@ -87,7 +93,7 @@ knitr::include_graphics("global-aids-strategy.png")
 
 ## Data
 
-* We used sexual behaviour data from AIS, BAIS, DHS and PHIA household surveys to place respondents into $K = 4$ risk groups:
+* Sexual behaviour data from household surveys to place respondents into $K = 4$ risk groups:
   1. $k = 1$ Not sexually active
   2. $k = 2$ One cohabiting sexual partner
   3. $k = 3$ Non-regular sexual partner(s)
@@ -96,7 +102,7 @@ knitr::include_graphics("global-aids-strategy.png")
   * Combines survey and programmatic data to estimate indicators in the general population
 * Risk ratios from ALPHA network analysis [@slaymaker2020croi] and UNAIDS analysis led by Keith Sabin
   * 10 longitudinal studies: https://alpha.lshtm.ac.uk/
-  
+
 ##
 
 ```{r echo=FALSE, out.width = "400px"}
@@ -111,7 +117,12 @@ knitr::include_graphics("depends/available-surveys.png")
 
 ## Two-stage model for risk group proportions
 
-* Only some of the surveys included a transactional sex question, required to differentiate between the $k = 3$ and $k = 4$ risk groups
+\begin{center}
+\begin{tcolorbox}[width=0.9\textwidth, colframe={title}, colback={white}, title={}]
+How do we deal with the fact that only some of the surveys included a transactional sex question? This question is required to differentiate between the $k = 3$ and $k = 4$ risk groups
+\end{tcolorbox}
+\end{center}
+
 * Our approach was to fit a two-stage model
   1. Spatio-temporal multinomial logistic regression model for the proportion of AGYW in the $k = 1, 2, 3^{+}$ risk groups, using all 47 surveys
   2. Spatial logistic regression model for the proportion of those in the $k = 3^{+} = \{3, 4\}$ risk groups who are in the $k = 4$ risk group, using only the 13 surveys with a specific transactional sex question
@@ -135,37 +146,49 @@ knitr::include_graphics("depends/available-surveys.png")
 
 ## Multinomial logistic regression model
 
-* Consider models of the form
 \begin{align*}
     y_{itak}^\star &\sim \text{xPoisson}(\lambda_{itak}) \\
     \log(\lambda_{itak}) &= \theta_{ita} + \beta_k + \zeta_{c[i]k} + \alpha_{ac[i]k} + \phi_{ik} + \gamma_{tk} + \delta_{itk}.
 \end{align*}
+
 * The terms are
   * $\theta_{ita}$: observation (IID)
   * $\beta_k$: category (IID)
-  * $\zeta_{ck}$: country-category (IID x IID) 
+  * $\zeta_{ck}$: country-category (IID x IID)
   * $\alpha_{ack}$: age-country-category (IID x IID x IID)
   * $\phi_{ik}$: space-category ({IID, **Besag**} x IID)
   * $\gamma_{tk}$: year-category ({**IID**, AR1} x IID)
   * $\delta_{itk}$: space-year-category (Implemented but crashing on cluster at the moment...)
+* Without category interactions, any effect will be washed out when we apply softmax to get the probabilities!
+
+## 
+
+```{r echo=FALSE, warning =FALSE, out.width="350px", fig.cap = "The Besag model, $\\phi_i \\, | \\, \\phi_{-i} \\sim \\mathcal{N} \\left(\\frac{1}{n_{\\delta i}} \\sum_{j: j \\sim i} \\phi_j, \\frac{1}{n_{\\delta i}\\tau_\\phi} \\right)$, operates on the neighbourhood graph."}
+areas <- sf::read_sf("depends/zwe_areas.geojson")
+
+areas %>%
+  filter(area_level == 2) %>%
+  bsae::plot_graph(add_geography = TRUE)
+```
 
 ## Multinomial logistic regression model
 
 * Independent penalised complexity [@simpson2017penalising] priors on all standard deviation parameters with $\sigma = 0$ and $\mathbb{P}(\sigma > 2.5 = 0.01)$
   * Sidenote, I'm interested as to if joint priors might be more suitable
 * Possible (but tricky) to define all these interactions in `R-INLA` by combination of the `group` and `replicate` options
+  * Check out the `aaa_fit_multi-sexbehav-sae` report if you're interested!
 * Used sum-to-zero constraints to make posterior inferences interpretable
   * Because we're interested in the contribution of each random effect to total variance
 * Model comparison via CPO statistic
 
 ## Logistic regression model
 
-* Consider models of the form
 \begin{align*}
     y_{ia4}^\star &\sim \text{Binomial} \left( y_{ia3}^\star + y_{ia4}^\star, q_{ia} \right), \label{eq:logistic-regression} \\
     q_{ia} &= \text{logit}^{-1} \left( \eta_{ia} \right), \\
     \eta_{ia} &= \beta_0 +  \zeta_{c[i]} + \alpha_{ac[i]} + \phi_i + \beta_{\texttt{cfsw}} \texttt{cfsw}_{c[i]}.
 \end{align*}
+
 * The terms are
   * $\beta_0$: intercept
   * $\zeta_{c[i]}$: country effects (IID)
@@ -184,18 +207,6 @@ knitr::include_graphics("depends/available-surveys.png")
 $\implies$ Estimates of risk group proportions $p_{itak}$ by district, year and age group
 \end{tcolorbox}
 \end{center}
-
-##
-
-```{r echo=FALSE, out.width="350px", fig.cap = "Results of FSW age disaggregation."}
-knitr::include_graphics("depends/age-disagg-fsw-line.pdf")
-```
-
-##
-
-```{r echo=FALSE, out.width="350px", fig.cap = "PIT histograms and ECDF difference plots."}
-knitr::include_graphics("depends/coverage.pdf")
-```
 
 ##
 
@@ -249,7 +260,7 @@ $\implies$ Estimates of HIV incidence $\lambda_{iak}$, number of new HIV infecti
 * Which are the strata with highest incidence?
 
 ```{r include=FALSE}
-df <- readr::read_csv("depends/incidence-district-sexbehav.csv")
+twdf <- readr::read_csv("depends/incidence-district-sexbehav.csv")
 
 df_area_age_behav <- df %>%
   select(area_id, age_group, population_nosex12m, incidence_nosex12m, starts_with("population_sex"), starts_with("incidence_sex")) %>%
@@ -315,14 +326,35 @@ knitr::include_graphics("depends/infections-reached.pdf")
 
 ## Takeaways
 
-* Risk group estimates can help implement the Global AIDS Strategy; tool and user guide currently being rolled out!
-* Importance of reaching FSW
-* Countries have different epidemic profiles
+1. Risk group estimates can help implement the Global AIDS Strategy; tool and user guide currently being rolled out!
+2. Importance of reaching FSW
+3. Countries have different epidemic profiles
 
-## Thanks for listening!
+## Acknowledgements
 
 * Joint work with members of the HIV inference group (`hiv-inference.org`) particularly Katie Risher and Jeff Eaton
 * The code for this project is at `github.com/athowes/multi-agyw`
+
+## About me
+
+* At Waterloo this term to work with Alex Stringer on improving the approximate inference method we use for the Naomi model
+* Interested in Bayesian statistics, and applications in global health and biosecurity
+* Recently worked on early detection of biological threats with metagenomic sequencing at the Nucleic Acid Observatory
 * You can find me online at `athowes.github.io`
+* Come say hi if you have any similar interests!
+
+# Supplement
+
+##
+
+```{r echo=FALSE, out.width="350px", fig.cap = "Results of FSW age disaggregation."}
+knitr::include_graphics("depends/age-disagg-fsw-line.pdf")
+```
+
+## 
+
+```{r echo=FALSE, out.width="350px", fig.cap = "PIT histograms and ECDF difference plots."}
+knitr::include_graphics("depends/coverage.pdf")
+```
 
 ## Bibliography {.allowframebreaks}
