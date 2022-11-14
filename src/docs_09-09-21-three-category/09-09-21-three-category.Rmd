@@ -132,7 +132,7 @@ $$
 * $\log(\lambda_{itak}) = \eta_{itak}$ the linear predictor for district $i$, survey $t$, age-group $a$ and category $k$
 * Including observation-specific random effects $\theta_{ita} \sim \mathcal{N}(0, \tau_\theta^{-1})$ in the model $\eta_{itak} = \theta_{ita} + \cdots$ assures exact reproduction of the multinomial denominators
   * By "observation" I mean observation of the multinomial e.g. a vector `c(2, 5, 3, 0)`
-  * These variables correspond to $\log(\delta)$ from before. So we're just having a free parameter which can 
+  * These variables correspond to $\log(\delta)$ from before
 * Then you put whatever mixed model things you'd like in
 
 ## No intercept
