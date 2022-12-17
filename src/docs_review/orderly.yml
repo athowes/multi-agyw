@@ -1,0 +1,19 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Response to reviewers
+      filenames:
+        - review.pdf
+
+resources:
+  - review.Rmd
+  - citations.bib
+  - preamble.tex
+
+packages:
+  - rmarkdown
+  - dplyr
+  - ggplot2
+  - forcats
+  - tidyverse

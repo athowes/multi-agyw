@@ -18,3 +18,6 @@ run_commit_push("docs_aids22-poster")
 
 #' Paper and appendices
 run_commit_push("docs_paper")
+
+#' Reviews
+run_commit_push("docs_review")

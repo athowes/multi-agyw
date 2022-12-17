@@ -1,0 +1,46 @@
+---
+title: Response to reviewers for "Spatio-temporal estimates of HIV risk group proportions for adolescent
+  girls and young women across 13 priority countries in sub-Saharan Africa"
+subtitle: |
+  Corresponding author: Adam Howes (`ath19@ic.ac.uk`)
+output:
+  pdf_document:
+    toc: true
+    number_sections: true
+    keep_tex: true
+    includes:
+      in_header: preamble.tex
+bibliography: citations.bib
+---
+
+\newpage
+
+# Reviewer 1 {-}
+
+We thank the reviewer for...
+
+> Comment
+
+Reply, perhaps some code
+
+```{r}
+2 + 2
+```
+
+\newpage
+
+# Reviewer 2 {-}
+
+We thank the reviewer for...
+
+> Comment
+
+Reply, perhaps some code
+
+```{r}
+2 + 2
+```
+
+\newpage
+
+# References {#references .unnumbered}
