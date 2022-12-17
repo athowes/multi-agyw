@@ -22,6 +22,7 @@ Waterloo Student Conference in Statistics, Actuarial Science and Finance](https:
 * [paper](https://athowes.github.io/multi-agyw/paper.pdf)
 * [appendix](https://athowes.github.io/multi-agyw/appendix.pdf)
 * [tables-figures](https://athowes.github.io/multi-agyw/tables-figures.pdf)
+* [review](https://athowes.github.io/multi-agyw/review.pdf)
 
 ## Misc
 
