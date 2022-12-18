@@ -115,9 +115,18 @@ t$result()
 
 #' Testing with just one country on the cluster
 
+#' A
+root <- "/Volumes/ath19"
+multi_agyw_location <- "~/Documents/phd/multi-agyw/"
+
+setwd(multi_agyw_location)
 report <- "aaa_fit_multi-sexbehav-sae"
-param <- list(include_interactions = TRUE, iso3 = "MWI")
+param <- list(include_interactions = FALSE, iso3 = "MWI")
 path_bundles <- "bundles"
+
+#' Easy task!
+report <- "plot_available-surveys"
+param <- NULL
 
 #' A1.
 bundle <- orderly::orderly_bundle_pack(path = path_bundles, name = report, parameters = param)
@@ -129,9 +138,7 @@ folder$upload(path = bundle$path)
 recent_bundle <- folder$list() %>% filter(created == max(created))
 
 #' B
-root <- "/Volumes/ath19"
 setwd(root)
-multi_agyw_location <- "~/Documents/phd/multi-agyw/"
 
 #' B1.
 folder$download(
@@ -186,3 +193,11 @@ t <- obj$enqueue(orderly::orderly_bundle_run(
 
 t$status()
 t$result()
+
+#' Some kind of "Error!" here when running the models. Might want to remove the
+#' try_multinomial_model setting. All very nice to stop an error leading to a crash,
+#' but I can't debug the error if it just returns "Error!"
+#'
+#' I think there is also an error relating the file paths and so on. Can test this
+#' by trying to run an easy report. Doing this now above.
+t$log()
