@@ -5,9 +5,14 @@ artefacts:
       description: Response to reviewers
       filenames:
         - review.pdf
+  - data:
+      description: Cover letter
+      filenames:
+        - cover.pdf
 
 resources:
   - review.Rmd
+  - cover.Rmd
   - citations.bib
   - preamble.tex
 

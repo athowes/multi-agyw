@@ -1,0 +1,30 @@
+---
+title: "Cover letter"
+author: "Adam Howes"
+output:
+  pagedown::html_letter:
+    self_contained: false
+links-to-footnotes: true
+paged-footnotes: true
+# uncomment this line to produce HTML and PDF in RStudio:
+knit: pagedown::chrome_print
+---
+
+::: from
+Adam Howes    
+Email: ath19@ic.ac.uk     
+:::
+
+::: date
+19th December, 2022
+:::
+
+Dear editor,
+
+Thank you for the opportunity to submit a revised version of our manuscript.
+We appreciate the time you and the reviewers have given to providing helpful feedback.
+Enclosed is a point-by-point response to all points raised.
+
+With kind regards, on behalf of all the co-authors,
+
+Adam Howes

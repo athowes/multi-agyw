@@ -29,7 +29,7 @@ We have added the following text to the manuscript to clarify this point:
 
 > 2. Is there no other potential covariate that could be used for better modeling?
 
-Many of the covariates which would be most predictive of risk group proportions are themselves difficult to accuracy measure, and make only modest at best improvements to model performance.
+Many of the covariates which one might expect to be most predictive of risk group proportions are themselves difficult to accurately measure, and can only lead to modest at best improvements in model performance.
 For example, despite the case for their being a clear link between the "proportion clients of FSW" covariate and the "proportion FSW" outcome we found only marginal benefits to inclusion.
 
 > 3. Please explain sub-national effect more clearly. Why and how you used it?
@@ -39,7 +39,16 @@ We considered both spatially unstructured (IID) and spatially structured (Besag)
 
 > 4. Why the interaction term for spatiotemporal effect didn't consider in the modeling framework?
 
-We found that the spatiotemporal interaction terms substantially increased the computational burden of the model, so decided to exclude them.
+```{r}
+#' TODO Calculate the average Sobol index for survey random effects
+sobol <- 1
+```
+
+Fitting each country individually, the proportion of variance (Sobol' index) attributable to the temporal (survey) random effects was on average `r sobol`/% (Figure B.3).
+This is corroborated by the lack of temporal trends in Figures B.5 through B.17 which show the modelled and direct estimates for each country individually, as well as the fact that unstructured (IID) rather than structured (AR1) temporal random effects were preferred in the model selection (Figure A.1).
+
+We had wanted to include the spatiotemporal interaction terms regardless, first for statistical completeness, and second to demonstrate how complex three-way^[As all random effects in the model are interacted with category.] interactions can be specified in `R-INLA` by careful use of the `group` and `replicate` options.
+However, we found that including these terms substantially increased the computational burden of the model when fitting all countries jointly, so in the end decided to exclude them.
 
 \newpage
 
@@ -49,14 +58,15 @@ We thank the reviewer for their kind comments.
 
 > My little concern is about using different data from UNAIDS Key Population Atlas apart from the DHS, which is the may source data for the analyses. I believe the two variants of data are based on different designs, and combining them may not result in dependable results. It would have been more attainable if the UNAIDS data had been used in their sensitivity analysis to confirm the results from the DHS data.
 
-The UNAIDS KP Atlas data and household survey data are different in their design.
-We believe the household data to be more biased.
+For the FSW risk group, we used age-disaggregated (Figure A.4) national-level estimates from @stevens2022estimating to inform the level, and household survey data to inform subnational variation.
+Estimates of hidden populations like FSW from household surveys have significant limitations due in part to stigma around disclosing membership, as well as potential for not being included in the sampling frame [@abdul2014estimating].
+For this reason, we believe it is more appropriate to calibrate our estimates to @stevens2022estimating, who as well as including the KP Atlas data integrate data from other FSW population size estimates using a Bayesian mixed effects model.
 
 > Figure 1 is not clear. I recommend that the authors use a table as an alternative visualization.
 
 Table B.3 in the appendix provides an alternative tabulation of the surveys we used, with sample size further broken down by age group.
-We are unsure how Figure 1 might be made clearer.
-*Look for other papers which have similar plots. Is there anything they do that we could add to make it clearer*.
+We are unsure on how to make Figure 1 might clearer.
+Other examples of similar figures in published papers include @giguere2021trends (Figure 1), ...
 
 \newpage
 
