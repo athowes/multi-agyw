@@ -33,25 +33,25 @@ orderly::orderly_commit(id) #' [x]
 #' 1. Pull bundle
 #' 2. Import into archive
 
-
 #' A
+repo <- "multi-agyw"
 report <- "fit_multi-sexbehav-sae"
-param <- list(include_interactions = TRUE)
 path_bundles <- "bundles"
+param <- list(include_interactions = TRUE)
 
 #' A1.
 bundle <- orderly::orderly_bundle_pack(path = path_bundles, name = report, parameters = param)
 
 #' A2.
 spud <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
-folder <- spud$folder("HIVInferenceGroup-WP", paste0("Shared Documents/orderly/multi-agyw/", path_bundles), verify = TRUE)
+folder <- spud$folder("HIVInferenceGroup-WP", paste0("Shared Documents/orderly/", repo, "/", path_bundles), verify = TRUE)
 folder$upload(path = bundle$path)
-recent_bundle <- folder$list() %>% filter(created == max(created))
+recent_bundle <- dplyr::filter(folder$list(), created == max(created))
 
 #' B
 root <- "/Volumes/ath19"
 setwd(root)
-multi_agyw_location <- "~/Documents/phd/multi-agyw/"
+repo_location <- paste0("~/Documents/phd/", repo, "/")
 
 #' B1.
 folder$download(
@@ -61,7 +61,7 @@ folder$download(
 
 #' B2.
 orderly_packages <- yaml::read_yaml(
-  file.path(paste0(multi_agyw_location, "src/", report, "/orderly.yml"))
+  file.path(paste0(repo_location, "src/", report, "/orderly.yml"))
 )$packages
 
 packages <- list(loaded = c("orderly", orderly_packages))
@@ -69,7 +69,9 @@ packages <- list(loaded = c("orderly", orderly_packages))
 config <- didehpc::didehpc_config(
   workdir = path_bundles,
   credentials = "ath19",
-  cluster = "fi--didemrchnb"
+  cluster = "fi--didemrchnb",
+  template = "24Core",
+  cores = 4,
   # "fi--dideclusthn"
   # "fi--didemrchnb"
 )
@@ -97,7 +99,7 @@ t$result()
 
 #' Run larger job
 path <- file.path(recent_bundle$name)
-output_path <- "output"
+output_path <- file.path("/output")
 
 t <- obj$enqueue(orderly::orderly_bundle_run(
   path = path,
@@ -113,20 +115,12 @@ t$result()
 #' C2.
 #' Not at this stage yet
 
-#' Testing with just one country on the cluster
+#' Test with just one country on the cluster
 
-#' A
-root <- "/Volumes/ath19"
-multi_agyw_location <- "~/Documents/phd/multi-agyw/"
-
-setwd(multi_agyw_location)
+setwd(repo_location)
 report <- "aaa_fit_multi-sexbehav-sae"
-param <- list(include_interactions = FALSE, iso3 = "MWI")
+param <- list(include_interactions = TRUE, iso3 = "MWI")
 path_bundles <- "bundles"
-
-#' Easy task!
-report <- "plot_available-surveys"
-param <- NULL
 
 #' A1.
 bundle <- orderly::orderly_bundle_pack(path = path_bundles, name = report, parameters = param)
@@ -135,7 +129,7 @@ bundle <- orderly::orderly_bundle_pack(path = path_bundles, name = report, param
 spud <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
 folder <- spud$folder("HIVInferenceGroup-WP", paste0("Shared Documents/orderly/multi-agyw/", path_bundles), verify = TRUE)
 folder$upload(path = bundle$path)
-recent_bundle <- folder$list() %>% filter(created == max(created))
+recent_bundle <- dplyr::filter(folder$list(), created == max(created))
 
 #' B
 setwd(root)
@@ -148,7 +142,7 @@ folder$download(
 
 #' B2.
 orderly_packages <- yaml::read_yaml(
-  file.path(paste0(multi_agyw_location, "src/", report, "/orderly.yml"))
+  file.path(paste0(repo_location, "src/", report, "/orderly.yml"))
 )$packages
 
 packages <- list(loaded = c("orderly", orderly_packages))
@@ -156,7 +150,9 @@ packages <- list(loaded = c("orderly", orderly_packages))
 config <- didehpc::didehpc_config(
   workdir = path_bundles,
   credentials = "ath19",
-  cluster = "fi--didemrchnb"
+  cluster = "fi--didemrchnb",
+  template = "24Core",
+  cores = 4,
   # "fi--dideclusthn"
   # "fi--didemrchnb"
 )
@@ -184,7 +180,7 @@ t$result()
 
 #' Run larger job
 path <- file.path(recent_bundle$name)
-output_path <- "output"
+output_path <- file.path("/output")
 
 t <- obj$enqueue(orderly::orderly_bundle_run(
   path = path,
@@ -193,11 +189,3 @@ t <- obj$enqueue(orderly::orderly_bundle_run(
 
 t$status()
 t$result()
-
-#' Some kind of "Error!" here when running the models. Might want to remove the
-#' try_multinomial_model setting. All very nice to stop an error leading to a crash,
-#' but I can't debug the error if it just returns "Error!"
-#'
-#' I think there is also an error relating the file paths and so on. Can test this
-#' by trying to run an easy report. Doing this now above.
-t$log()
