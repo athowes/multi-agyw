@@ -118,7 +118,7 @@ t$result()
 #' Test with just one country on the cluster
 
 setwd(repo_location)
-report <- "aaa_fit_multi-sexbehav-sae"
+report <- "aaa_fit-multi-sexbehav-sae-minimal"
 param <- list(include_interactions = TRUE, iso3 = "MWI")
 path_bundles <- "bundles"
 
@@ -189,3 +189,11 @@ t <- obj$enqueue(orderly::orderly_bundle_run(
 
 t$status()
 t$result()
+
+#' Test running locally
+id <- orderly::orderly_run(report, param)
+orderly::orderly_commit(id)
+
+#' C
+bundle_output_location <- file.path(root, "output", t$result()$filename)
+orderly::orderly_bundle_import(path = bundle_output_location, root = repo_location)
