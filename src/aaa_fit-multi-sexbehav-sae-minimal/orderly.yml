@@ -48,6 +48,7 @@ packages:
   - stats
   - multi.utils
   - magrittr
+  - sn
 
 depends:
   plot_available-surveys:

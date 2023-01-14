@@ -327,7 +327,7 @@ try_multinomial_model <- function(...) {
 
 res <- purrr::pmap(
   list(formula = formulas, model_name = models, S = S),
-  try_multinomial_model
+  multinomial_model
 )
 
 #' Extract the df, full fitted models and samples

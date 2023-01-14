@@ -58,6 +58,7 @@ packages:
   - stringr
   - Matrix
   - multi.utils
+  - sn
 
 depends:
   plot_available-surveys:

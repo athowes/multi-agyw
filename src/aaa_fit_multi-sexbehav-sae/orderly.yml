@@ -68,6 +68,7 @@ packages:
   - Matrix
   - stats
   - multi.utils
+  - sn
 
 depends:
   plot_available-surveys:
