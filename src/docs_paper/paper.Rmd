@@ -272,7 +272,7 @@ n_group <- length(unique(df_3p1_subnational$indicator))
 ```
 
 We performed inference using the integrated nested Laplace approximation (INLA) [@rue2009approximate] algorithm via the `R-INLA` package [@martins2013bayesian].
-For models with a Gaussian latent field, INLA has comparable accuracy to Markov chain Monte Carlo in the realistic, pre-asymptotic regime, and is substantially more computationally tractable for high dimensional models like ours, which has `r n_district` districts, `r n_year` years, `r n_age` age groups, and `r n_group` risk groups.
+For models with a Gaussian latent field, INLA has comparable accuracy to Markov chain Monte Carlo with realistic, finite samples [@rue2017bayesian], and is substantially more computationally tractable for high dimensional models like ours, which has `r n_district` districts, `r n_year` years, `r n_age` age groups, and `r n_group` risk groups.
 It is not possible to directly fit multinomial logistic regression models in `R-INLA`, so we used the multinomial-Poisson transformation [@baker1994multinomial].
 Details of this approach, including how we used Kronecker products over Gaussian Markov random fields to appropriately define random effects, are provided in Supplementary Appendix A.1.2.
 The best performing model was selected according to the conditional predictive ordinate (CPO) criterion [@pettit1990conditional], a measure of leave-one-out model performance that can be calculated directly in `R-INLA` without explicit model refitting [@held2010posterior].
