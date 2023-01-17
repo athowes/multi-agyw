@@ -191,17 +191,18 @@ Finally, we quantified the increased efficiency of HIV prevention, in terms of t
 \begin{table}[htb]
 \small
 \centering
-\begin{tabularx}{\textwidth}{lp{5cm}ll}
+\begin{tabularx}{\textwidth}{lp{6cm}ll}
 \toprule
-Risk group & Description & Local HIV incidence & Incidence ratio \\
+Risk group & Description & Local HIV & Incidence ratio \\
+ & & incidence & \\
 \midrule
 None & Not sexually active & -- & 0.0 \\
 Low & One cohabiting partner & -- & 1.0 (Baseline) \\
 High & Non-regular or multiple partner(s) & -- & 1.72 \\
-Very high & Transactional sex (adjusted to correspond to female sex workers) & $<$0.1\% & 25.0 \\
+ & & $<$0.1\% & 25.0 \\
  & & 0.1-0.3\% & 13.0 \\
- & & 0.3-1.0\% & 9.0 \\
- & & 1.0-3.0\% & 6.0 \\
+ Very high & Transactional sex (adjusted to correspond & 0.3-1.0\% & 9.0 \\
+ & to female sex workers) & 1.0-3.0\% & 6.0 \\
  & & $>$3.0\% & 3.0 \\
 \bottomrule
 \end{tabularx}
@@ -250,9 +251,9 @@ FSW population size estimates by age were obtained by disaggregating national 15
 Further technical details are in Supplementary Appendix A.1.
 
 We considered four model specifications for the space-age-time multinomial model for the three risk groups (Supplementary Appendix A.1.2).
-All models included intercepts for each risk group, age, country, and age-country effects, a spatial effect allowing variation in risk group proportions by district, and a temporal effect allowing variation over time.
-The specification for the spatial random effects was varied in alternative models between independent spatial effects for each district versus spatially correlated effects, where information is borrowed more between neighboring districts.
-Temporal effects were varied as independent temporal effects versus first-order auto-regressive temporal effects, where a smooth temporal trend is assumed. 
+All models included intercepts for each risk group, as well as age, country, and age-country random effects.
+We used spatial effects to allow variation in risk group proportions by district, and considered alternative model specifications with either independent spatial effects or spatially correlated effects which share information more between neighboring districts than those far apart.
+Similary, we used temporal random effects to allow variation in risk group proportions over time, and considered alternative model specifications as independent temporal effects versus first-order auto-regressive temporal effects where a smooth temporal trend is assumed. 
 <!-- Each alternative was considered with an additional spatio-temporal interaction term allowing the temporal trend to vary across districts. -->
 To understand the importance of each part of the model we analysed the relative sizes of the variance parameters for each effect.
 
@@ -408,7 +409,7 @@ Direct estimates of the four risk group proportions from these surveys were high
 knitr::include_graphics("depends/3p1-continental-map.png")
 ```
 
-```{r within-between-country-variation, fig.cap="National (in white) and subnational (in color) posterior means of the risk group proportions. Estimates are stratified by risk group (columns) and five-year age group (rows). Regions of sub-Saharan Africa were defined according to the UN geocode (M49 standard). \\label{fig:within-between-country-variation}"}
+```{r within-between-country-variation, fig.cap="National (in white) and subnational (in color) posterior means of the risk group proportions. Estimates are stratified by risk group (columns) and five-year age group (rows). Regions of sub-Saharan Africa were defined according to the UN M49 geocode [@un2020statistics]. \\label{fig:within-between-country-variation}"}
 knitr::include_graphics("depends/3p1-within-between-country-variation.png")
 ```
 
