@@ -734,6 +734,8 @@ We inherent any limitations of the national FSW estimates [@stevens2022estimatin
 <!-- (As presented by Oli's paper) -->
 Furthermore, we do not consider seasonal migration patterns, which may particularly affect FSW size.
 More generally, we did not aim to include predictive covariates.
+Many covariates that might be predictive of risk group proportions (for example sociodemographic characteristics, education, local economic activity, cultural and religious norms and attitudes) are themselves difficult to measure spatially, and previous efforts have only led to modest improvements in model performance.
+Identifying measurable correlates of risk, or particular settings in which time-concentrated HIV risk occurs, is an important area for further research to improve risk priorisation and precision HIV programme delivery.
 
 The efficiency of each stratified prevention strategy depends on the ability of programmes to identify and effectively reach those in each strata.
 Our analysis of new infections potentially averted assumed a "best-case" scenario where AGYW of every strata can be reached perfectly, and should therefore be interpreted as illustrating the potentially obtainable benefits rather than benefits which would be obtained from any specific intervention strategy.

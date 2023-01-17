@@ -36,7 +36,7 @@ For example, despite the case for their being a clear link between the "proporti
 We agree that identifying predictive and measureable predictors of risk group proportions, or high risk locations, is an important area for further research.
 We have commented on this in the discussion section:
 
-> Comment here.
+> More generally, we did not aim to include predictive covariates. Many covariates that might be predictive of risk group proportions (for example sociodemographic characteristics, education, local economic activity, cultural and religious norms and attitudes) are themselves difficult to measure spatially, and previous efforts have only led to modest improvements in model performance. Identifying measurable correlates of risk, or particular settings in which time-concentrated HIV risk occurs, is an important area for further research to improve risk priorisation and precision HIV programme delivery.
 
 > *3. Please explain sub-national effect more clearly. Why and how you used it?*
 
@@ -50,17 +50,16 @@ Throughout the manuscript, we have replaced references to "effect" by the more a
 
 > *4. Why the interaction term for spatiotemporal effect didn't consider in the modeling framework?*
 
-```{r}
+```{r echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 df <- read_csv("depends/aaa-variance-proportions.csv")
 sobol <- 100 * mean(df$percentage_variance_sur_idx, na.rm = TRUE)
 ```
-
 
 We share the reviewer's interest in the spatiotemporal interaction in risk group proportions, which would allow variation in temporal trend by country.
 However, we found that these interactions made the model computationally intractable to estimate given the large number of districts, years, age groups and risk groups involved.
 This is a limitation of our analysis, but, in practice, we do not believe this has a large impact on our results because overall we found that risk group proportions were very stable over time, while they varied substantially spatially.
 More specifically, when we fit the model to each country individually, which can be considered as an extreme version of country-specific spatiotemporal interactions, the proportion of variance (Sobol' index) attributable to the temporal (survey) random effects^[For those countries where such a random effect could be meaningfully defined.] was on average `r sobol`/% (Supplementary Figure B.3).
-This is corroborated by the lack of temporal trends in Figures B.5 through B.17 which show the modelled and direct estimates for each country individually, as well as the fact that unstructured (IID) rather than structured (AR1) temporal random effects were preferred in the model selection (Supplementary Figure A.1).
+This is corroborated by the lack of temporal trends in Supplementary Figures B.5 through B.17 which show the modelled and direct estimates for each country individually, as well as the fact that unstructured (IID) rather than structured (AR1) temporal random effects were preferred in the model selection (Supplementary Figure A.1).
 
 \newpage
 
@@ -96,6 +95,7 @@ We have extended the caption of Figure 1 to draw attention to this alternative p
 > *Please send a completed Competing Interests' statement, including any COIs declared by your co-authors. If you have no competing interests to declare, please state: "The authors have declared that no competing interests exist". Otherwise please declare all competing interests beginning with the statement ``I have read the journal's policy and the authors of this manuscript have the following competing interests:*
 
 Response here.
+Requested that coauthors send their COIs.
 
 > *Please amend your detailed Financial Disclosure statement. This is published with the article. It must therefore be completed in full sentences and contain the exact wording you wish to be published. State what role the funders took in the study. If the funders had no role in your study, please state: "The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript." If any authors received a salary from any of your funders, please state which authors and which funders. If you did not receive any funding for this study, please simply state: "The authors received no specific funding for this work."*
 
