@@ -22,3 +22,9 @@ packages:
   - ggplot2
   - forcats
   - tidyverse
+
+depends:
+  process_variance-proportions:
+    id: latest
+    use:
+      depends/aaa-variance-proportions.csv: aaa-variance-proportions.csv

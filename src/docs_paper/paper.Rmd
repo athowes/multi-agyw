@@ -252,14 +252,15 @@ Further technical details are in Supplementary Appendix A.1.
 
 We considered four model specifications for the space-age-time multinomial model for the three risk groups (Supplementary Appendix A.1.2).
 All models included intercepts for each risk group, as well as age, country, and age-country random effects.
-We used spatial effects to allow variation in risk group proportions by district, and considered alternative model specifications with either independent spatial effects or spatially correlated effects which share information more between neighboring districts than those far apart.
-Similary, we used temporal random effects to allow variation in risk group proportions over time, and considered alternative model specifications as independent temporal effects versus first-order auto-regressive temporal effects where a smooth temporal trend is assumed. 
+To account for district-level variation we used spatial random effects consisting of a parameter for each district. 
+We considered alternative model specifications in which the spatial random effects were either independent or spatially correlated such that more information was shared between neighboring districts than those far apart.
+Similarly, we used temporal random effects to allow variation in risk group proportions over time, and considered alternative model specifications as independent versus first-order auto-regressive where a smooth temporal trend is assumed. 
 <!-- Each alternative was considered with an additional spatio-temporal interaction term allowing the temporal trend to vary across districts. -->
 To understand the importance of each part of the model we analysed the relative sizes of the variance parameters for each effect.
 
 For the logistic regression model of the proportion engaging in transactional sex among those with non-regular or multiple partner(s), we considered six specifications (Supplementary Appendix A.1.3).
-Each included an intercept, age and country effects, and a spatial effect allowing district-level variation.
-Both independent and spatially correlated spatial effects were considered.
+Each included an intercept, age and country random effects, and a spatial random effect allowing district-level variation.
+Both independent and spatially correlated spatial random effects were considered.
 To improve estimation with sparse data, during model selection we considered alternatives with national-level covariates for either the proportion of men who reported ever having paid for sex or having paid for sex in the last twelve months [@hodgins2022population].
 
 ```{r results='hide', warning=FALSE, message=FALSE}
@@ -396,9 +397,9 @@ The median number of surveys per country was four, ranging from one in Botswana 
 
 ## Model selection and model fit
 
-The best fitting multinomial regression model included correlated spatial effects and independent and identically distributed temporal effects.
+The best fitting multinomial regression model included correlated spatial random effects and independent and identically distributed temporal random effects.
 <!-- but not spatio-temporal interactions. -->
-The best logistic regression model for transactional sex included correlated spatial effects and the proportion of men who reported ever paying for sex covariate.
+The best logistic regression model for transactional sex included correlated spatial random effects and the proportion of men who reported ever paying for sex covariate.
 Model performance according to the CPO criterion is provided in Supplementary Appendix A.1 for all models we considered.
 Direct estimates of the four risk group proportions from these surveys were highly correlated with our modelled estimates at a national-level (Supplementary Fig B.5 - B.17).
 
