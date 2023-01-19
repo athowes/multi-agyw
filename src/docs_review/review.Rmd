@@ -94,8 +94,9 @@ We have extended the caption of Figure 1 to draw attention to this alternative p
 
 > *Please send a completed Competing Interests' statement, including any COIs declared by your co-authors. If you have no competing interests to declare, please state: "The authors have declared that no competing interests exist". Otherwise please declare all competing interests beginning with the statement ``I have read the journal's policy and the authors of this manuscript have the following competing interests:*
 
-Response here.
-Requested that coauthors send their COIs.
+The competing interests' statement has been updated to the following:
+
+> I have read the journal's policy and the authors of this manuscript have the following competing interests: KAR was supported through a consultancy via UNAIDS to conduct an early version of this work;  LZ, IW, MM, and CB are employees of UNAIDS; JWE is a member of the editorial board for PLOS GPH; other authors have declared that no competing interests exist.
 
 > *Please amend your detailed Financial Disclosure statement. This is published with the article. It must therefore be completed in full sentences and contain the exact wording you wish to be published. State what role the funders took in the study. If the funders had no role in your study, please state: "The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript." If any authors received a salary from any of your funders, please state which authors and which funders. If you did not receive any funding for this study, please simply state: "The authors received no specific funding for this work."*
 
