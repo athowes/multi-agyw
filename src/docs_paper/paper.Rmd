@@ -765,7 +765,7 @@ Successfully implementing this approach would result in more efficientlt reachin
 AH was supported by the EPSRC Centre for Doctoral Training in Modern Statistics and Statistical Machine Learning (EP/S023151/1).
 AH, VKN, KAR, JWE were supported by the Bill and Melinda Gates Foundation (OPP1190661, OPP1164897).
 TMW was supported by Imperial College London (President's PhD Scholarship).
-SF was supported by the EPSRC (EP/V002910/2).
+SRF was supported by the EPSRC (EP/V002910/2).
 JWE was supported by UNAIDS and National Institute of Allergy and Infectious Disease of the National Institutes of Health (R01AI136664). 
 LZ, IW, MM and CB are employed by UNAIDS.
 <!-- A first version of this work was funded by the Global Fund (###) via UNAIDS -->
