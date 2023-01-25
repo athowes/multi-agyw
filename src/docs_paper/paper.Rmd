@@ -161,7 +161,7 @@ inc_ratio <- round(inc_comparison$inc_female_Y015_029 / inc_comparison$inc_male_
 
 # Introduction
 
-<!-- TODO: Follow up with Clemens r.e. FSW group name: -->
+<!-- Possible TODO: Follow up with Clemens r.e. FSW group name: -->
 <!-- There are a couple of options: female sex workers, young women from key populations (and clarify in the text that you mean sex work), AGYW who sell sex. Many people who do this work all the time use "FSW" so likely fine, but there's also a move away from defining someone by their job making "who sell sex" possibly the preferred option. -->
 
 <!-- IW notes that AGYW typically refers to 15-24, but it feels clunky to me to say AGYW and women 25-29 -->
@@ -289,7 +289,7 @@ Further details are provided in Appendix A.2.
 ### Prevalence and PLHIV
 
 To calculate HIV prevalence by risk group, we disaggregated the district-age specific prevalence estimates from Naomi estimates to risk groups using odds ratios for the relative odds of having HIV between risk groups, calculated from a logistic regression of country-age specific household survey HIV bio-marker data.
-<!-- TODO: Be more specific about the data source here. -->
+<!-- Possible TODO: Be more specific about the data source here. -->
 Prevalence disaggregation was on the logit scale to ensure that HIV prevalence in each risk group remained in the range 0\% to 100\%.
 The number of PLHIV was calculated by multiplying HIV prevalence by risk group population size.
 
@@ -628,13 +628,13 @@ For any given fraction of AGYW prioritised, substantially more new infections we
 Reaching half of all expected new infections required reaching `r inf_half_without_behaviour`\% of the population when stratifying by subnational area and age, but only `r inf_half_with_behaviour`\% when behavioural stratification was included (Fig \ref{fig:infections-reached}).
 The majority of this benefit came from reaching FSW, who were `r inf_fsw$prop_population_cumulative`\% of the population but `r inf_fsw$prop_infections_averted_cumulative`\% of all new infections.
 
-<!-- How does this vary by country / region?  Maybe worth calling out result for West Africa vs. East Africa vs. Southern Africa here to highlight the difference. Also how does this compare with other estimates? And what does Oli think about this? I recognize that comparison is not straightforward because age group difference! -->
+<!-- Possible TODO: How does this vary by country / region?  Maybe worth calling out result for West Africa vs. East Africa vs. Southern Africa here to highlight the difference. Also how does this compare with other estimates? And what does Oli think about this? I recognize that comparison is not straightforward because age group difference! -->
 
 Considering each country separately, on average, reaching half of new infections in each country required reaching `r inf_country_half_without_behaviour$median`\% (range `r inf_country_half_without_behaviour$min`-`r inf_country_half_without_behaviour$max`\%) of the population when stratifying by area and age, reducing to `r inf_country_half_with_behaviour$median`\% (range `r inf_country_half_with_behaviour$min`-`r inf_country_half_with_behaviour$max`\%) when behaviour was included.
 The relative importance of stratifying by age, location and behaviour varied between countries, analogous to the varying contribution of each to the total variance (Supplementary Appendix B).
 For example, FSW in Kenya were estimated to be `r inf_fsw_kenya$prop_population_cumulative`\% of the population and close to a third (`r inf_fsw_kenya$prop_infections_averted_cumulative`\%) of all new infections, whereas FSW in Tanzania were just `r inf_fsw_tanzania$prop_population_cumulative`\% of the population and `r inf_fsw_tanzania$prop_infections_averted_cumulative`\% of all new infections.
 
-<!-- Are we able to add an analysis of the number who are prioritized for the 'standard' and 'enhanced' prevention packages in the Global Strategy? That gets a lot of emphasis in the Introduction, so would be nice to report about here. -->
+<!-- Possible TODO: Are we able to add an analysis of the number who are prioritized for the 'standard' and 'enhanced' prevention packages in the Global Strategy? That gets a lot of emphasis in the Introduction, so would be nice to report about here. -->
 
 ---
 abstract: |
@@ -678,7 +678,7 @@ Systematic differences in risk by age groups, and variation within and between c
 Changes over time were negligible in the overall variation in risk group proportions.
 The proportion of 15-19 year olds who are sexually active, and among women aged 20-29 years, norms around cohabitation especially varied across districts and countries.
 This variation underscores the need for these granular data to implement HIV prevention options aligned to local norms and risk behaviours.
-<!-- Some type of comment about how novel this would be if implemented -->
+<!-- Possible TODO: Some type of comment about how novel this would be if implemented -->
 
 We defined four risk groups based on sexual behaviour, the most proximal determinant of risk.
 Other factors, such as condom usage or type of sexual act, may account for additional heterogeneity in risk from sexual behaviour.
@@ -718,7 +718,7 @@ We plan to update our analysis with more surveys as they become available, but d
 Our analysis focused on females aged 15-29 years, and could be extended to consider optimisation of prevention more broadly, accounting for the `r 100 - infections_percent`\% of new infections among adults 15-49 which occur in women 30-49 and men 15-49.
 Estimating sexual risk behaviour in adults 15-49 would be a crucial step toward greater understanding of the dynamics of the HIV epidemic in sub-Saharan Africa, and would allow incidence models to include stratification of individuals by sexual risk.
 
-<!-- Paragraph about AGFS e.g. our results are consistent with age at first sex findings [@nguyen2022trends]. -->
+<!-- Possible paragraph about AGFS e.g. our results are consistent with age at first sex findings [@nguyen2022trends]. -->
 
 ## Limitations
 
@@ -749,11 +749,16 @@ This consideration may motivate selecting risk groups based on easily observable
 
 ## Conclusion
 
-We estimated the proportion of AGYW aged 15-19, 20-24 and 25-29 years in four sexual risk categories at a district-level in 13 priority countries and analyzed the number of infections that could be reached by prioritisation based upon location, age and behaviour.
+We estimated the proportion of AGYW aged 15-19, 20-24 and 25-29 years in four sexual risk groups at a district-level in 13 priority countries and analyzed the number of infections that could be reached by prioritisation based upon location, age and behaviour.
 Though subject to limitations, these estimates provide data that national HIV programmes can use to set targets and implement differentiated HIV prevention strategies as outlined in the Global AIDS Strategy.
-Successfully implementing this approach would result in more efficientlt reaching a greater number of those at risk of infection.
+Successfully implementing this approach would result in more efficiently reaching a greater number of those at risk of infection.
 
-<!-- TODO: Add "... and highlight the need to consider country-specific contexts." once there is more discussion of this in main text. -->
+Among AGYW, there was systematic variation by age group in risk group proportions, primary attributable to sexual debut typically occurring during the ages 15-24.
+There was also large amounts of spatial variation, particularly between those who reported one cohabiting partner versus non-regular or multiple partners.
+Risk group proportions did not change substantially over time, indicating that norms relating to sexual behaviour are relatively static.
+These findings underscore the importance of providing effective HIV prevention options tailored to the needs of particular age groups, as well as local sexual norms.
+
+<!-- Possible TODO: Add "... and highlight the need to consider country-specific contexts." once there is more discussion of this in main text. -->
 
 ## Supporting information
 
