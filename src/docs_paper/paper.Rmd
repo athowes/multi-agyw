@@ -753,12 +753,11 @@ We estimated the proportion of AGYW aged 15-19, 20-24 and 25-29 years in four se
 Though subject to limitations, these estimates provide data that national HIV programmes can use to set targets and implement differentiated HIV prevention strategies as outlined in the Global AIDS Strategy.
 Successfully implementing this approach would result in more efficiently reaching a greater number of those at risk of infection.
 
-Among AGYW, there was systematic variation by age group in risk group proportions, primary attributable to sexual debut typically occurring during the ages 15-24.
-There was also large amounts of spatial variation, particularly between those who reported one cohabiting partner versus non-regular or multiple partners.
+Among AGYW, there was systematic variation in sexual behaviour by age and location, but not over time.
+Age group variation was primarily attributable to age of sexual debut (ages 15-24).
+Spatial variation was particularly present between those who reported one cohabiting partner versus non-regular or multiple partners.
 Risk group proportions did not change substantially over time, indicating that norms relating to sexual behaviour are relatively static.
-These findings underscore the importance of providing effective HIV prevention options tailored to the needs of particular age groups, as well as local sexual norms.
-
-<!-- Possible TODO: Add "... and highlight the need to consider country-specific contexts." once there is more discussion of this in main text. -->
+These findings underscore the importance of providing effective HIV prevention options tailored to the needs of particular age groups, as well as local norms around sexual partnerships.
 
 ## Supporting information
 
