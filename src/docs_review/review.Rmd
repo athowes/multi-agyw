@@ -24,9 +24,9 @@ We thank the reviewer for their helpful comments regarding the statistical model
 The reviewer is right to note that multinomial logistic regression models can be implemented in probabilistic programming languages like `WinBUGS` directly.
 However, for this application, Markov chain Monte Carlo approaches would be prohibitively expensive.
 For this reason, we chose to use integrated nested Laplace approximations via `R-INLA`, which have been shown to have comparable accuracy for latent Gaussian models in the realistic, pre-asymptotic regime.
-We have added the following text to the methods section of the manuscript to clarify this point:
+We have added the following text to the methods section of the manuscript (lines 126-129) to clarify this point:
 
-> For models with a Gaussian latent field, INLA has comparable accuracy to Markov chain Monte Carlo in the realistic, pre-asymptotic regime, and is substantially more computationally tractable for high dimensional models like ours, which has 940 districts, 20 years, 3 age groups, and 4 risk groups.
+> For models with a Gaussian latent field, INLA has comparable accuracy to Markov chain Monte Carlo with realistic, finite samples, and is substantially more computationally tractable for high dimensional models like ours, which has 940 districts, 20 years, 3 age groups, and 4 risk groups.
 
 > *2. Is there no other potential covariate that could be used for better modeling?*
 
@@ -34,7 +34,7 @@ Many of the covariates which one might expect to be most predictive of risk grou
 For example, despite the case for their being a clear link between the "proportion clients of FSW" covariate and the "proportion FSW" outcome we found only marginal benefits to inclusion.
 
 We agree that identifying predictive and measurable predictors of risk group proportions, or high risk locations, is an important area for further research.
-We have commented on this in the discussion section:
+We have commented on this in the discussion section (lines 316-321):
 
 > More generally, we did not consider covariates potentially predictive of risk group proportions (such as sociodemographic characteristics, education, local economic activity, cultural and religious norms and attitudes), which are typically difficult to measure spatially. Identifying measurable correlates of risk, or particular settings in which time-concentrated HIV risk occurs, is an important area for further research to improve risk prioritisation and precision HIV programme delivery.
 
@@ -44,7 +44,7 @@ We did not use the specific term "sub-national effect" in the manuscript.
 We believe the reviewer is referring to the term "spatial effect", which we use to describe district-specific effects that allow the model to capture district-level variation in risk group proportions, primarily informed by survey data in each district.
 
 Thank you to the reviewer for highlighting the omission of specific definition for this term.
-Throughout the manuscript, we have replaced references to "effect" by the more accurate "random effect", and have clarified the usage of spatial random effect where it first appears in the methods section as follows:
+Throughout the manuscript, we have replaced references to "effect" by the more accurate "random effect", and have clarified the usage of the term spatial random effect where it first appears in the methods section (lines 108-114) as follows:
 
 > All models included intercepts for each risk group, as well as age, country, and age-country random effects. To account for district-level variation we used spatial random effects consisting of a parameter for each district. We considered alternative model specifications in which the spatial random effects were either independent or spatially correlated such that more information was shared between neighboring districts than those far apart. Similarly, we used temporal random effects to allow variation in risk group proportions over time, and considered alternative model specifications as independent versus first-order auto-regressive where a smooth temporal trend is assumed. 
 
@@ -76,7 +76,7 @@ Estimates of hidden populations like FSW from household surveys have significant
 For this reason, we believe it is more appropriate to calibrate our estimates to @stevens2022estimating, who as well as including the KP Atlas data, integrate data from other FSW population size estimates using a Bayesian mixed effects model.
 
 Overall, we agree with the reviewer's comment that relying on data from different designs is not the ideal analysis, but we believe that it is the best approach using available data given known limitations identifying women who sell sex in household sampling frames and questionnaires.
-We have noted this in the limitations section of the discussion:
+We have noted this in the limitations section of the discussion (lines 311-316):
 
 > We have the least confidence in our estimates for the FSW risk group. As well as having the smallest sample sizes, our transactional sex estimates do not overcome the difficulties of sampling hard to reach groups. We inherent any limitations of the national FSW estimates which we adjust our estimates of transactional sex to match. Furthermore, we do not consider seasonal migration patterns, which may particularly affect FSW size.
 
@@ -84,7 +84,7 @@ We have noted this in the limitations section of the discussion:
 
 In our and other previous work, figures similar to Figure 1 have been effective at concisely visualising inclusion of a large number of surveys across several countries and types (see, for example, Figure 1 of @giguere2021trends), and we prefer to retain this figure.
 Supplementary Table B.3 provides an alternative tabular summary of the surveys analysed, with sample size broken down by age group. 
-We have extended the caption of Figure 1 to draw attention to this alternative presentation:
+We have extended the caption of Figure 1 (proceeding line 170) to draw attention to this alternative presentation:
 
 > **Fig 1.** Surveys used in our analysis by year, survey type, sample size, and whether the survey included a question about transactional sex. Details of included surveys are in Supplementary Table B.3.
 
