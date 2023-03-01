@@ -417,7 +417,7 @@ knitr::include_graphics("depends/3p1-within-between-country-variation.png")
 ```
 
 Fig \ref{fig:continental-map} and Fig \ref{fig:within-between-country-variation} show posterior mean estimates for the proportion in each risk group from our final model.
-Posterior mean, median, and 95\% credible intervals are provided in the supplementary material.
+Posterior mean, median, and 95\% credible intervals are provided in S1 Data.
 In subsequent results, all estimates refer to 2018, the most recent year included in our analysis, unless otherwise indicated.
 
 ```{r results=FALSE}
@@ -633,7 +633,7 @@ The majority of this benefit came from reaching FSW, who were `r inf_fsw$prop_po
 <!-- Possible TODO: How does this vary by country / region?  Maybe worth calling out result for West Africa vs. East Africa vs. Southern Africa here to highlight the difference. Also how does this compare with other estimates? And what does Oli think about this? I recognize that comparison is not straightforward because age group difference! -->
 
 Considering each country separately, on average, reaching half of new infections in each country required reaching `r inf_country_half_without_behaviour$median`\% (range `r inf_country_half_without_behaviour$min`-`r inf_country_half_without_behaviour$max`\%) of the population when stratifying by area and age, reducing to `r inf_country_half_with_behaviour$median`\% (range `r inf_country_half_with_behaviour$min`-`r inf_country_half_with_behaviour$max`\%) when behaviour was included.
-The relative importance of stratifying by age, location and behaviour varied between countries, analogous to the varying contribution of each to the total variance (S2 Text).
+The relative importance of stratifying by age, location and behaviour varied between countries, analogous to the varying contribution of each to the total variance (Fig C in S2 Text).
 For example, FSW in Kenya were estimated to be `r inf_fsw_kenya$prop_population_cumulative`\% of the population and close to a third (`r inf_fsw_kenya$prop_infections_averted_cumulative`\%) of all new infections, whereas FSW in Tanzania were just `r inf_fsw_tanzania$prop_population_cumulative`\% of the population and `r inf_fsw_tanzania$prop_infections_averted_cumulative`\% of all new infections.
 
 <!-- Possible TODO: Are we able to add an analysis of the number who are prioritized for the 'standard' and 'enhanced' prevention packages in the Global Strategy? That gets a lot of emphasis in the Introduction, so would be nice to report about here. -->
@@ -763,7 +763,8 @@ These findings underscore the importance of providing effective HIV prevention o
 ## Supporting information
 
 **S1 Text**: Mathematical appendix, including for: the risk group model, FSW population size estimation, and calculation of HIV prevalence, HIV incidence and expected new HIV infections reached. \newline
-**S2 Text**: Supplementary tables and figures, including for: the Global AIDS strategy, the household survey data used, and plots of country-specific comparisons between direct and modelled estimates, HIV prevalence estimates, HIV incidence estimates, and expected new HIV infections reached. 
+**S2 Text**: Supplementary tables and figures, including for: the Global AIDS strategy, the household survey data used, and plots of country-specific comparisons between direct and modelled estimates, HIV prevalence estimates, HIV incidence estimates, and expected new HIV infections reached. \newline
+**S1 Data**: Estimates of risk group proportions.
 
 <!-- ## Funding and disclaimer -->
 
