@@ -14,11 +14,11 @@ bibliography: citations.bib
 
 \clearpage
 
-<!-- So that the tables and figures in this appendix are prefixed by "B." -->
+<!-- So that the tables and figures in this appendix are numbered alphabetically --->
 \setcounter{table}{0}  
-\renewcommand{\thetable}{B.\arabic{table}} 
+\renewcommand{\thetable}{\AlphAlph{\value{table}}} 
 \setcounter{figure}{0} 
-\renewcommand{\thefigure}{B.\arabic{figure}}
+\renewcommand{\thefigure}{\AlphAlph{\value{figure}}}
 
 # The Global AIDS Strategy
 

@@ -1,6 +1,5 @@
 ---
-title: Mathematical appendix to "Spatio-temporal estimates of HIV risk group proportions for adolescent
-  girls and young women across 13 priority countries in sub-Saharan Africa"
+title: Mathematical appendix to "Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa"
 subtitle: |
   Corresponding author: Adam Howes (`ath19@ic.ac.uk`)
 output:
@@ -15,17 +14,17 @@ bibliography: citations.bib
 
 \newpage
 
-<!-- So that the tables and figures in this appendix are prefixed by "A." -->
+<!-- So that the tables and figures in this appendix are numbered alphabetically --->
 \setcounter{table}{0}  
-\renewcommand{\thetable}{A.\arabic{table}} 
+\renewcommand{\thetable}{\Alph{table}} 
 \setcounter{figure}{0} 
-\renewcommand{\thefigure}{A.\arabic{figure}}
+\renewcommand{\thefigure}{\Alph{figure}}
 
 # Modelling of risk group proportions {#modelling-of-risk-group-proportions}
 
 ## Overview
 
-Let $i \in \{1, \ldots, n\}$ denote subnational units (Table B.5) which partition the 13 studied AGYW priority countries $c[i] \in \{1, \ldots, 13\}$.
+Let $i \in \{1, \ldots, n\}$ denote subnational units (Table E in S2 Text) which partition the 13 studied AGYW priority countries $c[i] \in \{1, \ldots, 13\}$.
 We considered the years 1999-2018 denoted as $t \in \{1, \ldots, T\}$, and age groups $a \in \{\text{15--19}, \text{20--24}, \text{25--29}\}$.
 Let the four risk groups be $k \in \{1, 2, 3, 4\}$ and denote being in either the third or fourth risk group by $k = 3^{+}$.
 
@@ -230,7 +229,7 @@ as implemented by `family = "xPoisson"` in `R-INLA`, which accepts non-integer i
 
 We performed model selection on the basis of the conditional predictive ordinate (CPO) criterion [@pettit1990conditional], selecting model M2.
 This model included Besag spatial random effects and IID temporal random effects.
-For reference, we also computed the deviance information criterion (DIC) [@spiegelhalter2002bayesian] and widely applicable information criterion (WAIC) [@watanabe2013widely] (Table \ref{tab:multinomial-model-performance} and Figure \ref{fig:multinomial-model-performance}).
+For reference, we also computed the deviance information criterion (DIC) [@spiegelhalter2002bayesian] and widely applicable information criterion (WAIC) [@watanabe2013widely] (Table \ref{tab:multinomial-model-performance} and Fig \ref{fig:multinomial-model-performance}).
 
 \begin{table}[h]
 \centering
@@ -295,7 +294,7 @@ to extend the binomial distribution to non-integer weighted counts and sample si
 ### Model selection
 
 We selected the best model according to the CPO statistic, which was model L6.
-CPO values, along with DIC and WAIC values for reference, are presented in Table \ref{tab:logistic-model-performance} and Figure \ref{fig:logistic-model-performance}.
+CPO values, along with DIC and WAIC values for reference, are presented in Table \ref{tab:logistic-model-performance} and Fig \ref{fig:logistic-model-performance}.
 Inclusion of Besag spatial random effects, rather than IID, consistently improved performance.
 Benefits from inclusion of covariates were more marginal.
 That said, as some countries had no suitable surveys, we preferred to include covariate information such that the estimates in these countries are based on some country-specific data.
@@ -333,7 +332,7 @@ These empirical coverages can be compared to the nominal coverage $(1 - \alpha)$
 This approach has the advantage of considering all possible confidence values at once.
 @sailynoja2021graphical develop binomial distribution-based simultaneous confidence bands for ECDF difference values which test uniformity.
 
-Figure \ref{fig:coverage} shows the PIT histogram and ECDF difference plots for our final model, faceted by risk group.
+Fig \ref{fig:coverage} shows the PIT histogram and ECDF difference plots for our final model, faceted by risk group.
 <!-- Comment on the results. -->
 <!-- What is going on with the cohabiting partner group towards one? -->
 
@@ -358,7 +357,7 @@ F(x) = \left(1 + \exp(\kappa_c (\mu_c - x)) \right)^{- \gamma_c},
 where $\kappa_c, \mu_c, \gamma_c > 0$ are country-specific shape, shape and skewness parameters respectively.
 
 Next, we used the assumed $\text{Gamma}(\alpha = 10.4, \beta = 0.36)$ FSW age distribution in South Africa from the Thembisa model [@johnson2020thembisa] to calculate the implied ratio between the number of FSW and the sexually debuted population in each age group.
-We assumed these ratios in South Africa were applicable to every country to calculate the number of FSW by age group in all 13 countries (Figure \ref{fig:age-disagg-fsw-line}).
+We assumed these ratios in South Africa were applicable to every country to calculate the number of FSW by age group in all 13 countries (Fig \ref{fig:age-disagg-fsw-line}).
 
 \begin{figure}
   \centering
@@ -388,7 +387,7 @@ Given the fitted log odds ratios $\log(\text{OR}_k)$, we disaggregated Naomi est
 \hat \theta = \argmin_{\theta \in [-10, 10]} \left( \sum_{k} \left( \text{logistic}(\theta + \log(\text{OR}_k)) \cdot N_{iak} \right) - H_{ia} \right)^2
 \end{equation}
 where $\text{logistic}(x) = \exp(x) / (1 + \exp(x))$ such that $\text{logistic}(\hat \theta + \log(\text{OR}_k)) = \rho_{iak}$.
-Figures B.18 - B.30 show the resulting HIV prevalence estimates by risk group in each country.
+Fig R - AD in S2 Text show the resulting HIV prevalence estimates by risk group in each country.
 The number of PLHIV are then obtained by $H_{iak} = \rho_{iak} N_{iak}$, where $N_{iak}$ is the risk group population size.
 
 ## Calculation of incidence and expected number of new infections
@@ -408,7 +407,7 @@ Risk group specific HIV incidence estimates are then given by
 \end{align}
 which we evaluated using Naomi model estimates of the number of new HIV infections $I_{ia} = \lambda_{ia} N_{ia}$, HIV infection risk ratios $\{\text{RR}_3, \text{RR}_4(\lambda_{ia})\}$, and risk group population sizes as above.
 The risk ratio $\text{RR}_4(\lambda_{ia})$ was defined as a function of general population incidence.
-Figures B.31 - B.43 show the resulting HIV incidence estimates by risk group in each country.
+Fig AE - AQ in S2 Text show the resulting HIV incidence estimates by risk group in each country.
 The number of new HIV infections are then $I_{iak} = \lambda_{iak} N_{iak}$.
 
 ## Calculation of expected new infections reached
@@ -421,7 +420,7 @@ As an illustration, for stratification just by age, we aggregated the number of 
 \end{align}
 Under this stratification, individuals in each age group $a$ are prioritised according to the highest HIV incidence $\lambda_a$.
 By cumulatively summing the expected infections, for each fraction of the total population reached we calculated the fraction of total expected new infections that would be reached.
-Figures B.44 - B.56 show the percentage of new infections that would be reached prioritising according to each possible stratification within each country.
+Fig AR - BD in S2 Text show the percentage of new infections that would be reached prioritising according to each possible stratification within each country.
 
 This analysis was relatively simple.
 More involved analyses might consider prioritisation of a hypothetical intervention which has some, possibly varying, probability of preventing HIV acquisition, as well as the costs associated to its roll-out.
