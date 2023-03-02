@@ -19,7 +19,7 @@ Waterloo Student Conference in Statistics, Actuarial Science and Finance](https:
 
 ## Manuscript
 
-* [paper](https://athowes.github.io/multi-agyw/paper.pdf)
+* [paper](https://athowes.github.io/multi-agyw/paper.pdf): note that this version of the paper is generated directly from `.Rmd` and has some small formatting issues that must be fixed in the `.tex` file
 * [appendix](https://athowes.github.io/multi-agyw/appendix.pdf)
 * [tables-figures](https://athowes.github.io/multi-agyw/tables-figures.pdf)
 * [review](https://athowes.github.io/multi-agyw/review.pdf)
