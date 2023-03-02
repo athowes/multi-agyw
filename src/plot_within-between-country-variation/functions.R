@@ -45,6 +45,7 @@ prepare_estimates <- function(df) {
     left_join(region_key, by = "iso3")
 
   df_national_sort <- df_national %>%
+    ungroup() %>%
     select(iso3, region) %>%
     unique() %>%
     group_by(region) %>%

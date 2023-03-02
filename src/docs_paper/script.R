@@ -41,3 +41,14 @@ rmarkdown::render("appendix.Rmd")
 rmarkdown::render("tables-figures.Rmd")
 rmarkdown::render("cover.Rmd")
 pagedown::chrome_print("cover.html")
+
+#' Clean subnational estimates for supplement
+supplementary_data <- read_csv("depends/df_3p1_subnational.csv") %>%
+  select(-iso3_sort_order) %>%
+  mutate(pse = estimate_smoothed * population_mean, .after = estimate_smoothed) %>%
+  relocate(region, .after = iso3) %>%
+  select(-survey_id, - population_mean) %>%
+  rename(proportion = estimate_smoothed) %>%
+  arrange(iso3)
+
+write_csv(supplementary_data, "supplementary-data.csv")

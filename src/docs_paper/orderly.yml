@@ -18,6 +18,10 @@ artefacts:
       filenames:
         - cover.pdf
         - cover.html
+  - data:
+      description: Supplementary data
+      filenames:
+        - supplementary-data.csv
 
 resources:
   - paper.Rmd
