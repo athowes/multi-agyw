@@ -208,7 +208,7 @@ High & Non-regular or multiple partner(s) & -- & 1.72 \\
  & & $>$3.0\% & 3.0 \\
 \bottomrule
 \end{tabularx}
-\caption{HIV risk groups and assumed HIV incidence rate ratio for each risk group relative to AGYW with one cohabiting sexual partner. Among FSW, the incidence rate ratio depended on the level of HIV incidence among the general population. The incidence rate ratio for women with non-regular or multiple sexual partner(s) was derived from analysis of ALPHA network data. Non-regular partners are defined to be non cohabiting. The transactional sex risk group is adjusted during analysis to correspond to female sex worker, and incidence rate ratios among FSW were dervied based on patterns of relative HIV prevalence among FSW compared to general population prevalence. When the local HIV incidence in the general population is higher, the incidence rate ratio for FSW is lower.}
+\caption{HIV risk groups and assumed HIV incidence rate ratio for each risk group relative to AGYW with one cohabiting sexual partner. Among FSW, the incidence rate ratio depended on the level of HIV incidence among the general population. The incidence rate ratio for women with non-regular or multiple sexual partner(s) was derived from analysis of ALPHA network data. Non-regular partners are defined to be non cohabiting. The transactional sex risk group is adjusted during analysis to correspond to female sex worker, and incidence rate ratios among FSW were derived based on patterns of relative HIV prevalence among FSW compared to general population prevalence. When the local HIV incidence in the general population is higher, the incidence rate ratio for FSW is lower.}
 \label{tab:risk-groups}
 \small
 \end{table}
@@ -412,7 +412,7 @@ Direct estimates of the four risk group proportions from these surveys were high
 knitr::include_graphics("depends/3p1-continental-map.png")
 ```
 
-```{r within-between-country-variation, fig.cap="National (in white) and subnational (in color) posterior means of the risk group proportions. Estimates are stratified by risk group (columns) and five-year age group (rows). Regions of sub-Saharan Africa were defined according to the UN M49 geocode [@un2020statistics]. \\label{fig:within-between-country-variation}"}
+```{r within-between-country-variation, fig.cap="National (in white) and subnational (in color) posterior means of the risk group proportions. Estimates are stratified by risk group (columns) and five-year age group (rows). \\label{fig:within-between-country-variation}"}
 knitr::include_graphics("depends/3p1-within-between-country-variation.png")
 ```
 
