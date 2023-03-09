@@ -273,7 +273,7 @@ Variable(s) & Description \\
 \begin{figure}[h]
 \centering
 \makebox[\textwidth][c]{\includegraphics{depends/model-direct-benefits.png}}
-\caption{Illustration our model results for AGYW 20-24 in Tanzania in 2010 in the cohabiting risk group. Compared to the direct survey results, our spatio-temporally smoothed estimates more plausibly represent district-level heterogeneity, as well as imputing any districts with missing data.}
+\caption{Illustration of our model results for AGYW 20-24 in Tanzania in 2010 in the cohabiting risk group. Compared to the direct survey results, our spatio-temporally smoothed estimates more plausibly represent district-level heterogeneity, as well as imputing any districts with missing data.}
 \label{fig:model-direct-benefits}
 \end{figure}
 

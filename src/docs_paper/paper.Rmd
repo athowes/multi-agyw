@@ -766,6 +766,96 @@ These findings underscore the importance of providing effective HIV prevention o
 **S2 Text**: Supplementary tables and figures, including for: the Global AIDS strategy, the household survey data used, and plots of country-specific comparisons between direct and modelled estimates, HIV prevalence estimates, HIV incidence estimates, and expected new HIV infections reached. \newline
 **S1 Data**: Estimates of risk group proportions.
 
+## List of legends
+
+### S1 Text
+
+#### Tables
+
+* Table A: The multinomial regression models that we considered. Observation random effects $\theta_{ita}$, included in all models, are omitted from this table.
+* Table B: Multinomial regression model performance, with the best performing model(s) according to each criterion shown as a square. For the CPO, higher values indicate better model performance for the CPO. For the 
+DIC and WAIC, lower values indicate better model performance.
+* Table C: The logistic regression models that were considered. \texttt{cfswever} denotes the proportion of men who have ever paid for sex and \texttt{cfswrecent} denotes the proportion of men who have paid for sex in the past 12 months.
+* Table D: Logistic regression model performance. For the CPO, higher values indicate better model performance. For the DIC and WAIC, lower values indicate better model performance.
+
+#### Figures
+
+* Figure A: Multinomial regression model performance, with the best performing model(s) according to each criterion shown as a square. For the CPO, higher values indicate better model performance for the CPO. For the DIC and WAIC, lower values indicate better model performance.
+* Figure B: Logistic regression model performance, with the best performing model(s) according to each criterion shown as a square.
+* Figure C: Probability integral transform (PIT) histograms (top row) and empirical cumulative distribution function (ECDF) difference plots (bottom row) for the final selected model.
+* Figure D: Proportion of FSW by age group (including the age groups 30-34, 35-39, 40-44 and 45-49) as produced by our disaggregation procedure.
+
+### S2 Text
+
+#### Tables
+
+* Table A: Prioritisation strata according to HIV incidence in the general population and behavioural risk.
+* Table B: Commitments to be met for each intervention in terms of proportion of the prioritisation strata reached, where "-" represents no commitment.
+* Table C: All of the surveys that we used in our analysis and their sample sizes, disaggregated by respondent age.
+* Table D: All of that surveys that were excluded from our analysis.
+* Table E: The numer of areas and analysis levels for each country that were used in our analysis.
+* Table F: AIS, BAIS and DHS survey questions.
+* Table G: PHIA survey questions.
+
+#### Figures
+
+* Figure A: Flowchart describing allocation of respondents to risk groups.
+* Figure B: Illustration of our model results for AGYW 20-24 in Tanzania in 2010 in the cohabiting risk group. Compared to the direct survey results, our spatio-temporally smoothed estimates more plausibly represent district-level heterogeneity, as well as imputing any districts with missing data.
+* Figure C: Proportion of variance explained by each random effect (Sobol’ indices) when the multinomial regression model is fit to each country individually. In this setting, country-category random effects are not included in the model and year-category random effects are replaced by survey-category random effects (for countries with surveys in multiple years). Countries are ordered by the proportion of their variance which is explained by the area-category random effects.
+* Figure D: The posterior density of national-level risk group proportions by age, illustrating the bi-modality of the cohabiting partner and non-regular and multiple partner(s) risk groups.
+* Figure E: Comparison of modelled and direct national-level estimates in 1999-2018 in Botswana. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.
+* Figure F: Comparison of modelled and direct national-level estimates in 1999-2018 in Cameroon. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.
+* Figure G: Comparison of modelled and direct national-level estimates in 1999-2018 in Kenya. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.
+* Figure H: Comparison of modelled and direct national-level estimates in 1999-2018 in Lesotho. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.
+* Figure I: Comparison of modelled and direct national-level estimates in 1999-2018 in Mozambique. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.
+* Figure J: Comparison of modelled and direct national-level estimates in 1999-2018 in Malawi. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.
+* Figure K: Comparison of modelled and direct national-level estimates in 1999-2018 in Namibia. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.
+* Figure L: Comparison of modelled and direct national-level estimates in 1999-2018 in Eswatini. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.
+* Figure M: Comparison of modelled and direct national-level estimates in 1999-2018 in Tanzania. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.
+* Figure M: Comparison of modelled and direct national-level estimates in 1999-2018 in Uganda. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.
+* Figure O: Comparison of modelled and direct national-level estimates in 1999-2018 in South Africa. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.
+* Figure P: Comparison of modelled and direct national-level estimates in 1999-2018 in Zambia. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.
+* Figure Q: Comparison of modelled and direct national-level estimates in 1999-2018 in Zimbabwe. Estimates are described as "partially direct" when there are no surveys containing a transactional sex question in a country-age-group and we instead used modelled logistic regression estimates to differentiate the direct estimates.
+* Figure R: District-level HIV prevalence for each of the risk groups in 2018 in Botswana.
+* Figure S: District-level HIV prevalence for each of the risk groups in 2018 in Cameroon.
+* Figure T: District-level HIV prevalence for each of the risk groups in 2018 in Kenya.
+* Figure U: District-level HIV prevalence for each of the risk groups in 2018 in Lesotho.
+* Figure V: District-level HIV prevalence for each of the risk groups in 2018 in Mozambique.
+* Figure W: District-level HIV prevalence for each of the risk groups in 2018 in Malawi.
+* Figure X: District-level HIV prevalence for each of the risk groups in 2018 in Namibia.
+* Figure Y: District-level HIV prevalence for each of the risk groups in 2018 in Eswatini.
+* Figure Z: District-level HIV prevalence for each of the risk groups in 2018 in Tanzania.
+* Figure AA: District-level HIV prevalence for each of the risk groups in 2018 in Uganda.
+* Figure AB: District-level HIV prevalence for each of the risk groups in 2018 in South Africa.
+* Figure AC: District-level HIV prevalence for each of the risk groups in 2018 in Zambia.
+* Figure AD: District-level HIV prevalence for each of the risk groups in 2018 in Zimbabwe.
+* Figure AE: District-level HIV incidence for each of the risk groups in 2018 in Botswana.
+* Figure AF: District-level HIV incidence for each of the risk groups in 2018 in Cameroon.
+* Figure AG: District-level HIV incidence for each of the risk groups in 2018 in Kenya.
+* Figure AH: District-level HIV incidence for each of the risk groups in 2018 in Lesotho.
+* Figure AI: District-level HIV incidence for each of the risk groups in 2018 in Mozambique.
+* Figure AJ: District-level HIV incidence for each of the risk groups in 2018 in Malawi.
+* Figure AK: District-level HIV incidence for each of the risk groups in 2018 in Namibia.
+* Figure AL: District-level HIV incidence for each of the risk groups in 2018 in Eswatini.
+* Figure AM: District-level HIV incidence for each of the risk groups in 2018 in Tanzania.
+* Figure AN: District-level HIV incidence for each of the risk groups in 2018 in Uganda.
+* Figure AO: District-level HIV incidence for each of the risk groups in 2018 in South Africa.
+* Figure AP: District-level HIV incidence for each of the risk groups in 2018 in Zambia.
+* Figure AQ: District-level HIV incidence for each of the risk groups in 2018 in Zimbabwe.
+* Figure AR: Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Botswana.
+* Figure AS: Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Cameroon.
+* Figure AT: Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Kenya.
+* Figure AU: Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Lesotho.
+* Figure AV: Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Mozambique.
+* Figure AW: Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Malawi.
+* Figure AX: Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Namibia.
+* Figure AY: Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Eswatini.
+* Figure AZ: Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Tanzania.
+* Figure BA: Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Uganda.
+* Figure BB: Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in South Africa.
+* Figure BC: Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Zambia.
+* Figure BD: Percentage of expected new infections reached taking a variety of risk stratification approaches against the percentage of at risk population reached in Zimbabwe.
+
 <!-- ## Funding and disclaimer -->
 
 <!-- AH was supported by the EPSRC Centre for Doctoral Training in Modern Statistics and Statistical Machine Learning (EP/S023151/1). -->
