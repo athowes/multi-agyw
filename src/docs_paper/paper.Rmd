@@ -286,7 +286,7 @@ We used `sf` [@pebesma2018sf] for handling of spatial data, `orderly` [@orderly]
 ## HIV indicators and prevention prioritisation
 
 Using risk group proportion estimates, and subnational estimates developed using the Naomi model, we calculated HIV prevalence, PLHIV, HIV incidence and number of new HIV infections stratified by district, age group and risk group.
-Further details are provided in Appendix A.2.
+Further details are provided in S1 Text.
 
 ### Prevalence and PLHIV
 
@@ -416,8 +416,7 @@ knitr::include_graphics("depends/3p1-continental-map.png")
 knitr::include_graphics("depends/3p1-within-between-country-variation.png")
 ```
 
-Fig \ref{fig:continental-map} and Fig \ref{fig:within-between-country-variation} show posterior mean estimates for the proportion in each risk group from our final model.
-Posterior mean, median, and 95\% credible intervals are provided in S1 Data.
+Fig \ref{fig:continental-map} and Fig \ref{fig:within-between-country-variation} show posterior mean estimates for the proportion in each risk group from our final model (provided in S1 Data).
 In subsequent results, all estimates refer to 2018, the most recent year included in our analysis, unless otherwise indicated.
 
 ```{r results=FALSE}
