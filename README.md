@@ -1,6 +1,6 @@
 # multi-agyw
 
-Code for the manuscript Howes *et al.* "Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa" ([medRxiv](https://www.medrxiv.org/content/10.1101/2022.07.12.22277551v1), forthcoming at [PLOS Global Public Health](https://journals.plos.org/globalpublichealth/))
+Code for the manuscript Howes *et al.* "Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa" ([medRxiv](https://www.medrxiv.org/content/10.1101/2022.07.12.22277551v3), forthcoming at [PLOS Global Public Health](https://journals.plos.org/globalpublichealth/))
 
 ## Summary
 
