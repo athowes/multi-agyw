@@ -206,8 +206,20 @@ plotA
 
 dev.off()
 
+ggsave(
+  "aids-abstract-A.png",
+  plotA,
+  width = 6.25, height = 3.5, units = "in", dpi = 300
+)
+
 pdf("aids-abstract-B.pdf", h = 3.5, w = 6.25)
 
 plotB
 
 dev.off()
+
+ggsave(
+  "aids-abstract-B.png",
+  plotB,
+  width = 6.25, height = 3.5, units = "in", dpi = 300
+)

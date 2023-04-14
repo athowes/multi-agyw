@@ -7,7 +7,9 @@ artefacts:
         - aids-abstract.pdf
         - aids-abstract.png
         - aids-abstract-A.pdf
+        - aids-abstract-A.png
         - aids-abstract-B.pdf
+        - aids-abstract-B.png
 
 packages:
   - dplyr

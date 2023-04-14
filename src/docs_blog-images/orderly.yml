@@ -1,0 +1,17 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Placeholder
+      filenames:
+        - placeholder.rds
+
+depends:
+  plot_model-direct-benefits:
+    id: latest
+    use:
+      depends/model-direct-benefits.png: model-direct-benefits.png
+  plot_aids-abstract:
+    id: latest
+    use:
+      depends/aids-abstract-A.png: aids-abstract-A.png

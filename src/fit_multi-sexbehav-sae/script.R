@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = FALSE, fewer_countries = TRUE))
+# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = FALSE, fewer_countries = FALSE))
 # setwd("src/fit_multi-sexbehav-sae")
 
 sf_use_s2(FALSE)
@@ -92,12 +92,14 @@ dev.off()
 #' ZWE   2           63
 
 #' Expect differences for CMR and KEN
-areas_model %>%
+(areas_by_iso3 <- areas_model %>%
   st_drop_geometry() %>%
   group_by(iso3, area_level) %>%
   summarise(
     n = n()
-  )
+  ))
+
+sum(areas_by_iso3$n)
 
 #' Create adjacency matrix for INLA
 adjM <- spdep::poly2nb(areas_model)
