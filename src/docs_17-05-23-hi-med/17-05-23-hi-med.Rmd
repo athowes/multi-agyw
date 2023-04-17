@@ -1,0 +1,114 @@
+---
+title: Using statistics to guide response to the HIV epidemic
+subtitle: High Impact Medicine
+author: Adam Howes
+institute: Imperial College London
+date: May 2023
+bibliography: citations.bib
+output:
+  beamer_presentation:
+    latex_engine: pdflatex
+    highlight: haddock
+    fig_width: 7 
+    fig_height: 3
+    includes:
+        in_header: preamble.tex
+---
+
+## Outline
+
+1. Background on small-area estimation of HIV indicators
+2. Estimating HIV risk group proportions
+3. Is this something you might want to work on?
+
+# 1. Background on small-area estimation of HIV indicators
+
+# 2. Estimating HIV risk group proportions
+
+## Background
+
+::: columns
+
+:::: column
+
+* In sub-Saharan Africa, adolescent girls and young women (AGYW) aged 15-29 are 28% of the population but 44% of new infections
+* This disparity is because of:
+  1. Younger age at first sex
+  2. Age patterns of sexual mixing
+  3. Structural vulnerabilities and power imbalances
+  4. Increased susceptibility to HIV infection
+
+::::
+
+:::: column
+
+```{r echo=FALSE, out.width = "125px", fig.cap="Tweet from UNAIDS"}
+knitr::include_graphics("tweet.png")
+```
+
+::::
+
+:::
+
+## Prevention packages
+
+* There are some prevention options ("core package") cheap enough they should be provided to all AGYW 
+* Other options ("intensified interventions") are more costly, and there are insufficient resources to offer to all AGYW
+
+\begin{center}
+\begin{tcolorbox}[width=0.9\textwidth, colframe={title}, colback={white}, title={}]
+$\implies$ How to prioritise interventions to have the greatest impact?
+\end{tcolorbox}
+\end{center}
+
+## Stratified prevention
+
+::: columns
+
+:::: column
+
+* Global AIDS strategy 2021-2026 proposed stratifying HIV prevention for AGYW based on
+  1. Population-level HIV incidence
+  2. Individual-level sexual risk behaviour
+* These are the two most proximal drivers of sexual transmission
+
+::::
+
+:::: column
+
+```{r echo=FALSE, out.width = "125px", fig.cap="Global AIDS strategy"}
+knitr::include_graphics("global-aids-strategy.png")
+```
+
+::::
+
+:::
+
+# 3. Is this something you might want to work on?
+
+## About me
+
+* Maths undergraduate $\to$ statistics masters $\to$ statistics PhD
+* Interested in impactful applications of statistics
+* Limited domain knowledge in any given area! Need to collaborate!
+
+## Many skills are required
+
+* Mathematics and statistics
+* Computer science and software engineering
+* Epidemiology and public health
+* Health economics and behavioural science
+* Implementation science
+* ...
+
+## Thanks for listening!
+
+* More information about me on my website `athowes.github.io`
+* Feel free to get in contact if I can be useful at `ath19@ic.ac.uk`
+* My PhD is supervised by Seth Flaxman and Jeff Eaton, and the risk group work is in collaboration with Imperial's HIV Inference Group and UNAIDS
+
+```{r echo=FALSE, out.width = "300px", fig.align='center'}
+knitr::include_graphics("mrc-gida-icl-mlgh.png")
+```
+
+## Bibliography {.allowframebreaks}

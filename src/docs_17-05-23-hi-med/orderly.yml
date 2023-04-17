@@ -4,14 +4,15 @@ artefacts:
   - data:
       description: Slides
       filenames:
-        - xx-05-23-hi-med.pdf
+        - 17-05-23-hi-med.pdf
 
 resources:
-  - xx-05-23-hi-med.Rmd
+  - 17-05-23-hi-med.Rmd
   - preamble.tex
   - citations.bib
   - global-aids-strategy.png
   - tweet.png
+  - mrc-gida-icl-mlgh.png
 
 packages:
   - dplyr
