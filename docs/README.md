@@ -11,7 +11,7 @@
 * [06-10-22-hdsl](https://athowes.github.io/multi-agyw/06-10-22-hdsl.pdf): [Health Data Science Lab](https://uwaterloo.ca/health-data-science-lab/) seminar
 * [14-10-22-waterloo](https://athowes.github.io/multi-agyw/14-10-22-waterloo.pdf): [
 Waterloo Student Conference in Statistics, Actuarial Science and Finance](https://uwaterloo.ca/statistics-actuarial-science-finance-student-conference/)
-* [14-10-22-waterloo](https://athowes.github.io/multi-agyw/14-10-22-waterloo.pdf): [High Impact Medicine](https://www.highimpactmedicine.org/)
+* [17-05-23-hi-med](https://athowes.github.io/multi-agyw/17-05-23-hi-med.pdf): [High Impact Medicine](https://www.highimpactmedicine.org/)
 
 ## Posters
 
