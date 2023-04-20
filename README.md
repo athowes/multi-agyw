@@ -1,6 +1,6 @@
 # multi-agyw
 
-Code for the manuscript Howes *et al.* "Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa" ([medRxiv](https://www.medrxiv.org/content/10.1101/2022.07.12.22277551v3), forthcoming at [PLOS Global Public Health](https://journals.plos.org/globalpublichealth/))
+Code for the paper Howes *et al.* "Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa" ([PLOS Global Public Health](https://journals.plos.org/globalpublichealth/article?id=10.1371/journal.pgph.0001731))
 
 ## Summary
 
@@ -19,11 +19,17 @@ If you would like to cite this work, please use:
 
 ```
 @article{howes2023spatio,
-  title={Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa},
-  author={Howes, Adam and Risher, Kathryn A and Nguyen, Van Kính and Stevens, Oliver and Jia, Katherine M and Wolock, Timothy M and Esra, Rachel and Zembe, Lycias and Wanyeki, Ian and Mahy, Mary and Benedikt, Clemens and Flaxman, Seth R and Eaton, Jeffrey W},
-  journal={medRxiv},
-  year={2023},
-  publisher={Cold Spring Harbor Laboratory Press}
+    doi = {10.1371/journal.pgph.0001731},
+    author = {Howes, Adam AND Risher, Kathryn A. AND Nguyen, Van Kính AND Stevens, Oliver AND Jia, Katherine M. AND Wolock, Timothy M. AND Esra, Rachel T. AND Zembe, Lycias AND Wanyeki, Ian AND Mahy, Mary AND Benedikt, Clemens AND Flaxman, Seth R. AND Eaton, Jeffrey W.},
+    journal = {PLOS Global Public Health},
+    publisher = {Public Library of Science},
+    title = {{Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa}},
+    year = {2023},
+    month = {04},
+    volume = {3},
+    url = {https://doi.org/10.1371/journal.pgph.0001731},
+    pages = {1-14},
+    number = {4}
 }
 ```
 
