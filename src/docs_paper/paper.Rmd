@@ -35,9 +35,9 @@ address:
   - code: B
     address: MRC Centre for Global Infectious Disease Analysis, School of Public Health, Imperial College London, London, United Kingdom
   - code: C
-    address: Heidelberg Institute for Global Health, Faculty of Medicine, Heidelberg University, Germany
-  - code: D
     address: Department of Public Health Sciences, Penn State College of Medicine, Hershey, PA, USA
+  - code: D
+    address: Heidelberg Institute for Global Health, Faculty of Medicine, Heidelberg University, Germany
   - code: E
     address: Center for Communicable Disease Dynamics, Department of Epidemiology, Harvard T.H. Chan School of Public Health, Boston, MA, USA
   - code: F
