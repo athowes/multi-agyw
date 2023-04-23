@@ -15,3 +15,23 @@ depends:
     id: latest
     use:
       depends/aids-abstract-A.png: aids-abstract-A.png
+  plot_infections-reached:
+    id: latest
+    use:
+      depends/infections-reached-country.pdf: infections-reached-country.pdf
+  process_coverage:
+    id: latest
+    use:
+      depends/coverage.pdf: coverage.pdf
+  process_variance-proportions:
+    id: latest
+    use:
+      depends/aaa-variance-proportions.pdf: aaa-variance-proportions.pdf
+  plot_available-surveys:
+    id: latest
+    use:
+      depends/available-surveys.png: available-surveys.png
+  plot_age-variation:
+    id: latest
+    use:
+      depends/age-variation.pdf: age-variation.pdf
