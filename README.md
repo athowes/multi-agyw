@@ -20,7 +20,7 @@ If you would like to cite this work, please use:
 ```
 @article{howes2023spatio,
     doi = {10.1371/journal.pgph.0001731},
-    author = {Howes, Adam AND Risher, Kathryn A. AND Nguyen, Van Kính AND Stevens, Oliver AND Jia, Katherine M. AND Wolock, Timothy M. AND Esra, Rachel T. AND Zembe, Lycias AND Wanyeki, Ian AND Mahy, Mary AND Benedikt, Clemens AND Flaxman, Seth R. AND Eaton, Jeffrey W.},
+    author = {Howes, Adam and Risher, Kathryn A. and Nguyen, Van Kính and Stevens, Oliver and Jia, Katherine M. and Wolock, Timothy M. and Esra, Rachel T. and Zembe, Lycias and Wanyeki, Ian and Mahy, Mary and Benedikt, Clemens and Flaxman, Seth R. and Eaton, Jeffrey W.},
     journal = {PLOS Global Public Health},
     publisher = {Public Library of Science},
     title = {{Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa}},
