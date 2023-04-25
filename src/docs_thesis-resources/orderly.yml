@@ -1,0 +1,13 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Placeholder
+      filenames:
+        - placeholder.rds
+
+depends:
+  process_age-disagg-fsw:
+    id: latest
+    use:
+      depends/age-disagg-fsw-line.pdf: age-disagg-fsw-line.pdf
