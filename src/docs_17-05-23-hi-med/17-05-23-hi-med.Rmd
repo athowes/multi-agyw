@@ -17,98 +17,230 @@ output:
 
 ## Outline
 
-1. Background on small-area estimation of HIV indicators
-2. Estimating HIV risk group proportions
-3. Is this something you might want to work on?
+1. Precision public health for HIV
+2. Estimating risk group proportions
+3. Might you want to do similar work?
 
-# 1. Background on small-area estimation of HIV indicators
+# 1. Precision public health for HIV
 
-# 2. Estimating HIV risk group proportions
+## What is precision public health
 
-## Background
+* Precision medicine: the right intervention, at the right time, to the right **individual**
+* Precision public health: the right intervention, at the right time, to the right **population**
 
-::: columns
+## How can statistics help?
 
-:::: column
+* Requires granular estimates of relevant quantities
+* Disaggregated by age group, location, behaviour
 
-* In sub-Saharan Africa, adolescent girls and young women (AGYW) aged 15-29 are 28% of the population but 44% of new infections
-* This disparity is because of:
-  1. Younger age at first sex
-  2. Age patterns of sexual mixing
-  3. Structural vulnerabilities and power imbalances
-  4. Increased susceptibility to HIV infection
+## What should we estimate
 
-::::
+* HIV prevalence: proportion of people who are infected
+* HIV incidence: rate of new infections
+* Antiretroviral therapy (ART) coverage: proportion of people living with HIV who take ART
 
-:::: column
+## 
 
-```{r echo=FALSE, out.width = "125px", fig.cap="Tweet from UNAIDS"}
-knitr::include_graphics("tweet.png")
+```{r echo=FALSE, out.width = "300px", fig.cap="Population health goals."}
+knitr::include_graphics("fast-track.png")
 ```
 
-::::
+# 2. Estimating risk group proportions
 
-:::
+##
 
-## Prevention packages
+```{r echo=FALSE}
+cbpalette <- c("#56B4E9", "#009E73", "#E69F00", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
 
-* There are some prevention options ("core package") cheap enough they should be provided to all AGYW 
-* Other options ("intensified interventions") are more costly, and there are insufficient resources to offer to all AGYW
-
-\begin{center}
-\begin{tcolorbox}[width=0.9\textwidth, colframe={title}, colback={white}, title={}]
-$\implies$ How to prioritise interventions to have the greatest impact?
-\end{tcolorbox}
-\end{center}
-
-## Stratified prevention
-
-::: columns
-
-:::: column
-
-* Global AIDS strategy 2021-2026 proposed stratifying HIV prevention for AGYW based on
-  1. Population-level HIV incidence
-  2. Individual-level sexual risk behaviour
-* These are the two most proximal drivers of sexual transmission
-
-::::
-
-:::: column
-
-```{r echo=FALSE, out.width = "125px", fig.cap="Global AIDS strategy"}
-knitr::include_graphics("global-aids-strategy.png")
+data.frame(
+  x = c("Population", "New infections"),
+  y = c(0.28, 0.44)
+) %>%
+  ggplot(aes(x = x, y = y, fill = x)) +
+    geom_col() +
+    coord_flip() +
+    scale_y_continuous(labels = scales::percent) +
+    scale_fill_manual(values = cbpalette) +
+    labs(x = "", y = "", title = bquote("AGYW*" ~ bold("over-represented") ~ "in numbers of new infections"), caption = "*Adolescent girls and young women, 15-29") +
+    guides(fill = "none") +
+    theme_minimal()
 ```
 
-::::
+## Why?
 
-:::
+1. Younger age at first sex
+2. Age patterns of sexual mixing
+3. Structural vulnerabilities and power imbalances
+4. Increased susceptibility to HIV infection
 
-# 3. Is this something you might want to work on?
+##
 
-## About me
+```{r echo=FALSE, out.width = "325px", fig.cap="HIV is a gender equality issue."}
+knitr::include_graphics("rec5.png")
+```
+
+##
+
+```{r echo=FALSE}
+data.frame(
+  price = 10,
+  effectiveness = 40,
+  name = "Condoms"
+) %>%
+  ggplot(aes(x = price, y = effectiveness, label = name)) +
+    geom_text() +
+    labs(x = "Price", y = "Effectiveness", title = "Not all interventions can* be provided to everyone", caption = "*Or should") +
+    scale_x_continuous(breaks = c(10, 90), labels = c("Cheap", "Expensive"), limits = c(0, 100)) +
+    scale_y_continuous(breaks = c(10, 90), labels = c("Works poorly", "Works well"), limits = c(0, 100)) +
+    theme_minimal() +
+    theme(
+      panel.border = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      axis.line = element_line(colour = "grey92", linewidth = 0.5, arrow = arrow(length = unit(5, "pt"), type = "open"))
+    )
+```
+
+## How to prioritise interventions?
+
+The **most proximal** drivers of transmission are
+$$
+\mathbb{P}(\text{transmission}) \propto \text{sexual partnerships} \times \mathbb{P}(\text{each partner can transmit})
+$$
+
+##
+
+```{r echo=FALSE}
+x <- y <- c(1:4)
+
+expand.grid(x, y) %>%
+  mutate(risk = ifelse(Var2 > 1, Var1 * Var2, 0)) %>%
+  ggplot(aes(x = Var1, y = Var2)) +
+  geom_tile(aes(fill = risk)) +
+  scale_fill_gradientn(
+    colours = c("white", "#E69F00"),
+    breaks = c(2, 14),
+    labels = c("Less risk", "More risk") 
+  ) +
+  scale_x_continuous(breaks = c(1:4), labels = c("<0.3%", "0.3-1%", "1-3%", ">3%")) +
+  scale_y_continuous(breaks = c(1:4), labels = c("None", "Low", "High", "Very\n high")) +
+  labs(x = "Population-level HIV incidence", y = "Individual-level risk behaviour", title = bquote("Important we consider" ~ bold("both") ~ "population setting and individual behaviour"), fill = "") +
+  theme_minimal() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "grey92", linewidth = 0.5, arrow = arrow(length = unit(5, "pt"), type = "open"))
+  )
+```
+
+## Population-level HIV incidence
+
+| Level       | District-level HIV incidence rate  |
+|-------------|------------------------------------|
+| Low         | <0.3%                              |
+| Moderate    | 0.3% - 1.0%                        |
+| High        | 1.0% - 3.0%                        |
+| Very High   | >3.0%                              |
+
+## Individual-level behavioural risk
+
+| Level       | Behavioural risk group             | Risk ratio^[From...] |
+|-------------|------------------------------------|------------|
+| None        | Not sexually active                | 0          |
+| Low         | One cohabiting partner             | 1          |
+| High        | Multiple or non-regular partner(s) | 1.72       |
+| Very High   | Female sex workers                 | 13         |
+
+##
+
+* Goal: enable prioritisation of HIV programming for AGYW
+* Audience: programme managers, service providers and policy makers 
+* Plan: estimate district-age behavioural risk group proportions, prevalences and incidences
+
+##
+
+* Describe data
+* Describe model
+* Spatio-temporal smoothing
+
+##
+
+```{r echo=FALSE, out.width = "350px", fig.cap = "Direct survey estimates are too noisy to work with, but our modelled estimates don't have the same issue."}
+knitr::include_graphics("depends/model-direct-benefits.png")
+``` 
+
+## 
+
+* Results: geographic discontinuitiy
+
+##
+
+* Results: impact of prioritisation
+
+##
+
+* Where might this work go
+* Yearly generation of estimates by country teams
+* Extending to adults 15-49
+
+##
+
+```{r echo=FALSE, out.width = "300px", fig.align='center', fig.cap = "Example of user interface for estimates generation."}
+knitr::include_graphics("naomi_user.png")
+```
+
+# 3. Might you want to do similar work?
+
+##
+
+Possible influence on health outcomes for many people **but** a part of a complex theory of change
+
+\begin{align*}
+\mathbb{P}(\text{impact}) = &\mathbb{P}(\text{relevant people interact with your work}) \\
+&\times \mathbb{P}(\text{what you've done is useful}) \\
+&\times \mathbb{P}(\text{message correctly conveyed}) \times \cdots \\
+&\times \mathbb{P}(\text{intervention technically works}) \\
+&\times \mathbb{P}(\text{intervention correctly implemented}) \times \cdots
+\end{align*}
+
+... hopefully you get the point
+
+##
 
 * Maths undergraduate $\to$ statistics masters $\to$ statistics PhD
-* Interested in impactful applications of statistics
-* Limited domain knowledge in any given area! Need to collaborate!
+* Involved with Effective Altruism during my masters, and since then I've been interested in impactful applications of statistics
 
-## Many skills are required
+##
 
-* Mathematics and statistics
-* Computer science and software engineering
-* Epidemiology and public health
-* Health economics and behavioural science
-* Implementation science
-* ...
+* I have very limited domain knowledge! Important to collaborate
+* Broad range of required skills: epidemiology, public health, health economics, behavioural science, implementation science, mathematics, statistics, computer science, software engineering
+
+##
+
+* How might the skills of medics fit in here?
+* Need to think about this!
 
 ## Thanks for listening!
 
-* More information about me on my website `athowes.github.io`
-* Feel free to get in contact if I can be useful at `ath19@ic.ac.uk`
-* My PhD is supervised by Seth Flaxman and Jeff Eaton, and the risk group work is in collaboration with Imperial's HIV Inference Group and UNAIDS
+* More information on my website: `athowes.github.io/about`
+* Feel free to get in contact if I can be useful: `ath19@ic.ac.uk`
+* My PhD is supervised by Seth Flaxman and Jeff Eaton, and the risk group work is in collaboration with Imperial's HIV Inference Group, within the MRC Centre for Global Infectious Disease Analysis, and UNAIDS
 
 ```{r echo=FALSE, out.width = "300px", fig.align='center'}
 knitr::include_graphics("mrc-gida-icl-mlgh.png")
+```
+
+##
+
+```{r echo=FALSE, out.width = "300px", fig.align='center', fig.cap = "For more (informal!) take a look at the blog post on my website`"}
+knitr::include_graphics("blog-post-updated.png")
+```
+
+##
+
+```{r echo=FALSE, out.width = "300px", fig.align='center', fig.cap = "For more (formal!) take a look at the paper."}
+knitr::include_graphics("plos-gph.png")
 ```
 
 ## Bibliography {.allowframebreaks}

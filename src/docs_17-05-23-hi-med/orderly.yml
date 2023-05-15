@@ -11,7 +11,9 @@ resources:
   - preamble.tex
   - citations.bib
   - global-aids-strategy.png
-  - tweet.png
+  - rec5.png
+  - fast-track.png
+  - naomi_user.png
   - mrc-gida-icl-mlgh.png
 
 packages:
