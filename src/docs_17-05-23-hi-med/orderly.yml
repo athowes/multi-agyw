@@ -14,7 +14,9 @@ resources:
   - rec5.png
   - fast-track.png
   - naomi_user.png
+  - blog-post-updated.png
   - mrc-gida-icl-mlgh.png
+  - plos-gph.png
 
 packages:
   - dplyr

@@ -83,13 +83,13 @@ knitr::include_graphics("rec5.png")
 
 ```{r echo=FALSE}
 data.frame(
-  price = 10,
-  effectiveness = 40,
-  name = "Condoms"
+  price = c(20, 50, 50, 80, 70, 70, 50),
+  effectiveness = c(80, 50, 60, 60, 50, 30, 40),
+  name = c("Condoms and lube", "STI screening", "Male partner testing", "Access to PrEP", "Access to PEP", "Cash transfers and incentives", "Keep girls in school")
 ) %>%
   ggplot(aes(x = price, y = effectiveness, label = name)) +
     geom_text() +
-    labs(x = "Price", y = "Effectiveness", title = "Not all interventions can* be provided to everyone", caption = "*Or should") +
+    labs(x = "Price", y = "Effectiveness", title = "Not all interventions can, or should, be provided to everyone", caption = "Possible interventions for reducing HIV incidence in AGYW. Positions on plot depend\n on setting, and is subject to uncertainty, so should not be interpreted too precisely.") +
     scale_x_continuous(breaks = c(10, 90), labels = c("Cheap", "Expensive"), limits = c(0, 100)) +
     scale_y_continuous(breaks = c(10, 90), labels = c("Works poorly", "Works well"), limits = c(0, 100)) +
     theme_minimal() +
