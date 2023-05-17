@@ -18,6 +18,7 @@ resources:
   - mrc-gida-icl-mlgh.png
   - plos-gph.png
   - fro.png
+  - dhs.png
 
 packages:
   - dplyr
@@ -63,7 +64,7 @@ depends:
     id: latest
     use:
       depends/infections-reached.pdf: infections-reached.pdf
-  zwe_data_areas:
-    id: latest
+  tza_data_areas:
+    id: 20201130-150758-409ee8ac
     use:
-      depends/zwe_areas.geojson: zwe_areas.geojson
+      depends/tza_areas.geojson: tza_areas.geojson

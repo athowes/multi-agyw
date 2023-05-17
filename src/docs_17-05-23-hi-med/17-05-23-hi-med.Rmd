@@ -26,7 +26,7 @@ output:
 ## What is precision public health
 
 * In medicine, we want to deliver the right intervention, at the right time
-* \textcolor{hilit}{Precision medicine} seeks to do that at the individual-level
+* \textcolor{hilit}{Precision medicine} seeks to do it at the individual-level
 * \textcolor{hilit}{Precision public health} seeks to do it at the population-level
 
 ##
@@ -179,7 +179,7 @@ expand.grid(x, y) %>%
 | High        | Multiple or non-regular partner(s) | 1.72       |
 | Very High   | Female sex workers                 | 13         |
 
-## What have we done
+## The work we've done
 
 * Goal: enable \textcolor{hilit}{prioritisation} of HIV programming for AGYW
 * Audience: programme managers, service providers and policy makers 
@@ -194,8 +194,25 @@ knitr::include_graphics("depends/available-surveys.png")
 
 ##
 
-```{r echo=FALSE, warning=FALSE, out.width="350px", fig.cap = "Example of model structure: we assume that neighbouring districts are similar."}
-areas <- sf::read_sf("depends/zwe_areas.geojson")
+```{r echo=FALSE, out.width="350px", fig.cap = "Example DHS questionnaire."}
+knitr::include_graphics("dhs.png")
+``` 
+
+##
+
+```{r echo=FALSE, out.width="350px", fig.cap = "How we allocated survey respondents to risk groups based on the questionnaire."}
+knitr::include_graphics("depends/category-flowchart.pdf")
+``` 
+
+## What do you mean by model?
+
+* Translation of scientific knowledge into a mathematical \textcolor{hilit}{data generating process}. If we wanted to, we could simulate fake data
+* Given observed data, we use Bayes theorem to update our beliefs about the parameters of the model
+
+##
+
+```{r echo=FALSE, warning=FALSE, out.width="350px", fig.cap = "An example of scientific knowledge included in the model is that we assume that neighbouring districts are similar. This is Tobler's first law of geography. The pictured country is Tanzania."}
+areas <- sf::read_sf("depends/tza_areas.geojson")
 
 areas %>%
   filter(area_level == 2) %>%
@@ -223,7 +240,8 @@ knitr::include_graphics("depends/infections-reached.pdf")
 ## Where might this work go
 
 * Extension to adults 15-49 and further countries
-* Generation of estimates led by country teams as a part of a yearly process: data ownership, data use, and data quality
+* Generation of estimates led by country teams as a part of a yearly process
+* Virtuous cycle of data \textcolor{hilit}{ownership}, data \textcolor{hilit}{use}, and data \textcolor{hilit}{quality}
 
 ##
 
@@ -256,12 +274,13 @@ knitr::include_graphics("naomi_user.png")
 ## Applied methodology
 
 * Being good (perhaps not great) at a useful enough collection of things
-* Feeling like no one care about the application at methods conferences, and no one cares about the methods at application conferences
+* Feeling like no one cares about the application at methods conferences, and no one cares about the methods at application conferences
 
 ## Team science
 
 * A lot of disciplines required: Epidemiology, public health, health economics, behavioural science, implementation science, mathematics, statistics, computer science, software engineering
 * Academia pushes against this by wanting every contribution to be marginally interesting in each field
+* MRC GIDA at Imperial does a good job here, in my opinion
 
 ##
 
@@ -281,7 +300,7 @@ knitr::include_graphics("mrc-gida-icl-mlgh.png")
 
 ##
 
-```{r echo=FALSE, out.width = "300px", fig.align='center', fig.cap = "For more (informal!) take a look at the blog post on my website`"}
+```{r echo=FALSE, out.width = "300px", fig.align='center', fig.cap = "For more (informal!) take a look at the blog post on my website."}
 knitr::include_graphics("blog-post-updated.png")
 ```
 
