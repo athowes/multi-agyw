@@ -17,6 +17,7 @@ resources:
   - blog-post-updated.png
   - mrc-gida-icl-mlgh.png
   - plos-gph.png
+  - fro.png
 
 packages:
   - dplyr
@@ -41,14 +42,6 @@ depends:
     id: latest
     use:
       depends/available-surveys.png: available-surveys.png
-  process_variance-proportions:
-    id: latest
-    use:
-      depends/aaa-variance-proportions.pdf: aaa-variance-proportions.pdf
-  plot_age-variation:
-    id: latest
-    use:
-      depends/age-variation.png: age-variation.png
   plot_model-direct-benefits:
     id: latest
     use:
@@ -70,14 +63,6 @@ depends:
     id: latest
     use:
       depends/infections-reached.pdf: infections-reached.pdf
-  process_age-disagg-fsw:
-    id: latest
-    use:
-      depends/age-disagg-fsw-line.pdf: age-disagg-fsw-line.pdf
-  process_coverage:
-    id: latest
-    use:
-      depends/coverage.pdf: coverage.pdf
   zwe_data_areas:
     id: latest
     use:
