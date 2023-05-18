@@ -188,7 +188,7 @@ expand.grid(x, y) %>%
 
 ##
 
-```{r echo=FALSE, out.width="350px", fig.cap = "A total of 46 surveys: importantance of good data processing code!"}
+```{r echo=FALSE, out.width="350px", fig.cap = "A total of 46 surveys: importance of good data processing code!"}
 knitr::include_graphics("depends/available-surveys.png")
 ``` 
 
