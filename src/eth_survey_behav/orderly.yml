@@ -1,0 +1,39 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Survey indicator datasets
+      filenames:
+        - eth_survey_indicators_sexbehav.csv
+        - eth_hiv_indicators_sexbehav.csv
+
+packages:
+  - dplyr
+  - forcats
+  - haven
+  - parallel
+  - rdhs
+  - naomi
+  - readr
+  - sf
+  - spud
+  - survey
+  - tidyr
+  - naomi.utils
+
+depends:
+  eth_data_areas:
+    id: latest
+    use:
+      depends/eth_areas.geojson: eth_areas.geojson
+  eth_survey_phia:
+    id: latest
+    use:
+      depends/eth2017phia_survey_meta.csv: eth2017phia_survey_meta.csv
+      depends/eth2017phia_survey_regions.csv: eth2017phia_survey_regions.csv
+      depends/eth2017phia_survey_clusters.csv: eth2017phia_survey_clusters.csv
+      depends/eth2017phia_survey_individuals.csv: eth2017phia_survey_individuals.csv
+      depends/eth2017phia_survey_biomarker.csv: eth2017phia_survey_biomarker.csv
+      depends/eth2017phia_survey_sexbehav.csv: eth2017phia_survey_sexbehav.csv
+
+

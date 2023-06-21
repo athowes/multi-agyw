@@ -1,0 +1,35 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Add 15-24 year olds
+      filenames:
+        - incidence-district-sexbehav_allages_women_nomoz.csv
+        - incidence-district-sexbehav_allages_men_nomoz.csv
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - readxl
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - tibble
+
+resources:
+  - naomi_extract.xlsx
+
+depends:
+  - process_agegroups:
+      id: latest
+      use:
+        depends/incidence-district-sexbehav_allages_women.csv: incidence-district-sexbehav_allages.csv
+  - process_agegroups_men:
+      id: latest
+      use:
+        depends/incidence-district-sexbehav_allages_men.csv: incidence-district-sexbehav_allages.csv

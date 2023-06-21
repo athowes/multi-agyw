@@ -13,7 +13,11 @@ stopifnot(iso3 %in% names(admin1_level))
 analysis_level <- analysis_level[iso3]
 admin1_level <- admin1_level[iso3]
 
-areas <- read_sf(paste0("depends/", tolower(iso3), "_areas.geojson"))
+if(iso3=="BDI") {
+  areas <- read_sf("bdi_areas.geojson")
+} else {
+  areas <- read_sf(paste0("depends/", tolower(iso3), "_areas.geojson"))
+}
 ind <- read_csv(paste0("depends/", tolower(iso3), "_survey_indicators_sexbehav.csv"))
 
 #' If PHIA surveys excluded then filter them out of the raw data
@@ -91,7 +95,8 @@ df <- crossing(
   #' All of the different surveys
   survey_id = unique(ind$survey_id),
   #' Three age groups
-  age_group = c("Y015_019", "Y020_024", "Y025_029"),
+  age_group = c("Y015_019", "Y020_024", "Y025_029", "Y030_034",
+                "Y035_039", "Y040_044", "Y045_049"),
   #' The areas in the model
   areas_model %>%
     st_drop_geometry() %>%
@@ -465,7 +470,11 @@ res_plot %>%
       age_group = fct_recode(age_group,
           "15-19" = "Y015_019",
           "20-24" = "Y020_024",
-          "25-29" = "Y025_029"
+          "25-29" = "Y025_029",
+          "30-34" = "Y030_034",
+          "35-39" = "Y035_039",
+          "40-44" = "Y040_044",
+          "45-49" = "Y045_049"
         ),
       source = fct_relevel(source, "raw", "smoothed") %>%
         fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed")
@@ -497,7 +506,11 @@ res_df <- res_df %>%
     age_group = fct_recode(age_group,
       "15-19" = "Y015_019",
       "20-24" = "Y020_024",
-      "25-29" = "Y025_029"
+      "25-29" = "Y025_029",
+      "30-34" = "Y030_034",
+      "35-39" = "Y035_039",
+      "40-44" = "Y040_044",
+      "45-49" = "Y045_049"
     ),
     indicator = fct_recode(indicator,
       "No sex" = "nosex12m",

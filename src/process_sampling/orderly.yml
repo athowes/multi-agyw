@@ -5,7 +5,6 @@ artefacts:
       description: S samples from the multinomial and logistic regression models
       filenames:
         - multi-sexbehav-sae-samples.rds
-        - fsw-logit-sae-samples.rds
 
 packages:
   - dplyr
@@ -25,7 +24,3 @@ depends:
       id: latest
       use:
         depends/best-multi-sexbehav-sae-fit.rds: best-multi-sexbehav-sae-fit.rds
-  - fit_fsw-logit-sae:
-      id: latest
-      use:
-        depends/best-fsw-logit-sae-fit.rds: best-fsw-logit-sae-fit.rds

@@ -1,0 +1,27 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Survey indicator datasets
+      filenames:
+        - zaf_survey_indicators_sexbehav.csv
+        - zaf_hiv_indicators_sexbehav.csv
+
+packages:
+  - readr
+  - dplyr
+  - forcats
+  - spud
+  - stringr
+  - sf
+  - tidyr
+  - naomi
+  - survey
+  - rdhs
+  - naomi.utils
+
+depends:
+  zaf_data_areas:
+    id: latest
+    use:
+      depends/zaf_areas.geojson: zaf_areas.geojson

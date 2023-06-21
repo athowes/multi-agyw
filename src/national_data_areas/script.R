@@ -29,8 +29,9 @@ iso3 <- c(priority_iso3, missing_iso3)
 
 sf <- lapply(iso3, function(x) {
   sf <- read_sf(paste0("depends/", tolower(x), "_areas.geojson")) %>%
-    filter(area_level == 0)
-}) %>%
+    filter(area_level == 0) %>%
+    mutate_at(vars(one_of('epp_level')), as.numeric)
+})  %>%
   bind_rows()
 
 #' Check that it looks like (southern and eastern) sub-Saharan Africa

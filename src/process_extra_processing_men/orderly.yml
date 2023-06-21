@@ -1,0 +1,65 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Multinomial smoothed district estimate results (four categories)
+      filenames:
+        - best-3p1-multi-sexbehav-sae.csv
+        - 3p1-boxplots.pdf
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - multi.utils
+
+depends:
+  - process_differentiate-high-risk_men:
+      id: latest
+      use:
+        depends/files_1.rds: files_1.rds
+        depends/files_2.rds: files_2.rds
+        depends/files_3.rds: files_3.rds
+        depends/files_4.rds: files_4.rds
+        depends/files_5.rds: files_5.rds
+        depends/files_6.rds: files_6.rds
+        depends/files_7.rds: files_7.rds
+        depends/files_8.rds: files_8.rds
+        depends/files_9.rds: files_9.rds
+        depends/files_10.rds: files_10.rds
+        depends/files_11.rds: files_11.rds
+        depends/files_12.rds: files_12.rds
+        depends/files_13.rds: files_13.rds
+        depends/files_14.rds: files_14.rds
+        depends/files_15.rds: files_15.rds
+        depends/files_16.rds: files_16.rds
+        depends/files_17.rds: files_17.rds
+        depends/files_18.rds: files_18.rds
+        depends/files_19.rds: files_19.rds
+        depends/files_20.rds: files_20.rds
+        depends/files_21.rds: files_21.rds
+        depends/files_22.rds: files_22.rds
+        depends/files_23.rds: files_23.rds
+        depends/files_24.rds: files_24.rds
+        depends/files_25.rds: files_25.rds
+        depends/files_26.rds: files_26.rds
+        depends/files_27.rds: files_27.rds
+        depends/files_28.rds: files_28.rds
+        depends/files_29.rds: files_29.rds
+        depends/files_30.rds: files_30.rds
+        depends/files_31.rds: files_31.rds
+        depends/files_32.rds: files_32.rds
+        depends/files_33.rds: files_33.rds
+        depends/files_34.rds: files_34.rds
+        depends/files_35.rds: files_35.rds
+        depends/files_36.rds: files_36.rds
+        depends/files_37.rds: files_37.rds
+        depends/files_38.rds: files_38.rds
+        depends/files_39.rds: files_39.rds

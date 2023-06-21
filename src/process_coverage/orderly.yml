@@ -20,7 +20,7 @@ packages:
   - multi.utils
 
 depends:
-  - process_differentiate-high-risk:
+  - process_fsw_all:
       id: latest
       use:
         depends/best-3p1-multi-sexbehav-sae.csv: best-3p1-multi-sexbehav-sae.csv

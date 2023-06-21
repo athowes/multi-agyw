@@ -1,0 +1,315 @@
+script: script.R
+
+sources:
+  - functions.R
+
+artefacts:
+  - data:
+      description: Checks that the data is as intended
+      filenames:
+        - areas-check.pdf
+        - data-check.pdf
+  - data:
+      description: Smoothed district indicator estimates for multinomial models
+      filenames:
+        - multi-sexbehav-sae.csv
+        - multi-sexbehav-sae.pdf
+  - data:
+      description: Stacked proportion barplots
+      filenames:
+        - stacked-proportions.pdf
+  - data:
+      description: Model selection information criteria for multinomial models
+      filenames:
+        - information-criteria.csv
+  - data:
+      description: Random effect variance parameter posterior means
+      filenames:
+        - variance-proportions.csv
+  - data:
+      description: Sample size recovery diagnostic
+      filenames:
+        - sample-size-recovery.pdf
+  - data:
+      description: Coverage posterior predictive checks
+      filenames:
+        - coverage-histograms.pdf
+        - coverage-ecdf-diff.pdf
+
+parameters:
+  iso3:
+    default: ~
+  #' Should we be used three categories or four
+  three_category:
+    default: TRUE
+  #' Fit only a guess at the best model rather than all models
+  lightweight:
+    default: FALSE
+  #' If the interaction models currently under development should be fit too
+  include_interactions:
+    default: FALSE
+  #' If data from PHIA surveys should be included
+  include_phia:
+    default: TRUE
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - purrr
+  - stringr
+  - Matrix
+  - stats
+  - multi.utils
+
+resources:
+  bdi_areas.geojson
+
+depends:
+  plot_available-surveys:
+    id: latest
+    use:
+      depends/available-surveys.csv: available-surveys.csv
+  bwa_data_areas:
+    id: latest
+    use:
+      depends/bwa_areas.geojson: bwa_areas.geojson
+  cmr_data_areas:
+    id: latest
+    use:
+      depends/cmr_areas.geojson: cmr_areas.geojson
+  ken_data_areas:
+    id: latest
+    use:
+      depends/ken_areas.geojson: ken_areas.geojson
+  lso_data_areas:
+    id: latest
+    use:
+      depends/lso_areas.geojson: lso_areas.geojson
+  # moz_data_areas:
+  #   id: 20220606-125318-016589c0
+  #   use:
+  #     depends/moz_areas.geojson: moz_areas.geojson
+  mwi_data_areas:
+    id: latest
+    use:
+      depends/mwi_areas.geojson: mwi_areas.geojson
+  nam_data_areas:
+    id: latest
+    use:
+      depends/nam_areas.geojson: nam_areas.geojson
+  swz_data_areas:
+    id: latest
+    use:
+      depends/swz_areas.geojson: swz_areas.geojson
+  tza_data_areas:
+    id: latest
+    use:
+      depends/tza_areas.geojson: tza_areas.geojson
+  uga_data_areas:
+    id: latest
+    use:
+      depends/uga_areas.geojson: uga_areas.geojson
+  zaf_data_areas:
+    id: latest
+    use:
+      depends/zaf_areas.geojson: zaf_areas.geojson
+  zmb_data_areas:
+    id: latest
+    use:
+      depends/zmb_areas.geojson: zmb_areas.geojson
+  zwe_data_areas:
+    id: latest
+    use:
+      depends/zwe_areas.geojson: zwe_areas.geojson
+  ago_data_areas:
+    id: latest
+    use:
+      depends/ago_areas.geojson: ago_areas.geojson
+  cod_data_areas:
+    id: latest
+    use:
+      depends/cod_areas.geojson: cod_areas.geojson
+  gab_data_areas:
+    id: latest
+    use:
+      depends/gab_areas.geojson: gab_areas.geojson
+  rwa_data_areas:
+    id: latest
+    use:
+      depends/rwa_areas.geojson: rwa_areas.geojson
+  eth_data_areas:
+    id: latest
+    use:
+      depends/eth_areas.geojson: eth_areas.geojson
+  hti_data_areas:
+    id: latest
+    use:
+      depends/hti_areas.geojson: hti_areas.geojson
+  tcd_data_areas:
+    id: latest
+    use:
+      depends/tcd_areas.geojson: tcd_areas.geojson
+  civ_data_areas:
+    id: latest
+    use:
+      depends/civ_areas.geojson: civ_areas.geojson
+  gha_data_areas:
+    id: latest
+    use:
+      depends/gha_areas.geojson: gha_areas.geojson
+  gin_data_areas:
+    id: latest
+    use:
+      depends/gin_areas.geojson: gin_areas.geojson
+  lbr_data_areas:
+    id: latest
+    use:
+      depends/lbr_areas.geojson: lbr_areas.geojson
+  mli_data_areas:
+    id: 20210315-110232-c505b0a1
+    use:
+      depends/mli_areas.geojson: mli_areas.geojson
+  ner_data_areas:
+    id: latest
+    use:
+      depends/ner_areas.geojson: ner_areas.geojson
+  sle_data_areas:
+    id: latest
+    use:
+      depends/sle_areas.geojson: sle_areas.geojson
+  tgo_data_areas:
+    id: latest
+    use:
+      depends/tgo_areas.geojson: tgo_areas.geojson
+  bfa_data_areas:
+    id: latest
+    use:
+      depends/bfa_areas.geojson: bfa_areas.geojson
+  bwa_survey_behav_men:
+    id: latest
+    use:
+      depends/bwa_survey_indicators_sexbehav.csv: bwa_survey_indicators_sexbehav.csv
+  cmr_survey_behav_men:
+    id: latest
+    use:
+      depends/cmr_survey_indicators_sexbehav.csv: cmr_survey_indicators_sexbehav.csv
+  ken_survey_behav_men:
+    id: latest
+    use:
+      depends/ken_survey_indicators_sexbehav.csv: ken_survey_indicators_sexbehav.csv
+  lso_survey_behav_men:
+    id: latest
+    use:
+      depends/lso_survey_indicators_sexbehav.csv: lso_survey_indicators_sexbehav.csv
+  # moz_survey_behav_men:
+  #   id: latest
+  #   use:
+  #     depends/moz_survey_indicators_sexbehav.csv: moz_survey_indicators_sexbehav.csv
+  mwi_survey_behav_men:
+    id: latest
+    use:
+      depends/mwi_survey_indicators_sexbehav.csv: mwi_survey_indicators_sexbehav.csv
+  nam_survey_behav_men:
+    id: latest
+    use:
+      depends/nam_survey_indicators_sexbehav.csv: nam_survey_indicators_sexbehav.csv
+  swz_survey_behav_men:
+    id: latest
+    use:
+      depends/swz_survey_indicators_sexbehav.csv: swz_survey_indicators_sexbehav.csv
+  tza_survey_behav_men:
+    id: latest
+    use:
+      depends/tza_survey_indicators_sexbehav.csv: tza_survey_indicators_sexbehav.csv
+  uga_survey_behav_men:
+    id: latest
+    use:
+      depends/uga_survey_indicators_sexbehav.csv: uga_survey_indicators_sexbehav.csv
+  zaf_survey_behav_men:
+    id: latest
+    use:
+      depends/zaf_survey_indicators_sexbehav.csv: zaf_survey_indicators_sexbehav.csv
+  zmb_survey_behav_men:
+    id: latest
+    use:
+      depends/zmb_survey_indicators_sexbehav.csv: zmb_survey_indicators_sexbehav.csv
+  zwe_survey_behav_men:
+    id: latest
+    use:
+      depends/zwe_survey_indicators_sexbehav.csv: zwe_survey_indicators_sexbehav.csv
+  ago_survey_behav_men:
+    id: latest
+    use:
+      depends/ago_survey_indicators_sexbehav.csv: ago_survey_indicators_sexbehav.csv
+  bdi_survey_behav_men:
+    id: latest
+    use:
+      depends/bdi_survey_indicators_sexbehav.csv: bdi_survey_indicators_sexbehav.csv
+  cod_survey_behav_men:
+    id: latest
+    use:
+      depends/cod_survey_indicators_sexbehav.csv: cod_survey_indicators_sexbehav.csv
+  gab_survey_behav_men:
+    id: latest
+    use:
+      depends/gab_survey_indicators_sexbehav.csv: gab_survey_indicators_sexbehav.csv
+  rwa_survey_behav_men:
+    id: latest
+    use:
+      depends/rwa_survey_indicators_sexbehav.csv: rwa_survey_indicators_sexbehav.csv
+  eth_survey_behav_men:
+    id: latest
+    use:
+      depends/eth_survey_indicators_sexbehav.csv: eth_survey_indicators_sexbehav.csv
+  hti_survey_behav_men:
+    id: latest
+    use:
+      depends/hti_survey_indicators_sexbehav.csv: hti_survey_indicators_sexbehav.csv
+  tcd_survey_behav_men:
+    id: latest
+    use:
+      depends/tcd_survey_indicators_sexbehav.csv: tcd_survey_indicators_sexbehav.csv
+  civ_survey_behav_men:
+    id: latest
+    use:
+      depends/civ_survey_indicators_sexbehav.csv: civ_survey_indicators_sexbehav.csv
+  gha_survey_behav_men:
+    id: latest
+    use:
+      depends/gha_survey_indicators_sexbehav.csv: gha_survey_indicators_sexbehav.csv
+  gin_survey_behav_men:
+    id: latest
+    use:
+      depends/gin_survey_indicators_sexbehav.csv: gin_survey_indicators_sexbehav.csv
+  lbr_survey_behav_men:
+    id: latest
+    use:
+      depends/lbr_survey_indicators_sexbehav.csv: lbr_survey_indicators_sexbehav.csv
+  mli_survey_behav_men:
+    id: latest
+    use:
+      depends/mli_survey_indicators_sexbehav.csv: mli_survey_indicators_sexbehav.csv
+  ner_survey_behav_men:
+    id: latest
+    use:
+      depends/ner_survey_indicators_sexbehav.csv: ner_survey_indicators_sexbehav.csv
+  sle_survey_behav_men:
+    id: latest
+    use:
+      depends/sle_survey_indicators_sexbehav.csv: sle_survey_indicators_sexbehav.csv
+  tgo_survey_behav_men:
+    id: latest
+    use:
+      depends/tgo_survey_indicators_sexbehav.csv: tgo_survey_indicators_sexbehav.csv
+  bfa_survey_behav_men:
+    id: latest
+    use:
+      depends/bfa_survey_indicators_sexbehav.csv: bfa_survey_indicators_sexbehav.csv

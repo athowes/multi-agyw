@@ -9,6 +9,9 @@ prev <- read_csv("depends/prev-district-sexbehav-logit.csv")
 naomi <- readRDS("depends/naomi.rds")
 areas <- readRDS("depends/areas.rds")
 
+# for french
+naomi$indicator[naomi$indicator=="Nouvelles infections"] <- "New infections"
+
 naomi <- naomi %>%
   pivot_wider(
     names_from = indicator,
@@ -21,14 +24,19 @@ naomi <- naomi %>%
       "Y020_024" = "20-24",
       "Y025_029" = "25-29",
       "Y015_024" = "15-24",
-      "Y015_049" = "15-49"
+      "Y015_049" = "15-49",
+      "Y025_049" = "25-49",
+      "Y030_034" = "30-34",
+      "Y035_039" = "35-39",
+      "Y040_044" = "40-44",
+      "Y045_049" = "45-49"
     ),
     #' In terms of new infections per hundred person years
     incidence = 100 * infections / (population - plhiv),
     incidence_cat = cut(
       incidence,
-      c(0, 0.1, 0.3, 1, 3, 10^6),
-      labels = c("Low", "Moderate", "High", "Very High", "Very Very High"),
+      c(0, 0.3, 1, 3, 10^6),
+      labels = c("Low", "Moderate", "High", "Very High"),
       include.lowest = TRUE,
       right = TRUE
     )
@@ -60,7 +68,8 @@ df <- df_3p1 %>%
 #   unique()
 
 rr_sexcohab <- 1
-rr_sexnonreg <- 1.72
+rr_sexnonreg_young <- 1.72
+rr_sexnonreg_old <- 2.1
 
 #' Tiered HIV risk ratio for the FSW group depending on district-level HIV incidence in general population
 rr_sexpaid12m_vvh <- 3 #' >3%
@@ -69,18 +78,27 @@ rr_sexpaid12m_h <- 9 #' 0.3-1%
 rr_sexpaid12m_m <- 13 #' 0.1-0.3%
 rr_sexpaid12m_l <- 25 #' <0.1%
 
+# quick regression to fill in between points here
+regression_dat <- data.frame(x = c(0.1,0.3,1,3,9), y = c(25,13,9,6,3))
+rr_reg <- lm(log(y) ~ log(x), data = regression_dat)
+
+rr_sexpaid12m <- exp(predict(rr_reg,data.frame(x = df$incidence)))
+# this gives implausibly high RRs for very low districts (e.g. IRR = 297!)
+# capping at 25
+rr_sexpaid12m[rr_sexpaid12m>25] <- 25
+
 #' TODO: Get distributions on these and using a sampling method to get uncertainty in economic analysis e.g.
 rr_sexnonreg_se <- 0.2
 rr_sexnonreg_se <- 1
 
 df <- df %>%
   mutate(
-    rr_sexpaid12m = case_when(
-      incidence_cat == "Very Very High" ~ rr_sexpaid12m_vvh,
-      incidence_cat == "Very High" ~ rr_sexpaid12m_vh,
-      incidence_cat == "High" ~ rr_sexpaid12m_h,
-      incidence_cat == "Moderate" ~ rr_sexpaid12m_m,
-      incidence_cat == "Low" ~ rr_sexpaid12m_l
+    rr_sexpaid12m = rr_sexpaid12m,
+    rr_sexnonreg = case_when(
+      age_group %in% c("Y015_019","Y020_024","Y015_024") ~ rr_sexnonreg_young,
+      age_group %in% c("Y025_029","Y030_034","Y035_039","Y040_044","Y045_049",
+                       "Y025_049") ~ rr_sexnonreg_old,
+      TRUE ~ NA_real_
     ),
     population_nosex12m = population * nosex12m,
     population_sexcohab = population * sexcohab,

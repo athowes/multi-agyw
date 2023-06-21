@@ -1,0 +1,38 @@
+script: eth_survey_phia.R
+
+parameters:
+  version:
+    default: "2022"
+  iso3:
+    default: "ETH"
+
+artefacts:
+  - data:
+      description: EPHIA survey indicator dataset
+      filenames:
+        - eth2017phia_hiv_indicators.csv
+        - eth2017phia_survey_regions.csv
+        - eth2017phia_survey_clusters.csv
+  - staticgraph:
+       description: UPHIA survey regions vs. area hierarchy
+       filenames:
+         - ephia-clusters-per-zone.png
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - naomi
+  - naomi.utils
+  - readr
+  - sf
+  - spud
+  - tidyr
+
+depends:
+  eth_data_areas:
+    id: 20220518-161831-0f63dc10
+    use:
+      depends/eth_areas.geojson: eth_areas.geojson
+
+

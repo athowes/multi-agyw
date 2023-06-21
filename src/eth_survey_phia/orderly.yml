@@ -1,0 +1,31 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: EPHIA 2017 survey microdata
+      filenames:
+        - eth2017phia_survey_meta.csv
+        - eth2017phia_survey_regions.csv
+        - eth2017phia_survey_clusters.csv
+        - eth2017phia_survey_individuals.csv
+        - eth2017phia_survey_biomarker.csv
+        - eth2017phia_survey_circumcision.csv
+        - eth2017phia_survey_sexbehav.csv
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - naomi.utils
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  eth_data_areas:
+    id: latest
+    use:
+      depends/eth_areas.geojson: eth_areas.geojson
+

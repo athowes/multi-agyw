@@ -1,0 +1,35 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Multinomial smoothed district estimate results (four categories) adjusted include FSW estimates
+      filenames:
+        - adjust-best-3p1-multi-sexbehav-sae.csv
+        - adjustment-comparison.pdf
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - multi.utils
+
+depends:
+  - process_extra_processing:
+      id: latest
+      use:
+        depends/best-3p1-multi-sexbehav-sae.csv: best-3p1-multi-sexbehav-sae.csv
+  - process_all-data:
+      id: latest
+      use:
+        depends/areas.rds: areas.rds
+  - process_age-disagg-fsw:
+      id: latest
+      use:
+        depends/fsw-estimates.csv: fsw-estimates.csv

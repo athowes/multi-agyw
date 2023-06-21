@@ -21,7 +21,7 @@ packages:
   - ggridges
 
 depends:
-  - process_transactional-fsw-adjustment:
+  - process_fsw_all:
       id: latest
       use:
         depends/adjust-best-3p1-multi-sexbehav-sae.csv: adjust-best-3p1-multi-sexbehav-sae.csv

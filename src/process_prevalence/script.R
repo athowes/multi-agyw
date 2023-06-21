@@ -10,10 +10,14 @@ areas <- readRDS("depends/areas.rds")
 naomi <- readRDS("depends/naomi.rds")
 prev <- read_csv("depends/hiv_indicators_sexbehav.csv")
 
+kps <- readRDS("kplhiv_art.rds")
+
+kp_prev <- kps$FSW$area %>% filter(indicator=="prev" & iso3 %in% priority_iso3)
+
 prev_wide <- prev %>%
   filter(
     (nosex12m != 0) & (sexcohab != 0) & (sexnonreg != 0) & (sexpaid12m != 0),
-    age_group != "Y015_024",
+    !age_group %in% c("Y015_024","Y015_049","Y025_049"),
     indicator == "prevalence"
   ) %>%
   mutate(
@@ -67,7 +71,7 @@ ind %>%
     )
   )
 
-dev.off()
+while (!is.null(dev.list()))  dev.off()
 
 #' Imported from the prevalence ratio tab of Katie's spreadsheet
 katie_prev_pr <- read_excel(
@@ -104,7 +108,7 @@ ind %>%
     labs(x = "") +
     theme_minimal()
 
-dev.off()
+while (!is.null(dev.list()))  dev.off()
 
 #' YWKP prevalence ratios
 katie_ywkp <- read_excel(
@@ -122,7 +126,7 @@ katie_ywkp <- read_excel(
   select(where(function(x) any(!is.na(x)))) %>%
   select(-c(`...13`, `...14`))
 
-names(katie_ywkp) <- c(paste0("country", 1:4), "prev_ywkp_under25", "prev_ywkp", "prev_under25", "prev")
+names(katie_ywkp) <- c(paste0("country", 1:4), "prev_ywkp_under25", "prev_fsw", "prev_under25", "prev")
 
 #' Add log-odds (and put prevalences in [0, 1] rather than [0, 100])
 katie_ywkp <- katie_ywkp %>%
@@ -130,50 +134,107 @@ katie_ywkp <- katie_ywkp %>%
     across(prev_ywkp_under25:prev, ~ .x / 100, .names = "{.col}"),
     across(prev_ywkp_under25:prev, ~ log(.x / (1 - .x)), .names = "{.col}_logodds"),
     pr_ywkp_under25 = prev_ywkp_under25 / prev_under25,
-    pr_ywkp = prev_ywkp / prev,
+    pr_fsw = prev_fsw / prev,
     lor_ywkp_under25 = prev_ywkp_under25_logodds / prev_under25_logodds,
-    lor_ywkp = prev_ywkp_logodds / prev_logodds
+    lor_fsw = prev_fsw_logodds / prev_logodds
   )
 
 pdf("ywkp-prev.pdf", h = 5, w = 6.25)
 
+# PLOTS FOR ALL FSW
+
 katie_ywkp %>%
-  ggplot(aes(x = prev_logodds, y = prev_ywkp_logodds)) +
+  ggplot(aes(x = prev_logodds, y = prev_fsw_logodds)) +
     geom_point() +
     geom_smooth(method = "lm") +
     geom_smooth(method = "loess", col = "red") +
     theme_minimal()
 
 katie_ywkp %>%
-  ggplot(aes(x = prev, y = lor_ywkp)) +
+  ggplot(aes(x = prev, y = lor_fsw)) +
   geom_point() +
   geom_smooth(method = "loess") +
   theme_minimal()
 
 katie_ywkp %>%
-  ggplot(aes(x = prev, y = pr_ywkp)) +
+  ggplot(aes(x = prev, y = pr_fsw)) +
   geom_point() +
   geom_smooth(method = "loess") +
   theme_minimal()
 
 katie_ywkp %>%
-  ggplot(aes(x = prev, y = prev_ywkp)) +
+  ggplot(aes(x = prev, y = prev_fsw)) +
   geom_point() +
   geom_smooth(method = "loess") +
   theme_minimal()
 
-dev.off()
+## PLOTS FOR FSW UNDER 25
 
-ywkp_fit <- lm(prev_ywkp_logodds ~ prev_logodds, data = katie_ywkp)
+katie_ywkp %>%
+  ggplot(aes(x = prev_under25_logodds, y = prev_ywkp_under25_logodds)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  geom_smooth(method = "loess", col = "red") +
+  theme_minimal()
+
+katie_ywkp %>%
+  ggplot(aes(x = prev_under25, y = lor_ywkp_under25)) +
+  geom_point() +
+  geom_smooth(method = "loess") +
+  theme_minimal()
+
+katie_ywkp %>%
+  ggplot(aes(x = prev_under25, y = pr_ywkp_under25)) +
+  geom_point() +
+  geom_smooth(method = "loess") +
+  theme_minimal()
+
+katie_ywkp %>%
+  ggplot(aes(x = prev_under25, y = prev_ywkp_under25)) +
+  geom_point() +
+  geom_smooth(method = "loess") +
+  theme_minimal()
+
+while (!is.null(dev.list()))  dev.off()
+
+ywkp_fit <- lm(prev_fsw_logodds ~ prev_logodds, data = katie_ywkp)
 
 data.frame(
-  prev = seq(0, 0.3, by = 0.001),
-  pr_ywkp = calculate_ywkp_pr_lor(seq(0, 0.3, by = 0.001))$pr
+  prev = seq(0, 0.7, by = 0.001),
+  pr_ywkp = calculate_ywkp_pr_lor(seq(0, 0.7, by = 0.001))$pr
 ) %>%
   ggplot(aes(x = prev, y = pr_ywkp)) +
     geom_line() +
     theme_minimal() +
+    ylim(0,30)+
     labs(x = "General population prevalence", y = "PR (YWKP)")
+
+kp_prev <- kp_prev %>%
+  select(iso3,area_id,median) %>%
+  left_join(naomi %>%
+              filter(age_group=="15-49",
+                     indicator %in% c("PLHIV","Population")) %>%
+              pivot_wider(names_from = "indicator",
+                          values_from = "estimate") %>%
+              mutate(gen_prev = PLHIV/Population) %>%
+              select(iso3,area_id,gen_prev))
+
+kp_prev <- kp_prev %>%
+  mutate(prev_fsw_logodds = log(median / (1-median)),
+         prev_logodds = log(gen_prev / (1-gen_prev)))
+
+kp_fit <- lm(prev_fsw_logodds ~ prev_logodds, data = kp_prev)
+
+data.frame(
+  prev = seq(0, 0.7, by = 0.001),
+  pr_ywkp = calculate_ywkp_pr_lor(seq(0, 0.7, by = 0.001), kp_fit)$pr
+) %>%
+  ggplot(aes(x = prev, y = pr_ywkp)) +
+  geom_line() +
+  theme_minimal() +
+  ylim(0,30) +
+  labs(x = "General population prevalence", y = "PR (KP)")
+
 
 #' Calculating the rest of the LOR with logisitic regression
 ind_inla <- ind %>%
@@ -182,7 +243,8 @@ ind_inla <- ind %>%
     sexcohab_id = ifelse(behav == "sexcohab", 1, 0),
     sexnonreg_id = ifelse(behav == "sexnonreg", 1, 0),
     sexpaid12m_id = ifelse(behav == "sexpaid12m", 1, 0),
-    all_id = ifelse(behav == "all", 1, 0)
+    all_id = ifelse(behav == "all", 1, 0),
+    year = as.numeric(substr(survey_id,4,7))
   ) %>%
   filter(
     indicator == "prevalence",
@@ -191,25 +253,45 @@ ind_inla <- ind %>%
 
 formula_baseline <- estimate ~ -1 + all_id + nosex12m_id + sexcohab_id + sexnonreg_id + sexpaid12m_id
 
-fit <- inla(
+fit_y <- inla(
   formula_baseline,
   control.family = list(link = "logit"),
   control.predictor = list(link = 1, compute = TRUE),
-  data = ind_inla,
+  data = ind_inla %>% filter(age_group %in% c("Y015_019","Y020_024","Y025_029")),
   control.compute = list(dic = TRUE, waic = TRUE, cpo = TRUE, config = TRUE),
   inla.mode = "experimental"
 )
 
-contents <- fit$misc$configs$contents
+contents <- fit_y$misc$configs$contents
 fixed_effects_idx <- contents$start[contents$tag != "Predictor"]
-samples <- inla.posterior.sample(n = 1000, fit)
+samples <- inla.posterior.sample(n = 1000, fit_y)
 fixed_effects <-  lapply(samples, function(x) x$latent[fixed_effects_idx])
 fixed_effects <- matrix(unlist(fixed_effects), byrow = T, nrow = length(fixed_effects))
 odds_estimate <- colMeans(exp(fixed_effects))
-exp(fit$summary.fixed$mean) #' This is what you'd get without sampling from the posterior
-or <- odds_estimate / odds_estimate[1] #' Odds ratio
-lor <- log(odds_estimate / odds_estimate[1]) #' Log odds ratio
-lor <- lor[-1] #' Don't need leading zero (baseline all)
+exp(fit_y$summary.fixed$mean) #' This is what you'd get without sampling from the posterior
+or_y <- odds_estimate / odds_estimate[1] #' Odds ratio
+lor_y <- log(odds_estimate / odds_estimate[1]) #' Log odds ratio
+lor_y <- lor_y[-1] #' Don't need leading zero (baseline all)
+
+fit_o <- inla(
+  formula_baseline,
+  control.family = list(link = "logit"),
+  control.predictor = list(link = 1, compute = TRUE),
+  data = ind_inla %>% filter(age_group %in% c("Y030_034","Y035_039","Y040_044","Y045_49")),
+  control.compute = list(dic = TRUE, waic = TRUE, cpo = TRUE, config = TRUE),
+  inla.mode = "experimental"
+)
+
+contents <- fit_o$misc$configs$contents
+fixed_effects_idx <- contents$start[contents$tag != "Predictor"]
+samples <- inla.posterior.sample(n = 1000, fit_o)
+fixed_effects <-  lapply(samples, function(x) x$latent[fixed_effects_idx])
+fixed_effects <- matrix(unlist(fixed_effects), byrow = T, nrow = length(fixed_effects))
+odds_estimate <- colMeans(exp(fixed_effects))
+exp(fit_o$summary.fixed$mean) #' This is what you'd get without sampling from the posterior
+or_o <- odds_estimate / odds_estimate[1] #' Odds ratio
+lor_o <- log(odds_estimate / odds_estimate[1]) #' Log odds ratio
+lor_o <- lor_o[-1] #' Don't need leading zero (baseline all)
 
 #' Naomi estimates of PLHIV and population by district and age band
 naomi <- naomi %>%
@@ -217,12 +299,16 @@ naomi <- naomi %>%
     names_from = indicator,
     values_from = estimate
   ) %>%
-  filter(age_group %in% c("15-19", "20-24", "25-29")) %>%
+  filter(age_group %in% c("15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49")) %>%
   mutate(
     age_group = case_when(
       age_group == "15-19" ~ "Y015_019",
       age_group == "20-24" ~ "Y020_024",
-      age_group == "25-29" ~ "Y025_029"
+      age_group == "25-29" ~ "Y025_029",
+      age_group == "30-34" ~ "Y030_034",
+      age_group == "35-39" ~ "Y035_039",
+      age_group == "40-44" ~ "Y040_044",
+      age_group == "45-49" ~ "Y045_049"
     )
   ) %>%
   rename(
@@ -283,7 +369,7 @@ start_time <- Sys.time()
 df_3p1_logit <- df_3p1 %>%
   mutate(
     gen_prev = plhiv / population,
-    ywkp_lor = calculate_ywkp_pr_lor(gen_prev, fit = ywkp_fit)$lor
+    ywkp_lor = calculate_ywkp_pr_lor(gen_prev, fit = kp_fit)$lor
   ) %>%
   select(-starts_with("pr_"), -gen_prev) %>%
   pivot_longer(
@@ -298,6 +384,7 @@ df_3p1_logit <- df_3p1 %>%
   filter(behav %in% c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")) %>%
   split(~ area_id + age_group) %>%
   lapply(function(x) {
+    if(x$age_group[1] %in% c("Y015_019","Y020_024","Y025_029")) {lor <- lor_y} else {lor <- lor_o}
     population_fine <- filter(x, indicator == "population")$estimate
     plhiv <- x$plhiv[1]
     ywkp_lor <- x$ywkp_lor[1]
@@ -372,7 +459,7 @@ plotsA <- df_3p1_linear_plot %>%
 
 plotsA
 
-dev.off()
+while (!is.null(dev.list()))  dev.off()
 
 pdf("prev-district-sexbehav-logit.pdf", h = 7, w = 6.25)
 
@@ -417,4 +504,4 @@ plotsB <- df_3p1_logit_plot %>%
 
 plotsB
 
-dev.off()
+while (!is.null(dev.list()))  dev.off()

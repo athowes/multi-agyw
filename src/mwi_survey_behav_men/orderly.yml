@@ -1,0 +1,37 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Survey indicator datasets
+      filenames:
+        - mwi_survey_indicators_sexbehav.csv
+        - mwi_hiv_indicators_sexbehav.csv
+
+packages:
+  - dplyr
+  - forcats
+  - haven
+  - parallel
+  - naomi
+  - readr
+  - sf
+  - spud
+  - survey
+  - tidyr
+  - naomi.utils
+  - rdhs
+
+depends:
+  mwi_data_areas:
+    id: latest
+    use:
+      depends/mwi_areas.geojson: mwi_areas.geojson
+  mwi_survey_phia:
+    id: latest
+    use:
+      depends/mwi2016phia_survey_meta.csv: mwi2016phia_survey_meta.csv
+      depends/mwi2016phia_survey_regions.csv: mwi2016phia_survey_regions.csv
+      depends/mwi2016phia_survey_clusters.csv: mwi2016phia_survey_clusters.csv
+      depends/mwi2016phia_survey_individuals.csv: mwi2016phia_survey_individuals.csv
+      depends/mwi2016phia_survey_biomarker.csv: mwi2016phia_survey_biomarker.csv
+      depends/mwi2016phia_survey_sexbehav.csv: mwi2016phia_survey_sexbehav.csv

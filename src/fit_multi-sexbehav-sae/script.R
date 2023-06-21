@@ -126,9 +126,10 @@ if(three_category) {
 df <- crossing(
   indicator = indicators,
   #' All of the different years
-  year = 1999:2018,
+  year = 1999:2021,
   #' Three age groups
-  age_group = c("Y015_019", "Y020_024", "Y025_029"),
+  age_group = c("Y015_019", "Y020_024", "Y025_029", "Y030_034", "Y035_039",
+                "Y040_044","Y045_049"),
   #' The areas in the model
   areas_model %>%
     st_drop_geometry() %>%
@@ -209,8 +210,8 @@ df <- mutate(df,
   arrange(obs_idx)
 
 #' Checking some dimensions:
-stopifnot(df$age_idx %>% max() == 3) #' 3 age groups
-stopifnot(df$year_idx %>% max() == length(1999:2018)) #' 20 years
+stopifnot(df$age_idx %>% max() == 7) #' 7 age groups
+stopifnot(df$year_idx %>% max() == length(1999:2021)) #' 22 years
 stopifnot(
   df$type_idx %>% max() == substr(ind$survey_id, 8, 11) %>% unique() %>% length() + 1
 ) #' The survey types plus one for country year pairs missing a survey
@@ -395,6 +396,11 @@ write_csv(ic_df, "information-criteria.csv", na = "")
 #' Which model has the highest CPO?
 best <- paste0("Model ", which.max(ic_df$cpo))
 
+# edit because that didn't work w/running "lightweight" version
+if(lightweight==TRUE) {
+  best <- 1
+}
+
 #' Artefact: Fitted model objects
 saveRDS(res_fit, "multi-sexbehav-sae-fits.rds")
 saveRDS(res_fit[[best]], "best-multi-sexbehav-sae-fit.rds")
@@ -451,6 +457,10 @@ res_df <- res_df %>%
 
 write_csv(res_df, "multi-sexbehav-sae.csv", na = "")
 write_csv(filter(res_df, model == best), "best-multi-sexbehav-sae.csv", na = "")
+
+if(lightweight == TRUE) {
+  write_csv(res_df, "best-multi-sexbehav-sae.csv", na = "")
+}
 
 #' Create plotting data for years with surveys
 unique_surveys <- res_df %>%

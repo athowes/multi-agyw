@@ -23,5 +23,6 @@ sapply(reports,
 #' For MOZ and TZA there are changes for the 2022 version
 orderly::orderly_pull_archive("tza_data_areas", remote = "naomi2", id = "latest(parameter:version == 2022)")
 orderly::orderly_pull_archive("moz_data_areas", remote = "naomi2", id = "latest(parameter:version == 2022)")
+orderly::orderly_pull_archive("eth_data_areas", remote = "naomi2", id = "latest(parameter:version == 2022)")
 
 run_commit_push("national_data_areas")

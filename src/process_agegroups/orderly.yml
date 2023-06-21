@@ -1,0 +1,27 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Add 15-24 year olds
+      filenames:
+        - incidence-district-sexbehav_allages.csv
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - readxl
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - tibble
+
+depends:
+  - process_incidence:
+      id: latest
+      use:
+        depends/incidence-district-sexbehav.csv: incidence-district-sexbehav.csv

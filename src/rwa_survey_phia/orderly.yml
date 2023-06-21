@@ -1,0 +1,31 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: RWAPHIA 2018 survey microdata
+      filenames:
+        - rwa2018phia_survey_meta.csv
+        - rwa2018phia_survey_regions.csv
+        - rwa2018phia_survey_clusters.csv
+        - rwa2018phia_survey_individuals.csv
+        - rwa2018phia_survey_biomarker.csv
+        - rwa2018phia_survey_circumcision.csv
+        - rwa2018phia_survey_sexbehav.csv
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - naomi.utils
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  rwa_data_areas:
+    id: latest
+    use:
+      depends/rwa_areas.geojson: rwa_areas.geojson
+

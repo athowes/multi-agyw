@@ -1,0 +1,31 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: KENPHIA 2018 survey microdata
+      filenames:
+        - ken2018phia_survey_meta.csv
+        - ken2018phia_survey_regions.csv
+        - ken2018phia_survey_clusters.csv
+        - ken2018phia_survey_individuals.csv
+        - ken2018phia_survey_biomarker.csv
+        - ken2018phia_survey_circumcision.csv
+        - ken2018phia_survey_sexbehav.csv
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - naomi.utils
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  ken_data_areas:
+    id: latest
+    use:
+      depends/ken_areas.geojson: ken_areas.geojson
+

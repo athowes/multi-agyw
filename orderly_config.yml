@@ -36,5 +36,6 @@ fields:
   author:
     required: false
 
-global_resources:
-  global
+vault:
+  addr: https://vault.dide.ic.ac.uk:8200
+

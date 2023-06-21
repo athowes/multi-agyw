@@ -47,7 +47,8 @@ packages:
   - gt
 
 resources:
-  naomi_extract.rds
+  - naomi_extract.rds
+  - bdi_areas.geojson
 
 depends:
   - bwa_data_areas:
@@ -102,6 +103,10 @@ depends:
       id: latest
       use:
         depends/zwe_areas.geojson: zwe_areas.geojson
+  - bfa_data_areas:
+      id: latest
+      use:
+        depends/bfa_areas.geojson: bfa_areas.geojson
   - bwa_survey_behav:
       id: latest
       use:
@@ -167,6 +172,11 @@ depends:
       use:
         depends/zwe_survey_indicators_sexbehav.csv: zwe_survey_indicators_sexbehav.csv
         depends/zwe_hiv_indicators_sexbehav.csv: zwe_hiv_indicators_sexbehav.csv
+  - bfa_survey_behav:
+      id: latest
+      use:
+        depends/bfa_survey_indicators_sexbehav.csv: bfa_survey_indicators_sexbehav.csv
+        depends/bfa_hiv_indicators_sexbehav.csv: bfa_hiv_indicators_sexbehav.csv
   - aaa_scale_pop:
       id: latest(parameter:iso3 == "BWA")
       use:
@@ -219,3 +229,232 @@ depends:
       id: latest(parameter:iso3 == "ZWE")
       use:
         depends/zwe_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "AGO")
+      use:
+        depends/ago_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "BDI")
+      use:
+        depends/bdi_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "COD")
+      use:
+        depends/cod_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "GAB")
+      use:
+        depends/gab_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "RWA")
+      use:
+        depends/rwa_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "ETH")
+      use:
+        depends/eth_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "TCD")
+      use:
+        depends/tcd_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "CIV")
+      use:
+        depends/civ_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "GHA")
+      use:
+        depends/gha_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "GIN")
+      use:
+        depends/gin_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "LBR")
+      use:
+        depends/lbr_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "MLI")
+      use:
+        depends/mli_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "NER")
+      use:
+        depends/ner_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "SLE")
+      use:
+        depends/sle_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "TGO")
+      use:
+        depends/tgo_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "BFA")
+      use:
+        depends/bfa_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "COG")
+      use:
+        depends/cog_interpolated-population.csv: interpolated_population.csv
+  - aaa_scale_pop:
+      id: latest(parameter:iso3 == "CAF")
+      use:
+        depends/caf_interpolated-population.csv: interpolated_population.csv
+  - ago_survey_behav:
+      id: latest
+      use:
+        depends/ago_survey_indicators_sexbehav.csv: ago_survey_indicators_sexbehav.csv
+        depends/ago_hiv_indicators_sexbehav.csv: ago_hiv_indicators_sexbehav.csv
+  - bdi_survey_behav:
+      id: latest
+      use:
+        depends/bdi_survey_indicators_sexbehav.csv: bdi_survey_indicators_sexbehav.csv
+        depends/bdi_hiv_indicators_sexbehav.csv: bdi_hiv_indicators_sexbehav.csv
+  - cod_survey_behav:
+      id: latest
+      use:
+        depends/cod_survey_indicators_sexbehav.csv: cod_survey_indicators_sexbehav.csv
+        depends/cod_hiv_indicators_sexbehav.csv: cod_hiv_indicators_sexbehav.csv
+  - gab_survey_behav:
+      id: latest
+      use:
+        depends/gab_survey_indicators_sexbehav.csv: gab_survey_indicators_sexbehav.csv
+        depends/gab_hiv_indicators_sexbehav.csv: gab_hiv_indicators_sexbehav.csv
+  - rwa_survey_behav:
+      id: latest
+      use:
+        depends/rwa_survey_indicators_sexbehav.csv: rwa_survey_indicators_sexbehav.csv
+        depends/rwa_hiv_indicators_sexbehav.csv: rwa_hiv_indicators_sexbehav.csv
+  - eth_survey_behav:
+      id: latest
+      use:
+        depends/eth_survey_indicators_sexbehav.csv: eth_survey_indicators_sexbehav.csv
+        depends/eth_hiv_indicators_sexbehav.csv: eth_hiv_indicators_sexbehav.csv
+  - hti_survey_behav:
+      id: latest
+      use:
+        depends/hti_survey_indicators_sexbehav.csv: hti_survey_indicators_sexbehav.csv
+        depends/hti_hiv_indicators_sexbehav.csv: hti_hiv_indicators_sexbehav.csv
+  - tcd_survey_behav:
+      id: latest
+      use:
+        depends/tcd_survey_indicators_sexbehav.csv: tcd_survey_indicators_sexbehav.csv
+        depends/tcd_hiv_indicators_sexbehav.csv: tcd_hiv_indicators_sexbehav.csv
+  - civ_survey_behav:
+      id: latest
+      use:
+        depends/civ_survey_indicators_sexbehav.csv: civ_survey_indicators_sexbehav.csv
+        depends/civ_hiv_indicators_sexbehav.csv: civ_hiv_indicators_sexbehav.csv
+  - gha_survey_behav:
+      id: latest
+      use:
+        depends/gha_survey_indicators_sexbehav.csv: gha_survey_indicators_sexbehav.csv
+        depends/gha_hiv_indicators_sexbehav.csv: gha_hiv_indicators_sexbehav.csv
+  - gin_survey_behav:
+      id: latest
+      use:
+        depends/gin_survey_indicators_sexbehav.csv: gin_survey_indicators_sexbehav.csv
+        depends/gin_hiv_indicators_sexbehav.csv: gin_hiv_indicators_sexbehav.csv
+  - lbr_survey_behav:
+      id: latest
+      use:
+        depends/lbr_survey_indicators_sexbehav.csv: lbr_survey_indicators_sexbehav.csv
+        depends/lbr_hiv_indicators_sexbehav.csv: lbr_hiv_indicators_sexbehav.csv
+  - mli_survey_behav:
+      id: latest
+      use:
+        depends/mli_survey_indicators_sexbehav.csv: mli_survey_indicators_sexbehav.csv
+        depends/mli_hiv_indicators_sexbehav.csv: mli_hiv_indicators_sexbehav.csv
+  - ner_survey_behav:
+      id: latest
+      use:
+        depends/ner_survey_indicators_sexbehav.csv: ner_survey_indicators_sexbehav.csv
+        depends/ner_hiv_indicators_sexbehav.csv: ner_hiv_indicators_sexbehav.csv
+  - sle_survey_behav:
+      id: latest
+      use:
+        depends/sle_survey_indicators_sexbehav.csv: sle_survey_indicators_sexbehav.csv
+        depends/sle_hiv_indicators_sexbehav.csv: sle_hiv_indicators_sexbehav.csv
+  - tgo_survey_behav:
+      id: latest
+      use:
+        depends/tgo_survey_indicators_sexbehav.csv: tgo_survey_indicators_sexbehav.csv
+        depends/tgo_hiv_indicators_sexbehav.csv: tgo_hiv_indicators_sexbehav.csv
+  - cog_survey_behav:
+      id: latest
+      use:
+        depends/cog_survey_indicators_sexbehav.csv: cog_survey_indicators_sexbehav.csv
+        depends/cog_hiv_indicators_sexbehav.csv: cog_hiv_indicators_sexbehav.csv
+  - caf_survey_behav:
+      id: latest
+      use:
+        depends/caf_survey_indicators_sexbehav.csv: caf_survey_indicators_sexbehav.csv
+  - ago_data_areas:
+      id: latest
+      use:
+        depends/ago_areas.geojson: ago_areas.geojson
+  - cod_data_areas:
+      id: latest
+      use:
+        depends/cod_areas.geojson: cod_areas.geojson
+  - gab_data_areas:
+      id: latest
+      use:
+        depends/gab_areas.geojson: gab_areas.geojson
+  - rwa_data_areas:
+      id: latest
+      use:
+        depends/rwa_areas.geojson: rwa_areas.geojson
+  - eth_data_areas:
+      id: latest
+      use:
+        depends/eth_areas.geojson: eth_areas.geojson
+  - hti_data_areas:
+      id: latest
+      use:
+        depends/hti_areas.geojson: hti_areas.geojson
+  - tcd_data_areas:
+      id: latest
+      use:
+        depends/tcd_areas.geojson: tcd_areas.geojson
+  - civ_data_areas:
+      id: latest
+      use:
+        depends/civ_areas.geojson: civ_areas.geojson
+  - gha_data_areas:
+      id: latest
+      use:
+        depends/gha_areas.geojson: gha_areas.geojson
+  - gin_data_areas:
+      id: latest
+      use:
+        depends/gin_areas.geojson: gin_areas.geojson
+  - lbr_data_areas:
+      id: latest
+      use:
+        depends/lbr_areas.geojson: lbr_areas.geojson
+  - mli_data_areas:
+      id: 20210315-110232-c505b0a1
+      use:
+        depends/mli_areas.geojson: mli_areas.geojson
+  - ner_data_areas:
+      id: latest
+      use:
+        depends/ner_areas.geojson: ner_areas.geojson
+  - sle_data_areas:
+      id: latest
+      use:
+        depends/sle_areas.geojson: sle_areas.geojson
+  - tgo_data_areas:
+      id: latest
+      use:
+        depends/tgo_areas.geojson: tgo_areas.geojson
+  - cog_data_areas:
+      id: latest
+      use:
+        depends/cog_areas.geojson: cog_areas.geojson
+  - caf_data_areas:
+      id: latest
+      use:
+        depends/caf_areas.geojson: caf_areas.geojson

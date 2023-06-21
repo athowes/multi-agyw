@@ -1,0 +1,36 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Survey indicator datasets
+      filenames:
+        - zwe_survey_indicators_sexbehav.csv
+        - zwe_hiv_indicators_sexbehav.csv
+
+packages:
+  - readr
+  - dplyr
+  - forcats
+  - spud
+  - stringr
+  - sf
+  - tidyr
+  - naomi
+  - survey
+  - rdhs
+  - naomi.utils
+
+depends:
+  zwe_data_areas:
+    id: latest
+    use:
+      depends/zwe_areas.geojson: zwe_areas.geojson
+  zwe_survey_phia:
+    id: latest
+    use:
+      depends/zwe2016phia_survey_meta.csv: zwe2016phia_survey_meta.csv
+      depends/zwe2016phia_survey_regions.csv: zwe2016phia_survey_regions.csv
+      depends/zwe2016phia_survey_clusters.csv: zwe2016phia_survey_clusters.csv
+      depends/zwe2016phia_survey_individuals.csv: zwe2016phia_survey_individuals.csv
+      depends/zwe2016phia_survey_biomarker.csv: zwe2016phia_survey_biomarker.csv
+      depends/zwe2016phia_survey_sexbehav.csv: zwe2016phia_survey_sexbehav.csv

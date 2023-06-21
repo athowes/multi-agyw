@@ -63,7 +63,8 @@ names(survey_sexbehav)
 
 survey_other <- list(survey_sexbehav)
 
-age_group_include <- c("Y015_019", "Y020_024", "Y025_029", "Y015_024")
+age_group_include <- c("Y015_019", "Y020_024", "Y025_029", "Y030_034", "Y035_039",
+                       "Y040_044", "Y045_049", "Y015_024", "Y025_049", "Y015_049")
 sex <- c("female")
 
 #' Survey indicator dataset
@@ -79,6 +80,31 @@ survey_indicators <- calc_survey_indicators(
   age_group_include = age_group_include,
   area_bottom_level = 2
 )
+
+#' PHIA data
+phia_survey_meta <- read_csv("depends/ken2018phia_survey_meta.csv")
+phia_survey_regions <- read_csv("depends/ken2018phia_survey_regions.csv")
+phia_survey_clusters <- read_csv("depends/ken2018phia_survey_clusters.csv")
+phia_survey_individuals <- read_csv("depends/ken2018phia_survey_individuals.csv")
+phia_survey_biomarker <- read_csv("depends/ken2018phia_survey_biomarker.csv")
+phia_survey_sexbehav <- read_csv("depends/ken2018phia_survey_sexbehav.csv")
+(phia_misallocation <- check_survey_sexbehav(phia_survey_sexbehav))
+
+#' PHIA survey indicator dataset
+phia_survey_indicators <- calc_survey_indicators(
+  phia_survey_meta,
+  phia_survey_regions,
+  phia_survey_clusters,
+  phia_survey_individuals,
+  phia_survey_biomarker,
+  list(phia_survey_sexbehav),
+  st_drop_geometry(areas),
+  sex = sex,
+  age_group_include = age_group_include
+)
+
+#' Combine all surveys together
+survey_indicators <- bind_rows(survey_indicators, phia_survey_indicators)
 
 #' Save survey indicators dataset
 write_csv(survey_indicators, "ken_survey_indicators_sexbehav.csv", na = "")
@@ -102,6 +128,27 @@ hiv_indicators <- calc_survey_hiv_indicators(
   formula = ~ indicator + survey_id + area_id + res_type + sex + age_group +
     nosex12m + sexcohab + sexnonreg + sexpaid12m
 )
+
+phia_survey_sexbehav_reduced <- phia_survey_sexbehav %>%
+  select(-sex12m, -sexcohabspouse, -sexnonregspouse, -giftsvar, -sexnonregplus, -sexnonregspouseplus)
+
+phia_hiv_indicators <- calc_survey_hiv_indicators(
+  phia_survey_meta,
+  phia_survey_regions,
+  phia_survey_clusters,
+  phia_survey_individuals,
+  phia_survey_biomarker,
+  survey_other = list(phia_survey_sexbehav_reduced),
+  st_drop_geometry(areas),
+  sex = sex,
+  age_group_include = age_group_include,
+  area_top_level = 0,
+  area_bottom_level = 0,
+  formula = ~ indicator + survey_id + area_id + res_type + sex + age_group +
+    nosex12m + sexcohab + sexnonreg + sexpaid12m
+)
+
+hiv_indicators <- bind_rows(hiv_indicators, phia_hiv_indicators)
 
 #' Keep only the stratifications with "all" in everything but the indicator itself
 hiv_indicators <- hiv_indicators %>%

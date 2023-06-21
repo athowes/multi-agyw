@@ -67,7 +67,8 @@ names(survey_sexbehav)
 
 survey_other <- list(survey_sexbehav)
 
-age_group_include <- c("Y015_019", "Y020_024", "Y025_029", "Y015_024")
+age_group_include <- c("Y015_019", "Y020_024", "Y025_029", "Y030_034", "Y035_039",
+                       "Y040_044", "Y045_049", "Y015_024", "Y025_049", "Y015_049")
 sex <- c("female")
 
 #' Survey indicator dataset

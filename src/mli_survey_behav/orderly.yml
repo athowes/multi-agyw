@@ -1,0 +1,29 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Survey indicator datasets
+      filenames:
+        - mli_survey_indicators_sexbehav.csv
+        - mli_hiv_indicators_sexbehav.csv
+
+packages:
+  - dplyr
+  - forcats
+  - haven
+  - parallel
+  - rdhs
+  - naomi
+  - readr
+  - sf
+  - spud
+  - survey
+  - tidyr
+  - naomi.utils
+
+depends:
+  mli_data_areas:
+    id: 20210315-110232-c505b0a1
+    use:
+      depends/mli_areas.geojson: mli_areas.geojson
+

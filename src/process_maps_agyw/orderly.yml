@@ -1,0 +1,32 @@
+script: script.R
+
+artefacts:
+
+  - data:
+      description: Maps AGYW incidence
+      filenames:
+        - maps_incidence_agyw_all.pdf
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - tibble
+
+depends:
+  - process_agegroups:
+      id: latest
+      use:
+        depends/incidence-district-sexbehav_allages.csv: incidence-district-sexbehav_allages.csv
+  - process_all-data:
+      id: latest
+      use:
+        depends/areas.rds: areas.rds
+        depends/naomi.rds: naomi.rds

@@ -1,0 +1,37 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Age country specific PWID estimates
+      filenames:
+        - age-disagg-pwid.pdf
+        - age-disagg-pwid-line.pdf
+        - pwid-estimates.csv
+        - palette-extension.pdf
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - readxl
+  - multi.utils
+
+resources:
+  - kplhiv_art.rds
+  - wpp2019_denom_m.rds
+
+depends:
+  national_data_areas:
+    id: latest
+    use:
+      depends/national_areas.rds: national_areas.rds
+  process_all-data_men:
+    id: latest
+    use:
+      depends/naomi_pop.rds: naomi_pop.rds

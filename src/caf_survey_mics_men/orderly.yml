@@ -1,0 +1,28 @@
+script: caf_survey.R
+
+artefacts:
+  - data:
+      description: MICS6 2018-19 survey micro data
+      filenames:
+        - caf2018mics_survey_meta.csv
+        - caf2018mics_survey_regions.csv
+        - caf2018mics_survey_clusters.csv
+        - caf2018mics_survey_individuals.csv
+        - caf2018mics_survey_sexbehav.csv
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - naomi.utils
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  caf_data_areas:
+    id: latest
+    use:
+      depends/caf_areas.geojson: caf_areas.geojson

@@ -1,0 +1,33 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Survey indicator dataset
+      filenames:
+        - lso_survey_indicators_sexbehav.csv
+        - lso_hiv_indicators_sexbehav.csv
+
+packages:
+  - dplyr
+  - naomi
+  - readr
+  - sf
+  - spud
+  - forcats
+  - rdhs
+  - naomi.utils
+
+depends:
+  lso_data_areas:
+    id: latest
+    use:
+      depends/lso_areas.geojson: lso_areas.geojson
+  lso_survey_phia:
+    id: latest
+    use:
+      depends/lso2017phia_survey_meta.csv: lso2017phia_survey_meta.csv
+      depends/lso2017phia_survey_regions.csv: lso2017phia_survey_regions.csv
+      depends/lso2017phia_survey_clusters.csv: lso2017phia_survey_clusters.csv
+      depends/lso2017phia_survey_individuals.csv: lso2017phia_survey_individuals.csv
+      depends/lso2017phia_survey_biomarker.csv: lso2017phia_survey_biomarker.csv
+      depends/lso2017phia_survey_sexbehav.csv: lso2017phia_survey_sexbehav.csv

@@ -6,23 +6,58 @@ priority_iso3 <- multi.utils::priority_iso3()
 
 #' fsw_ntl_pse.csv are the old estimates from Oli
 #' fsw_ntl.csv are the newer estimates from Oli
-pse <- read_csv("fsw_ntl.csv") %>%
-  mutate(kp = "FSW", .before = "iso3") %>%
-  filter(indicator == "pse_count")
+pse <- readRDS("kplhiv_art.rds")
+
+pse <- pse$FSW$area %>% filter(indicator=="pse_count",
+                               iso3 %in% priority_iso3)
 
 afs <- readRDS("kinh-afs-dist.rds")
-pop <- readRDS("depends/naomi_pop.rds")
+naomi_pop <- readRDS("depends/naomi_pop.rds")
+wpp_pop <- readRDS("wpp2019_denom.rds")
+
+wpp_pop <- wpp_pop %>%
+  filter(age_group %in% c("Y015_019","Y020_024","Y025_029","Y030_034",
+                          "Y035_039","Y040_044","Y045_049")) %>%
+  group_by(area_id,year) %>%
+  summarize(population = sum(population)) %>%
+  filter(year==2019)
+
+# Right now the WPP2019 estimates have incorrect area specification for TZA and
+# ETH and CAF and COD.  Will use Naomi pop as denominator for right now - TO BE FIXED
+pse <- pse %>%
+  left_join(wpp_pop %>% select(area_id,population)) %>%
+  left_join(naomi_pop %>%
+              filter(age_group=="15-49") %>%
+              rename(population_naomi = population) %>%
+              select(area_id,population_naomi))
+
+pse <- pse %>%
+  mutate(prop_fsw = ifelse(iso3 %in% c("TZA","ETH","COD","CAF"),
+                           median / population_naomi,
+                       median / population) ) %>%
+  select(-population,-population_naomi,-indicator,-lower,-upper,-median)
+
+pse$iso3 <- as.character(pse$iso3)
+
+# No data for Haiti in Oli's estimates
+# bringing in PSE from Key Pop Atlas - 2014 estimate is PSE of 176400 while
+# 2015 estimate is PSE of 70300 - 176400 is super high, going with 70300 for now with
+# 2015 wpp population denominator
+# fix this so that it is not hard coded!!
+hti_pse <- 70300 / 2785000
+# fix to fill in cabo delgado so it doesn't break all of our future code, give it
+# mozambique mean proportion across all areas
+moz_1_10_pse <- mean(pse$prop_fsw[pse$iso3=="MOZ"])
+pse <- rbind(pse,c("HTI","HTI",hti_pse),c("MOZ","MOZ_1_10",moz_1_10_pse))
+pse$prop_fsw <- as.numeric(pse$prop_fsw)
 
 age_groups <- c("15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49")
 
 fsw <- pse %>%
-  select(-indicator, -lower, -upper) %>%
-  rename(
-    area_id = iso3,
-    total_fsw = median
-  ) %>%
-  filter(area_id %in% priority_iso3) %>%
-  mutate(age_group = "15-49")
+  mutate(age_group = "15-49") %>%
+  left_join(select(naomi_pop, iso3, area_id, age_group, population)) %>%
+  mutate(total_fsw = population * prop_fsw) %>%
+  select(iso3, area_id, total_fsw, age_group)
 
 #' FSW age distribution parameters in ZAF from Thembisa
 #' Downloaded from: https://www.thembisa.org/content/downloadPage/Thembisa4_3
@@ -62,14 +97,28 @@ afs <- afs %>%
     area_id %in% priority_iso3
   )
 
+# No data for Haiti in Kinh's estiamtes - borrow Zambia's estimate (looks
+# similar on statcompiler) - get correct estimate later!
+afs <- rbind(afs,afs[afs$area_id=="ZMB",])
+afs$area_id[nrow(afs)] <- "HTI"
+
 pskewlogis <- function(t, scale, shape, skew) {
   (1 + (scale * t)^-shape)^-skew
 }
 
+# need to assign kinh's afs to all admin1s in a country
+# then merge to admin1 population
+
+afs <- afs %>%
+  rename(iso3 = area_id)
+
+afs <- afs %>%
+  full_join(select(fsw,iso3,area_id))
+
 df <- data.frame()
 
-for(x in priority_iso3) {
-
+for(x in unique(afs$area_id)) {
+  print(x)
   afs_x <- filter(afs, area_id == x)
   ages <- 15:49
 
@@ -89,7 +138,7 @@ for(x in priority_iso3) {
     group_by(area_id, age_group) %>%
     summarise(eversex = mean(eversex)) %>%
     left_join(
-      pop,
+      naomi_pop,
       by = c("area_id", "age_group")
     ) %>%
     mutate(
@@ -100,14 +149,44 @@ for(x in priority_iso3) {
   df <- bind_rows(df, df_x)
 }
 
+# for ZAF as a whole for reference to Thembisa
+afs_zaf <- filter(afs, iso3 == "ZAF")
+afs_zaf <- filter(afs_zaf, row_number()==1)
+ages <- 15:49
+
+df_zaf <- data.frame(
+  iso3 = "ZAF",
+  age = ages,
+  eversex = pskewlogis(
+    ages,
+    scale = afs_zaf$lambda,
+    skew = afs_zaf$skew,
+    shape = afs_zaf$shape
+  ),
+  age_group = rep(age_groups, each = 5)
+)
+
+df_zaf <- df_zaf %>%
+  group_by(iso3, age_group) %>%
+  summarise(eversex = mean(eversex)) %>%
+  left_join(
+    naomi_pop,
+    by = c("iso3" = "area_id", "age_group")
+  ) %>%
+  mutate(
+    eversexpop = eversex * population,
+    eversexpop_prop = eversexpop / sum(eversexpop)
+  )
+
 #' Calculate propensities based on ZAF
-propensity <- df %>%
-  filter(area_id == "ZAF") %>%
+propensity <- df_zaf %>%
+  filter(iso3 == "ZAF") %>%
   left_join(
     zaf_gamma,
     by = "age_group"
   ) %>%
   mutate(propensity = dist / eversexpop_prop) %>%
+  ungroup() %>%
   select(age_group, propensity)
 
 #' Compute proportions for each age group for other countries
@@ -117,14 +196,14 @@ df <- df %>%
     by = "age_group"
   ) %>%
   mutate(dist = eversexpop_prop * propensity) %>%
-  group_by(iso3) %>%
+  group_by(area_id) %>%
   mutate(dist = dist / sum(dist)) %>%
   ungroup()
 
-df <- df %>%
-  left_join(
-    select(fsw, total_fsw, area_id),
-    by = c("area_id")
+df <- select(fsw, total_fsw, iso3, area_id) %>%
+  full_join(
+    df,
+    by = c("area_id", "iso3")
   ) %>%
   mutate(
     fsw = dist * total_fsw,
@@ -152,9 +231,9 @@ pdf("age-disagg-fsw-line.pdf", h = 4, w = 6.25)
 
 df %>%
   filter(age_group != "Y015_049") %>%
-  ggplot(aes(x = age_group, y = fsw_prop, group = area_id, col = area_id)) +
+  ggplot(aes(x = age_group, y = fsw_prop, group = iso3, col = iso3)) +
   geom_line() +
-  scale_color_manual(values = extended_cbpalette(n = 13)) +
+  scale_color_manual(values = extended_cbpalette(n = n_distinct(df$iso3))) +
   labs(x = "Age group", y = "FSW proportion", col = "ISO3") +
   theme_minimal()
 
@@ -164,7 +243,7 @@ pdf("palette-extension.pdf", h = 4, w = 4)
 
 scales::show_col(multi.utils::cbpalette())
 
-scales::show_col(extended_cbpalette(n = 13))
+scales::show_col(extended_cbpalette(n = 30))
 
 dev.off()
 

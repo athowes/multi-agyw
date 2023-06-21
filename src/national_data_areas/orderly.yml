@@ -99,3 +99,51 @@ depends:
     id: latest
     use:
       depends/bdi_areas.geojson: bdi_areas.geojson
+  eth_data_areas:
+    id: latest
+    use:
+      depends/eth_areas.geojson: eth_areas.geojson
+  hti_data_areas:
+    id: latest
+    use:
+      depends/hti_areas.geojson: hti_areas.geojson
+  tcd_data_areas:
+    id: latest
+    use:
+      depends/tcd_areas.geojson: tcd_areas.geojson
+  civ_data_areas:
+    id: latest
+    use:
+      depends/civ_areas.geojson: civ_areas.geojson
+  gha_data_areas:
+    id: latest
+    use:
+      depends/gha_areas.geojson: gha_areas.geojson
+  gin_data_areas:
+    id: latest
+    use:
+      depends/gin_areas.geojson: gin_areas.geojson
+  lbr_data_areas:
+    id: latest
+    use:
+      depends/lbr_areas.geojson: lbr_areas.geojson
+  mli_data_areas:
+    id: latest
+    use:
+      depends/mli_areas.geojson: mli_areas.geojson
+  ner_data_areas:
+    id: latest
+    use:
+      depends/ner_areas.geojson: ner_areas.geojson
+  sle_data_areas:
+    id: latest
+    use:
+      depends/sle_areas.geojson: sle_areas.geojson
+  tgo_data_areas:
+    id: latest
+    use:
+      depends/tgo_areas.geojson: tgo_areas.geojson
+  bfa_data_areas:
+    id: latest
+    use:
+      depends/bfa_areas.geojson: bfa_areas.geojson

@@ -1,0 +1,71 @@
+script: script.R
+
+sources:
+  - functions.R
+
+artefacts:
+  - data:
+      description: Checks that the data is as intended
+      filenames:
+        - areas-check.pdf
+        - data-check.pdf
+  - data:
+      description: Smoothed district indicator estimates for multinomial models
+      filenames:
+        - multi-sexbehav-sae.csv
+        - best-multi-sexbehav-sae.csv
+        - multi-sexbehav-sae-fits.rds
+        - best-multi-sexbehav-sae-fit.rds
+        - multi-sexbehav-sae.pdf
+  - data:
+      description: Model selection information criteria for multinomial models
+      filenames:
+        - information-criteria.csv
+  - data:
+      description: Random effect variance parameter posterior means
+      filenames:
+        - variance-proportions.csv
+
+parameters:
+  #' Should we be using three categories or four
+  three_category:
+    default: TRUE
+  #' Fit only one model rather than all models
+  lightweight:
+    default: FALSE
+  #' If the interaction models currently under development should be fit too
+  include_interactions:
+    default: FALSE
+  #' If data from PHIA surveys should be included
+  include_phia:
+    default: TRUE
+  #' If a subset of the countries should be considered
+  fewer_countries:
+    default: FALSE
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - purrr
+  - stringr
+  - Matrix
+  - multi.utils
+
+depends:
+  plot_available-surveys_men:
+    id: latest
+    use:
+      depends/available-surveys.csv: available-surveys.csv
+  process_all-data_men:
+    id: latest
+    use:
+      depends/areas.rds: areas.rds
+      depends/survey_indicators_sexbehav.csv: survey_indicators_sexbehav.csv

@@ -1,0 +1,37 @@
+script: moz_survey_phia.R
+
+parameters:
+  version:
+    default: "2023"
+  iso3:
+    default: "MOZ"
+
+artefacts:
+  - data:
+      description: INSIDA 2021 survey microdata
+      filenames:
+        - moz2021phia_survey_meta.csv
+        - moz2021phia_survey_regions.csv
+        - moz2021phia_survey_clusters.csv
+        - moz2021phia_survey_individuals.csv
+        - moz2021phia_survey_biomarker.csv
+        - moz2021phia_survey_sexbehav.csv
+
+packages:
+  - dplyr
+  - haven
+  - naomi
+  - naomi.utils
+  - readr
+  - sf
+  - spud
+  - tidyr
+
+resources:
+  - insida2021adultind.csv
+
+depends:
+  moz_data_areas:
+    id: latest
+    use:
+      depends/moz_areas.geojson: moz_areas.geojson

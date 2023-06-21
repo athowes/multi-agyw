@@ -10,8 +10,20 @@ orderly::orderly_commit(id) #' [x]
 id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(fewer_countries = TRUE))
 orderly::orderly_commit(id) #' [x]
 
+
+
+
+# these are what i've run
 id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE))
 orderly::orderly_commit(id) #' [x]
+
+id <- orderly::orderly_run("fit_multi-sexbehav-sae_men", parameters = list(lightweight = TRUE))
+orderly::orderly_commit(id) #' [x]
+
+
+
+
+
 
 id <- orderly::orderly_run("fit_multi-sexbehav-sae", parameters = list(include_interactions = FALSE, fewer_countries = FALSE))
 orderly::orderly_commit(id) #' [x]

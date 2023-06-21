@@ -11,13 +11,13 @@ run_commit_push("plot_age-variation") #' [x]
 run_commit_push("plot_continental-map") #' [x]
 
 #' Dotplots and cloropoth of cohabiting and non-regular partner(s) risk groups (women aged 20-29)
-run_commit_push("plot_aids-abstract") #' [x]
+# run_commit_push("plot_aids-abstract") #' [x]
 
 #' Choropleth contrasting direct estimates with modeled estimates, and illustrating benefits of the later
-run_commit_push("plot_model-direct-benefits") #' [x]
+# run_commit_push("plot_model-direct-benefits") #' [x]
 
 #' Barplot of the information criteria (DIC, WAIC, CPO) for each model
-run_commit_push("process_information-criteria") #' [x]
+# run_commit_push("process_information-criteria") #' [x]
 
 #' Variance based sensitivity analysis
 run_commit_push("process_variance-proportions") #' [x]
@@ -27,9 +27,18 @@ run_commit_push("process_coverage") #' [x]
 
 #' Calculate and plot HIV prevalence by risk group
 run_commit_push("process_prevalence") #' [x]
+run_commit_push("process_prevalence_men") #' [x]
 
 #' Calculate and plot HIV incidence by risk group
 run_commit_push("process_incidence") #' [x]
+run_commit_push("process_incidence_men") #' [x]
+
+#' Add age groups
+run_commit_push("process_agegroups")
+run_commit_push("process_agegroups_men")
 
 #' Analysis and plots of number of infections reached by different prioritisation strategies
 run_commit_push("plot_infections-reached") #' [x]
+
+#' Plots for AGYW Incidence
+run_commit_push("process_maps_agyw")

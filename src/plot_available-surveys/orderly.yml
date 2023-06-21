@@ -86,3 +86,79 @@ depends:
     id: latest
     use:
       depends/zwe_survey_indicators_sexbehav.csv: zwe_survey_indicators_sexbehav.csv
+  ago_survey_behav:
+    id: latest
+    use:
+      depends/ago_survey_indicators_sexbehav.csv: ago_survey_indicators_sexbehav.csv
+  bdi_survey_behav:
+    id: latest
+    use:
+      depends/bdi_survey_indicators_sexbehav.csv: bdi_survey_indicators_sexbehav.csv
+  cod_survey_behav:
+    id: latest
+    use:
+      depends/cod_survey_indicators_sexbehav.csv: cod_survey_indicators_sexbehav.csv
+  gab_survey_behav:
+    id: latest
+    use:
+      depends/gab_survey_indicators_sexbehav.csv: gab_survey_indicators_sexbehav.csv
+  rwa_survey_behav:
+    id: latest
+    use:
+      depends/rwa_survey_indicators_sexbehav.csv: rwa_survey_indicators_sexbehav.csv
+  eth_survey_behav:
+    id: latest
+    use:
+      depends/eth_survey_indicators_sexbehav.csv: eth_survey_indicators_sexbehav.csv
+  hti_survey_behav:
+    id: latest
+    use:
+      depends/hti_survey_indicators_sexbehav.csv: hti_survey_indicators_sexbehav.csv
+  tcd_survey_behav:
+    id: latest
+    use:
+      depends/tcd_survey_indicators_sexbehav.csv: tcd_survey_indicators_sexbehav.csv
+  civ_survey_behav:
+    id: latest
+    use:
+      depends/civ_survey_indicators_sexbehav.csv: civ_survey_indicators_sexbehav.csv
+  gha_survey_behav:
+    id: latest
+    use:
+      depends/gha_survey_indicators_sexbehav.csv: gha_survey_indicators_sexbehav.csv
+  gin_survey_behav:
+    id: latest
+    use:
+      depends/gin_survey_indicators_sexbehav.csv: gin_survey_indicators_sexbehav.csv
+  lbr_survey_behav:
+    id: latest
+    use:
+      depends/lbr_survey_indicators_sexbehav.csv: lbr_survey_indicators_sexbehav.csv
+  mli_survey_behav:
+    id: latest
+    use:
+      depends/mli_survey_indicators_sexbehav.csv: mli_survey_indicators_sexbehav.csv
+  ner_survey_behav:
+    id: latest
+    use:
+      depends/ner_survey_indicators_sexbehav.csv: ner_survey_indicators_sexbehav.csv
+  sle_survey_behav:
+    id: latest
+    use:
+      depends/sle_survey_indicators_sexbehav.csv: sle_survey_indicators_sexbehav.csv
+  tgo_survey_behav:
+    id: latest
+    use:
+      depends/tgo_survey_indicators_sexbehav.csv: tgo_survey_indicators_sexbehav.csv
+  bfa_survey_behav:
+    id: latest
+    use:
+      depends/bfa_survey_indicators_sexbehav.csv: bfa_survey_indicators_sexbehav.csv
+  cog_survey_behav:
+    id: latest
+    use:
+      depends/cog_survey_indicators_sexbehav.csv: cog_survey_indicators_sexbehav.csv
+  caf_survey_behav:
+    id: latest
+    use:
+      depends/caf_survey_indicators_sexbehav.csv: caf_survey_indicators_sexbehav.csv

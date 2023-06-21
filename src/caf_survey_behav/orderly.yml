@@ -1,0 +1,32 @@
+script: caf_survey.R
+
+artefacts:
+  - data:
+      description: Survey indicator datasets
+      filenames:
+        - caf_survey_indicators_sexbehav.csv
+
+packages:
+  - dplyr
+  - ggplot2
+  - haven
+  - naomi
+  - naomi.utils
+  - spud
+  - rdhs
+  - readr
+  - sf
+
+depends:
+  caf_data_areas:
+    id: latest
+    use:
+      depends/caf_areas.geojson: caf_areas.geojson
+  caf_survey_mics:
+    id: latest
+    use:
+      depends/caf2018mics_survey_meta.csv: caf2018mics_survey_meta.csv
+      depends/caf2018mics_survey_regions.csv: caf2018mics_survey_regions.csv
+      depends/caf2018mics_survey_clusters.csv: caf2018mics_survey_clusters.csv
+      depends/caf2018mics_survey_individuals.csv: caf2018mics_survey_individuals.csv
+      depends/caf2018mics_survey_sexbehav.csv: caf2018mics_survey_sexbehav.csv

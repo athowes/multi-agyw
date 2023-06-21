@@ -1,0 +1,46 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Small-area estimates of incidence by risk group
+      filenames:
+        - incidence-district-sexbehav.csv
+        - incidence-district-sexbehav.pdf
+        - infections-district-sexbehav.pdf
+
+  - data:
+      description: Files for Ian
+      filenames:
+        - map-ian.pdf
+        - data-ian.rds
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - tibble
+
+resources:
+ - kplhiv_art.rds
+
+depends:
+  - process_msm_pwid_all:
+      id: latest
+      use:
+        depends/adjust-best-3p1-multi-sexbehav-sae.csv: adjust-best-3p1-multi-sexbehav-sae.csv
+  - process_all-data_men:
+      id: latest
+      use:
+        depends/areas.rds: areas.rds
+        depends/naomi.rds: naomi.rds
+  - process_prevalence_men:
+      id: latest
+      use:
+        depends/prev-district-sexbehav-logit.csv: prev-district-sexbehav-logit.csv
