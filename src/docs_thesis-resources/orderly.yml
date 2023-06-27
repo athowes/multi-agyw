@@ -2,12 +2,136 @@ script: script.R
 
 artefacts:
   - data:
-      description: Placeholder
+      description: Figures in .png format
       filenames:
-        - placeholder.rds
+        - depends/temporal-interpolation-ribbon-13.png
+        - depends/temporal-interpolation-ribbon-12.png
+        - depends/temporal-interpolation-ribbon-11.png
+        - depends/temporal-interpolation-ribbon-10.png
+        - depends/temporal-interpolation-ribbon-9.png
+        - depends/temporal-interpolation-ribbon-8.png
+        - depends/temporal-interpolation-ribbon-7.png
+        - depends/temporal-interpolation-ribbon-6.png
+        - depends/temporal-interpolation-ribbon-5.png
+        - depends/temporal-interpolation-ribbon-4.png
+        - depends/temporal-interpolation-ribbon-3.png
+        - depends/temporal-interpolation-ribbon-2.png
+        - depends/temporal-interpolation-ribbon-1.png
+        - depends/prev-district-sexbehav-logit-13.png
+        - depends/prev-district-sexbehav-logit-12.png
+        - depends/prev-district-sexbehav-logit-11.png
+        - depends/prev-district-sexbehav-logit-10.png
+        - depends/prev-district-sexbehav-logit-9.png
+        - depends/prev-district-sexbehav-logit-8.png
+        - depends/prev-district-sexbehav-logit-7.png
+        - depends/prev-district-sexbehav-logit-6.png
+        - depends/prev-district-sexbehav-logit-5.png
+        - depends/prev-district-sexbehav-logit-4.png
+        - depends/prev-district-sexbehav-logit-3.png
+        - depends/prev-district-sexbehav-logit-2.png
+        - depends/prev-district-sexbehav-logit-1.png
+        - depends/model-direct-benefits.png
+        - depends/model-comparison.png
+        - depends/infections-reached-country-13.png
+        - depends/infections-reached-country-12.png
+        - depends/infections-reached-country-11.png
+        - depends/infections-reached-country-10.png
+        - depends/infections-reached-country-9.png
+        - depends/infections-reached-country-8.png
+        - depends/infections-reached-country-7.png
+        - depends/infections-reached-country-6.png
+        - depends/infections-reached-country-5.png
+        - depends/infections-reached-country-4.png
+        - depends/infections-reached-country-3.png
+        - depends/infections-reached-country-2.png
+        - depends/infections-reached-country-1.png
+        - depends/incidence-district-sexbehav-13.png
+        - depends/incidence-district-sexbehav-12.png
+        - depends/incidence-district-sexbehav-11.png
+        - depends/incidence-district-sexbehav-10.png
+        - depends/incidence-district-sexbehav-9.png
+        - depends/incidence-district-sexbehav-8.png
+        - depends/incidence-district-sexbehav-7.png
+        - depends/incidence-district-sexbehav-6.png
+        - depends/incidence-district-sexbehav-5.png
+        - depends/incidence-district-sexbehav-4.png
+        - depends/incidence-district-sexbehav-3.png
+        - depends/incidence-district-sexbehav-2.png
+        - depends/incidence-district-sexbehav-1.png
+        - depends/fsw-logit-model-comparison.png
+        - depends/coverage.png
+        - depends/category-flowchart.png
+        - depends/age-variation.png
+        - depends/age-disagg-fsw-line.png
+        - depends/aaa-variance-proportions.png
 
 depends:
+  plot_available-surveys:
+    id: latest
+    use:
+      depends/available-surveys.png: available-surveys.png
+      depends/available-surveys.csv: available-surveys.csv
+  plot-tikz_category-flowchart:
+    id: latest
+    use:
+      depends/category-flowchart.pdf: category-flowchart.pdf
+  process_information-criteria:
+    id: latest
+    use:
+      depends/model-comparison.pdf: model-comparison.pdf
+      depends/fsw-logit-model-comparison.pdf: fsw-logit-model-comparison.pdf
+  process_variance-proportions:
+    id: latest
+    use:
+      depends/variance-proportions-uncertainty.csv: variance-proportions-uncertainty.csv
+      depends/aaa-variance-proportions.pdf: aaa-variance-proportions.pdf
+  plot_temporal-variation:
+    id: latest
+    use:
+      depends/temporal-interpolation-ribbon.pdf: temporal-interpolation-ribbon.pdf
+  plot_model-direct-benefits:
+    id: latest
+    use:
+      depends/model-direct-benefits.pdf: model-direct-benefits.pdf
   process_age-disagg-fsw:
     id: latest
     use:
       depends/age-disagg-fsw-line.pdf: age-disagg-fsw-line.pdf
+  plot_age-variation:
+    id: latest
+    use:
+      depends/age-variation.pdf: age-variation.pdf
+  process_coverage:
+    id: latest
+    use:
+      depends/coverage.pdf: coverage.pdf
+  plot_continental-map:
+    id: latest
+    use:
+      depends/3p1-continental-map.png: 3p1-continental-map.png
+  plot_within-between-country-variation:
+    id: latest
+    use:
+      depends/3p1-within-between-country-variation.png: 3p1-within-between-country-variation.png
+      depends/df_3p1_subnational.csv: df_3p1_subnational.csv
+      depends/df_3p1_national.csv: df_3p1_national.csv
+  process_prevalence:
+    id: latest
+    use:
+      depends/prev-district-sexbehav-logit.pdf: prev-district-sexbehav-logit.pdf
+  process_incidence:
+    id: latest
+    use:
+      depends/incidence-district-sexbehav.pdf: incidence-district-sexbehav.pdf
+      depends/infections-district-sexbehav.pdf: infections-district-sexbehav.pdf
+  plot_infections-reached:
+    id: latest
+    use:
+      depends/infections-reached.png: infections-reached.png
+      depends/infections-reached-country.pdf: infections-reached-country.pdf
+      depends/infections-reached.csv: infections-reached.csv
+      depends/infections-reached-country.rds: infections-reached-country.rds
+  process_transactional-fsw-adjustment:
+    id: latest
+    use:
+      depends/multi-sexbehav-sae.csv: adjust-best-3p1-multi-sexbehav-sae.csv

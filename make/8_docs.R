@@ -22,3 +22,9 @@ run_commit_push("docs_paper")
 
 #' Reviews
 run_commit_push("docs_review")
+
+#' For blog
+run_commit_push("docs_blog-images")
+
+#' For thesis
+run_commit_push("docs_thesis-resources")
