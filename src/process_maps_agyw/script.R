@@ -73,7 +73,7 @@ fct_reorg <- function(fac, ...) {
 }
 
 df_maps <- df_maps %>%
-  mutate(iso3 = fct_reorg(iso3, Botswana = "BWA",
+  mutate(iso3 = recode_factor(iso3, Botswana = "BWA",
                           Cameroon = "CMR", Kenya = "KEN", Lesotho = "LSO",
                           Mozambique = "MOZ", Malawi = "MWI", Namibia = "NAM",
                           Eswatini = "SWZ", Tanzania = "TZA", Uganda = "UGA",

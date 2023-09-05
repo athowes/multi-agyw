@@ -24,14 +24,9 @@ packages:
 
 resources:
   - kplhiv_art.rds
-  - wpp2019_denom_m.rds
 
 depends:
-  national_data_areas:
-    id: latest
-    use:
-      depends/national_areas.rds: national_areas.rds
-  process_all-data_men:
+  process_naomi-data_men:
     id: latest
     use:
       depends/naomi_pop.rds: naomi_pop.rds

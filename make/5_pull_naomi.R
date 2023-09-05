@@ -1,34 +1,146 @@
-#' The 13 GF AGYW countries
+###### TO FIX:
+###### define at top of the file the quarter you want to filter the Naomi results
+###### to - e.g. iso3 == "ZAF" ~ calendar_quarter == "CY2022Q3" needs to be fixed
+###### multiple times within the script right now
+
+#' Countries
 priority_iso3 <- multi.utils::priority_iso3()
 analysis_level <- multi.utils::analysis_level()
 
+#####################################################################
+## Read in Naomi files + clean up so that they can all be appended
+#####################################################################
+
 # come up with more sustainable solution to read in this file - file is not on
 # Imperial Sharepoint and can't read in directly from UNAIDS sharepoint
-naomi_output <- readRDS("~/Downloads/naomi1.rds")
+# naomi_output <- readRDS("~/Downloads/naomi1.rds")
+naomi_output <- readRDS("~/Downloads/naomi1_2023_07_05.rds")
 
-naomi_mwi <- read_csv("~/Downloads/indicators_mwi.csv")
-naomi_mwi$iso3 <- "MWI"
-naomi_mwi$country <- "Malawi"
-naomi_mwi$region <- "ESA"
+# naomi_mwi <- read_csv("~/Downloads/indicators_mwi.csv")
+# naomi_mwi$iso3 <- "MWI"
+# naomi_mwi$country <- "Malawi"
+# naomi_mwi$region <- "ESA"
+#
+# naomi_moz <- read_csv("~/Downloads/PRELIMINARY NAOMI indicators_13.04.2023.csv")
+# naomi_moz$iso3 <- "MOZ"
+# naomi_moz$country <- "Mozambique"
+# naomi_moz$region <- "ESA"
+#
+# naomi_zaf <- read_csv("~/Downloads/zaf_naomi-output_dhis-coarse_thembisa-calibrated-fine_2023-03-20/indicators.csv")
+# naomi_zaf$iso3 <- "ZAF"
+# naomi_zaf$country <- "South Africa"
+# naomi_zaf$region <- "ESA"
+#
+# naomi_caf <- read_csv("~/Downloads/CAF naomi_outputs/indicators.csv")
+# naomi_caf$iso3 <- "CAF"
+# naomi_caf$country <- "Central African Republic"
+# naomi_caf$region <- "WCA"
+#
+# # process this year's AGO data - missing a huge amount of columns
+# naomi_ago <- read_csv("~/Downloads/ago_plhiv_spectrum2022_totals_dissagreagted_by_ago-dhs2015_sae.csv")
+# ago_areas <- read_sf("~/Downloads/ago_areas.geojson") %>% st_drop_geometry()
+# # need to create 15-24 and 15-49 year age categories
+# naomi_ago <- naomi_ago %>%
+#   bind_rows(
+#     naomi_ago %>%
+#       filter(age_group %in% c("Y015_019","Y020_024")) %>%
+#       group_by(area_id,sex,indicator,calendar_quarter,source) %>%
+#       summarise(value = sum(value),
+#                 age_group = "Y015_024")
+#   ) %>%
+#   bind_rows(
+#     naomi_ago %>%
+#       filter(age_group %in% c("Y015_019","Y020_024","Y025_029","Y030_034",
+#                               "Y035_039","Y040_044","Y045_049")) %>%
+#       group_by(area_id,sex,indicator,calendar_quarter,source) %>%
+#       summarise(value = sum(value),
+#                 age_group = "Y015_049")
+#   )
+#
+# # Also need to create level 1 and 0 data
+# naomi_ago <- naomi_ago %>%
+#   bind_rows(
+#     naomi_ago %>%
+#   left_join(
+#     ago_areas %>%
+#       st_drop_geometry() %>%
+#       filter(area_level==2) %>%
+#       select(area_id,parent_area_id),
+#     by = "area_id"
+#   ) %>%
+#   group_by(parent_area_id,sex,age_group,indicator,calendar_quarter,source) %>%
+#   summarise(value = sum(value)) %>%
+#   rename(area_id = parent_area_id)
+#   )
+# naomi_ago <- naomi_ago %>%
+#   bind_rows(
+#     naomi_ago %>%
+#       left_join(
+#         ago_areas %>%
+#           st_drop_geometry() %>%
+#           filter(area_level==1) %>%
+#           select(area_id,parent_area_id),
+#         by = "area_id"
+#       ) %>%
+#       group_by(parent_area_id,sex,age_group,indicator,calendar_quarter,source) %>%
+#       summarise(value = sum(value)) %>%
+#       rename(area_id = parent_area_id)
+#   )
+#
+# naomi_ago <- naomi_ago %>%
+#   bind_rows(
+#     naomi_ago %>%
+#       group_by(area_id,sex,age_group,calendar_quarter,source) %>%
+#       mutate(prevalence = value[indicator=="plhiv"] / value[indicator=="population"]) %>%
+#       select(-indicator,-value) %>%
+#       rename(value = prevalence) %>%
+#       mutate(indicator = "prevalence") %>%
+#       distinct()
+#   ) %>%
+#   bind_rows(
+#     naomi_ago %>%
+#       group_by(area_id,sex,age_group,calendar_quarter,source) %>%
+#       mutate(incidence = value[indicator=="infections"] / (value[indicator=="population"] - value[indicator=="plhiv"])) %>%
+#       select(-indicator,-value) %>%
+#       rename(value = incidence) %>%
+#       mutate(indicator = "incidence") %>%
+#       distinct()
+#   )
+#
+# naomi_ago$iso3 <- "AGO"
+# naomi_ago$country <- "Angola"
+# naomi_ago <- naomi_ago %>%
+#   left_join(select(ago_areas,
+#                    area_id,area_name,area_level,area_level_label))
+# naomi_ago <- naomi_ago %>%
+#   left_join(naomi_output %>%
+#               select(age_group,age_group_label) %>%
+#               distinct())
+# naomi_ago$quarter_label <- "December 2022"
+# naomi_ago$mean <- naomi_ago$value # not sure which this is and whether we use the
+#   # mean or median but assuming doesn't really matter since this is a quite shady
+#   # way to produce estimates anyways.
+# naomi_ago$median <- naomi_ago$value
+# naomi_ago$se <- NA_complex_
+# naomi_ago$mode <- NA_complex_
+# naomi_ago$lower <- NA_complex_
+# naomi_ago$upper <- NA_complex_
+# naomi_ago$region <- "ESA"
+# naomi_ago <- naomi_ago %>%
+#   left_join(naomi_output %>%
+#               filter(country=="South Africa") %>%
+#               select(indicator,indicator_label) %>%
+#               distinct())
 
-naomi_moz <- read_csv("~/Downloads/PRELIMINARY NAOMI indicators_13.04.2023.csv")
-naomi_moz$iso3 <- "MOZ"
-naomi_moz$country <- "Mozambique"
-naomi_moz$region <- "ESA"
+# naomi_output <- naomi_output %>%
+#   filter(iso3!="MWI" & iso3!="MOZ" & iso3!="ZAF" & iso3!="CAF" & iso3!="AGO") %>%
+#   bind_rows(list(naomi_mwi,naomi_moz, naomi_zaf, naomi_caf, naomi_ago))
 
-naomi_zaf <- read_csv("~/Downloads/zaf_naomi-output_dhis-coarse_thembisa-calibrated-fine_2023-03-20/indicators.csv")
-naomi_zaf$iso3 <- "ZAF"
-naomi_zaf$country <- "South Africa"
-naomi_zaf$region <- "ESA"
 
-naomi_caf <- read_csv("~/Downloads/CAF naomi_outputs/indicators.csv")
-naomi_caf$iso3 <- "CAF"
-naomi_caf$country <- "Central African Republic"
-naomi_caf$region <- "WCA"
 
-naomi_output <- naomi_output %>%
-  filter(iso3!="MWI" & iso3!="MOZ" & iso3!="ZAF" & iso3!="CAF") %>%
-  bind_rows(list(naomi_mwi,naomi_moz, naomi_zaf, naomi_caf))
+#####################################################################
+## Clean up Naomi to pull into later estimation steps
+#####################################################################
 
 
 naomi_extract <- naomi_output %>%
@@ -45,7 +157,8 @@ naomi_extract <- naomi_output %>%
       iso3 == "MOZ" ~ calendar_quarter == "CY2022Q4",
       iso3 == "MWI" ~ calendar_quarter == "CY2022Q3",
       iso3 == "CAF" ~ calendar_quarter == "CY2022Q4",
-      TRUE ~ calendar_quarter == "CY2021Q4"
+      iso3 == "AGO" ~ calendar_quarter == "CY2022Q4",
+      TRUE ~ calendar_quarter == "CY2022Q4"
     )
   ) %>%
   left_join(
@@ -56,10 +169,20 @@ naomi_extract <- naomi_output %>%
   filter(area_level %in% c(0, analysis_level)) %>%
   select(-analysis_level)
 
-saveRDS(naomi_extract, "src/process_all-data/naomi_extract.rds")
-saveRDS(naomi_extract, "src/process_all-data_men/naomi_extract.rds")
+saveRDS(naomi_extract, "src/process_naomi-data/naomi_extract.rds")
+saveRDS(naomi_extract, "src/process_naomi-data_men/naomi_extract.rds")
 
-# naomi outputs for the excel spreadsheet
+
+#####################################################################
+## Run task to get Naomi data ready for incorporation into other tasks
+#####################################################################
+
+run_commit_push("process_naomi-data")
+run_commit_push("process_naomi-data_men")
+
+#####################################################################
+## Clean up Naomi to pull into the Excel spreadsheet
+#####################################################################
 
 extra_analysis_level <- c(analysis_level,c("BEN" = 2,
                                            "GMB" = 2, "GNB" = 1, "GNQ" = 2,
@@ -76,7 +199,8 @@ naomi_extract <- naomi_output %>%
       iso3 == "MOZ" ~ calendar_quarter == "CY2022Q4",
       iso3 == "MWI" ~ calendar_quarter == "CY2022Q3",
       iso3 == "CAF" ~ calendar_quarter == "CY2022Q4",
-      TRUE ~ calendar_quarter == "CY2021Q4"
+      iso3 == "AGO" ~ calendar_quarter == "CY2022Q4",
+      TRUE ~ calendar_quarter == "CY2022Q4"
     )
   ) %>%
   left_join(
@@ -98,7 +222,8 @@ naomi_extract <- naomi_output %>%
           iso3 == "MOZ" ~ calendar_quarter == "CY2022Q4",
           iso3 == "MWI" ~ calendar_quarter == "CY2022Q3",
           iso3 == "CAF" ~ calendar_quarter == "CY2022Q4",
-          TRUE ~ calendar_quarter == "CY2021Q4"
+          iso3 == "AGO" ~ calendar_quarter == "CY2022Q4",
+          TRUE ~ calendar_quarter == "CY2022Q4"
         )
       ) %>%
       left_join(
@@ -176,7 +301,8 @@ naomi_extract <- naomi_output %>%
                iso3 == "MOZ" ~ calendar_quarter == "CY2022Q4",
                iso3 == "MWI" ~ calendar_quarter == "CY2022Q3",
                iso3 == "CAF" ~ calendar_quarter == "CY2022Q4",
-               TRUE ~ calendar_quarter == "CY2021Q4"
+               iso3 == "AGO" ~ calendar_quarter == "CY2022Q4",
+               TRUE ~ calendar_quarter == "CY2022Q4"
              )) %>%
       select(area_id,mean)
   ) %>%
@@ -244,17 +370,7 @@ naomi_extract <- naomi_extract %>%
   mutate(area_name = ifelse(!is.na(area_name_fixed),area_name_fixed,area_name)) %>%
   select(-area_name_fixed)
 
-writexl::write_xlsx(naomi_extract,"src/process_all-data/naomi_extract.xlsx")
+writexl::write_xlsx(naomi_extract,"src/process_naomi-data/naomi_extract.xlsx")
 
 
-#' Alternative population option: aaa_scale_pop reports from Oli's fertility repo
-#' "Worldpop pixel level populations, overlaid with district level shape files, which are then
-#' scaled to the 5 year age group and sex distributions from WPP 2019 at national level."
-#' skip haiti for this
-lapply(priority_iso3[priority_iso3!="HTI"], function(x) {
-  orderly::orderly_pull_archive(
-    "aaa_scale_pop",
-    id = paste0('latest(parameter:iso3 == "', x, '")'),
-    remote = "fertility",
-    recursive = TRUE)
-})
+

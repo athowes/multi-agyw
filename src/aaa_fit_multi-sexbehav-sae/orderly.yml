@@ -68,6 +68,7 @@ packages:
   - Matrix
   - stats
   - multi.utils
+  - parallel
 
 resources:
   bdi_areas.geojson

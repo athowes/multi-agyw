@@ -1,12 +1,24 @@
 continental_map <- function(df, areas, national_areas) {
 
   df <- df %>%
-    filter(age_group != "15-24") %>%
-    #' Assuming the survey_id is structured as ISO2000DHS
-    mutate(year = {if("year" %in% names(.)) year else substr(survey_id, 4, 7)}) %>%
+    filter(!age_group %in%  c("Y030_034","Y035_039","Y040_044","Y045_049")) %>%
+    mutate(
+      age_group = fct_recode(age_group,
+                             "15-19" = "Y015_019",
+                             "20-24" = "Y020_024",
+                             "25-29" = "Y025_029",
+      ),
+      indicator = fct_recode(indicator,
+                             "Not sexually active" = "nosex12m",
+                             "One cohabiting partner" = "sexcohab",
+                             "Non-regular or multiple partners(s) +" = "sexnonregplus",
+                             "Non-regular or multiple partner(s)" = "sexnonreg",
+                             "FSW" = "sexpaid12m"
+      )) %>%
     #' Only the most recent survey in each year
     group_by(iso3) %>%
-    filter(year == max(year)) %>%
+    filter(year == max(year),
+           iso3 != "HTI") %>%
     ungroup() %>%
     left_join(
       select(areas, area_id, geometry),
@@ -14,11 +26,15 @@ continental_map <- function(df, areas, national_areas) {
     ) %>%
     st_as_sf()
 
-  priority_iso3 <- multi.utils::priority_iso3()
+  priority_iso3 <- c("BWA", "CMR", "KEN", "LSO", "MOZ", "MWI", "NAM", "SWZ",
+                     "TZA", "UGA", "ZAF", "ZMB", "ZWE",
+                     "AGO", "BDI", "COD", "GAB", "RWA", "ETH", "TCD",
+                     "CIV", "GHA", "GIN", "LBR", "MLI",
+                     "NER", "SLE", "TGO", "BFA", "COG", "CAF")
 
   #' Countries that I want to show on the plot but we don't have data for
   #' These are just chosen manually by looking at countries between CMR and the rest on a map
-  missing_iso3 <- c("AGO", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
+  missing_iso3 <- c("GNQ", "NGA", "BEN","SSD")
 
   df_subnational <- filter(df, !(area_id %in% priority_iso3))
   df_national <- setdiff(df, df_subnational)

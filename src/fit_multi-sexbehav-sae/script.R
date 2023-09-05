@@ -37,8 +37,11 @@ areas <- areas %>%
   )
 
 #' If working with a subset of the countries for model development and testing, also filter out of the data
+# Not including COD or "HTI" "TCD" "GHA" "GIN" "LBR" "MLI" "NER" "SLE" "TGO" "BFA"
 if(fewer_countries) {
-  subset_iso3 <- c("BWA", "MOZ", "MWI", "ZMB", "ZWE")
+  subset_iso3 <- c("BWA", "MOZ", "MWI", "ZMB", "ZWE", "CMR", "KEN", "LSO",
+                   "NAM", "SWZ", "TZA", "UGA", "ZAF", "BDI",
+                   "RWA", "ETH","GAB", "CIV", "COG", "CAF")
 
   ind <- ind %>%
     mutate(iso3 = substr(survey_id, 1, 3)) %>%

@@ -14,6 +14,8 @@ packages:
   - readr
   - sf
 
+resources:  - bdi_areas.geojson
+
 depends:
   bwa_data_areas:
     id: latest
@@ -95,10 +97,6 @@ depends:
     id: latest
     use:
       depends/rwa_areas.geojson: rwa_areas.geojson
-  bdi_data_areas:
-    id: latest
-    use:
-      depends/bdi_areas.geojson: bdi_areas.geojson
   eth_data_areas:
     id: latest
     use:
@@ -147,3 +145,15 @@ depends:
     id: latest
     use:
       depends/bfa_areas.geojson: bfa_areas.geojson
+  ben_data_areas:
+    id: latest
+    use:
+      depends/ben_areas.geojson: ben_areas.geojson
+  nga_data_areas:
+    id: latest
+    use:
+      depends/nga_areas.geojson: nga_areas.geojson
+  ssd_data_areas:
+    id: latest
+    use:
+      depends/ssd_areas.geojson: ssd_areas.geojson

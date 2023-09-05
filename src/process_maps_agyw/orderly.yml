@@ -12,7 +12,6 @@ packages:
   - forcats
   - ggplot2
   - INLA
-  - naomi
   - readr
   - scales
   - sf

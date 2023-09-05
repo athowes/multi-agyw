@@ -39,6 +39,9 @@ depends:
       id: latest
       use:
         depends/areas.rds: areas.rds
+  - process_naomi-data_men:
+      id: latest
+      use:
         depends/naomi.rds: naomi.rds
   - process_prevalence_men:
       id: latest

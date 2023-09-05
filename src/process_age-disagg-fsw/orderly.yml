@@ -26,14 +26,9 @@ packages:
 resources:
   - kinh-afs-dist.rds
   - kplhiv_art.rds
-  - wpp2019_denom.rds
 
 depends:
-  national_data_areas:
-    id: latest
-    use:
-      depends/national_areas.rds: national_areas.rds
-  process_all-data:
+  process_naomi-data:
     id: latest
     use:
       depends/naomi_pop.rds: naomi_pop.rds

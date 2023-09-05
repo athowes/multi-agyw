@@ -1,6 +1,4 @@
-priority_iso3 <- multi.utils::priority_iso3()
-missing_iso3 <- c("AGO", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
-iso3 <- c(priority_iso3, missing_iso3)
+iso3 <- multi.utils::priority_iso3()
 
 #' Names of the reports to pull
 reports <- paste0(tolower(iso3), "_data_areas")
@@ -20,9 +18,7 @@ sapply(reports,
   }
 )
 
-#' For MOZ and TZA there are changes for the 2022 version
+#' For MOZ, ETH & TZA there are changes for the 2022 version
 orderly::orderly_pull_archive("tza_data_areas", remote = "naomi2", id = "latest(parameter:version == 2022)")
 orderly::orderly_pull_archive("moz_data_areas", remote = "naomi2", id = "latest(parameter:version == 2022)")
 orderly::orderly_pull_archive("eth_data_areas", remote = "naomi2", id = "latest(parameter:version == 2022)")
-
-run_commit_push("national_data_areas")

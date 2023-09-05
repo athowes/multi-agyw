@@ -8,34 +8,13 @@ priority_iso3 <- multi.utils::priority_iso3()
 #' fsw_ntl.csv are the newer estimates from Oli
 pse <- readRDS("kplhiv_art.rds")
 
-pse <- pse$FSW$area %>% filter(indicator=="pse_count",
-                               iso3 %in% priority_iso3)
+pse <- pse$FSW$area %>% filter(indicator=="pse_prop",
+                               iso3 %in% priority_iso3) %>%
+  rename(prop_fsw = median) %>%
+  select(-indicator,-lower,-upper)
 
 afs <- readRDS("kinh-afs-dist.rds")
 naomi_pop <- readRDS("depends/naomi_pop.rds")
-wpp_pop <- readRDS("wpp2019_denom.rds")
-
-wpp_pop <- wpp_pop %>%
-  filter(age_group %in% c("Y015_019","Y020_024","Y025_029","Y030_034",
-                          "Y035_039","Y040_044","Y045_049")) %>%
-  group_by(area_id,year) %>%
-  summarize(population = sum(population)) %>%
-  filter(year==2019)
-
-# Right now the WPP2019 estimates have incorrect area specification for TZA and
-# ETH and CAF and COD.  Will use Naomi pop as denominator for right now - TO BE FIXED
-pse <- pse %>%
-  left_join(wpp_pop %>% select(area_id,population)) %>%
-  left_join(naomi_pop %>%
-              filter(age_group=="15-49") %>%
-              rename(population_naomi = population) %>%
-              select(area_id,population_naomi))
-
-pse <- pse %>%
-  mutate(prop_fsw = ifelse(iso3 %in% c("TZA","ETH","COD","CAF"),
-                           median / population_naomi,
-                       median / population) ) %>%
-  select(-population,-population_naomi,-indicator,-lower,-upper,-median)
 
 pse$iso3 <- as.character(pse$iso3)
 

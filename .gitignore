@@ -56,3 +56,9 @@ src/process_remove_moz/naomi_extract.xlsx
 src/plot_available-surveys_men/countries_codes_and_coordinates.csv
 src/plot_available-surveys_men/STATcompilerExport2021127_12313.xlsx
 src/process_prevalence_men/~$Draft outline of size estimation approach v4.xlsx
+src/process_naomi-data/bdi_areas.geojson
+src/process_naomi-data_men/naomi_extract.xlsx
+src/process_naomi-data_men/bdi_areas.geojson
+src/process_naomi-data/~$naomi_extract.xlsx
+src/process_naomi-data/naomi_extract.xlsx
+src/national_data_areas/bdi_areas.geojson

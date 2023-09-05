@@ -6,10 +6,11 @@ priority_iso3 <- multi.utils::priority_iso3()
 analysis_level <- multi.utils::analysis_level()
 
 #' Merge all of the area datasets
-areas <- lapply(priority_iso3[-which(priority_iso3=="BDI")], function(x) read_sf(paste0("depends/", tolower(x), "_areas.geojson")))
-areas$BDI <- read_sf("bdi_areas.geojson")
+# areas <- lapply(priority_iso3[-which(priority_iso3=="BDI")], function(x) read_sf(paste0("depends/", tolower(x), "_areas.geojson")))
+areas <- lapply(priority_iso3, function(x) read_sf(paste0("depends/", tolower(x), "_areas.geojson")))
+# areas$BDI <- read_sf("bdi_areas.geojson")
 # areas <- lapply(areas, function(x) mutate(x, epp_level = as.numeric(epp_level)))
-areas[[18]]$epp_level <- as.numeric(areas[[18]]$epp_level) #' Fix non-conforming column type
+# areas[[18]]$epp_level <- as.numeric(areas[[18]]$epp_level) #' Fix non-conforming column type
 areas <- bind_rows(areas)
 
 pdf("areas.pdf", h = 11, w = 6.25)
@@ -207,40 +208,3 @@ hiv <- lapply(priority_iso3, function(x) { if(file.exists(paste0("depends/", tol
   bind_rows()
 
 write_csv(hiv, "hiv_indicators_sexbehav.csv")
-
-#' Merge all of the population datasets (aaa_scale_pop reports from Oli's fertility repo)
-pop <- lapply(priority_iso3[priority_iso3!="HTI"], function(x) read_csv(paste0("depends/", tolower(x), "_interpolated-population.csv"))) %>%
-  bind_rows()
-
-write_csv(pop, "interpolated_population.csv")
-
-naomi_extract <- readRDS("naomi_extract.rds")
-
-naomi <- naomi_extract %>%
-  filter(sex=="male") %>%
-  select(
-    iso3, area_id, area_level, age_group = age_group_label,
-    indicator = indicator_label, estimate = mean
-  )
-
-saveRDS(naomi, "naomi.rds")
-
-pop <- naomi %>%
-  filter(indicator == "Population") %>%
-  select(-indicator) %>%
-  rename(population = estimate) %>%
-  pivot_wider(
-    names_from = age_group,
-    values_from = population
-  ) %>%
-  mutate(
-    `25-49` = `25-29` + `30-34` + `35-39` + `40-44` + `45-49`,
-    `15-29` = `15-19` + `20-24` + `25-29`,
-  ) %>%
-  pivot_longer(
-    cols = -c(iso3, area_id, area_level),
-    names_to = "age_group",
-    values_to = "population"
-  )
-
-saveRDS(pop, "naomi_pop.rds")

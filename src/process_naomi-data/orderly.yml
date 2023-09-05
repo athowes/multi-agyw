@@ -1,0 +1,29 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Naomi population, PLHIV and new infections data
+      filenames:
+        - naomi.rds
+        - naomi_pop.rds
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - purrr
+  - stringr
+  - Matrix
+  - spud
+  - gt
+
+resources:
+  - naomi_extract.rds
+  # - bdi_areas.geojson

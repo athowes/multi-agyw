@@ -73,142 +73,142 @@ ind %>%
 
 while (!is.null(dev.list()))  dev.off()
 
-#' Imported from the prevalence ratio tab of Katie's spreadsheet
-katie_prev_pr <- read_excel(
-  "Draft outline of size estimation approach v4.xlsx",
-  sheet = "Prev Ratios",
-  skip = 1
-) %>%
-  select(-`YWKPs*`)
-
-rg <- c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")
-names(katie_prev_pr) <- c("country", "iso3", paste0("prev_", rg), paste0("pr_", rg))
-
-katie_pr <- katie_prev_pr %>%
-  select(iso3, starts_with("pr_")) %>%
-  filter(iso3 %in% priority_iso3) %>%
-  pivot_longer(
-    cols = starts_with("pr_"),
-    names_to = c("indicator", "behav"),
-    names_sep = "_",
-    values_to = "estimate"
-  ) %>%
-  rename(area_id = iso3)
-
-#' Compare to prevalence ratios from this analysis
-pdf("katie-comp.pdf", h = 7, w = 6.25)
-
-ind %>%
-  filter(indicator == "pr") %>%
-  ggplot(aes(x = "", y = estimate)) +
-    geom_jitter(width = 0.2, alpha = 0.5, aes(col = age_group)) +
-    geom_point(data = katie_pr, aes(x = "", y = estimate), col = "black", shape = 2) +
-    facet_grid(area_id ~ behav, scales = "free") +
-    scale_color_manual(values = multi.utils::cbpalette()) +
-    labs(x = "") +
-    theme_minimal()
-
-while (!is.null(dev.list()))  dev.off()
-
-#' YWKP prevalence ratios
-katie_ywkp <- read_excel(
-  "Draft outline of size estimation approach v4.xlsx",
-  sheet = "HIV YWKPs",
-  col_names = FALSE,
-  col_types = c("text", "text", "text", "text",
-                "numeric", "numeric", "numeric",
-                "numeric", "numeric", "numeric",
-                "numeric", "numeric", "numeric",
-                "numeric"),
-  skip = 6
-) %>%
-  filter(!is.na(`...1`)) %>%
-  select(where(function(x) any(!is.na(x)))) %>%
-  select(-c(`...13`, `...14`))
-
-names(katie_ywkp) <- c(paste0("country", 1:4), "prev_ywkp_under25", "prev_fsw", "prev_under25", "prev")
-
-#' Add log-odds (and put prevalences in [0, 1] rather than [0, 100])
-katie_ywkp <- katie_ywkp %>%
-  mutate(
-    across(prev_ywkp_under25:prev, ~ .x / 100, .names = "{.col}"),
-    across(prev_ywkp_under25:prev, ~ log(.x / (1 - .x)), .names = "{.col}_logodds"),
-    pr_ywkp_under25 = prev_ywkp_under25 / prev_under25,
-    pr_fsw = prev_fsw / prev,
-    lor_ywkp_under25 = prev_ywkp_under25_logodds / prev_under25_logodds,
-    lor_fsw = prev_fsw_logodds / prev_logodds
-  )
-
-pdf("ywkp-prev.pdf", h = 5, w = 6.25)
-
-# PLOTS FOR ALL FSW
-
-katie_ywkp %>%
-  ggplot(aes(x = prev_logodds, y = prev_fsw_logodds)) +
-    geom_point() +
-    geom_smooth(method = "lm") +
-    geom_smooth(method = "loess", col = "red") +
-    theme_minimal()
-
-katie_ywkp %>%
-  ggplot(aes(x = prev, y = lor_fsw)) +
-  geom_point() +
-  geom_smooth(method = "loess") +
-  theme_minimal()
-
-katie_ywkp %>%
-  ggplot(aes(x = prev, y = pr_fsw)) +
-  geom_point() +
-  geom_smooth(method = "loess") +
-  theme_minimal()
-
-katie_ywkp %>%
-  ggplot(aes(x = prev, y = prev_fsw)) +
-  geom_point() +
-  geom_smooth(method = "loess") +
-  theme_minimal()
-
-## PLOTS FOR FSW UNDER 25
-
-katie_ywkp %>%
-  ggplot(aes(x = prev_under25_logodds, y = prev_ywkp_under25_logodds)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  geom_smooth(method = "loess", col = "red") +
-  theme_minimal()
-
-katie_ywkp %>%
-  ggplot(aes(x = prev_under25, y = lor_ywkp_under25)) +
-  geom_point() +
-  geom_smooth(method = "loess") +
-  theme_minimal()
-
-katie_ywkp %>%
-  ggplot(aes(x = prev_under25, y = pr_ywkp_under25)) +
-  geom_point() +
-  geom_smooth(method = "loess") +
-  theme_minimal()
-
-katie_ywkp %>%
-  ggplot(aes(x = prev_under25, y = prev_ywkp_under25)) +
-  geom_point() +
-  geom_smooth(method = "loess") +
-  theme_minimal()
-
-while (!is.null(dev.list()))  dev.off()
-
-ywkp_fit <- lm(prev_fsw_logodds ~ prev_logodds, data = katie_ywkp)
-
-data.frame(
-  prev = seq(0, 0.7, by = 0.001),
-  pr_ywkp = calculate_ywkp_pr_lor(seq(0, 0.7, by = 0.001))$pr
-) %>%
-  ggplot(aes(x = prev, y = pr_ywkp)) +
-    geom_line() +
-    theme_minimal() +
-    ylim(0,30)+
-    labs(x = "General population prevalence", y = "PR (YWKP)")
-
+#' #' Imported from the prevalence ratio tab of Katie's spreadsheet
+#' katie_prev_pr <- read_excel(
+#'   "Draft outline of size estimation approach v4.xlsx",
+#'   sheet = "Prev Ratios",
+#'   skip = 1
+#' ) %>%
+#'   select(-`YWKPs*`)
+#'
+#' rg <- c("nosex12m", "sexcohab", "sexnonreg", "sexpaid12m")
+#' names(katie_prev_pr) <- c("country", "iso3", paste0("prev_", rg), paste0("pr_", rg))
+#'
+#' katie_pr <- katie_prev_pr %>%
+#'   select(iso3, starts_with("pr_")) %>%
+#'   filter(iso3 %in% priority_iso3) %>%
+#'   pivot_longer(
+#'     cols = starts_with("pr_"),
+#'     names_to = c("indicator", "behav"),
+#'     names_sep = "_",
+#'     values_to = "estimate"
+#'   ) %>%
+#'   rename(area_id = iso3)
+#'
+#' #' Compare to prevalence ratios from this analysis
+#' pdf("katie-comp.pdf", h = 7, w = 6.25)
+#'
+#' ind %>%
+#'   filter(indicator == "pr") %>%
+#'   ggplot(aes(x = "", y = estimate)) +
+#'     geom_jitter(width = 0.2, alpha = 0.5, aes(col = age_group)) +
+#'     geom_point(data = katie_pr, aes(x = "", y = estimate), col = "black", shape = 2) +
+#'     facet_grid(area_id ~ behav, scales = "free") +
+#'     scale_color_manual(values = multi.utils::cbpalette()) +
+#'     labs(x = "") +
+#'     theme_minimal()
+#'
+#' while (!is.null(dev.list()))  dev.off()
+#'
+#' #' YWKP prevalence ratios
+#' katie_ywkp <- read_excel(
+#'   "Draft outline of size estimation approach v4.xlsx",
+#'   sheet = "HIV YWKPs",
+#'   col_names = FALSE,
+#'   col_types = c("text", "text", "text", "text",
+#'                 "numeric", "numeric", "numeric",
+#'                 "numeric", "numeric", "numeric",
+#'                 "numeric", "numeric", "numeric",
+#'                 "numeric"),
+#'   skip = 6
+#' ) %>%
+#'   filter(!is.na(`...1`)) %>%
+#'   select(where(function(x) any(!is.na(x)))) %>%
+#'   select(-c(`...13`, `...14`))
+#'
+#' names(katie_ywkp) <- c(paste0("country", 1:4), "prev_ywkp_under25", "prev_fsw", "prev_under25", "prev")
+#'
+#' #' Add log-odds (and put prevalences in [0, 1] rather than [0, 100])
+#' katie_ywkp <- katie_ywkp %>%
+#'   mutate(
+#'     across(prev_ywkp_under25:prev, ~ .x / 100, .names = "{.col}"),
+#'     across(prev_ywkp_under25:prev, ~ log(.x / (1 - .x)), .names = "{.col}_logodds"),
+#'     pr_ywkp_under25 = prev_ywkp_under25 / prev_under25,
+#'     pr_fsw = prev_fsw / prev,
+#'     lor_ywkp_under25 = prev_ywkp_under25_logodds / prev_under25_logodds,
+#'     lor_fsw = prev_fsw_logodds / prev_logodds
+#'   )
+#'
+#' pdf("ywkp-prev.pdf", h = 5, w = 6.25)
+#'
+#' # PLOTS FOR ALL FSW
+#'
+#' katie_ywkp %>%
+#'   ggplot(aes(x = prev_logodds, y = prev_fsw_logodds)) +
+#'     geom_point() +
+#'     geom_smooth(method = "lm") +
+#'     geom_smooth(method = "loess", col = "red") +
+#'     theme_minimal()
+#'
+#' katie_ywkp %>%
+#'   ggplot(aes(x = prev, y = lor_fsw)) +
+#'   geom_point() +
+#'   geom_smooth(method = "loess") +
+#'   theme_minimal()
+#'
+#' katie_ywkp %>%
+#'   ggplot(aes(x = prev, y = pr_fsw)) +
+#'   geom_point() +
+#'   geom_smooth(method = "loess") +
+#'   theme_minimal()
+#'
+#' katie_ywkp %>%
+#'   ggplot(aes(x = prev, y = prev_fsw)) +
+#'   geom_point() +
+#'   geom_smooth(method = "loess") +
+#'   theme_minimal()
+#'
+#' ## PLOTS FOR FSW UNDER 25
+#'
+#' katie_ywkp %>%
+#'   ggplot(aes(x = prev_under25_logodds, y = prev_ywkp_under25_logodds)) +
+#'   geom_point() +
+#'   geom_smooth(method = "lm") +
+#'   geom_smooth(method = "loess", col = "red") +
+#'   theme_minimal()
+#'
+#' katie_ywkp %>%
+#'   ggplot(aes(x = prev_under25, y = lor_ywkp_under25)) +
+#'   geom_point() +
+#'   geom_smooth(method = "loess") +
+#'   theme_minimal()
+#'
+#' katie_ywkp %>%
+#'   ggplot(aes(x = prev_under25, y = pr_ywkp_under25)) +
+#'   geom_point() +
+#'   geom_smooth(method = "loess") +
+#'   theme_minimal()
+#'
+#' katie_ywkp %>%
+#'   ggplot(aes(x = prev_under25, y = prev_ywkp_under25)) +
+#'   geom_point() +
+#'   geom_smooth(method = "loess") +
+#'   theme_minimal()
+#'
+#' while (!is.null(dev.list()))  dev.off()
+#'
+#' ywkp_fit <- lm(prev_fsw_logodds ~ prev_logodds, data = katie_ywkp)
+#'
+#' data.frame(
+#'   prev = seq(0, 0.7, by = 0.001),
+#'   pr_ywkp = calculate_ywkp_pr_lor(seq(0, 0.7, by = 0.001))$pr
+#' ) %>%
+#'   ggplot(aes(x = prev, y = pr_ywkp)) +
+#'     geom_line() +
+#'     theme_minimal() +
+#'     ylim(0,30)+
+#'     labs(x = "General population prevalence", y = "PR (YWKP)")
+#'
 kp_prev <- kp_prev %>%
   select(iso3,area_id,median) %>%
   left_join(naomi %>%
@@ -224,16 +224,16 @@ kp_prev <- kp_prev %>%
          prev_logodds = log(gen_prev / (1-gen_prev)))
 
 kp_fit <- lm(prev_fsw_logodds ~ prev_logodds, data = kp_prev)
-
-data.frame(
-  prev = seq(0, 0.7, by = 0.001),
-  pr_ywkp = calculate_ywkp_pr_lor(seq(0, 0.7, by = 0.001), kp_fit)$pr
-) %>%
-  ggplot(aes(x = prev, y = pr_ywkp)) +
-  geom_line() +
-  theme_minimal() +
-  ylim(0,30) +
-  labs(x = "General population prevalence", y = "PR (KP)")
+#'
+#' data.frame(
+#'   prev = seq(0, 0.7, by = 0.001),
+#'   pr_ywkp = calculate_ywkp_pr_lor(seq(0, 0.7, by = 0.001), kp_fit)$pr
+#' ) %>%
+#'   ggplot(aes(x = prev, y = pr_ywkp)) +
+#'   geom_line() +
+#'   theme_minimal() +
+#'   ylim(0,30) +
+#'   labs(x = "General population prevalence", y = "PR (KP)")
 
 
 #' Calculating the rest of the LOR with logisitic regression
@@ -335,10 +335,10 @@ df_3p1 <- naomi %>%
     by = c("area_id", "age_group")
   ) %>%
   filter(!is.na(prop_nosex12m)) %>%
-  left_join(
-    select(katie_prev_pr, -starts_with("prev_")),
-    by = "iso3"
-  ) %>%
+  # left_join(
+  #   select(katie_prev_pr, -starts_with("prev_")),
+  #   by = "iso3"
+  # ) %>%
   mutate(
     population_nosex12m = population * prop_nosex12m,
     population_sexcohab = population * prop_sexcohab,
@@ -346,23 +346,23 @@ df_3p1 <- naomi %>%
     population_sexpaid12m = population * prop_sexpaid12m
   )
 
-#' Calculate prevalence and PLHIV using linear disaggregation
-df_3p1_linear <- df_3p1 %>%
-  mutate(
-    prev_nosex12m = plhiv / (population_nosex12m +
-                             pr_sexcohab * population_sexcohab +
-                             pr_sexnonreg * population_sexnonreg +
-                             pr_sexpaid12m * population_sexpaid12m),
-    prev_sexcohab = pr_sexcohab * prev_nosex12m,
-    prev_sexnonreg = pr_sexnonreg * prev_nosex12m,
-    prev_sexpaid12m = pr_sexpaid12m * prev_nosex12m,
-    plhiv_nosex12m = prev_nosex12m * population_nosex12m,
-    plhiv_nosex12m = prev_sexcohab * population_sexcohab,
-    plhiv_nosex12m = prev_sexnonreg * population_sexnonreg,
-    plhiv_nosex12m = prev_sexpaid12m * population_sexpaid12m
-  )
+#' #' Calculate prevalence and PLHIV using linear disaggregation
+#' df_3p1_linear <- df_3p1 %>%
+#'   mutate(
+#'     prev_nosex12m = plhiv / (population_nosex12m +
+#'                              pr_sexcohab * population_sexcohab +
+#'                              pr_sexnonreg * population_sexnonreg +
+#'                              pr_sexpaid12m * population_sexpaid12m),
+#'     prev_sexcohab = pr_sexcohab * prev_nosex12m,
+#'     prev_sexnonreg = pr_sexnonreg * prev_nosex12m,
+#'     prev_sexpaid12m = pr_sexpaid12m * prev_nosex12m,
+#'     plhiv_nosex12m = prev_nosex12m * population_nosex12m,
+#'     plhiv_nosex12m = prev_sexcohab * population_sexcohab,
+#'     plhiv_nosex12m = prev_sexnonreg * population_sexnonreg,
+#'     plhiv_nosex12m = prev_sexpaid12m * population_sexpaid12m
+#'   )
 
-write_csv(df_3p1_linear, "prev-district-sexbehav-linear.csv")
+# write_csv(df_3p1_linear, "prev-district-sexbehav-linear.csv")
 
 start_time <- Sys.time()
 
@@ -415,51 +415,51 @@ df_3p1_logit <- df_3p1_logit %>%
 
 write_csv(df_3p1_logit, "prev-district-sexbehav-logit.csv")
 
-#' Artefact: Cloropleths
-pdf("prev-district-sexbehav-linear.pdf", h = 7, w = 6.25)
-
-df_3p1_linear_plot <- df_3p1_linear %>%
-  select(iso3, area_id, age_group, starts_with("prev_")) %>%
-  pivot_longer(
-    cols = starts_with("prev_"),
-    names_to = "indicator",
-    names_prefix = "prev_",
-    values_to = "prev",
-  ) %>%
-  left_join(
-    select(areas, area_id),
-    by = "area_id"
-  ) %>%
-  st_as_sf()
-
-plotsA <- df_3p1_linear_plot %>%
-  multi.utils::update_naming() %>%
-  split(.$iso3) %>%
-  lapply(function(x)
-    x %>%
-      ggplot(aes(fill = prev)) +
-      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
-      coord_sf(lims_method = "geometry_bbox") +
-      scale_fill_viridis_c(option = "C", label = label_percent()) +
-      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
-      theme_minimal() +
-      labs(
-        title = paste0(x$iso3[1]),
-        fill = "Prevalence"
-      ) +
-      theme(
-        axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        panel.grid = element_blank(),
-        strip.text = element_text(face = "bold"),
-        legend.position = "bottom",
-        legend.key.width = unit(4, "lines")
-      )
-  )
-
-plotsA
-
-while (!is.null(dev.list()))  dev.off()
+#' #' Artefact: Cloropleths
+#' pdf("prev-district-sexbehav-linear.pdf", h = 7, w = 6.25)
+#'
+#' df_3p1_linear_plot <- df_3p1_linear %>%
+#'   select(iso3, area_id, age_group, starts_with("prev_")) %>%
+#'   pivot_longer(
+#'     cols = starts_with("prev_"),
+#'     names_to = "indicator",
+#'     names_prefix = "prev_",
+#'     values_to = "prev",
+#'   ) %>%
+#'   left_join(
+#'     select(areas, area_id),
+#'     by = "area_id"
+#'   ) %>%
+#'   st_as_sf()
+#'
+#' plotsA <- df_3p1_linear_plot %>%
+#'   multi.utils::update_naming() %>%
+#'   split(.$iso3) %>%
+#'   lapply(function(x)
+#'     x %>%
+#'       ggplot(aes(fill = prev)) +
+#'       geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+#'       coord_sf(lims_method = "geometry_bbox") +
+#'       scale_fill_viridis_c(option = "C", label = label_percent()) +
+#'       facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
+#'       theme_minimal() +
+#'       labs(
+#'         title = paste0(x$iso3[1]),
+#'         fill = "Prevalence"
+#'       ) +
+#'       theme(
+#'         axis.text = element_blank(),
+#'         axis.ticks = element_blank(),
+#'         panel.grid = element_blank(),
+#'         strip.text = element_text(face = "bold"),
+#'         legend.position = "bottom",
+#'         legend.key.width = unit(4, "lines")
+#'       )
+#'   )
+#'
+#' plotsA
+#'
+#' while (!is.null(dev.list()))  dev.off()
 
 pdf("prev-district-sexbehav-logit.pdf", h = 7, w = 6.25)
 

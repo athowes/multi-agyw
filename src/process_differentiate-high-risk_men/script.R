@@ -288,7 +288,7 @@ for(i in 1:n_iter) {
       prob_upper = row_summary(prob_samples_df, upper)
     )
 
-  saveRDS(df,paste0("files_",i,".rds"))
+  full_df[[i]] <- df
 
   end_time <- Sys.time()
 
@@ -297,10 +297,10 @@ for(i in 1:n_iter) {
   rm(samples)
 }
 
-#' full_df <- do.call(rbind,full_df)
-#'
-#' #' Save output
-#' write_csv(full_df, "best-3p1-multi-sexbehav-sae.csv")
+full_df <- do.call(rbind,full_df)
+
+#' Save output
+write_csv(full_df, "best-3p1-multi-sexbehav-sae.csv")
 #'
 #' #' Visualise result
 #' pdf("3p1-boxplots.pdf", h = 5, w = 6.25)

@@ -24,15 +24,18 @@ gadm_download <- function(admin = 1, countries, file_path) {
 #   bind_rows()
 
 priority_iso3 <- multi.utils::priority_iso3()
-missing_iso3 <- c("AGO", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI")
+missing_iso3 <- c("AGO", "CAF", "COD", "COG", "GAB", "GNQ", "RWA", "BDI",
+                  "BEN","NGA","SSD")
 iso3 <- c(priority_iso3, missing_iso3)
 
-sf <- lapply(iso3, function(x) {
-  sf <- read_sf(paste0("depends/", tolower(x), "_areas.geojson")) %>%
-    filter(area_level == 0) %>%
-    mutate_at(vars(one_of('epp_level')), as.numeric)
-})  %>%
-  bind_rows()
+areas <- lapply(iso3[-which(iso3=="BDI")], function(x) read_sf(paste0("depends/", tolower(x), "_areas.geojson")))
+areas$BDI <- read_sf("bdi_areas.geojson")
+# areas <- lapply(areas, function(x) mutate(x, epp_level = as.numeric(epp_level)))
+areas[[18]]$epp_level <- as.numeric(areas[[18]]$epp_level) #' Fix non-conforming column type
+areas[[41]]$spectrum_region_code <- as.numeric(areas[[41]]$spectrum_region_code)
+areas <- bind_rows(areas)
+
+sf <- areas %>% filter(area_level==0)
 
 #' Check that it looks like (southern and eastern) sub-Saharan Africa
 pdf("national-areas.pdf", h = 8.5, w = 6.25)

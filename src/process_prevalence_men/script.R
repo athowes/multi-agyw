@@ -37,7 +37,7 @@ kp_prev$area_level <- as.numeric(kp_prev$area_level)
 kp_prev <- kp_prev %>%
   left_join(
     naomi %>%
-      filter(age_group=="15-49") %>%
+      filter(age_group=="15-24") %>%
       pivot_wider(
         values_from = "estimate",
         names_from = "indicator"
@@ -84,26 +84,26 @@ areas <- areas %>% select(area_id, level0, level1 , level2)
 df_3p1 <- df_3p1 %>%
   left_join(areas)
 
-msm_level <- msm %>%
+kp_level <- kp_prev %>%
   group_by(iso3) %>%
-  summarise(area_level_msm = mean(area_level))
+  summarise(area_level_kp = mean(area_level))
 
-msm_analysis_level <- msm_level$area_level_msm
-names(msm_analysis_level) <- msm_level$iso3
+kp_analysis_level <- kp_level$area_level_kp
+names(kp_analysis_level) <- kp_level$iso3
 
 df_3p1 <- df_3p1 %>%
   left_join(
-    as.data.frame(msm_analysis_level) %>%
+    as.data.frame(kp_analysis_level) %>%
       tibble::rownames_to_column("iso3"),
     by = "iso3"
   ) %>%
-  mutate(kp_match_area = case_when(msm_analysis_level == 0 ~ level0,
-                                   msm_analysis_level == 1 ~ level1,
-                                   msm_analysis_level == 2 ~ level2,
+  mutate(kp_match_area = case_when(kp_analysis_level == 0 ~ level0,
+                                   kp_analysis_level == 1 ~ level1,
+                                   kp_analysis_level == 2 ~ level2,
                                    TRUE ~ NA_character_))
 
 df_3p1 <- df_3p1 %>%
-  select(!(level0:msm_analysis_level))
+  select(!(level0:kp_analysis_level))
 
 #
 

@@ -68,6 +68,7 @@ packages:
   - Matrix
   - stats
   - multi.utils
+  - parallel
 
 resources:
   bdi_areas.geojson
@@ -93,10 +94,10 @@ depends:
     id: latest
     use:
       depends/lso_areas.geojson: lso_areas.geojson
-  # moz_data_areas:
-  #   id: 20220606-125318-016589c0
-  #   use:
-  #     depends/moz_areas.geojson: moz_areas.geojson
+  moz_data_areas:
+    id: latest
+    use:
+      depends/moz_areas.geojson: moz_areas.geojson
   mwi_data_areas:
     id: latest
     use:
@@ -209,10 +210,10 @@ depends:
     id: latest
     use:
       depends/lso_survey_indicators_sexbehav.csv: lso_survey_indicators_sexbehav.csv
-  # moz_survey_behav_men:
-  #   id: latest
-  #   use:
-  #     depends/moz_survey_indicators_sexbehav.csv: moz_survey_indicators_sexbehav.csv
+  moz_survey_behav_men:
+    id: latest
+    use:
+      depends/moz_survey_indicators_sexbehav.csv: moz_survey_indicators_sexbehav.csv
   mwi_survey_behav_men:
     id: latest
     use:

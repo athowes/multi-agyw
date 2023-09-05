@@ -14,15 +14,6 @@ artefacts:
         - survey_indicators_sexbehav.pdf
         - hiv_indicators_sexbehav.csv
   - data:
-      description: All population datasets
-      filenames:
-        - interpolated_population.csv
-  - data:
-      description: Naomi population, PLHIV and new infections data
-      filenames:
-        - naomi.rds
-        - naomi_pop.rds
-  - data:
       description: Compare spouse risk group sizes
       filenames:
         - spouse-comparison.pdf
@@ -47,8 +38,7 @@ packages:
   - gt
 
 resources:
-  - naomi_extract.rds
-  - bdi_areas.geojson
+  # - bdi_areas.geojson
 
 depends:
   - bwa_data_areas:

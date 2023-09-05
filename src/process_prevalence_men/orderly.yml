@@ -38,4 +38,7 @@ depends:
       use:
         depends/areas.rds: areas.rds
         depends/hiv_indicators_sexbehav.csv: hiv_indicators_sexbehav.csv
+  - process_naomi-data_men:
+      id: latest
+      use:
         depends/naomi.rds: naomi.rds

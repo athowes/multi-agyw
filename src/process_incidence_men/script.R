@@ -10,6 +10,8 @@ prev <- read_csv("depends/prev-district-sexbehav-logit.csv")
 naomi <- readRDS("depends/naomi.rds")
 areas <- readRDS("depends/areas.rds")
 
+df_3p1 <- df_3p1 %>% filter(iso3!="UGA")
+
 # for french
 naomi$indicator[naomi$indicator=="Nouvelles infections"] <- "New infections"
 

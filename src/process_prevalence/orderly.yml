@@ -8,11 +8,7 @@ artefacts:
       description: HIV prevalence by risk group
       filenames:
         - prev-data.pdf
-        - katie-comp.pdf
-        - ywkp-prev.pdf
-        - prev-district-sexbehav-linear.csv
         - prev-district-sexbehav-logit.csv
-        - prev-district-sexbehav-linear.pdf
         - prev-district-sexbehav-logit.pdf
 
 packages:
@@ -31,7 +27,6 @@ packages:
 
 resources:
  - kplhiv_art.rds
- - Draft outline of size estimation approach v4.xlsx
 
 depends:
   - process_fsw_all:
@@ -43,4 +38,7 @@ depends:
       use:
         depends/areas.rds: areas.rds
         depends/hiv_indicators_sexbehav.csv: hiv_indicators_sexbehav.csv
+  - process_naomi-data:
+      id: latest
+      use:
         depends/naomi.rds: naomi.rds
