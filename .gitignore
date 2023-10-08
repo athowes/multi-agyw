@@ -62,3 +62,5 @@ src/process_naomi-data_men/bdi_areas.geojson
 src/process_naomi-data/~$naomi_extract.xlsx
 src/process_naomi-data/naomi_extract.xlsx
 src/national_data_areas/bdi_areas.geojson
+src/process_age-disagg-msm/.Rapp.history
+src/process_prevalence/.Rapp.history

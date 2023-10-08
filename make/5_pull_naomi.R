@@ -155,7 +155,6 @@ naomi_extract <- naomi_output %>%
     case_when(
       iso3 == "ZAF" ~ calendar_quarter == "CY2022Q3",
       iso3 == "MOZ" ~ calendar_quarter == "CY2022Q4",
-      iso3 == "MWI" ~ calendar_quarter == "CY2022Q3",
       iso3 == "CAF" ~ calendar_quarter == "CY2022Q4",
       iso3 == "AGO" ~ calendar_quarter == "CY2022Q4",
       TRUE ~ calendar_quarter == "CY2022Q4"
@@ -166,7 +165,7 @@ naomi_extract <- naomi_output %>%
       tibble::rownames_to_column("iso3"),
     by = "iso3"
   ) %>%
-  filter(area_level %in% c(0, analysis_level)) %>%
+  filter(area_level <= analysis_level) %>%
   select(-analysis_level)
 
 saveRDS(naomi_extract, "src/process_naomi-data/naomi_extract.rds")
@@ -197,7 +196,6 @@ naomi_extract <- naomi_output %>%
     case_when(
       iso3 == "ZAF" ~ calendar_quarter == "CY2022Q3",
       iso3 == "MOZ" ~ calendar_quarter == "CY2022Q4",
-      iso3 == "MWI" ~ calendar_quarter == "CY2022Q3",
       iso3 == "CAF" ~ calendar_quarter == "CY2022Q4",
       iso3 == "AGO" ~ calendar_quarter == "CY2022Q4",
       TRUE ~ calendar_quarter == "CY2022Q4"
@@ -220,7 +218,6 @@ naomi_extract <- naomi_output %>%
         case_when(
           iso3 == "ZAF" ~ calendar_quarter == "CY2022Q3",
           iso3 == "MOZ" ~ calendar_quarter == "CY2022Q4",
-          iso3 == "MWI" ~ calendar_quarter == "CY2022Q3",
           iso3 == "CAF" ~ calendar_quarter == "CY2022Q4",
           iso3 == "AGO" ~ calendar_quarter == "CY2022Q4",
           TRUE ~ calendar_quarter == "CY2022Q4"
@@ -299,7 +296,6 @@ naomi_extract <- naomi_output %>%
              case_when(
                iso3 == "ZAF" ~ calendar_quarter == "CY2022Q3",
                iso3 == "MOZ" ~ calendar_quarter == "CY2022Q4",
-               iso3 == "MWI" ~ calendar_quarter == "CY2022Q3",
                iso3 == "CAF" ~ calendar_quarter == "CY2022Q4",
                iso3 == "AGO" ~ calendar_quarter == "CY2022Q4",
                TRUE ~ calendar_quarter == "CY2022Q4"

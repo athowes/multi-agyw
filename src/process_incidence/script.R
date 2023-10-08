@@ -9,7 +9,7 @@ prev <- read_csv("depends/prev-district-sexbehav-logit.csv")
 naomi <- readRDS("depends/naomi.rds")
 areas <- readRDS("depends/areas.rds")
 
-df_3p1 <- df_3p1 %>% filter(iso3!="UGA")
+# df_3p1 <- df_3p1 %>% filter(iso3!="UGA")
 
 # for french
 naomi$indicator[naomi$indicator=="Nouvelles infections"] <- "New infections"
@@ -45,7 +45,7 @@ naomi <- naomi %>%
   )
 
 df_3p1 <- df_3p1 %>%
-  filter(year == 2018) %>%
+  filter(year == survey_year_sample) %>%
   select(area_id, age_group, indicator, estimate_smoothed) %>%
   pivot_wider(
     names_from = indicator,
@@ -131,165 +131,165 @@ stopifnot(max(df$infections - sum_infections) < 10^{-9})
 
 write_csv(df, "incidence-district-sexbehav.csv")
 
-df_plot <- df %>%
-  select(iso3, area_id, age_group, starts_with("incidence_sex")) %>%
-  pivot_longer(
-    cols = starts_with("incidence_sex"),
-    names_to = "indicator",
-    names_prefix = "incidence_",
-    values_to = "incidence",
-  ) %>%
-  left_join(
-    select(areas, area_id),
-    by = "area_id"
-  ) %>%
-  st_as_sf()
-
-#' Artefact: Cloropleths
-pdf("incidence-district-sexbehav.pdf", h = 7, w = 6.25)
-
-plotsA <- df_plot %>%
-  multi.utils::update_naming() %>%
-  split(.$iso3) %>%
-  lapply(function(x)
-    x %>%
-      ggplot(aes(fill = incidence)) +
-      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
-      coord_sf(lims_method = "geometry_bbox") +
-      scale_fill_viridis_c(option = "C", label = label_percent()) +
-      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
-      theme_minimal() +
-      labs(
-        title = paste0(x$iso3[1]),
-        fill = "Incidence rate"
-      ) +
-      theme(
-        axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        panel.grid = element_blank(),
-        strip.text = element_text(face = "bold"),
-        legend.position = "bottom",
-        legend.key.width = unit(4, "lines")
-      )
-  )
-
-plotsA
-
-dev.off()
-
-pdf("infections-district-sexbehav.pdf", h = 7, w = 6.25)
-
-df %>%
-  select(iso3, area_id, age_group, starts_with("infections_sex")) %>%
-  pivot_longer(
-    cols = starts_with("infections_sex"),
-    names_to = "indicator",
-    names_prefix = "infections_",
-    values_to = "infections",
-  ) %>%
-  left_join(
-    select(areas, area_id),
-    by = "area_id"
-  ) %>%
-  st_as_sf() %>%
-  multi.utils::update_naming() %>%
-  split(.$iso3) %>%
-  lapply(function(x)
-    x %>%
-      ggplot(aes(fill = infections)) +
-      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
-      coord_sf(lims_method = "geometry_bbox") +
-      scale_fill_viridis_c(option = "C") +
-      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
-      theme_minimal() +
-      labs(
-        title = paste0(x$iso3[1]),
-        fill = "New infections"
-      ) +
-      theme(
-        axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        panel.grid = element_blank(),
-        strip.text = element_text(face = "bold"),
-        legend.position = "bottom",
-        legend.key.width = unit(4, "lines")
-      )
-  )
-
-dev.off()
-
-pdf("map-ian.pdf", h = 6, w = 6.25)
-
-df_ian <- df %>%
-  filter(age_group %in% c("Y015_019", "Y020_024")) %>%
-  group_by(area_id) %>%
-  summarise(
-    infections_sexcohab = sum(infections_sexcohab),
-    infections_sexnonreg = sum(infections_sexnonreg),
-    infections_sexpaid12m = sum(infections_sexpaid12m),
-    incidence_sexcohab = 100 * infections_sexcohab / sum(susceptible_sexcohab),
-    incidence_sexnonreg = 100 * infections_sexnonreg / sum(susceptible_sexnonreg),
-    incidence_sexpaid12m = 100 * infections_sexpaid12m / sum(susceptible_sexpaid12m),
-  ) %>%
-  pivot_longer(
-    cols = c(starts_with("incidence_"), starts_with("infections")),
-    names_to = "indicator",
-    values_to = "estimate",
-  ) %>%
-  separate(indicator, into = c("indicator", "behav")) %>%
-  mutate(age_group = "Y015_024")
-
-naomi_aggregate <- naomi %>%
-  filter(age_group == "Y015_024") %>%
-  select(area_id, age_group, incidence, infections) %>%
-  pivot_longer(
-    cols = c("incidence", "infections"),
-    values_to = "estimate",
-    names_to = "indicator"
-  ) %>%
-  mutate(behav = "all")
-
-df_ian <- bind_rows(df_ian, naomi_aggregate)
-
-df_ian_sf <- df_ian %>%
-  mutate(iso3 = substr(area_id, 1, 3)) %>%
-  left_join(
-    select(areas, area_id),
-    by = "area_id"
-  ) %>%
-  st_as_sf()
-
-df_ian_sf %>%
-  mutate(
-    behav = fct_recode(behav,
-      "All" = "all",
-      "Cohabiting" = "sexcohab",
-      "Non-regular partner(s)" = "sexnonreg",
-      "YWKPs" = "sexpaid12m")
-  ) %>%
-  filter(indicator == "incidence") %>%
-  ggplot(aes(fill = estimate)) +
-  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
-  coord_sf(lims_method = "geometry_bbox") +
-  scale_fill_gradient2(
-    midpoint = 1, limits = c(0, 3), oob = scales::squish,
-    breaks = c(0, 1, 3), labels=c("0", "1", "3+"),
-    low = viridis::plasma(3, direction = -1)[1],
-    mid = viridis::plasma(3, direction = -1)[2],
-    high = viridis::plasma(3, direction = -1)[3]
-  ) +
-  # scale_fill_viridis_c(option = "C", limits = c(0, 3), oob = scales::squish) +
-  facet_wrap(~behav, labeller = labeller(indicator = label_wrap_gen(10)), nrow = 2) +
-  labs(fill = "Incidence rate \n(per 100 PYAR)") +
-  theme_minimal() +
-  theme(
-    axis.text = element_blank(),
-    axis.ticks = element_blank(),
-    panel.grid = element_blank(),
-    strip.text = element_text(face = "bold"),
-    legend.position = "right"
-  )
-
-dev.off()
-
-saveRDS(df_ian_sf, "data-ian.rds")
+#' df_plot <- df %>%
+#'   select(iso3, area_id, age_group, starts_with("incidence_sex")) %>%
+#'   pivot_longer(
+#'     cols = starts_with("incidence_sex"),
+#'     names_to = "indicator",
+#'     names_prefix = "incidence_",
+#'     values_to = "incidence",
+#'   ) %>%
+#'   left_join(
+#'     select(areas, area_id),
+#'     by = "area_id"
+#'   ) %>%
+#'   st_as_sf()
+#'
+#' #' Artefact: Cloropleths
+#' pdf("incidence-district-sexbehav.pdf", h = 7, w = 6.25)
+#'
+#' plotsA <- df_plot %>%
+#'   multi.utils::update_naming() %>%
+#'   split(.$iso3) %>%
+#'   lapply(function(x)
+#'     x %>%
+#'       ggplot(aes(fill = incidence)) +
+#'       geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+#'       coord_sf(lims_method = "geometry_bbox") +
+#'       scale_fill_viridis_c(option = "C", label = label_percent()) +
+#'       facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
+#'       theme_minimal() +
+#'       labs(
+#'         title = paste0(x$iso3[1]),
+#'         fill = "Incidence rate"
+#'       ) +
+#'       theme(
+#'         axis.text = element_blank(),
+#'         axis.ticks = element_blank(),
+#'         panel.grid = element_blank(),
+#'         strip.text = element_text(face = "bold"),
+#'         legend.position = "bottom",
+#'         legend.key.width = unit(4, "lines")
+#'       )
+#'   )
+#'
+#' plotsA
+#'
+#' dev.off()
+#'
+#' pdf("infections-district-sexbehav.pdf", h = 7, w = 6.25)
+#'
+#' df %>%
+#'   select(iso3, area_id, age_group, starts_with("infections_sex")) %>%
+#'   pivot_longer(
+#'     cols = starts_with("infections_sex"),
+#'     names_to = "indicator",
+#'     names_prefix = "infections_",
+#'     values_to = "infections",
+#'   ) %>%
+#'   left_join(
+#'     select(areas, area_id),
+#'     by = "area_id"
+#'   ) %>%
+#'   st_as_sf() %>%
+#'   multi.utils::update_naming() %>%
+#'   split(.$iso3) %>%
+#'   lapply(function(x)
+#'     x %>%
+#'       ggplot(aes(fill = infections)) +
+#'       geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+#'       coord_sf(lims_method = "geometry_bbox") +
+#'       scale_fill_viridis_c(option = "C") +
+#'       facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
+#'       theme_minimal() +
+#'       labs(
+#'         title = paste0(x$iso3[1]),
+#'         fill = "New infections"
+#'       ) +
+#'       theme(
+#'         axis.text = element_blank(),
+#'         axis.ticks = element_blank(),
+#'         panel.grid = element_blank(),
+#'         strip.text = element_text(face = "bold"),
+#'         legend.position = "bottom",
+#'         legend.key.width = unit(4, "lines")
+#'       )
+#'   )
+#'
+#' dev.off()
+#'
+#' pdf("map-ian.pdf", h = 6, w = 6.25)
+#'
+#' df_ian <- df %>%
+#'   filter(age_group %in% c("Y015_019", "Y020_024")) %>%
+#'   group_by(area_id) %>%
+#'   summarise(
+#'     infections_sexcohab = sum(infections_sexcohab),
+#'     infections_sexnonreg = sum(infections_sexnonreg),
+#'     infections_sexpaid12m = sum(infections_sexpaid12m),
+#'     incidence_sexcohab = 100 * infections_sexcohab / sum(susceptible_sexcohab),
+#'     incidence_sexnonreg = 100 * infections_sexnonreg / sum(susceptible_sexnonreg),
+#'     incidence_sexpaid12m = 100 * infections_sexpaid12m / sum(susceptible_sexpaid12m),
+#'   ) %>%
+#'   pivot_longer(
+#'     cols = c(starts_with("incidence_"), starts_with("infections")),
+#'     names_to = "indicator",
+#'     values_to = "estimate",
+#'   ) %>%
+#'   separate(indicator, into = c("indicator", "behav")) %>%
+#'   mutate(age_group = "Y015_024")
+#'
+#' naomi_aggregate <- naomi %>%
+#'   filter(age_group == "Y015_024") %>%
+#'   select(area_id, age_group, incidence, infections) %>%
+#'   pivot_longer(
+#'     cols = c("incidence", "infections"),
+#'     values_to = "estimate",
+#'     names_to = "indicator"
+#'   ) %>%
+#'   mutate(behav = "all")
+#'
+#' df_ian <- bind_rows(df_ian, naomi_aggregate)
+#'
+#' df_ian_sf <- df_ian %>%
+#'   mutate(iso3 = substr(area_id, 1, 3)) %>%
+#'   left_join(
+#'     select(areas, area_id),
+#'     by = "area_id"
+#'   ) %>%
+#'   st_as_sf()
+#'
+#' df_ian_sf %>%
+#'   mutate(
+#'     behav = fct_recode(behav,
+#'       "All" = "all",
+#'       "Cohabiting" = "sexcohab",
+#'       "Non-regular partner(s)" = "sexnonreg",
+#'       "YWKPs" = "sexpaid12m")
+#'   ) %>%
+#'   filter(indicator == "incidence") %>%
+#'   ggplot(aes(fill = estimate)) +
+#'   geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+#'   coord_sf(lims_method = "geometry_bbox") +
+#'   scale_fill_gradient2(
+#'     midpoint = 1, limits = c(0, 3), oob = scales::squish,
+#'     breaks = c(0, 1, 3), labels=c("0", "1", "3+"),
+#'     low = viridis::plasma(3, direction = -1)[1],
+#'     mid = viridis::plasma(3, direction = -1)[2],
+#'     high = viridis::plasma(3, direction = -1)[3]
+#'   ) +
+#'   # scale_fill_viridis_c(option = "C", limits = c(0, 3), oob = scales::squish) +
+#'   facet_wrap(~behav, labeller = labeller(indicator = label_wrap_gen(10)), nrow = 2) +
+#'   labs(fill = "Incidence rate \n(per 100 PYAR)") +
+#'   theme_minimal() +
+#'   theme(
+#'     axis.text = element_blank(),
+#'     axis.ticks = element_blank(),
+#'     panel.grid = element_blank(),
+#'     strip.text = element_text(face = "bold"),
+#'     legend.position = "right"
+#'   )
+#'
+#' dev.off()
+#'
+#' saveRDS(df_ian_sf, "data-ian.rds")

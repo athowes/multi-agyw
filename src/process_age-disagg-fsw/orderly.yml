@@ -4,11 +4,11 @@ artefacts:
   - data:
       description: Age country specific FSW estimates
       filenames:
-        - age-disagg-fsw.pdf
-        - age-disagg-fsw-line.pdf
+        # - age-disagg-fsw.pdf
+        # - age-disagg-fsw-line.pdf
         - fsw-estimates.csv
-        - thembisa-fsw-age-dist.pdf
-        - palette-extension.pdf
+        # - thembisa-fsw-age-dist.pdf
+        # - palette-extension.pdf
 packages:
   - dplyr
   - forcats

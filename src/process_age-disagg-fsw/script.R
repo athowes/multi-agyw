@@ -23,12 +23,12 @@ pse$iso3 <- as.character(pse$iso3)
 # 2015 estimate is PSE of 70300 - 176400 is super high, going with 70300 for now with
 # 2015 wpp population denominator
 # fix this so that it is not hard coded!!
-hti_pse <- 70300 / 2785000
-# fix to fill in cabo delgado so it doesn't break all of our future code, give it
-# mozambique mean proportion across all areas
-moz_1_10_pse <- mean(pse$prop_fsw[pse$iso3=="MOZ"])
-pse <- rbind(pse,c("HTI","HTI",hti_pse),c("MOZ","MOZ_1_10",moz_1_10_pse))
-pse$prop_fsw <- as.numeric(pse$prop_fsw)
+# hti_pse <- 70300 / 2785000
+# # fix to fill in cabo delgado so it doesn't break all of our future code, give it
+# # mozambique mean proportion across all areas
+# moz_1_10_pse <- mean(pse$prop_fsw[pse$iso3=="MOZ"])
+# pse <- rbind(pse,c("HTI","HTI",hti_pse),c("MOZ","MOZ_1_10",moz_1_10_pse))
+# pse$prop_fsw <- as.numeric(pse$prop_fsw)
 
 age_groups <- c("15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49")
 
@@ -48,15 +48,15 @@ gamma_sd <- 9
 beta <- gamma_mean / gamma_sd^2 #' rate
 alpha <- gamma_mean * beta #' shape
 
-pdf("thembisa-fsw-age-dist.pdf", h = 5, w = 6.25)
-
-data.frame(x = 15:49, y = dgamma(15:49, shape = alpha, rate = beta)) %>%
-  ggplot(aes(x = x, y = y)) +
-  geom_line() +
-  labs(x = "Age", y = "", title = "Age distribution of FSW from Thembisa 4.3 (ZAF)") +
-  theme_minimal()
-
-dev.off()
+# pdf("thembisa-fsw-age-dist.pdf", h = 5, w = 6.25)
+#
+# data.frame(x = 15:49, y = dgamma(15:49, shape = alpha, rate = beta)) %>%
+#   ggplot(aes(x = x, y = y)) +
+#   geom_line() +
+#   labs(x = "Age", y = "", title = "Age distribution of FSW from Thembisa 4.3 (ZAF)") +
+#   theme_minimal()
+#
+# dev.off()
 
 #' Distribution function of the gamma
 zaf_gamma <- data.frame(
@@ -78,8 +78,8 @@ afs <- afs %>%
 
 # No data for Haiti in Kinh's estiamtes - borrow Zambia's estimate (looks
 # similar on statcompiler) - get correct estimate later!
-afs <- rbind(afs,afs[afs$area_id=="ZMB",])
-afs$area_id[nrow(afs)] <- "HTI"
+# afs <- rbind(afs,afs[afs$area_id=="ZMB",])
+# afs$area_id[nrow(afs)] <- "HTI"
 
 pskewlogis <- function(t, scale, shape, skew) {
   (1 + (scale * t)^-shape)^-skew
@@ -190,40 +190,40 @@ df <- select(fsw, total_fsw, iso3, area_id) %>%
   ) %>%
   select(-eversexpop, -eversexpop_prop, -propensity, - dist, -total_fsw)
 
-pdf("age-disagg-fsw.pdf", h = 5, w = 6.25)
+# pdf("age-disagg-fsw.pdf", h = 5, w = 6.25)
+#
+# df %>%
+#   filter(age_group != "Y015_049") %>%
+#   ggplot(aes(x = forcats::fct_rev(area_id), y = fsw_prop)) +
+#   geom_bar(stat = "identity", alpha = 0.7) +
+#   facet_grid(~age_group) +
+#   scale_y_continuous(breaks = seq(0, 0.05, by = 0.025)) +
+#   coord_flip() +
+#   labs(x = "FSW proportion", y = "ISO3") +
+#   theme_minimal()
+#
+# dev.off()
 
-df %>%
-  filter(age_group != "Y015_049") %>%
-  ggplot(aes(x = forcats::fct_rev(area_id), y = fsw_prop)) +
-  geom_bar(stat = "identity", alpha = 0.7) +
-  facet_grid(~age_group) +
-  scale_y_continuous(breaks = seq(0, 0.05, by = 0.025)) +
-  coord_flip() +
-  labs(x = "FSW proportion", y = "ISO3") +
-  theme_minimal()
+# extended_cbpalette <- colorRampPalette(multi.utils::cbpalette())
 
-dev.off()
+# pdf("age-disagg-fsw-line.pdf", h = 4, w = 6.25)
+#
+# df %>%
+#   filter(age_group != "Y015_049") %>%
+#   ggplot(aes(x = age_group, y = fsw_prop, group = iso3, col = iso3)) +
+#   geom_line() +
+#   scale_color_manual(values = extended_cbpalette(n = n_distinct(df$iso3))) +
+#   labs(x = "Age group", y = "FSW proportion", col = "ISO3") +
+#   theme_minimal()
+#
+# dev.off()
 
-extended_cbpalette <- colorRampPalette(multi.utils::cbpalette())
-
-pdf("age-disagg-fsw-line.pdf", h = 4, w = 6.25)
-
-df %>%
-  filter(age_group != "Y015_049") %>%
-  ggplot(aes(x = age_group, y = fsw_prop, group = iso3, col = iso3)) +
-  geom_line() +
-  scale_color_manual(values = extended_cbpalette(n = n_distinct(df$iso3))) +
-  labs(x = "Age group", y = "FSW proportion", col = "ISO3") +
-  theme_minimal()
-
-dev.off()
-
-pdf("palette-extension.pdf", h = 4, w = 4)
-
-scales::show_col(multi.utils::cbpalette())
-
-scales::show_col(extended_cbpalette(n = 30))
-
-dev.off()
+# pdf("palette-extension.pdf", h = 4, w = 4)
+#
+# scales::show_col(multi.utils::cbpalette())
+#
+# scales::show_col(extended_cbpalette(n = 30))
+#
+# dev.off()
 
 write_csv(df, "fsw-estimates.csv")

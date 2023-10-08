@@ -5,14 +5,19 @@ artefacts:
       description: Small-area estimates of incidence by risk group
       filenames:
         - incidence-district-sexbehav.csv
-        - incidence-district-sexbehav.pdf
-        - infections-district-sexbehav.pdf
+        # - incidence-district-sexbehav.pdf
+        # - infections-district-sexbehav.pdf
 
-  - data:
-      description: Files for Ian
-      filenames:
-        - map-ian.pdf
-        - data-ian.rds
+  # - data:
+  #     description: Files for Ian
+  #     filenames:
+  #       - map-ian.pdf
+  #       - data-ian.rds
+
+parameters:
+  #' what year should we sample from for the survey data?
+  survey_year_sample:
+    default: 2018
 
 packages:
   - dplyr

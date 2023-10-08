@@ -104,40 +104,40 @@ df <- df %>%
          pwid_prop = pwid / population) %>%
   select(-pop, -pop_prop, -dist, -total_pwid)
 
-pdf("age-disagg-pwid.pdf", h = 5, w = 6.25)
+# pdf("age-disagg-pwid.pdf", h = 5, w = 6.25)
+#
+# df %>%
+#   filter(age_group != "15-49") %>%
+#   ggplot(aes(x = forcats::fct_rev(area_id), y = pwid_prop)) +
+#   geom_bar(stat = "identity", alpha = 0.7) +
+#   facet_grid(~age_group) +
+#   scale_y_continuous(breaks = seq(0, 0.05, by = 0.025)) +
+#   coord_flip() +
+#   labs(x = "PWID proportion", y = "ISO3") +
+#   theme_minimal()
+#
+# dev.off()
 
-df %>%
-  filter(age_group != "15-49") %>%
-  ggplot(aes(x = forcats::fct_rev(area_id), y = pwid_prop)) +
-  geom_bar(stat = "identity", alpha = 0.7) +
-  facet_grid(~age_group) +
-  scale_y_continuous(breaks = seq(0, 0.05, by = 0.025)) +
-  coord_flip() +
-  labs(x = "PWID proportion", y = "ISO3") +
-  theme_minimal()
+# extended_cbpalette <- colorRampPalette(multi.utils::cbpalette())
 
-dev.off()
+# pdf("age-disagg-pwid-line.pdf", h = 4, w = 6.25)
+#
+# df %>%
+#   filter(age_group != "Y015_049") %>%
+#   ggplot(aes(x = age_group, y = pwid_prop, group = iso3, col = iso3)) +
+#   geom_line() +
+#   scale_color_manual(values = extended_cbpalette(n = n_distinct(df$iso3))) +
+#   labs(x = "Age group", y = "PWID proportion", col = "ISO3") +
+#   theme_minimal()
+#
+# dev.off()
 
-extended_cbpalette <- colorRampPalette(multi.utils::cbpalette())
-
-pdf("age-disagg-pwid-line.pdf", h = 4, w = 6.25)
-
-df %>%
-  filter(age_group != "Y015_049") %>%
-  ggplot(aes(x = age_group, y = pwid_prop, group = iso3, col = iso3)) +
-  geom_line() +
-  scale_color_manual(values = extended_cbpalette(n = n_distinct(df$iso3))) +
-  labs(x = "Age group", y = "PWID proportion", col = "ISO3") +
-  theme_minimal()
-
-dev.off()
-
-pdf("palette-extension.pdf", h = 4, w = 4)
-
-scales::show_col(multi.utils::cbpalette())
-
-scales::show_col(extended_cbpalette(n = n_distinct(df$iso3)))
-
-dev.off()
+# pdf("palette-extension.pdf", h = 4, w = 4)
+#
+# scales::show_col(multi.utils::cbpalette())
+#
+# scales::show_col(extended_cbpalette(n = n_distinct(df$iso3)))
+#
+# dev.off()
 
 write_csv(df, "pwid-estimates.csv")

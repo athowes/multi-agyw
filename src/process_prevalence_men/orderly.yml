@@ -7,9 +7,14 @@ artefacts:
   - data:
       description: HIV prevalence by risk group
       filenames:
-        - prev-data.pdf
+        # - prev-data.pdf
         - prev-district-sexbehav-logit.csv
-        - prev-district-sexbehav-logit.pdf
+        # - prev-district-sexbehav-logit.pdf
+
+parameters:
+  #' what year should we sample from for the survey data?
+  survey_year_sample:
+    default: 2018
 
 packages:
   - dplyr

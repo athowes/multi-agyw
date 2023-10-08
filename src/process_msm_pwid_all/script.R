@@ -89,26 +89,26 @@ df_3p1_adjusted <- df_3p1 %>%
 
 write_csv(df_3p1_adjusted, "adjust-best-3p1-multi-sexbehav-sae.csv")
 
-pdf("adjustment-comparison.pdf", h = 5, w = 6.25)
-
-bind_rows(
-  df_3p1 %>%
-    filter(indicator == "sexnonregplus", year == 2018) %>%
-    mutate(adjustment = "Unadjusted") %>%
-    select(age_group, area_id, estimate_smoothed, adjustment),
-  df_3p1_adjusted %>%
-    filter(indicator == "sexnonreg", year == 2018) %>%
-    mutate(adjustment = "Adjusted") %>%
-    select(age_group, area_id, estimate_smoothed, adjustment)
-) %>%
-  pivot_wider(
-    names_from = adjustment,
-    values_from = estimate_smoothed
-  ) %>%
-  mutate(iso3 = substr(area_id, 1, 3)) %>%
-  ggplot(aes(x = Unadjusted, y = Adjusted, col = iso3, shape = age_group)) +
-  geom_point(alpha = 0.5) +
-  lims(x = c(0, 0.1), y = c(0, 0.1)) +
-  theme_minimal()
-
-dev.off()
+# pdf("adjustment-comparison.pdf", h = 5, w = 6.25)
+#
+# bind_rows(
+#   df_3p1 %>%
+#     filter(indicator == "sexnonregplus", year == 2018) %>%
+#     mutate(adjustment = "Unadjusted") %>%
+#     select(age_group, area_id, estimate_smoothed, adjustment),
+#   df_3p1_adjusted %>%
+#     filter(indicator == "sexnonreg", year == 2018) %>%
+#     mutate(adjustment = "Adjusted") %>%
+#     select(age_group, area_id, estimate_smoothed, adjustment)
+# ) %>%
+#   pivot_wider(
+#     names_from = adjustment,
+#     values_from = estimate_smoothed
+#   ) %>%
+#   mutate(iso3 = substr(area_id, 1, 3)) %>%
+#   ggplot(aes(x = Unadjusted, y = Adjusted, col = iso3, shape = age_group)) +
+#   geom_point(alpha = 0.5) +
+#   lims(x = c(0, 0.1), y = c(0, 0.1)) +
+#   theme_minimal()
+#
+# dev.off()

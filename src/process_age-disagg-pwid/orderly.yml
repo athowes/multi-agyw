@@ -4,10 +4,10 @@ artefacts:
   - data:
       description: Age country specific PWID estimates
       filenames:
-        - age-disagg-pwid.pdf
-        - age-disagg-pwid-line.pdf
+        # - age-disagg-pwid.pdf
+        # - age-disagg-pwid-line.pdf
         - pwid-estimates.csv
-        - palette-extension.pdf
+        # - palette-extension.pdf
 packages:
   - dplyr
   - forcats

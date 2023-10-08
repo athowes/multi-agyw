@@ -53,25 +53,25 @@ ind <- prev_wide %>%
   ) %>%
   separate(indicator, into = c("behav", "indicator"))
 
-pdf("prev-data.pdf", h = 7, w = 6.25)
-
-ind %>%
-  split(.$indicator) %>%
-  lapply(function(x)
-  ggplot(x, aes( x = "", y = estimate)) +
-    geom_boxplot(outlier.shape = NA) +
-    geom_jitter(aes(col = area_id), alpha = 0.5) +
-    facet_grid(age_group ~ behav) +
-    labs(title = paste0(x$indicator[1]), x = "") +
-    theme_minimal() +
-    theme(
-      axis.text.x = element_blank(),
-      plot.title = element_text(face = "bold"),
-      legend.position = "bottom"
-    )
-  )
-
-while (!is.null(dev.list()))  dev.off()
+# pdf("prev-data.pdf", h = 7, w = 6.25)
+#
+# ind %>%
+#   split(.$indicator) %>%
+#   lapply(function(x)
+#   ggplot(x, aes( x = "", y = estimate)) +
+#     geom_boxplot(outlier.shape = NA) +
+#     geom_jitter(aes(col = area_id), alpha = 0.5) +
+#     facet_grid(age_group ~ behav) +
+#     labs(title = paste0(x$indicator[1]), x = "") +
+#     theme_minimal() +
+#     theme(
+#       axis.text.x = element_blank(),
+#       plot.title = element_text(face = "bold"),
+#       legend.position = "bottom"
+#     )
+#   )
+#
+# while (!is.null(dev.list()))  dev.off()
 
 #' #' Imported from the prevalence ratio tab of Katie's spreadsheet
 #' katie_prev_pr <- read_excel(
@@ -236,7 +236,9 @@ kp_fit <- lm(prev_fsw_logodds ~ prev_logodds, data = kp_prev)
 #'   labs(x = "General population prevalence", y = "PR (KP)")
 
 
-#' Calculating the rest of the LOR with logisitic regression
+#' #' Calculating the rest of the LOR with logisitic regression
+#' SWITCHING FROM INLA MODEL TO GLM TO AVOID NEEDING INLA FOR NAOMI INTEGRATION
+#' NOT PERFECTLY IDENTICAL BUT CLOSE ENOUGH
 ind_inla <- ind %>%
   mutate(
     nosex12m_id = ifelse(behav == "nosex12m", 1, 0),
@@ -250,48 +252,64 @@ ind_inla <- ind %>%
     indicator == "prevalence",
     !is.na(estimate)
   )
+#'
+#' formula_baseline <- estimate ~ -1 + all_id + nosex12m_id + sexcohab_id + sexnonreg_id + sexpaid12m_id
+#'
+#' fit_y <- inla(
+#'   formula_baseline,
+#'   control.family = list(link = "logit"),
+#'   control.predictor = list(link = 1, compute = TRUE),
+#'   data = ind_inla %>% filter(age_group %in% c("Y015_019","Y020_024","Y025_029")),
+#'   control.compute = list(dic = TRUE, waic = TRUE, cpo = TRUE, config = TRUE),
+#'   inla.mode = "experimental"
+#' )
+#'
+#' contents <- fit_y$misc$configs$contents
+#' fixed_effects_idx <- contents$start[contents$tag != "Predictor"]
+#' samples <- inla.posterior.sample(n = 1000, fit_y)
+#' fixed_effects <-  lapply(samples, function(x) x$latent[fixed_effects_idx])
+#' fixed_effects <- matrix(unlist(fixed_effects), byrow = T, nrow = length(fixed_effects))
+#' odds_estimate <- colMeans(exp(fixed_effects))
+#' exp(fit_y$summary.fixed$mean) #' This is what you'd get without sampling from the posterior
+#' or_y <- odds_estimate / odds_estimate[1] #' Odds ratio
+#' lor_y <- log(odds_estimate / odds_estimate[1]) #' Log odds ratio
+#' lor_y <- lor_y[-1] #' Don't need leading zero (baseline all)
 
-formula_baseline <- estimate ~ -1 + all_id + nosex12m_id + sexcohab_id + sexnonreg_id + sexpaid12m_id
+fit_y <- glm(estimate ~ -1 + all_id + nosex12m_id + sexcohab_id + sexnonreg_id + sexpaid12m_id,
+             family = quasibinomial(link = "logit"),
+             data = ind_inla %>% filter(age_group %in% c("Y015_019","Y020_024","Y025_029")))
+odds_estimate <- exp(fit_y$coefficients)
+or_y <- odds_estimate / odds_estimate[1]
+lor_y <- log(odds_estimate / odds_estimate[1])
+lor_y <- lor_y[-1]
 
-fit_y <- inla(
-  formula_baseline,
-  control.family = list(link = "logit"),
-  control.predictor = list(link = 1, compute = TRUE),
-  data = ind_inla %>% filter(age_group %in% c("Y015_019","Y020_024","Y025_029")),
-  control.compute = list(dic = TRUE, waic = TRUE, cpo = TRUE, config = TRUE),
-  inla.mode = "experimental"
-)
+# fit_o <- inla(
+#   formula_baseline,
+#   control.family = list(link = "logit"),
+#   control.predictor = list(link = 1, compute = TRUE),
+#   data = ind_inla %>% filter(age_group %in% c("Y030_034","Y035_039","Y040_044","Y045_49")),
+#   control.compute = list(dic = TRUE, waic = TRUE, cpo = TRUE, config = TRUE),
+#   inla.mode = "experimental"
+# )
+#
+# contents <- fit_o$misc$configs$contents
+# fixed_effects_idx <- contents$start[contents$tag != "Predictor"]
+# samples <- inla.posterior.sample(n = 1000, fit_o)
+# fixed_effects <-  lapply(samples, function(x) x$latent[fixed_effects_idx])
+# fixed_effects <- matrix(unlist(fixed_effects), byrow = T, nrow = length(fixed_effects))
+# odds_estimate <- colMeans(exp(fixed_effects))
+# exp(fit_o$summary.fixed$mean) #' This is what you'd get without sampling from the posterior
+# or_o <- odds_estimate / odds_estimate[1] #' Odds ratio
+# lor_o <- log(odds_estimate / odds_estimate[1]) #' Log odds ratio
+# lor_o <- lor_o[-1] #' Don't need leading zero (baseline all)
 
-contents <- fit_y$misc$configs$contents
-fixed_effects_idx <- contents$start[contents$tag != "Predictor"]
-samples <- inla.posterior.sample(n = 1000, fit_y)
-fixed_effects <-  lapply(samples, function(x) x$latent[fixed_effects_idx])
-fixed_effects <- matrix(unlist(fixed_effects), byrow = T, nrow = length(fixed_effects))
-odds_estimate <- colMeans(exp(fixed_effects))
-exp(fit_y$summary.fixed$mean) #' This is what you'd get without sampling from the posterior
-or_y <- odds_estimate / odds_estimate[1] #' Odds ratio
-lor_y <- log(odds_estimate / odds_estimate[1]) #' Log odds ratio
-lor_y <- lor_y[-1] #' Don't need leading zero (baseline all)
-
-fit_o <- inla(
-  formula_baseline,
-  control.family = list(link = "logit"),
-  control.predictor = list(link = 1, compute = TRUE),
-  data = ind_inla %>% filter(age_group %in% c("Y030_034","Y035_039","Y040_044","Y045_49")),
-  control.compute = list(dic = TRUE, waic = TRUE, cpo = TRUE, config = TRUE),
-  inla.mode = "experimental"
-)
-
-contents <- fit_o$misc$configs$contents
-fixed_effects_idx <- contents$start[contents$tag != "Predictor"]
-samples <- inla.posterior.sample(n = 1000, fit_o)
-fixed_effects <-  lapply(samples, function(x) x$latent[fixed_effects_idx])
-fixed_effects <- matrix(unlist(fixed_effects), byrow = T, nrow = length(fixed_effects))
-odds_estimate <- colMeans(exp(fixed_effects))
-exp(fit_o$summary.fixed$mean) #' This is what you'd get without sampling from the posterior
-or_o <- odds_estimate / odds_estimate[1] #' Odds ratio
-lor_o <- log(odds_estimate / odds_estimate[1]) #' Log odds ratio
-lor_o <- lor_o[-1] #' Don't need leading zero (baseline all)
+fit_o <- glm(estimate ~ -1 + all_id + nosex12m_id + sexcohab_id + sexnonreg_id + sexpaid12m_id,
+             family = quasibinomial(link = "logit"),
+             data = ind_inla %>% filter(age_group %in% c("Y030_034","Y035_039","Y040_044","Y045_49")))
+odds_estimate <- exp(fit_o$coefficients)
+or_o <- odds_estimate / odds_estimate[1]
+lor_o <- log(odds_estimate / odds_estimate[1])
+lor_o <- lor_o[-1]
 
 #' Naomi estimates of PLHIV and population by district and age band
 naomi <- naomi %>%
@@ -319,7 +337,7 @@ naomi <- naomi %>%
 
 #' Modelled estimates of proportion in each risk group
 df_3p1 <- df_3p1 %>%
-  filter(year == 2018) %>%
+  filter(year == survey_year_sample) %>%
   select(area_id, age_group, indicator, estimate_smoothed) %>%
   pivot_wider(
     names_from = indicator,
@@ -404,7 +422,7 @@ end_time <- Sys.time()
 end_time - start_time
 
 #' Check how the YWKP LORs look
-plot(df_3p1_logit$ywkp_lor)
+# plot(df_3p1_logit$ywkp_lor)
 
 df_3p1_logit <- df_3p1_logit %>%
   unite("indicator", indicator, behav, sep = "_") %>%
@@ -461,47 +479,47 @@ write_csv(df_3p1_logit, "prev-district-sexbehav-logit.csv")
 #'
 #' while (!is.null(dev.list()))  dev.off()
 
-pdf("prev-district-sexbehav-logit.pdf", h = 7, w = 6.25)
-
-df_3p1_logit_plot <- df_3p1_logit %>%
-  select(iso3, area_id, age_group, starts_with("prev_")) %>%
-  pivot_longer(
-    cols = starts_with("prev_"),
-    names_to = "indicator",
-    names_prefix = "prev_",
-    values_to = "prev",
-  ) %>%
-  left_join(
-    select(areas, area_id),
-    by = "area_id"
-  ) %>%
-  st_as_sf()
-
-plotsB <- df_3p1_logit_plot %>%
-  multi.utils::update_naming() %>%
-  split(.$iso3) %>%
-  lapply(function(x)
-    x %>%
-      ggplot(aes(fill = prev)) +
-      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
-      coord_sf(lims_method = "geometry_bbox") +
-      scale_fill_viridis_c(option = "C", label = label_percent()) +
-      facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
-      theme_minimal() +
-      labs(
-        title = paste0(x$iso3[1]),
-        fill = "Prevalence"
-      ) +
-      theme(
-        axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        panel.grid = element_blank(),
-        strip.text = element_text(face = "bold"),
-        legend.position = "bottom",
-        legend.key.width = unit(4, "lines")
-      )
-  )
-
-plotsB
-
-while (!is.null(dev.list()))  dev.off()
+# pdf("prev-district-sexbehav-logit.pdf", h = 7, w = 6.25)
+#
+# df_3p1_logit_plot <- df_3p1_logit %>%
+#   select(iso3, area_id, age_group, starts_with("prev_")) %>%
+#   pivot_longer(
+#     cols = starts_with("prev_"),
+#     names_to = "indicator",
+#     names_prefix = "prev_",
+#     values_to = "prev",
+#   ) %>%
+#   left_join(
+#     select(areas, area_id),
+#     by = "area_id"
+#   ) %>%
+#   st_as_sf()
+#
+# plotsB <- df_3p1_logit_plot %>%
+#   multi.utils::update_naming() %>%
+#   split(.$iso3) %>%
+#   lapply(function(x)
+#     x %>%
+#       ggplot(aes(fill = prev)) +
+#       geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+#       coord_sf(lims_method = "geometry_bbox") +
+#       scale_fill_viridis_c(option = "C", label = label_percent()) +
+#       facet_grid(age_group ~ indicator, labeller = labeller(indicator = label_wrap_gen(20))) +
+#       theme_minimal() +
+#       labs(
+#         title = paste0(x$iso3[1]),
+#         fill = "Prevalence"
+#       ) +
+#       theme(
+#         axis.text = element_blank(),
+#         axis.ticks = element_blank(),
+#         panel.grid = element_blank(),
+#         strip.text = element_text(face = "bold"),
+#         legend.position = "bottom",
+#         legend.key.width = unit(4, "lines")
+#       )
+#   )
+#
+# plotsB
+#
+# while (!is.null(dev.list()))  dev.off()

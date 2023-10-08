@@ -5,7 +5,7 @@ artefacts:
       description: Multinomial smoothed district estimate results (four categories) adjusted include FSW estimates
       filenames:
         - adjust-best-3p1-multi-sexbehav-sae.csv
-        - adjustment-comparison.pdf
+        # - adjustment-comparison.pdf
 
 packages:
   - dplyr
