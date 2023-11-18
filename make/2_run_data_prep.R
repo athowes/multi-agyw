@@ -54,7 +54,9 @@ run_commit_push("tgo_survey_behav")
 run_commit_push("tza_survey_behav") #' [x]
 run_commit_push("uga_survey_behav") #' [x]
 run_commit_push("zaf_survey_behav") #' [x]
-run_commit_push("zmb_survey_behav") #' [x]
+
+# run_commit_push("zmb_survey_behav") #' [x]
+
 run_commit_push("zwe_survey_behav") #' [x]
 run_commit_push("caf_survey_behav")
 
@@ -96,7 +98,9 @@ run_commit_push("tgo_survey_behav_men")
 run_commit_push("tza_survey_behav_men") #' [x]
 run_commit_push("uga_survey_behav_men") #' [x]
 run_commit_push("zaf_survey_behav_men") #' [x]
-run_commit_push("zmb_survey_behav_men") #' [x]
+
+# run_commit_push("zmb_survey_behav_men") #' [x]
+
 run_commit_push("zwe_survey_behav_men") #' [x]
 run_commit_push("caf_survey_behav_men")
 

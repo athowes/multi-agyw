@@ -37,9 +37,6 @@ packages:
   - spud
   - gt
 
-resources:
-  - bdi_areas.geojson
-
 depends:
   - process_areas:
       id: latest
@@ -63,7 +60,7 @@ depends:
         depends/gab_areas.geojson: gab_areas.geojson
         depends/rwa_areas.geojson: rwa_areas.geojson
         depends/eth_areas.geojson: eth_areas.geojson
-        depends/hti_areas.geojson: hti_areas.geojson
+        # depends/hti_areas.geojson: hti_areas.geojson
         depends/tcd_areas.geojson: tcd_areas.geojson
         depends/civ_areas.geojson: civ_areas.geojson
         depends/gha_areas.geojson: gha_areas.geojson
@@ -75,6 +72,7 @@ depends:
         depends/tgo_areas.geojson: tgo_areas.geojson
         depends/cog_areas.geojson: cog_areas.geojson
         depends/caf_areas.geojson: caf_areas.geojson
+        depends/bdi_areas.geojson: bdi_areas.geojson
   - bwa_survey_behav_men:
       id: latest
       use:
