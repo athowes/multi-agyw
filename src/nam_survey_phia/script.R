@@ -14,20 +14,30 @@ fieldwork_end <- NA
 areas <- read_sf("depends/nam_areas.geojson")
 
 #' ## Load PHIA datasets
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+# sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#
+# phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA/datasets/NAM/datasets"
+#
+# paths <- list(geo = "NAMPHIA 2017 PR Geospatial Data 20210603.zip",
+#               hh = "102 NAMPHIA 2017 Household Dataset (DTA).zip",
+#               ind = "202_NAMPHIA 2017 Adult Interview Dataset (DTA).zip",
+#               bio = "302_NAMPHIA 2017 Adult Biomarker Dataset (DTA).zip",
+#               chind = "205 NAMPHIA 2017 Child Interview Dataset (DTA).zip",
+#               chbio = "305 NAMPHIA 2017 Child Biomarker Dataset (DTA).zip") %>%
+#   lapply(function(x) file.path(phia_path, x)) %>%
+#   lapply(URLencode)
+#
+# phia_files <- lapply(paths, sharepoint$download)
 
-phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA/datasets/NAM/datasets"
+phia_path <- "NAM/datasets"
 
-paths <- list(geo = "NAMPHIA 2017 PR Geospatial Data 20210603.zip",
+phia_files <- list(geo = "NAMPHIA 2017 PR Geospatial Data 20210603.zip",
               hh = "102 NAMPHIA 2017 Household Dataset (DTA).zip",
               ind = "202_NAMPHIA 2017 Adult Interview Dataset (DTA).zip",
               bio = "302_NAMPHIA 2017 Adult Biomarker Dataset (DTA).zip",
               chind = "205 NAMPHIA 2017 Child Interview Dataset (DTA).zip",
               chbio = "305 NAMPHIA 2017 Child Biomarker Dataset (DTA).zip") %>%
-  lapply(function(x) file.path(phia_path, x)) %>%
-  lapply(URLencode)
-
-phia_files <- lapply(paths, sharepoint$download)
+  lapply(function(x) file.path(phia_path, x))
 
 geo <- rdhs::read_zipdata(phia_files$geo)
 

@@ -23,8 +23,11 @@ packages:
   - readr
   - sf
 
+resources:
+  - KEN
+
 depends:
-  ken_data_areas:
+  process_areas:
     id: latest
     use:
       depends/ken_areas.geojson: ken_areas.geojson

@@ -27,8 +27,11 @@ packages:
   - readr
   - sf
 
+resources:
+  - UGA
+
 depends:
-  uga_data_areas:
+  process_areas:
     id: latest
     use:
       depends/uga_areas.geojson: uga_areas.geojson

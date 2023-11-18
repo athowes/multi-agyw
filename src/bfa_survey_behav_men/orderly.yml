@@ -22,7 +22,7 @@ packages:
   - naomi.utils
 
 depends:
-  bfa_data_areas:
+  process_areas:
     id: latest
     use:
       depends/bfa_areas.geojson: bfa_areas.geojson

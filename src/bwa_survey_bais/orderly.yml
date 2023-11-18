@@ -14,3 +14,6 @@ packages:
   - sf
   - spud
   - tidyr
+
+resources:
+  - bais-iv-2013-20150319-v1.dta

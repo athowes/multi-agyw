@@ -13,17 +13,23 @@ fieldwork_end <- NA
 #' ## Load area hierarchy
 areas <- read_sf("depends/tza_areas.geojson")
 
-#' ## Load PHIA datasets
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#' #' ## Load PHIA datasets
+#' sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#'
+#' phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA/datasets/TZA/datasets"
+#'
+#' paths <- list(geo = "THIS 2016-2017 PR Geospatial Data 20211014.zip",
+#'               survey = "THIS 2016-2017 Household Interview and Biomarker Datasets v2.0 (DTA).zip") %>%
+#'   lapply(function(x) file.path(phia_path, x)) %>%
+#'   lapply(URLencode)
+#'
+#' phia_files <- lapply(paths, sharepoint$download)
 
-phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA/datasets/TZA/datasets"
+phia_path <- "TZA/datasets"
 
-paths <- list(geo = "THIS 2016-2017 PR Geospatial Data 20211014.zip",
+phia_files <- list(geo = "THIS 2016-2017 PR Geospatial Data 20211014.zip",
               survey = "THIS 2016-2017 Household Interview and Biomarker Datasets v2.0 (DTA).zip") %>%
-  lapply(function(x) file.path(phia_path, x)) %>%
-  lapply(URLencode)
-
-phia_files <- lapply(paths, sharepoint$download)
+  lapply(function(x) file.path(phia_path, x))
 
 geo <- rdhs::read_zipdata(phia_files$geo)
 

@@ -13,21 +13,31 @@ fieldwork_end <- NA
 #' ## Load area hierarchy
 areas <- read_sf("depends/rwa_areas.geojson")
 
-#' ## Load PHIA datasets
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#' #' ## Load PHIA datasets
+#' sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#'
+#' phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA/datasets/RWA/datasets"
+#'
+#' paths <- list(geo = "RPHIA 2018-2019 PR Geospatial Data 20210722.zip",
+#'               hh = "102_RPHIA 2018-2019 Household Dataset (DTA).zip",
+#'               ind = "202_202 RPHIA 2018-2019 Adult Interview Dataset (DTA).zip",
+#'               bio = "302 RPHIA 2018-2019 Adult Biomarker Dataset (DTA).zip",
+#'               chind = "205_RPHIA 2018-2019 Child Interview Dataset (DTA).zip",
+#'               chbio = "305 RPHIA 2018-2019 Child Biomarker Dataset (DTA).zip") %>%
+#'   lapply(function(x) file.path(phia_path, x)) %>%
+#'   lapply(URLencode)
+#'
+#' phia_files <- lapply(paths, sharepoint$download)
 
-phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA/datasets/RWA/datasets"
+phia_path <- "RWA/datasets"
 
-paths <- list(geo = "RPHIA 2018-2019 PR Geospatial Data 20210722.zip",
+phia_files <- list(geo = "RPHIA 2018-2019 PR Geospatial Data 20210722.zip",
               hh = "102_RPHIA 2018-2019 Household Dataset (DTA).zip",
               ind = "202_202 RPHIA 2018-2019 Adult Interview Dataset (DTA).zip",
               bio = "302 RPHIA 2018-2019 Adult Biomarker Dataset (DTA).zip",
               chind = "205_RPHIA 2018-2019 Child Interview Dataset (DTA).zip",
               chbio = "305 RPHIA 2018-2019 Child Biomarker Dataset (DTA).zip") %>%
-  lapply(function(x) file.path(phia_path, x)) %>%
-  lapply(URLencode)
-
-phia_files <- lapply(paths, sharepoint$download)
+  lapply(function(x) file.path(phia_path, x))
 
 geo <- rdhs::read_zipdata(phia_files$geo)
 

@@ -27,8 +27,11 @@ packages:
   - readr
   - sf
 
+resources:
+  - MWI
+
 depends:
-  mwi_data_areas:
+  process_areas:
     id: latest
     use:
       depends/mwi_areas.geojson: mwi_areas.geojson

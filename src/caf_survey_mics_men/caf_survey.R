@@ -11,16 +11,21 @@ survey_mid_calendar_quarter <- "CY2018Q4"
 #' ## Load area hierarchy
 areas <- read_sf("depends/caf_areas.geojson")
 
-#' Authenticate SharePoint login
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#' #' Authenticate SharePoint login
+#' sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#'
+#' naomi_raw_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/MICS/automate/zip"
+#' file_path <- "Central African Republic MICS6 Datasets.zip"
+#' url <- URLencode(file.path(naomi_raw_path, file_path))
+#' mics <- sharepoint$download(url)
+#'
+#' mics_dat <- unzip(mics, c("Central African Republic MICS6 SPSS Datasets/mn.sav",
+#'                           "Central African Republic MICS6 SPSS Datasets/hh.sav"))
 
-naomi_raw_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/MICS/automate/zip"
-file_path <- "Central African Republic MICS6 Datasets.zip"
-url <- URLencode(file.path(naomi_raw_path, file_path))
-mics <- sharepoint$download(url)
+mics_dat <- unzip("Central African Republic MICS6 Datasets.zip",
+                  c("Central African Republic MICS6 Datasets/Central African Republic MICS6 SPSS Datasets/mn.sav",
+                    "Central African Republic MICS6 Datasets/Central African Republic MICS6 SPSS Datasets/hh.sav"))
 
-mics_dat <- unzip(mics, c("Central African Republic MICS6 SPSS Datasets/mn.sav",
-                          "Central African Republic MICS6 SPSS Datasets/hh.sav"))
 
 ind <- haven::read_sav(mics_dat[1])
 hh <- haven::read_sav(mics_dat[2])

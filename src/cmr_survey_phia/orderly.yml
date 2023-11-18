@@ -23,8 +23,11 @@ packages:
   - readr
   - sf
 
+resources:
+  - CMR
+
 depends:
-  cmr_data_areas:
+  process_areas:
     id: latest
     use:
       depends/cmr_areas.geojson: cmr_areas.geojson

@@ -5,7 +5,7 @@
 #' ISO3 country code
 iso3 <- "BDI"
 
-areas <- read_sf("bdi_areas.geojson") %>% st_make_valid()
+areas <- read_sf("depends/bdi_areas.geojson") %>% st_make_valid()
 areas_wide <- naomi::spread_areas(areas)
 
 surveys <- create_surveys_dhs(iso3, survey_characteristics = 24) %>%

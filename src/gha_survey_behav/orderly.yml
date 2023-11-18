@@ -22,7 +22,7 @@ packages:
   - naomi.utils
 
 depends:
-  gha_data_areas:
+  process_areas:
     id: latest
     use:
       depends/gha_areas.geojson: gha_areas.geojson

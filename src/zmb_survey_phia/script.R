@@ -9,19 +9,28 @@ survey_mid_calendar_quarter <- "CY2016Q2"
 #' ## Load area hierarchy
 areas <- read_sf("depends/zmb_areas.geojson")
 
-#' ## Load PHIA datasets
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#' #' ## Load PHIA datasets
+#' sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#'
+#' phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data"
+#'
+#' paths <- list(gadm1 = "shape files/gadm/v3.6/gadm36_ZMB_1_sf.rds",
+#'               gadm2 = "shape files/gadm/v3.6/gadm36_ZMB_2_sf.rds",
+#'               geo = "household surveys/PHIA/datasets/ZMB/datasets/ZAMPHIA 2016 PR Geospatial Data 20210920.zip",
+#'               survey = "household surveys/PHIA/datasets/ZMB/datasets/ZAMPHIA 2016 Household Interview and Biomarker Datasets v2.0 (DTA).zip") %>%
+#'   lapply(function(x) file.path(phia_path, x)) %>%
+#'   lapply(URLencode)
+#'
+#' phia_files <- lapply(paths, sharepoint$download)
 
-phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data"
 
-paths <- list(gadm1 = "shape files/gadm/v3.6/gadm36_ZMB_1_sf.rds",
-              gadm2 = "shape files/gadm/v3.6/gadm36_ZMB_2_sf.rds",
-              geo = "household surveys/PHIA/datasets/ZMB/datasets/ZAMPHIA 2016 PR Geospatial Data 20210920.zip",
-              survey = "household surveys/PHIA/datasets/ZMB/datasets/ZAMPHIA 2016 Household Interview and Biomarker Datasets v2.0 (DTA).zip") %>%
-  lapply(function(x) file.path(phia_path, x)) %>%
-  lapply(URLencode)
+phia_path <- "ZMB/datasets"
 
-phia_files <- lapply(paths, sharepoint$download)
+phia_files <- list(gadm1 = "gadm36_ZMB_1_sf.rds",
+              gadm2 = "gadm36_ZMB_2_sf.rds",
+              geo = "ZAMPHIA 2016 PR Geospatial Data 20210920.zip",
+              survey = "ZAMPHIA 2016 Household Interview and Biomarker Datasets v2.0 (DTA).zip") %>%
+  lapply(function(x) file.path(phia_path, x))
 
 geo <- rdhs::read_zipdata(phia_files$geo)
 

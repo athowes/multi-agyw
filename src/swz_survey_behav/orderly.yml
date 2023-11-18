@@ -20,7 +20,7 @@ packages:
   - rdhs
 
 depends:
-  swz_data_areas:
+  process_areas:
     id: latest
     use:
       depends/swz_areas.geojson: swz_areas.geojson

@@ -29,9 +29,10 @@ packages:
 
 resources:
   - insida2021adultind.csv
+  - INSIDA_2021_UNAIDS_DATASET.csv
 
 depends:
-  moz_data_areas:
+  process_areas:
     id: latest
     use:
       depends/moz_areas.geojson: moz_areas.geojson

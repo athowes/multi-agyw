@@ -18,8 +18,8 @@ packages:
   - naomi.utils
 
 depends:
-  ken_data_areas:
-    id: 20201111-135452-f9ac48a9
+  process_areas:
+    id: latest
     use:
       depends/ken_areas.geojson: ken_areas.geojson
   ken_survey_phia:

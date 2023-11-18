@@ -1,11 +1,13 @@
 # orderly::orderly_develop_start("bwa_survey_bais")
 # setwd("src/bwa_survey_bais")
 
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
-url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/Botswana/BAIS IV/bais-iv-2013-20150319-v1.dta"
-path <- sharepoint$download(URLencode(url))
+# sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+# url <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/Botswana/BAIS IV/bais-iv-2013-20150319-v1.dta"
+# path <- sharepoint$download(URLencode(url))
+#
+# raw <- read_dta(path)
 
-raw <- read_dta(path)
+raw <- read_dta("bais-iv-2013-20150319-v1.dta")
 
 ## District_Code                    "District Code(2)"
 ## EA_Code                          "EA number"

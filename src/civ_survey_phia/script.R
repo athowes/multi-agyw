@@ -15,21 +15,32 @@ areas <- read_sf("depends/civ_areas.geojson")
 areas_wide <- spread_areas(areas)
 
 #' ## Load PHIA datasets
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+# sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#
+# phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA/datasets/CIV/datasets"
 
-phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA/datasets/CIV/datasets"
+phia_path <- "CIV/datasets"
 
-paths <- list(geo = "CIPHIA 2017-2018 PR Geospatial Data 20210804.zip",
+# paths <- list(geo = "CIPHIA 2017-2018 PR Geospatial Data 20210804.zip",
+#               hh = "102 CIPHIA 2017-2018 Household Dataset (DTA).zip",
+#               ind = "202 CIPHIA 2017-2018 Adult Interview Dataset (DTA).zip",
+#               bio = "302 CIPHIA 2017-2018 Adult Biomarker Dataset (DTA).zip",
+#               chind = "205 CIPHIA 2017-2018 Child Interview Dataset (DTA).zip",
+#               chbio = "305 CIPHIA 2017-2018 Child Biomarker Dataset (DTA).zip") %>%
+#   lapply(function(x) file.path(phia_path, x)) %>%
+#   append(list(civ_gadm1 = "sites/HIVInferenceGroup-WP/Shared%20Documents/Data/shape%20files/gadm/v3.6/gadm36_CIV_1_sf.rds")) %>%
+#   lapply(URLencode)
+
+phia_files <- list(geo = "CIPHIA 2017-2018 PR Geospatial Data 20210804.zip",
               hh = "102 CIPHIA 2017-2018 Household Dataset (DTA).zip",
               ind = "202 CIPHIA 2017-2018 Adult Interview Dataset (DTA).zip",
               bio = "302 CIPHIA 2017-2018 Adult Biomarker Dataset (DTA).zip",
               chind = "205 CIPHIA 2017-2018 Child Interview Dataset (DTA).zip",
-              chbio = "305 CIPHIA 2017-2018 Child Biomarker Dataset (DTA).zip") %>%
-  lapply(function(x) file.path(phia_path, x)) %>%
-  append(list(civ_gadm1 = "sites/HIVInferenceGroup-WP/Shared%20Documents/Data/shape%20files/gadm/v3.6/gadm36_CIV_1_sf.rds")) %>%
-  lapply(URLencode)
+              chbio = "305 CIPHIA 2017-2018 Child Biomarker Dataset (DTA).zip",
+              civ_gadm1 = "gadm36_CIV_1_sf.rds") %>%
+  lapply(function(x) file.path(phia_path, x))
 
-phia_files <- lapply(paths, sharepoint$download)
+# phia_files <- lapply(paths, sharepoint$download)
 
 geo <- rdhs::read_zipdata(phia_files$geo)
 

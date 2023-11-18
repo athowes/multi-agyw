@@ -21,8 +21,11 @@ packages:
   - readr
   - sf
 
+resources:
+  - "Central African Republic MICS6 Datasets.zip"
+
 depends:
-  caf_data_areas:
+  process_areas:
     id: latest
     use:
       depends/caf_areas.geojson: caf_areas.geojson

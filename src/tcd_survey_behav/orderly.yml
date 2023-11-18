@@ -22,7 +22,7 @@ packages:
   - naomi.utils
 
 depends:
-  tcd_data_areas:
+  process_areas:
     id: latest
     use:
       depends/tcd_areas.geojson: tcd_areas.geojson

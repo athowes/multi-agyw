@@ -10,20 +10,30 @@ survey_mid_calendar_quarter <- "CY2016Q1"
 areas <- read_sf("depends/zwe_areas.geojson")
 
 #' ## Load PHIA datasets
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+# sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#
+# phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA"
+#
+# paths <- list(geo = "datasets/ZWE/datasets/ZIMPHIA 2015-2016 PR Geospatial Data 20211001.zip",
+#               hh = "datasets/ZWE/datasets/102_ZIMPHIA 2015-2016 Household Dataset (DTA).zip",
+#               ind = "datasets/ZWE/datasets/202_ZIMPHIA 2015-2016 Adult Interview Dataset (DTA).zip",
+#               bio = "datasets/ZWE/datasets/302_ZIMPHIA 2015-2016 Adult Biomarker Dataset (DTA).zip",
+#               chind = "datasets/ZWE/datasets/205_ZIMPHIA 2015-2016 Child Interview Dataset (DTA).zip",
+#               chbio = "datasets/ZWE/datasets/305_ZIMPHIA 2015-2016 Child Biomarker Dataset (DTA).zip") %>%
+#   lapply(function(x) file.path(phia_path, x)) %>%
+#   lapply(URLencode)
+#
+# phia_files <- lapply(paths, sharepoint$download)
 
-phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA"
+phia_path <- "ZWE/datasets"
 
-paths <- list(geo = "datasets/ZWE/datasets/ZIMPHIA 2015-2016 PR Geospatial Data 20211001.zip",
-              hh = "datasets/ZWE/datasets/102_ZIMPHIA 2015-2016 Household Dataset (DTA).zip",
-              ind = "datasets/ZWE/datasets/202_ZIMPHIA 2015-2016 Adult Interview Dataset (DTA).zip",
-              bio = "datasets/ZWE/datasets/302_ZIMPHIA 2015-2016 Adult Biomarker Dataset (DTA).zip",
-              chind = "datasets/ZWE/datasets/205_ZIMPHIA 2015-2016 Child Interview Dataset (DTA).zip",
-              chbio = "datasets/ZWE/datasets/305_ZIMPHIA 2015-2016 Child Biomarker Dataset (DTA).zip") %>%
-  lapply(function(x) file.path(phia_path, x)) %>%
-  lapply(URLencode)
-
-phia_files <- lapply(paths, sharepoint$download)
+phia_files <- list(geo = "ZIMPHIA 2015-2016 PR Geospatial Data 20211001.zip",
+              hh = "102_ZIMPHIA 2015-2016 Household Dataset (DTA).zip",
+              ind = "202_ZIMPHIA 2015-2016 Adult Interview Dataset (DTA).zip",
+              bio = "302_ZIMPHIA 2015-2016 Adult Biomarker Dataset (DTA).zip",
+              chind = "205_ZIMPHIA 2015-2016 Child Interview Dataset (DTA).zip",
+              chbio = "305_ZIMPHIA 2015-2016 Child Biomarker Dataset (DTA).zip") %>%
+  lapply(function(x) file.path(phia_path, x))
 
 geo <- rdhs::read_zipdata(phia_files$geo)
 

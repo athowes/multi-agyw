@@ -19,37 +19,43 @@ reports <- paste0(tolower(iso3), "_survey_behav")
 run_commit_push(reports)
 
 #' (If the above isn't working, here are separate ones)
+run_commit_push("ago_survey_behav")
+run_commit_push("bdi_survey_behav")
+run_commit_push("bfa_survey_behav") # FAILED - excludes 1999 DHS because sexual behavior data for that survey seems to be missing
 run_commit_push("bwa_survey_behav") #' [x]
+run_commit_push("civ_survey_behav") # Exclude 2005 AIS
 run_commit_push("cmr_survey_behav") #' [x]
+run_commit_push("cod_survey_behav")
+
+# run_commit_push("cog_survey_behav")
+
+run_commit_push("eth_survey_behav")
+
+# run_commit_push("gab_survey_behav") # RUNS WITH 2000 DHS excluded
+
+run_commit_push("gha_survey_behav")
+run_commit_push("gin_survey_behav") # Exclude 1999 DHS
+# run_commit_push("hti_survey_behav")
 run_commit_push("ken_survey_behav") #' [x]
+
+# run_commit_push("lbr_survey_behav")
+
 run_commit_push("lso_survey_behav") #' [x]
+run_commit_push("mli_survey_behav") # NEED TO EXCLUDE 2012 SURVEY DUE TO areas not aligning to regions COME BACK TO ME!!!
 run_commit_push("moz_survey_behav") #' [x]
 run_commit_push("mwi_survey_behav") #' [x]
 run_commit_push("nam_survey_behav") #' [x]
+run_commit_push("ner_survey_behav")
+run_commit_push("rwa_survey_behav") # RUNS WITH 2000 and 2005 DHS excluded
+run_commit_push("sle_survey_behav")
 run_commit_push("swz_survey_behav") #' [x]
+run_commit_push("tcd_survey_behav") # Exclude 2004 DHS
+run_commit_push("tgo_survey_behav")
 run_commit_push("tza_survey_behav") #' [x]
 run_commit_push("uga_survey_behav") #' [x]
 run_commit_push("zaf_survey_behav") #' [x]
 run_commit_push("zmb_survey_behav") #' [x]
 run_commit_push("zwe_survey_behav") #' [x]
-run_commit_push("ago_survey_behav")
-run_commit_push("bdi_survey_behav")
-run_commit_push("bfa_survey_behav") # FAILED - excludes 1999 DHS because sexual behavior data for that survey seems to be missing
-run_commit_push("civ_survey_behav") # Exclude 2005 AIS
-run_commit_push("cod_survey_behav")
-run_commit_push("cog_survey_behav")
-run_commit_push("eth_survey_behav")
-run_commit_push("gab_survey_behav") # RUNS WITH 2000 DHS excluded
-run_commit_push("gha_survey_behav")
-run_commit_push("gin_survey_behav") # Exclude 1999 DHS
-run_commit_push("hti_survey_behav")
-run_commit_push("lbr_survey_behav")
-run_commit_push("mli_survey_behav") # NEED TO EXCLUDE 2012 SURVEY DUE TO areas not aligning to regions COME BACK TO ME!!!
-run_commit_push("ner_survey_behav")
-run_commit_push("rwa_survey_behav") # RUNS WITH 2000 and 2005 DHS excluded
-run_commit_push("sle_survey_behav")
-run_commit_push("tcd_survey_behav") # Exclude 2004 DHS
-run_commit_push("tgo_survey_behav")
 run_commit_push("caf_survey_behav")
 
 # Same for men
@@ -62,14 +68,20 @@ run_commit_push("bwa_survey_behav_men") #' [x]
 run_commit_push("civ_survey_behav_men")
 run_commit_push("cmr_survey_behav_men") #' [x]
 run_commit_push("cod_survey_behav_men")
-run_commit_push("cog_survey_behav_men")
+
+# run_commit_push("cog_survey_behav_men")
+
 run_commit_push("eth_survey_behav_men")
-run_commit_push("gab_survey_behav_men")
+
+# run_commit_push("gab_survey_behav_men")
+
 run_commit_push("gha_survey_behav_men")
 run_commit_push("gin_survey_behav_men")
-run_commit_push("hti_survey_behav_men")
+# run_commit_push("hti_survey_behav_men")
 run_commit_push("ken_survey_behav_men") #' [x]
-run_commit_push("lbr_survey_behav_men")
+
+# run_commit_push("lbr_survey_behav_men")
+
 run_commit_push("lso_survey_behav_men") #' [x]
 run_commit_push("mli_survey_behav_men")
 run_commit_push("moz_survey_behav_men") #' [x]

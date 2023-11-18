@@ -11,7 +11,10 @@ multinomial_model <- function(formula, model_name) {
               control.predictor = list(link = 1),
               control.compute = list(dic = TRUE, waic = TRUE,
                                      cpo = TRUE, config = TRUE),
-              inla.mode = "experimental")
+              inla.mode = "experimental",
+              verbose = TRUE,
+              debug = TRUE,
+              safe = TRUE)
 
   message(paste0("Completed fitting ", model_name, "."))
 

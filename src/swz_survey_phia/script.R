@@ -14,16 +14,22 @@ fieldwork_end <- NA
 areas <- read_sf("depends/swz_areas.geojson")
 
 #' ## Load PHIA datasets
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+# sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#
+# phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA/datasets/SWZ/datasets"
+#
+# paths <- list(geo = "SHIMS2 2016-2017 PR Geospatial Data 20211022.zip",
+#               survey = "SHIMS2 2016-2017 Household Interview and Biomarker Datasets v2.0 (DTA).zip") %>%
+#   lapply(function(x) file.path(phia_path, x)) %>%
+#   lapply(URLencode)
+#
+# phia_files <- lapply(paths, sharepoint$download)
 
-phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA/datasets/SWZ/datasets"
+phia_path <- "SWZ/datasets"
 
-paths <- list(geo = "SHIMS2 2016-2017 PR Geospatial Data 20211022.zip",
+phia_files <- list(geo = "SHIMS2 2016-2017 PR Geospatial Data 20211022.zip",
               survey = "SHIMS2 2016-2017 Household Interview and Biomarker Datasets v2.0 (DTA).zip") %>%
-  lapply(function(x) file.path(phia_path, x)) %>%
-  lapply(URLencode)
-
-phia_files <- lapply(paths, sharepoint$download)
+  lapply(function(x) file.path(phia_path, x))
 
 geo <- rdhs::read_zipdata(phia_files$geo)
 

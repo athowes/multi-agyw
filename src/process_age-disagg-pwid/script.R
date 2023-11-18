@@ -7,7 +7,7 @@ priority_iso3 <- multi.utils::priority_iso3()
 pse_clean <- readRDS("kplhiv_art.rds")
 naomi_pop <- readRDS("depends/naomi_pop.rds")
 
-pse <- pse_clean$PWID$area %>% filter(indicator=="pse_count",
+pse <- pse_clean$PWID$area %>% filter(indicator=="pse_prop",
                                iso3 %in% priority_iso3) %>%
   rename(prop_pwid = median) %>%
   select(-indicator,-lower,-upper)
@@ -18,12 +18,12 @@ pse$iso3 <- as.character(pse$iso3)
 # bringing in PSE from Key Pop Atlas - no data from Haiti, using PSE from
 # Dominican Republic (LB = 0.01%, UB = 0.02%) use 0.015% (this is surely
 # low, but don't have better data to use really...)
-hti_pse <- 0.00015
-# fix to fill in cabo delgado so it doesn't break all of our future code, give it
-# mozambique mean proportion across all areas
-moz_1_10_pse <- mean(pse$prop_pwid[pse$iso3=="MOZ"])
-pse <- rbind(pse,c("HTI","HTI",hti_pse),c("MOZ","MOZ_1_10",moz_1_10_pse))
-pse$prop_pwid <- as.numeric(pse$prop_pwid)
+# hti_pse <- 0.00015
+# # fix to fill in cabo delgado so it doesn't break all of our future code, give it
+# # mozambique mean proportion across all areas
+# moz_1_10_pse <- mean(pse$prop_pwid[pse$iso3=="MOZ"])
+# pse <- rbind(pse,c("HTI","HTI",hti_pse),c("MOZ","MOZ_1_10",moz_1_10_pse))
+# pse$prop_pwid <- as.numeric(pse$prop_pwid)
 
 age_groups <- c("15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49")
 

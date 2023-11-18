@@ -15,20 +15,31 @@ fieldwork_end <- NA
 areas <- read_sf("depends/cmr_areas.geojson")
 
 #' ## Load PHIA datasets
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+# sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
 
-phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA/datasets/CMR/datasets"
+# phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA/datasets/CMR/datasets"
 
-paths <- list(geo = "CAMPHIA 2017-2018 PR Geospatial Data 20210628.zip",
+phia_path <- "CMR/datasets"
+
+# paths <- list(geo = "CAMPHIA 2017-2018 PR Geospatial Data 20210628.zip",
+#               hh = "102 CAMPHIA 2017-2018 Household Dataset (DTA).zip",
+#               ind = "202 CAMPHIA 2017-2018 Adult Interview Dataset (DTA).zip",
+#               bio = "302 CAMPHIA 2017-2018 Adult Biomarker Dataset (DTA).zip",
+#               chind = "205 CAMPHIA 2017-2018 Child Interview Dataset (DTA).zip",
+#               chbio = "305 CAMPHIA 2017-2018 Child Biomarker Dataset (DTA).zip") %>%
+#   lapply(function(x) file.path(phia_path, x)) %>%
+#   lapply(URLencode)
+
+phia_files <- list(geo = "CAMPHIA 2017-2018 PR Geospatial Data 20210628.zip",
               hh = "102 CAMPHIA 2017-2018 Household Dataset (DTA).zip",
               ind = "202 CAMPHIA 2017-2018 Adult Interview Dataset (DTA).zip",
               bio = "302 CAMPHIA 2017-2018 Adult Biomarker Dataset (DTA).zip",
               chind = "205 CAMPHIA 2017-2018 Child Interview Dataset (DTA).zip",
               chbio = "305 CAMPHIA 2017-2018 Child Biomarker Dataset (DTA).zip") %>%
-  lapply(function(x) file.path(phia_path, x)) %>%
-  lapply(URLencode)
+  lapply(function(x) file.path(phia_path, x))
 
-phia_files <- lapply(paths, sharepoint$download)
+
+# phia_files <- lapply(paths, sharepoint$download)
 
 geo <- rdhs::read_zipdata(phia_files$geo)
 

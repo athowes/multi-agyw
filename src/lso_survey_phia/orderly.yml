@@ -23,8 +23,11 @@ packages:
   - readr
   - sf
 
+resources:
+  - LSO
+
 depends:
-  lso_data_areas:
+  process_areas:
     id: latest
     use:
       depends/lso_areas.geojson: lso_areas.geojson

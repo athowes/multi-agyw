@@ -1,16 +1,17 @@
 #' ## Load area hierarchy
 areas <- read_sf("depends/moz_areas.geojson")
 
-#' Authenticate SharePoint login
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#' #' Authenticate SharePoint login
+#' sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#'
+#' #' Read in files from SharePoint
+#' raw_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/naomi-raw/MOZ/2022-11-16 INSIDA 2021 survey/INSIDA_2021_UNAIDS_DATASET.csv"
+#'
+#' raw_path <- URLencode(raw_path)
+#'
+#' phia_path <- sharepoint$download(raw_path)
 
-#' Read in files from SharePoint
-raw_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/naomi-raw/MOZ/2022-11-16 INSIDA 2021 survey/INSIDA_2021_UNAIDS_DATASET.csv"
-
-raw_path <- URLencode(raw_path)
-
-phia_path <- sharepoint$download(raw_path)
-
+phia_path <- "INSIDA_2021_UNAIDS_DATASET.csv"
 
 #' ## Load PHIA datasets
 iso3 <- "MOZ"

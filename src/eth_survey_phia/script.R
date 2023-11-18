@@ -21,20 +21,30 @@ areas <- read_sf("depends/eth_areas.geojson") %>%
   st_make_valid()
 
 #' ## Load PHIA datasets
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+# sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
 
-phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA/datasets/ETH/datasets"
+# phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA/datasets/ETH/datasets"
+#
+# paths <- list(geo = "EPHIA 2017-2018 PR Geospatial Data 20210622.zip",
+#               hh = "102 EPHIA 2017-2018 Household Dataset (DTA).zip",
+#               ind = "202 EPHIA 2017-2018 Adult Interview Dataset (DTA).zip",
+#               bio = "302 EPHIA 2017-2018 Adult Biomarker Dataset (DTA).zip",
+#               chind = "205_EPHIA 2017-2018 Child Interview Dataset (DTA).zip",
+#               chbio = "305 EPHIA 2017-2018 Child Biomarker Dataset (DTA).zip") %>%
+#   lapply(function(x) file.path(phia_path, x)) %>%
+#   lapply(URLencode)
+#
+# phia_files <- lapply(paths, sharepoint$download)
 
-paths <- list(geo = "EPHIA 2017-2018 PR Geospatial Data 20210622.zip",
+phia_path <- "ETH/datasets"
+
+phia_files <- list(geo = "EPHIA 2017-2018 PR Geospatial Data 20210622.zip",
               hh = "102 EPHIA 2017-2018 Household Dataset (DTA).zip",
               ind = "202 EPHIA 2017-2018 Adult Interview Dataset (DTA).zip",
               bio = "302 EPHIA 2017-2018 Adult Biomarker Dataset (DTA).zip",
               chind = "205_EPHIA 2017-2018 Child Interview Dataset (DTA).zip",
               chbio = "305 EPHIA 2017-2018 Child Biomarker Dataset (DTA).zip") %>%
-  lapply(function(x) file.path(phia_path, x)) %>%
-  lapply(URLencode)
-
-phia_files <- lapply(paths, sharepoint$download)
+  lapply(function(x) file.path(phia_path, x))
 
 geo <- rdhs::read_zipdata(phia_files$geo)
 

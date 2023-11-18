@@ -14,16 +14,22 @@ fieldwork_end <- "2016-08-01"
 areas <- read_sf("depends/mwi_areas.geojson")
 
 #' ## Load PHIA datasets
-sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+# sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")
+#
+# phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA"
+#
+# paths <- list(geo = "datasets/MWI/datasets/MPHIA 2015-2016 PR Geospatial Data 20210917.zip",
+#               survey = "datasets/MWI/datasets/MPHIA 2015-2016 Household Interview and Biomarker Datasets v2.0 (DTA).zip") %>%
+#   lapply(function(x) file.path(phia_path, x)) %>%
+#   lapply(URLencode)
+#
+# phia_files <- lapply(paths, sharepoint$download)
 
-phia_path <- "sites/HIVInferenceGroup-WP/Shared Documents/Data/household surveys/PHIA"
+phia_path <- "MWI/datasets"
 
-paths <- list(geo = "datasets/MWI/datasets/MPHIA 2015-2016 PR Geospatial Data 20210917.zip",
-              survey = "datasets/MWI/datasets/MPHIA 2015-2016 Household Interview and Biomarker Datasets v2.0 (DTA).zip") %>%
-  lapply(function(x) file.path(phia_path, x)) %>%
-  lapply(URLencode)
-
-phia_files <- lapply(paths, sharepoint$download)
+phia_files <- list(geo = "MPHIA 2015-2016 PR Geospatial Data 20210917.zip",
+              survey = "MPHIA 2015-2016 Household Interview and Biomarker Datasets v2.0 (DTA).zip") %>%
+  lapply(function(x) file.path(phia_path, x))
 
 geo <- rdhs::read_zipdata(phia_files$geo)
 

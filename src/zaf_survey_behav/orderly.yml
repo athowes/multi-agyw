@@ -21,7 +21,7 @@ packages:
   - naomi.utils
 
 depends:
-  zaf_data_areas:
+  process_areas:
     id: latest
     use:
       depends/zaf_areas.geojson: zaf_areas.geojson

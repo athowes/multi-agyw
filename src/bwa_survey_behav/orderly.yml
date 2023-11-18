@@ -28,7 +28,7 @@ packages:
   - tidyr
 
 depends:
-  bwa_data_areas:
+  process_areas:
     id: latest
     use:
       depends/bwa_areas.geojson: bwa_areas.geojson

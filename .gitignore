@@ -64,3 +64,490 @@ src/process_naomi-data/naomi_extract.xlsx
 src/national_data_areas/bdi_areas.geojson
 src/process_age-disagg-msm/.Rapp.history
 src/process_prevalence/.Rapp.history
+Central African Republic MICS6 Datasets/Central African Republic MICS6 SPSS Datasets/bh.sav
+Central African Republic MICS6 Datasets/Central African Republic MICS6 SPSS Datasets/ch.sav
+Central African Republic MICS6 Datasets/Central African Republic MICS6 SPSS Datasets/fg.sav
+Central African Republic MICS6 Datasets/Central African Republic MICS6 SPSS Datasets/fs.sav
+Central African Republic MICS6 Datasets/Central African Republic MICS6 SPSS Datasets/hh.sav
+Central African Republic MICS6 Datasets/Central African Republic MICS6 SPSS Datasets/hl.sav
+Central African Republic MICS6 Datasets/Central African Republic MICS6 SPSS Datasets/mn.sav
+Central African Republic MICS6 Datasets/Central African Republic MICS6 SPSS Datasets/tn.sav
+Central African Republic MICS6 Datasets/Central African Republic MICS6 SPSS Datasets/wm.sav
+Central African Republic MICS6 Datasets/Read_me_Central_African_Republic_MICS6.txt
+pwid-estimates.csv
+src/bwa_survey_bais/bais-iv-2013-20150319-v1.dta
+src/caf_survey_mics/Central African Republic MICS6 Datasets.zip
+src/caf_survey_mics/Central African Republic MICS6 Datasets/Central African Republic MICS6 SPSS Datasets/hh.sav
+src/caf_survey_mics/Central African Republic MICS6 Datasets/Central African Republic MICS6 SPSS Datasets/wm.sav
+src/caf_survey_mics_men/Central African Republic MICS6 Datasets.zip
+src/civ_survey_phia/CIV/datasets/101 CIPHIA 2017-2018 Household Dataset (SAS).zip
+src/civ_survey_phia/CIV/datasets/102 CIPHIA 2017-2018 Household Dataset (DTA).zip
+src/civ_survey_phia/CIV/datasets/103 CIPHIA 2017-2018 Household Dataset (CSV).zip
+src/civ_survey_phia/CIV/datasets/201 CIPHIA 2017-2018 Adult Interview Dataset (SAS).zip
+src/civ_survey_phia/CIV/datasets/202 CIPHIA 2017-2018 Adult Interview Dataset (DTA).zip
+src/civ_survey_phia/CIV/datasets/203 CIPHIA 2017-2018 Adult Interview Dataset (CSV).zip
+src/civ_survey_phia/CIV/datasets/204 CIPHIA 2017-2018 Child Interview Dataset (SAS).zip
+src/civ_survey_phia/CIV/datasets/205 CIPHIA 2017-2018 Child Interview Dataset (DTA).zip
+src/civ_survey_phia/CIV/datasets/206 CIPHIA 2017-2018 Child Interview Dataset (CSV).zip
+src/civ_survey_phia/CIV/datasets/302 CIPHIA 2017-2018 Adult Biomarker Dataset (DTA).zip
+src/civ_survey_phia/CIV/datasets/303 CIPHIA 2017-2018 Adult Biomarker Dataset (CSV).zip
+src/civ_survey_phia/CIV/datasets/304 CIPHIA 2017-2018 Child Biomarker Dataset (SAS).zip
+src/civ_survey_phia/CIV/datasets/305 CIPHIA 2017-2018 Child Biomarker Dataset (DTA).zip
+src/civ_survey_phia/CIV/datasets/306 CIPHIA 2017-2018 Child Biomarker Dataset (CSV).zip
+src/civ_survey_phia/CIV/datasets/401 CIPHIA 2017-2018 Household Intermediary Weights (SAS).zip
+src/civ_survey_phia/CIV/datasets/402 CIPHIA 2017-2018 Household Intermediary Weights (DTA).zip
+src/civ_survey_phia/CIV/datasets/403 CIPHIA 2017-2018 Household Intermediary Weights (CSV).zip
+src/civ_survey_phia/CIV/datasets/404 CIPHIA 2017-2018 Individual Intermediary Weights (SAS).zip
+src/civ_survey_phia/CIV/datasets/405 CIPHIA 2017-2018 Individual Intermediary Weights (DTA).zip
+src/civ_survey_phia/CIV/datasets/406 CIPHIA 2017-2018 Individual Intermediary Weights (CSV).zip
+src/civ_survey_phia/CIV/datasets/CIPHIA 2017-2018 Adult Biomarker Dataset (SAS).zip
+src/civ_survey_phia/CIV/datasets/CIPHIA 2017-2018 PR Geospatial Data 20210804.zip
+src/civ_survey_phia/CIV/datasets/gadm36_CIV_1_sf.rds
+src/civ_survey_phia/CIV/documentation/01 PHIA Data Use Manual.pdf
+src/civ_survey_phia/CIV/documentation/02 CIPHIA 2017-2018 Data Use Manual Supplement v5.0.pdf
+src/cmr_survey_phia/CMR/CAMPHIA-EPHIA-data-request.png
+src/cmr_survey_phia/CMR/datasets/101 CAMPHIA 2017-2018 Household Dataset (SAS).zip
+src/cmr_survey_phia/CMR/datasets/102 CAMPHIA 2017-2018 Household Dataset (DTA).zip
+src/cmr_survey_phia/CMR/datasets/103 CAMPHIA 2017-2018 Household Dataset (CSV).zip
+src/cmr_survey_phia/CMR/datasets/201 CAMPHIA 2017-2018 Adult Interview Dataset (SAS).zip
+src/cmr_survey_phia/CMR/datasets/202 CAMPHIA 2017-2018 Adult Interview Dataset (DTA).zip
+src/cmr_survey_phia/CMR/datasets/203 CAMPHIA 2017-2018 Adult Interview Dataset (CSV).zip
+src/cmr_survey_phia/CMR/datasets/204 CAMPHIA 2017-2018 Child Interview Dataset (SAS).zip
+src/cmr_survey_phia/CMR/datasets/205 CAMPHIA 2017-2018 Child Interview Dataset (DTA).zip
+src/cmr_survey_phia/CMR/datasets/206 CAMPHIA 2017-2018 Child Interview Dataset (CSV).zip
+src/cmr_survey_phia/CMR/datasets/301 CAMPHIA 2017-2018 Adult Biomarker Dataset (SAS).zip
+src/cmr_survey_phia/CMR/datasets/302 CAMPHIA 2017-2018 Adult Biomarker Dataset (DTA).zip
+src/cmr_survey_phia/CMR/datasets/303 CAMPHIA 2017-2018 Adult Biomarker Dataset (CSV).zip
+src/cmr_survey_phia/CMR/datasets/304 CAMPHIA 2017-2018 Child Biomarker Dataset (SAS).zip
+src/cmr_survey_phia/CMR/datasets/305 CAMPHIA 2017-2018 Child Biomarker Dataset (DTA).zip
+src/cmr_survey_phia/CMR/datasets/306 CAMPHIA 2017-2018 Child Biomarker Dataset (CSV).zip
+src/cmr_survey_phia/CMR/datasets/401 CAMPHIA 2017-2018 Household Intermediary Weights (SAS).zip
+src/cmr_survey_phia/CMR/datasets/402 CAMPHIA 2017-2018 Household Intermediary Weights (DTA).zip
+src/cmr_survey_phia/CMR/datasets/403 CAMPHIA 2017-2018 Household Intermediary Weights (CSV).zip
+src/cmr_survey_phia/CMR/datasets/404 CAMPHIA 2017-2018 Individual Intermediary Weights (SAS).zip
+src/cmr_survey_phia/CMR/datasets/405 CAMPHIA 2017-2018 Individual Intermediary Weights (DTA).zip
+src/cmr_survey_phia/CMR/datasets/406 CAMPHIA 2017-2018 Individual Intermediary Weights (CSV).zip
+src/civ_survey_phia/CIV/documentation/03 CIPHIA 2017-2018 Questionnaires.xlsx
+src/civ_survey_phia/CIV/documentation/04 CIPHIA 2017-2018 Household Questionnaire.pdf
+src/civ_survey_phia/CIV/documentation/05 CIPHIA 2017-2018 Adult Questionnaire v2.0.pdf
+src/civ_survey_phia/CIV/documentation/07 CIPHIA 2017-2018 Codebook (All Codebooks in One).xlsx
+src/civ_survey_phia/CIV/documentation/08_PHIA Tabulation Plan v3.7.pdf
+src/civ_survey_phia/CIV/documentation/09_CIPHIA 2017-2018 Sampling and Weighting Technical Report.pdf
+src/civ_survey_phia/CIV/documentation/10 CIPHIA 2017-2018 Sampling and Weighting Technical Report, Appendices.zip
+src/cmr_survey_phia/CMR/datasets/CAMPHIA 2017-2018 PR Geospatial Data 20210628.zip
+src/cmr_survey_phia/CMR/documentation/01 PHIA Data Use Manual.pdf
+src/cmr_survey_phia/CMR/documentation/02 CAMPHIA 2017-2018 Data Use Manual Supplement v3.2.pdf
+src/cmr_survey_phia/CMR/documentation/03 CAMPHIA 2017-2018 Questionnaires v2.0.xlsx
+src/cmr_survey_phia/CMR/documentation/04 CAMPHIA 2017-2018 Household Questionnaire v2.0.pdf
+src/cmr_survey_phia/CMR/documentation/05 CAMPHIA 2017-2018 Adult Questionnaire v2.0.pdf
+src/cmr_survey_phia/CMR/documentation/06 CAMPHIA 2017-2018 Adolescent Questionnaire.pdf
+src/cmr_survey_phia/CMR/documentation/07 CAMPHIA 2017-2018 Codebook (All Codebooks in One).xlsx
+src/cmr_survey_phia/CMR/documentation/08_PHIA Tabulation Plan v3.7.pdf
+src/cmr_survey_phia/CMR/documentation/09 CAMPHIA 2017-2018 Sampling and Weighting Technical Report.pdf
+src/cmr_survey_phia/CMR/documentation/10_CAMPHIA 2017-2018 Sampling and Weighting Technical Report, Appendices.zip
+src/cmr_survey_phia/CMR/Email - Eaton, Jeffrey W - Outlook.pdf
+src/eth_survey_phia/ETH/CAMPHIA-EPHIA-data-request.png
+src/eth_survey_phia/ETH/datasets/101 EPHIA 2017-2018 Household Dataset (SAS).zip
+src/eth_survey_phia/ETH/datasets/102 EPHIA 2017-2018 Household Dataset (DTA).zip
+src/eth_survey_phia/ETH/datasets/103 EPHIA 2017-2018 Household Dataset (CSV).zip
+src/eth_survey_phia/ETH/datasets/201 EPHIA 2017-2018 Adult Interview Dataset (SAS).zip
+src/eth_survey_phia/ETH/datasets/202 EPHIA 2017-2018 Adult Interview Dataset (DTA).zip
+src/eth_survey_phia/ETH/datasets/203 EPHIA 2017-2018 Adult Interview Dataset (CSV).zip
+src/eth_survey_phia/ETH/datasets/204 EPHIA 2017-2018 Child Interview Dataset (SAS).zip
+src/eth_survey_phia/ETH/datasets/205_EPHIA 2017-2018 Child Interview Dataset (DTA).zip
+src/eth_survey_phia/ETH/datasets/206 EPHIA 2017-2018 Child Interview Dataset (CSV).zip
+src/eth_survey_phia/ETH/datasets/301 EPHIA 2017-2018 Adult Biomarker Dataset (SAS).zip
+src/eth_survey_phia/ETH/datasets/302 EPHIA 2017-2018 Adult Biomarker Dataset (DTA).zip
+src/eth_survey_phia/ETH/datasets/303 EPHIA 2017-2018 Adult Biomarker Dataset (CSV).zip
+src/eth_survey_phia/ETH/datasets/304 EPHIA 2017-2018 Child Biomarker Dataset (SAS).zip
+src/eth_survey_phia/ETH/datasets/305 EPHIA 2017-2018 Child Biomarker Dataset (DTA).zip
+src/eth_survey_phia/ETH/datasets/306 EPHIA 2017-2018 Child Biomarker Dataset (CSV).zip
+src/eth_survey_phia/ETH/datasets/401 EPHIA 2017-2018 Household Intermediary Weights Dataset (SAS).zip
+src/eth_survey_phia/ETH/datasets/402 EPHIA 2017-2018 Household Intermediary Weights Dataset (DTA).zip
+src/eth_survey_phia/ETH/datasets/403 EPHIA 2017-2018 Household Intermediary Weights Dataset (CSV).zip
+src/eth_survey_phia/ETH/datasets/404 EPHIA 2017-2018 Individual Intermediary Weights Dataset (SAS).zip
+src/eth_survey_phia/ETH/datasets/405 EPHIA 2017-2018 Individual Intermediary Weights Dataset (DTA).zip
+src/eth_survey_phia/ETH/datasets/406 EPHIA 2017-2018 Individual Intermediary Weights Dataset (CSV).zip
+src/eth_survey_phia/ETH/datasets/EPHIA 2017-2018 PR Geospatial Data 20210622.zip
+src/eth_survey_phia/ETH/documentation/01 PHIA Data Use Manual.pdf
+src/eth_survey_phia/ETH/documentation/02 EPHIA 2017-2018 Data Use Manual Supplement v5.1.pdf
+src/eth_survey_phia/ETH/documentation/03 EPHIA 2017-2018 Questionnaires.xlsx
+src/eth_survey_phia/ETH/documentation/04 EPHIA 2017-2018 Household Questionnaire.pdf
+src/eth_survey_phia/ETH/documentation/05 EPHIA 2017-2018 Adult Questionnaire.pdf
+src/eth_survey_phia/ETH/documentation/06 EPHIA 2017-2018 Adolescent Questionnaire.pdf
+src/eth_survey_phia/ETH/documentation/07 EPHIA 2017-2018 Codebook (All Codebooks in One).xlsx
+src/eth_survey_phia/ETH/documentation/08_PHIA Tabulation Plan v3.7.pdf
+src/eth_survey_phia/ETH/documentation/09_EPHIA 2017-2018 Sampling and Weighting Technical Report.pdf
+src/eth_survey_phia/ETH/documentation/10 EPHIA 2017-2018 Sampling and Weighting Technical Report, Appendices.zip
+src/eth_survey_phia/ETH/Email - Eaton, Jeffrey W - Outlook.pdf
+src/ken_survey_phia/KEN/datasets/KENPHIA 2018 Drug Resistance Data (CSV).zip
+src/ken_survey_phia/KEN/datasets/KENPHIA 2018 Drug Resistance Data (DTA).zip
+src/ken_survey_phia/KEN/datasets/KENPHIA 2018 Drug Resistance Data (SAS).zip
+src/ken_survey_phia/KEN/datasets/KENPHIA 2018 Geospatial Data (CSV).zip
+src/ken_survey_phia/KEN/datasets/KENPHIA 2018 Geospatial Data (DTA).zip
+src/ken_survey_phia/KEN/datasets/KENPHIA 2018 Geospatial Data (SAS).zip
+src/ken_survey_phia/KEN/datasets/KENPHIA 2018 Household Interview and Biomarker Datasets v1.1 (CSV).zip
+src/ken_survey_phia/KEN/datasets/KENPHIA 2018 Household Interview and Biomarker Datasets v1.1 (DTA).zip
+src/ken_survey_phia/KEN/datasets/KENPHIA 2018 Household Interview and Biomarker Datasets v1.1 (SAS).zip
+src/ken_survey_phia/KEN/datasets/KENPHIA 2018 Intermediary Weights v1.1 (CSV).zip
+src/ken_survey_phia/KEN/datasets/KENPHIA 2018 Intermediary Weights v1.1 (DTA).zip
+src/ken_survey_phia/KEN/datasets/KENPHIA 2018 Intermediary Weights v1.1 (SAS).zip
+src/ken_survey_phia/KEN/documentation/21-03-2022-23-20-40-62390848f1f0e.xlsx
+src/ken_survey_phia/KEN/documentation/21-03-2022-23-20-57-62390859d8eb6.pdf
+src/ken_survey_phia/KEN/documentation/26-08-2022-18-23-35-63090fa7c5e77.pdf
+src/ken_survey_phia/KEN/documentation/26-08-2022-18-25-41-630910253a68a.pdf
+src/ken_survey_phia/KEN/documentation/26-08-2022-18-26-20-6309104c842fa.pdf
+src/ken_survey_phia/KEN/documentation/26-08-2022-18-26-52-6309106c0b16a.pdf
+src/ken_survey_phia/KEN/documentation/26-08-2022-18-28-15-630910bf80ab2.pdf
+src/ken_survey_phia/KEN/documentation/26-08-2022-18-32-01-630911a132468.pdf
+src/ken_survey_phia/KEN/documentation/26-08-2022-18-45-30-630914ca9ccf2.xlsx
+src/ken_survey_phia/KEN/documentation/26-08-2022-18-46-08-630914f0d2e87.zip
+src/ken_survey_phia/KEN/documentation/26-08-2022-18-46-30-6309150606a69.xlsx
+src/ken_survey_phia/KEN/documentation/28-09-2021-22-01-17-615390ad6a147.pdf
+src/ken_survey_phia/KEN/documentation/29-09-2021-20-47-13-6154d0d140c1f.pdf
+src/ken_survey_phia/KEN/KenPHIA data request.txt
+src/ken_survey_phia/KEN/reports/KENPHIA-2018_Preliminary-Report_final-web.pdf
+src/ken_survey_phia/KEN/reports/KENPHIA_Ago25-DIGITAL.pdf
+src/lso_survey_phia/LSO/datasets/101_LePHIA 2016-2017 Household Dataset (SAS).zip
+src/lso_survey_phia/LSO/datasets/102_LePHIA 2016-2017 Household Dataset (DTA).zip
+src/lso_survey_phia/LSO/datasets/103_LePHIA 2016-2017 Household Dataset (CSV).zip
+src/lso_survey_phia/LSO/datasets/201_LePHIA 2016-2017 Adult Interview Dataset (SAS).zip
+src/lso_survey_phia/LSO/datasets/202_LePHIA 2016-2017 Adult Interview Dataset (DTA).zip
+src/lso_survey_phia/LSO/datasets/203_LePHIA 2016-2017 Adult Interview Dataset (CSV).zip
+src/lso_survey_phia/LSO/datasets/204_LePHIA 2016-2017 Child Interview Dataset (SAS).zip
+src/lso_survey_phia/LSO/datasets/205_LePHIA 2016-2017 Child Interview Dataset (DTA).zip
+src/lso_survey_phia/LSO/datasets/206_LePHIA 2016-2017 Child Interview Dataset (CSV).zip
+src/lso_survey_phia/LSO/datasets/301_LePHIA 2016-2017 Adult Biomarker Dataset (SAS).zip
+src/lso_survey_phia/LSO/datasets/302_LePHIA 2016-2017 Adult Biomarker Dataset (DTA).zip
+src/lso_survey_phia/LSO/datasets/303_LePHIA 2016-2017 Adult Biomarker Dataset (CSV).zip
+src/lso_survey_phia/LSO/datasets/304_LePHIA 2016-2017 Child Biomarker Dataset (SAS).zip
+src/lso_survey_phia/LSO/datasets/305_LePHIA 2016-2017 Child Biomarker Dataset (DTA).zip
+src/lso_survey_phia/LSO/datasets/306_LePHIA 2016-2017 Child Biomarker Dataset (CSV).zip
+src/lso_survey_phia/LSO/datasets/401_LePHIA 2016-2017 Household Intermediary Weights Dataset (SAS).zip
+src/lso_survey_phia/LSO/datasets/402_LePHIA 2016-2017 Household Intermediary Weights Dataset (DTA).zip
+src/lso_survey_phia/LSO/datasets/403_LePHIA 2016-2017 Household Intermediary Weights Dataset (CSV).zip
+src/lso_survey_phia/LSO/datasets/404_LePHIA 2016-2017 Individual Intermediary Weights Dataset (SAS).zip
+src/lso_survey_phia/LSO/datasets/405_LePHIA 2016-2017 Individual Intermediary Weights Dataset (DTA).zip
+src/lso_survey_phia/LSO/datasets/406_LePHIA 2016-2017 Individual Intermediary Weights Dataset (CSV).zip
+src/lso_survey_phia/LSO/datasets/LePHIA 2016-2017 PR Geospatial Data 20210518.zip
+src/lso_survey_phia/LSO/documentation/02_LePHIA 2016-2017 Data Use Manual Supplement.pdf
+src/lso_survey_phia/LSO/documentation/03_LePHIA 2016-2017 Questionnaires (All Questionnaires in One).xlsx
+src/lso_survey_phia/LSO/documentation/04_LePHIA 2016-2017 Household Questionnaire.pdf
+src/lso_survey_phia/LSO/documentation/05_LEPHIA 2016-2017 Adult Questionnaire.pdf
+src/lso_survey_phia/LSO/documentation/06_LePHIA 2016-2017 Adolescent Questionnaire.pdf
+src/lso_survey_phia/LSO/documentation/07_LePHIA 2016-2017 Codebook (All Codebooks in One).xlsx
+src/lso_survey_phia/LSO/documentation/08_PHIA Tabulation Plan v3.6.pdf
+src/lso_survey_phia/LSO/documentation/09_LePHIA 2016-2017 Sampling and Weighting Technical Report.pdf
+src/lso_survey_phia/LSO/documentation/10_LePHIA 2016-2017 Sampling and Weighting Technical Report, Appendices.zip
+src/lso_survey_phia/LSO/Email - Eaton, Jeffrey W - Outlook.pdf
+src/lso_survey_phia/LSO/LePHIA data request_2021-05-20.png
+src/lso_survey_phia/LSO/LePHIA data request_2021-05-20.txt
+src/mwi_survey_phia/MWI/datasets/MPHIA 2015-2016 Household Interview and Biomarker Datasets v2.0 (CSV).zip
+src/mwi_survey_phia/MWI/datasets/MPHIA 2015-2016 Household Interview and Biomarker Datasets v2.0 (DTA).zip
+src/mwi_survey_phia/MWI/datasets/MPHIA 2015-2016 Household Interview and Biomarker Datasets v2.0 (SAS).zip
+src/mwi_survey_phia/MWI/datasets/MPHIA 2015-2016 Intermediary Weights v2.0 (CSV).zip
+src/mwi_survey_phia/MWI/datasets/MPHIA 2015-2016 Intermediary Weights v2.0 (DTA).zip
+src/mwi_survey_phia/MWI/datasets/MPHIA 2015-2016 Intermediary Weights v2.0 (SAS).zip
+src/mwi_survey_phia/MWI/datasets/MPHIA 2015-2016 PR Geospatial Data 20210917.zip
+src/mwi_survey_phia/MWI/datasets/old datasets/01_MPHIA 2015-2016 Adult Biomarker Dataset (SAS).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/01_MPHIA 2015-2016 Adult Interview Dataset (SAS).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/01_MPHIA 2015-2016 Household Dataset (SAS).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/01_MPHIA 2015-2016 Household Intermediary Weights Dataset (SAS).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/02_MPHIA 2015-2016 Adult Biomarker Dataset (DTA).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/02_MPHIA 2015-2016 Adult Interview Dataset (DTA).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/02_MPHIA 2015-2016 Household Dataset (DTA).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/02_MPHIA 2015-2016 Household Intermediary Weights Dataset (DTA).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/03_MPHIA 2015-2016 Adult Biomarker Dataset (CSV).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/03_MPHIA 2015-2016 Adult Interview Dataset (CSV).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/03_MPHIA 2015-2016 Household Dataset (CSV).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/03_MPHIA 2015-2016 Household Intermediary Weights Dataset (CSV).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/04_MPHIA 2015-2016 Child Biomarker Dataset (SAS).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/04_MPHIA 2015-2016 Child Interview Dataset (SAS).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/04_MPHIA 2015-2016 Individual Intermediary Weights Dataset (SAS).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/05_MPHIA 2015-2016 Child Biomarker Dataset (DTA).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/05_MPHIA 2015-2016 Child Interview Dataset (DTA).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/05_MPHIA 2015-2016 Individual Intermediary Weights Dataset (DTA).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/06_MPHIA 2015-2016 Child Biomarker Dataset (CSV).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/06_MPHIA 2015-2016 Child Interview Dataset (CSV).zip
+src/mwi_survey_phia/MWI/datasets/old datasets/06_MPHIA 2015-2016 Individual Intermediary Weights Dataset (CSV).zip
+src/mwi_survey_phia/MWI/documentation/001_PHIA Data Use Manual.pdf
+src/mwi_survey_phia/MWI/documentation/002_MPHIA 2015-2016 Data Use Manual Supplement.pdf
+src/mwi_survey_phia/MWI/documentation/003_MPHIA 2015-2016 Questionnaires.xlsx
+src/mwi_survey_phia/MWI/documentation/004_MPHIA 2015-2016 Household Questionnaire.pdf
+src/mwi_survey_phia/MWI/documentation/005_MPHIA 2015-2016 Adult Questionnaire.pdf
+src/mwi_survey_phia/MWI/documentation/008_PHIA Tabulation Plan.pdf
+src/mwi_survey_phia/MWI/documentation/07_MPHIA 2015-2016 Codebook.xlsx
+src/mwi_survey_phia/MWI/documentation/10_MPHIA 2015-2016 Sampling and Weighting Technical Report.pdf
+src/mwi_survey_phia/MWI/documentation/11_MPHIA 2015-2016 Sampling and Weighting Technical Report, Appendices.zip
+src/moz_survey_phia/INSIDA_2021_UNAIDS_DATASET.csv
+src/nam_survey_phia/NAM/datasets/101 NAMPHIA 2017 Household Dataset (SAS).zip
+src/nam_survey_phia/NAM/datasets/102 NAMPHIA 2017 Household Dataset (DTA).zip
+src/nam_survey_phia/NAM/datasets/103 NAMPHIA 2017 Household Dataset (CSV).zip
+src/nam_survey_phia/NAM/datasets/201_NAMPHIA 2017 Adult Interview Dataset (SAS).zip
+src/nam_survey_phia/NAM/datasets/202_NAMPHIA 2017 Adult Interview Dataset (DTA).zip
+src/nam_survey_phia/NAM/datasets/203 NAMPHIA 2017 Adult Interview Dataset (CSV).zip
+src/nam_survey_phia/NAM/datasets/204 NAMPHIA 2017 Child Interview Dataset (SAS).zip
+src/nam_survey_phia/NAM/datasets/205 NAMPHIA 2017 Child Interview Dataset (DTA).zip
+src/nam_survey_phia/NAM/datasets/206 NAMPHIA 2017 Child Interview Dataset (CSV).zip
+src/nam_survey_phia/NAM/datasets/301_NAMPHIA 2017 Adult Biomarker Dataset (SAS).zip
+src/nam_survey_phia/NAM/datasets/302_NAMPHIA 2017 Adult Biomarker Dataset (DTA).zip
+src/nam_survey_phia/NAM/datasets/303_NAMPHIA 2017 Adult Biomarker Dataset (CSV).zip
+src/nam_survey_phia/NAM/datasets/304 NAMPHIA 2017 Child Biomarker Dataset (SAS).zip
+src/nam_survey_phia/NAM/datasets/305 NAMPHIA 2017 Child Biomarker Dataset (DTA).zip
+src/nam_survey_phia/NAM/datasets/306 NAMPHIA 2017 Child Biomarker Dataset (CSV).zip
+src/nam_survey_phia/NAM/datasets/401NAMPHIA 2017 Household Intermediary Weights Dataset (SAS).zip
+src/nam_survey_phia/NAM/datasets/402NAMPHIA 2017 Household Intermediary Weights Dataset (DTA).zip
+src/nam_survey_phia/NAM/datasets/403NAMPHIA 2017 Household Intermediary Weights Dataset (CSV).zip
+src/nam_survey_phia/NAM/datasets/404NAMPHIA 2017 Individual Intermediary Weights Dataset (SAS).zip
+src/nam_survey_phia/NAM/datasets/405NAMPHIA 2017 Individual Intermediary Weights Dataset (DTA).zip
+src/nam_survey_phia/NAM/datasets/406NAMPHIA 2017 Individual Intermediary Weights Dataset (CSV).zip
+src/nam_survey_phia/NAM/datasets/NAMPHIA 2017 PR Geospatial Data 20210603.zip
+src/nam_survey_phia/NAM/documentation/01 PHIA Data Use Manual.pdf
+src/nam_survey_phia/NAM/documentation/02_NAMPHIA 2017 Data Use Manual Supplement.pdf
+src/nam_survey_phia/NAM/documentation/03 NAMPHIA 2017 Questionnaires (All Questionnaires in One).xlsx
+src/nam_survey_phia/NAM/documentation/04 NAMPHIA 2017 Household Questionnaire.pdf
+src/nam_survey_phia/NAM/documentation/05 NAMPHIA 2017 Adult Questionnaire.pdf
+src/nam_survey_phia/NAM/documentation/06 NAMPHIA 2017 Adolescent Questionnaire.pdf
+src/nam_survey_phia/NAM/documentation/07 NAMPHIA 2017 Codebook (All Codebooks in One).xlsx
+src/nam_survey_phia/NAM/documentation/08_PHIA Tabulation Plan v3.7.pdf
+src/nam_survey_phia/NAM/documentation/09_NAMPHIA 2017 Sampling and Weighting Technical Report.pdf
+src/nam_survey_phia/NAM/documentation/10 NAMPHIA 2017 Sampling and Weighting Technical Report, Appendices.zip
+src/nam_survey_phia/NAM/namphia-data-request_2021-06-08.jpg
+src/process_areas/2023_ssa_all_levels.geojson
+src/rwa_survey_phia/RWA/datasets/101_RPHIA 2018-2019 Household Dataset (SAS).zip
+src/rwa_survey_phia/RWA/datasets/102_RPHIA 2018-2019 Household Dataset (DTA).zip
+src/rwa_survey_phia/RWA/datasets/103_RPHIA 2018-2019 Household Dataset (CSV).zip
+src/rwa_survey_phia/RWA/datasets/201_RPHIA 2018-2019 Adult Interview Dataset (SAS).zip
+src/rwa_survey_phia/RWA/datasets/202_202 RPHIA 2018-2019 Adult Interview Dataset (DTA).zip
+src/rwa_survey_phia/RWA/datasets/203_RPHIA 2018-2019 Adult Interview Dataset (CSV).zip
+src/rwa_survey_phia/RWA/datasets/204_RPHIA 2018-2019 Child Interview Dataset (SAS).zip
+src/rwa_survey_phia/RWA/datasets/205_RPHIA 2018-2019 Child Interview Dataset (DTA).zip
+src/rwa_survey_phia/RWA/datasets/206_RPHIA 2018-2019 Child Interview Dataset (CSV).zip
+src/rwa_survey_phia/RWA/datasets/301 RPHIA 2018-2019 Adult Biomarker Dataset (SAS).zip
+src/rwa_survey_phia/RWA/datasets/302 RPHIA 2018-2019 Adult Biomarker Dataset (DTA).zip
+src/rwa_survey_phia/RWA/datasets/303 RPHIA 2018-2019 Adult Biomarker Dataset (CSV).zip
+src/rwa_survey_phia/RWA/datasets/304 RPHIA 2018-2019 Child Biomarker Dataset (SAS).zip
+src/rwa_survey_phia/RWA/datasets/305 RPHIA 2018-2019 Child Biomarker Dataset (DTA).zip
+src/rwa_survey_phia/RWA/datasets/306 RPHIA 2018-2019 Child Biomarker Dataset (CSV).zip
+src/rwa_survey_phia/RWA/datasets/401 RPHIA 2018-2019 Household Intermediary Weights (SAS).zip
+src/rwa_survey_phia/RWA/datasets/402 RPHIA 2018-2019 Household Intermediary Weights (DTA).zip
+src/rwa_survey_phia/RWA/datasets/403 RPHIA 2018-2019 Household Intermediary Weights (CSV).zip
+src/rwa_survey_phia/RWA/datasets/404 RPHIA 2018-2019 Individual Intermediary Weights (SAS).zip
+src/rwa_survey_phia/RWA/datasets/405 RPHIA 2018-2019 Individual Intermediary Weights (DTA).zip
+src/rwa_survey_phia/RWA/datasets/406 RPHIA 2018-2019 Individual Intermediary Weights (CSV).zip
+src/rwa_survey_phia/RWA/datasets/RPHIA 2018-2019 PR Geospatial Data 20210722.zip
+src/rwa_survey_phia/RWA/documentation/01 PHIA Data Use Manual.pdf
+src/rwa_survey_phia/RWA/documentation/02 RPHIA 2018-2019 Data Use Manual Supplement.pdf
+src/rwa_survey_phia/RWA/documentation/03 RPHIA 2018-2019 Questionnaires.xlsx
+src/rwa_survey_phia/RWA/documentation/04 RPHIA 2018-2019 Household Questionnaire.pdf
+src/rwa_survey_phia/RWA/documentation/05 RPHIA 2018-2019 Adult Questionnaire.pdf
+src/rwa_survey_phia/RWA/documentation/06 RPHIA 2018-2019 Adolescent Questionnaire.pdf
+src/rwa_survey_phia/RWA/documentation/07 RPHIA 2018-2019 Codebook (All Codebooks in One).xlsx
+src/rwa_survey_phia/RWA/documentation/08_PHIA Tabulation Plan v3.7.pdf
+src/rwa_survey_phia/RWA/documentation/09 RPHIA 2018-2019 Sampling and Weighting Technical Report.pdf
+src/rwa_survey_phia/RWA/documentation/10 RPHIA 2018-2019 Sampling and Weighting Technical Report, Appendices.zip
+src/rwa_survey_phia/RWA/RPHIA data request_2021-07-23.txt
+src/swz_survey_phia/SWZ/datasets/old datasets/101_SHIMS2 2016-2017 Household Dataset (SAS).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/102_SHIMS2 2016-2017 Household Dataset (DTA).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/103_SHIMS2 2016-2017 Household Dataset (CSV).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/201_SHIMS2 2016-2017 Adult Interview Dataset (SAS).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/202_SHIMS2 2016-2017 Adult Interview Dataset (DTA).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/203_SHIMS2 2016-2017 Adult Interview Dataset (CSV).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/204_SHIMS2 2016-2017 Child Interview Dataset (SAS).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/205_SHIMS2 2016-2017 Child Interview Dataset (DTA).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/206_SHIMS2 2016-2017 Child Interview Dataset (CSV).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/301_SHIMS2 2016-2017 Adult Biomarker Dataset (SAS).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/302_SHIMS2 2016-2017 Adult Biomarker Dataset (DTA).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/303_SHIMS2 2016-2017 Adult Biomarker Dataset (CSV).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/304_SHIMS2 2016-2017 Child Biomarker Dataset (SAS).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/305_SHIMS2 2016-2017 Child Biomarker Dataset (DTA).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/306_SHIMS2 2016-2017 Child Biomarker Dataset (CSV).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/401_SHIMS2 2016-2017 Household Intermediary Weights Dataset (SAS).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/402_SHIMS2 2016-2017 Household Intermediary Weights Dataset (DTA).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/403_SHIMS2 2016-2017 Household Intermediary Weights Dataset (CSV).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/404_SHIMS2 2016-2017 Individual Intermediary Weights Dataset (SAS).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/405_SHIMS2 2016-2017 Individual Intermediary Weights Dataset (DTA).zip
+src/swz_survey_phia/SWZ/datasets/old datasets/406_SHIMS2 2016-2017 Individual Intermediary Weights Dataset (CSV).zip
+src/swz_survey_phia/SWZ/datasets/SHIMS2 2016-2017 Household Interview and Biomarker Datasets v2.0 (CSV).zip
+src/swz_survey_phia/SWZ/datasets/SHIMS2 2016-2017 Household Interview and Biomarker Datasets v2.0 (DTA).zip
+src/swz_survey_phia/SWZ/datasets/SHIMS2 2016-2017 Household Interview and Biomarker Datasets v2.0 (SAS).zip
+src/swz_survey_phia/SWZ/datasets/SHIMS2 2016-2017 Intermediary Weights v2.0 (CSV).zip
+src/swz_survey_phia/SWZ/datasets/SHIMS2 2016-2017 Intermediary Weights v2.0 (DTA).zip
+src/swz_survey_phia/SWZ/datasets/SHIMS2 2016-2017 Intermediary Weights v2.0 (SAS).zip
+src/swz_survey_phia/SWZ/datasets/SHIMS2 2016-2017 PR Geospatial Data 20211022.zip
+src/swz_survey_phia/SWZ/documentation/008_PHIA Tabulation Plan.pdf
+src/swz_survey_phia/SWZ/documentation/01_PHIA Data Use Manual.pdf
+src/swz_survey_phia/SWZ/documentation/02_SHIMS2 2016-2017 Data Use Manual Supplement.pdf
+src/swz_survey_phia/SWZ/documentation/03_SHIMS2 2016-2017 Questionnaires (All Questionnaires in One).xlsx
+src/swz_survey_phia/SWZ/documentation/04_SHIMS2 2016-2017 Household Questionnaire.pdf
+src/swz_survey_phia/SWZ/documentation/05_SHIMS2 2016-2017 Adult Questionnaire.pdf
+src/swz_survey_phia/SWZ/documentation/06_SHIMS2 2016-2017 Adolescent Questionnaire.pdf
+src/swz_survey_phia/SWZ/documentation/07_SHIMS2 2016-2017 Codebook (All Codebooks in One).xlsx
+src/swz_survey_phia/SWZ/documentation/09_SHIMS2 2016-2017 Sampling and Weighting Technical Report.pdf
+src/swz_survey_phia/SWZ/documentation/10_SHIMS2 2016-2017 Sampling and Weighting Technical Report, Appendices.zip
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.1 CHAID TREES/AD_INDIV_STATUS.pdf
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.1 CHAID TREES/AF_BT_STATUS.pdf
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.1 CHAID TREES/AM_BT_STATUS.pdf
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.1 CHAID TREES/C_BT_STATUS.pdf
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.1 CHAID TREES/CH_INDIV_STATUS.pdf
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.1 CHAID TREES/TF_BT_STATUS.pdf
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.1 CHAID TREES/TM_BT_STATUS.pdf
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.1 CHAID TREES/TN_INDIV_STATUS.pdf
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.2 NR ADJUSTMENT CELLS/Swa_AD_INDIV.xlsx
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.2 NR ADJUSTMENT CELLS/Swa_AF_BT.xlsx
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.2 NR ADJUSTMENT CELLS/Swa_AM_BT.xlsx
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.2 NR ADJUSTMENT CELLS/Swa_C_BT.xlsx
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.2 NR ADJUSTMENT CELLS/Swa_CH_INDIV.xlsx
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.2 NR ADJUSTMENT CELLS/Swa_TF_BT.xlsx
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.2 NR ADJUSTMENT CELLS/Swa_TM_BT.xlsx
+src/swz_survey_phia/SWZ/documentation/APPENDIX C/C.2 NR ADJUSTMENT CELLS/Swa_TN_INDIV.xlsx
+src/swz_survey_phia/SWZ/reports/SHIMS2-Summary-Sheet-Slides_3May19.pptx
+src/swz_survey_phia/SWZ/reports/SHIMS2_Final-Report_05.03.2019_forWEB.pdf
+src/swz_survey_phia/SWZ/reports/SHIMS2_Final.pdf
+src/tza_survey_phia/TZA/datasets/old datasets/01_THIS 2016-2017 Adult Biomarker Dataset (SAS).zip
+src/tza_survey_phia/TZA/datasets/old datasets/01_THIS 2016-2017 Adult Interview Dataset (SAS).zip
+src/tza_survey_phia/TZA/datasets/old datasets/01_THIS 2016-2017 Household Dataset (SAS).zip
+src/tza_survey_phia/TZA/datasets/old datasets/01_THIS 2016-2017 Household Intermediary Weights Dataset (SAS).zip
+src/tza_survey_phia/TZA/datasets/old datasets/02_THIS 2016-2017 Adult Biomarker Dataset (DTA).zip
+src/tza_survey_phia/TZA/datasets/old datasets/02_THIS 2016-2017 Adult Interview Dataset (DTA).zip
+src/tza_survey_phia/TZA/datasets/old datasets/02_THIS 2016-2017 Household Dataset (DTA).zip
+src/tza_survey_phia/TZA/datasets/old datasets/02_THIS 2016-2017 Household Intermediary Weights Dataset (DTA).zip
+src/tza_survey_phia/TZA/datasets/old datasets/03_THIS 2016-2017 Adult Biomarker Dataset (CSV).zip
+src/tza_survey_phia/TZA/datasets/old datasets/03_THIS 2016-2017 Adult Interview Dataset (CSV).zip
+src/tza_survey_phia/TZA/datasets/old datasets/03_THIS 2016-2017 Household Dataset (CSV).zip
+src/tza_survey_phia/TZA/datasets/old datasets/03_THIS 2016-2017 Household Intermediary Weights Dataset (CSV).zip
+src/tza_survey_phia/TZA/datasets/old datasets/04_THIS 2016-2017 Child Biomarker Dataset (SAS).zip
+src/tza_survey_phia/TZA/datasets/old datasets/04_THIS 2016-2017 Child Interview Dataset (SAS).zip
+src/tza_survey_phia/TZA/datasets/old datasets/04_THIS 2016-2017 Individual Intermediary Weights Dataset (SAS).zip
+src/tza_survey_phia/TZA/datasets/old datasets/05_THIS 2016-2017 Child Biomarker Dataset (DTA).zip
+src/tza_survey_phia/TZA/datasets/old datasets/05_THIS 2016-2017 Child Interview Dataset (DTA).ZIP
+src/tza_survey_phia/TZA/datasets/old datasets/05_THIS 2016-2017 Individual Intermediary Weights Dataset (DTA).zip
+src/tza_survey_phia/TZA/datasets/old datasets/06_THIS 2016-2017 Child Biomarker Dataset (CSV).zip
+src/tza_survey_phia/TZA/datasets/old datasets/06_THIS 2016-2017 Individual Intermediary Weights Dataset (CSV).zip
+src/tza_survey_phia/TZA/datasets/old datasets/06_THIS 2017-2017 Child Interview Dataset (CSV).zip
+src/tza_survey_phia/TZA/datasets/THIS 2016-2017 Household Interview and Biomarker Datasets v2.0 (CSV).zip
+src/tza_survey_phia/TZA/datasets/THIS 2016-2017 Household Interview and Biomarker Datasets v2.0 (DTA).zip
+src/tza_survey_phia/TZA/datasets/THIS 2016-2017 Household Interview and Biomarker Datasets v2.0 (SAS).zip
+src/tza_survey_phia/TZA/datasets/THIS 2016-2017 Intermediary Weights v2.0 (CSV).zip
+src/tza_survey_phia/TZA/datasets/THIS 2016-2017 Intermediary Weights v2.0 (DTA).zip
+src/tza_survey_phia/TZA/datasets/THIS 2016-2017 Intermediary Weights v2.0 (SAS).zip
+src/tza_survey_phia/TZA/datasets/THIS 2016-2017 PR Geospatial Data 20211014.zip
+src/tza_survey_phia/TZA/documentation/03_THIS 2016-2017 Questionnaires (All Questionnaires in One).xlsx
+src/tza_survey_phia/TZA/documentation/PHIA Data Use Manual.pdf
+src/tza_survey_phia/TZA/documentation/PHIA Tabulation Plan.pdf
+src/tza_survey_phia/TZA/documentation/THIS 2016-2017 Adolescent Questionnaire.pdf
+src/tza_survey_phia/TZA/documentation/THIS 2016-2017 Adult Questionnaire.pdf
+src/tza_survey_phia/TZA/documentation/THIS 2016-2017 Codebook (All Codebooks in One).xlsx
+src/tza_survey_phia/TZA/documentation/THIS 2016-2017 Data Use Manual Supplement.pdf
+src/tza_survey_phia/TZA/documentation/THIS 2016-2017 Household Questionnaire.pdf
+src/tza_survey_phia/TZA/documentation/THIS 2016-2017 Sampling and Weighting Technical Report, Appendices.zip
+src/tza_survey_phia/TZA/documentation/THIS 2016-2017 Sampling and Weighting Technical Report.pdf
+src/uga_survey_phia/UGA/datasets/101 UPHIA 2016-2017 Household Dataset (SAS).zip
+src/uga_survey_phia/UGA/datasets/102 UPHIA 2016-2017 Household Dataset (DTA).zip
+src/uga_survey_phia/UGA/datasets/103 UPHIA 2016-2017 Household Dataset (CSV).zip
+src/uga_survey_phia/UGA/datasets/201 UPHIA 2016-2017 Adult Interview Dataset (SAS).zip
+src/uga_survey_phia/UGA/datasets/202 UPHIA 2016-2017 Adult Interview Dataset (DTA).zip
+src/uga_survey_phia/UGA/datasets/203_UPHIA 2016-2017 Adult Interview Dataset (CSV).zip
+src/uga_survey_phia/UGA/datasets/204_UPHIA 2016-2017 Child Interview Dataset (SAS).zip
+src/uga_survey_phia/UGA/datasets/205 UPHIA 2016-2017 Child Interview Dataset (DTA).zip
+src/uga_survey_phia/UGA/datasets/206 UPHIA 2016-2017 Child Interview Dataset (CSV).zip
+src/uga_survey_phia/UGA/datasets/301 UPHIA 2016-2017 Adult Biomarker Dataset (SAS).zip
+src/uga_survey_phia/UGA/datasets/302 UPHIA 2016-2017 Adult Biomarker Dataset (DTA).zip
+src/uga_survey_phia/UGA/datasets/303 UPHIA 2016-2017 Adult Biomarker Dataset (CSV).zip
+src/uga_survey_phia/UGA/datasets/304 UPHIA 2016-2017 Child Biomarker Dataset (SAS).zip
+src/uga_survey_phia/UGA/datasets/305 UPHIA 2016-2017 Child Biomarker Dataset (DTA).zip
+src/uga_survey_phia/UGA/datasets/306 UPHIA 2016-2017 Child Biomarker Dataset (CSV).zip
+src/uga_survey_phia/UGA/datasets/401 UPHIA 2016-2017 Household Intermediary Weights Dataset (SAS).zip
+src/uga_survey_phia/UGA/datasets/402 UPHIA 2016-2017 Household Intermediary Weights Dataset (DTA).zip
+src/uga_survey_phia/UGA/datasets/403 UPHIA 2016-2017 Household Intermediary Weights Dataset (CSV).zip
+src/uga_survey_phia/UGA/datasets/404 UPHIA 2016-2017 Individual Intermediary Weights Dataset (SAS).zip
+src/uga_survey_phia/UGA/datasets/405 UPHIA 2016-2017 Individual Intermediary Weights Dataset (DTA).zip
+src/uga_survey_phia/UGA/datasets/406 UPHIA 2016-2017 Individual Intermediary Weights Dataset (CSV).zip
+src/uga_survey_phia/UGA/datasets/UPHIA 2016-2017 PR Geospatial Data 20210602.zip
+src/uga_survey_phia/UGA/documentation/01 PHIA Data Use Manual.pdf
+src/uga_survey_phia/UGA/documentation/02_UPHIA 2016-2017 Data Use Manual Supplement.pdf
+src/uga_survey_phia/UGA/documentation/03 UPHIA 2016-2017 Questionnaires (All Questionnaires in One).xlsx
+src/uga_survey_phia/UGA/documentation/04_UPHIA 2016-2017 Household Questionnaire.pdf
+src/uga_survey_phia/UGA/documentation/05 UPHIA 2016-2017 Adult Questionnaire.pdf
+src/uga_survey_phia/UGA/documentation/06 UPHIA 2016-2017 Adolescent Questionnaire.pdf
+src/uga_survey_phia/UGA/documentation/07 UPHIA 2016-2017 Codebook (All Codebooks in One).xlsx
+src/uga_survey_phia/UGA/documentation/08_PHIA Tabulation Plan v3.7.pdf
+src/uga_survey_phia/UGA/documentation/09_UPHIA 2016-2017 Sampling and Weighting Technical Report.pdf
+src/uga_survey_phia/UGA/documentation/10 UPHIA 2016-2017 Sampling and Weighting Technical Report, Appendices.zip
+src/uga_survey_phia/UGA/uphia-data-request_2021-06-08.jpg
+src/zmb_survey_phia/ZMB/01_PHIA Data Use Manual.pdf
+src/zmb_survey_phia/ZMB/02_ZAMPHIA 2016 Data Use Manual Supplement.pdf
+src/zmb_survey_phia/ZMB/04_ZAMPHIA 2016 Questionnaires (All Questionnaires in One).xlsx
+src/zmb_survey_phia/ZMB/05_ZAMPHIA 2016 Household Questionnaire.pdf
+src/zmb_survey_phia/ZMB/06_ZAMPHIA 2016 Adult Questionnaire.pdf
+src/zmb_survey_phia/ZMB/07_ZAMPHIA 2016 Adolescent Questionnaire.pdf
+src/zmb_survey_phia/ZMB/08_ZAMPHIA 2016 Codebook (All Codebooks in One).xlsx
+src/zmb_survey_phia/ZMB/09_PHIA Tabulation Plan.pdf
+src/zmb_survey_phia/ZMB/10_ZAMPHIA 2016 Sampling and Weighting Technical Report.pdf
+src/zmb_survey_phia/ZMB/11_ZAMPHIA 2016 Sampling and Weighting Technical Report, Appendices.zip
+src/zmb_survey_phia/ZMB/datasets/gadm36_ZMB_1_sf.rds
+src/zmb_survey_phia/ZMB/datasets/gadm36_ZMB_2_sf.rds
+src/zmb_survey_phia/ZMB/datasets/old datasets/01_ZAMPHIA 2016 Adult Biomarker Dataset (SAS).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/01_ZAMPHIA 2016 Adult Interview Dataset (SAS).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/01_ZAMPHIA 2016 Household Dataset (SAS).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/01_ZAMPHIA 2016 Household Intermediary Weights Dataset (SAS).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/02_ZAMPHIA 2016 Adult Biomarker Dataset (DTA).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/02_ZAMPHIA 2016 Adult Interview Dataset (DTA).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/02_ZAMPHIA 2016 Household Dataset (DTA).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/02_ZAMPHIA 2016 Household Intermediary Weights Dataset (DTA).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/03_ZAMPHIA 2016 Adult Biomarker Dataset (CSV).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/03_ZAMPHIA 2016 Adult Interview Dataset (CSV).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/03_ZAMPHIA 2016 Household Dataset (CSV).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/03_ZAMPHIA 2016 Household Intermediary Weights Dataset (CSV).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/04_ZAMPHIA 2016 Child Biomarker Dataset (SAS).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/04_ZAMPHIA 2016 Child Interview Dataset (SAS).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/04_ZAMPHIA 2016 Individual Intermediary Weights Dataset (SAS).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/05_ZAMPHIA 2016 Child Biomarker Dataset (DTA).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/05_ZAMPHIA 2016 Child Interview Dataset (DTA).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/05_ZAMPHIA 2016 Individual Intermediary Weights Dataset (DTA).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/06_ZAMPHIA 2016 Child Biomarker Dataset (CSV).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/06_ZAMPHIA 2016 Child Interview Dataset (CSV).zip
+src/zmb_survey_phia/ZMB/datasets/old datasets/06_ZAMPHIA 2016 Individual Intermediary Weights Dataset (CSV).zip
+src/zmb_survey_phia/ZMB/datasets/ZAMPHIA 2016 Household Interview and Biomarker Datasets v2.0 (CSV).zip
+src/zmb_survey_phia/ZMB/datasets/ZAMPHIA 2016 Household Interview and Biomarker Datasets v2.0 (DTA).zip
+src/zmb_survey_phia/ZMB/datasets/ZAMPHIA 2016 Household Interview and Biomarker Datasets v2.0 (SAS).zip
+src/zmb_survey_phia/ZMB/datasets/ZAMPHIA 2016 Intermediary Weights v2.0 (CSV).zip
+src/zmb_survey_phia/ZMB/datasets/ZAMPHIA 2016 Intermediary Weights v2.0 (DTA).zip
+src/zmb_survey_phia/ZMB/datasets/ZAMPHIA 2016 Intermediary Weights v2.0 (SAS).zip
+src/zmb_survey_phia/ZMB/datasets/ZAMPHIA 2016 PR Geospatial Data 20210920.zip
+src/zwe_survey_phia/ZWE/datasets/101_ZIMPHIA 2015-2016 Household Dataset (SAS).zip
+src/zwe_survey_phia/ZWE/datasets/102_ZIMPHIA 2015-2016 Household Dataset (DTA).zip
+src/zwe_survey_phia/ZWE/datasets/103_ZIMPHIA 2015-2016 Household Dataset (CSV).zip
+src/zwe_survey_phia/ZWE/datasets/201_ZIMPHIA 2015-2016 Adult Interview Dataset (SAS).zip
+src/zwe_survey_phia/ZWE/datasets/202_ZIMPHIA 2015-2016 Adult Interview Dataset (DTA).zip
+src/zwe_survey_phia/ZWE/datasets/203_ZIMPHIA 2015-2016 Adult Interview Dataset (CSV).zip
+src/zwe_survey_phia/ZWE/datasets/204_ZIMPHIA 2015-2016 Child Interview Dataset (SAS).zip
+src/zwe_survey_phia/ZWE/datasets/205_ZIMPHIA 2015-2016 Child Interview Dataset (DTA).zip
+src/zwe_survey_phia/ZWE/datasets/206_ZIMPHIA 2015-2016 Child Interview Dataset (CSV).zip
+src/zwe_survey_phia/ZWE/datasets/301_ZIMPHIA 2015-2016 Adult Biomarker Dataset (SAS).zip
+src/zwe_survey_phia/ZWE/datasets/302_ZIMPHIA 2015-2016 Adult Biomarker Dataset (DTA).zip
+src/zwe_survey_phia/ZWE/datasets/303_ZIMPHIA 2015-2016 Adult Biomarker Dataset (CSV).zip
+src/zwe_survey_phia/ZWE/datasets/304_ZIMPHIA 2015-2016 Child Biomarker Dataset (SAS).zip
+src/zwe_survey_phia/ZWE/datasets/305_ZIMPHIA 2015-2016 Child Biomarker Dataset (DTA).zip
+src/zwe_survey_phia/ZWE/datasets/306_ZIMPHIA 2015-2016 Child Biomarker Dataset (CSV).zip
+src/zwe_survey_phia/ZWE/datasets/401_ZIMPHIA 2015-2016 Household Intermediary Weights Dataset (SAS).zip
+src/zwe_survey_phia/ZWE/datasets/402_ZIMPHIA 2015-2016 Household Intermediary Weights Dataset (DTA).zip
+src/zwe_survey_phia/ZWE/datasets/403_ZIMPHIA 2015-2016 Household Intermediary Weights Dataset (CSV).zip
+src/zwe_survey_phia/ZWE/datasets/404_ZIMPHIA 2015-2016 Individual Intermediary Weights Dataset (SAS).zip
+src/zwe_survey_phia/ZWE/datasets/405_ZIMPHIA 2015-2016 Individual Intermediary Weights Dataset (DTA).zip
+src/zwe_survey_phia/ZWE/datasets/406_ZIMPHIA 2015-2016 Individual Intermediary Weights Dataset (CSV).zip
+src/zwe_survey_phia/ZWE/datasets/ZIMPHIA 2015-2016 PR Geospatial Data 20211001.zip
+src/zwe_survey_phia/ZWE/documentation/01_PHIA Data Use Manual v5.4.pdf
+src/zwe_survey_phia/ZWE/documentation/02_ZIMPHIA 2015-2016 Data Use Manual Supplement.pdf
+src/zwe_survey_phia/ZWE/documentation/03_ZIMPHIA 2015-2016 Questionnaires (All Questionnaires in One).xlsx
+src/zwe_survey_phia/ZWE/documentation/04_ZIMPHIA 2015-2016 Household Questionnaire.pdf
+src/zwe_survey_phia/ZWE/documentation/05_ZIMPHIA 2015-2016 Adult Questionnaire.pdf
+src/zwe_survey_phia/ZWE/documentation/06_ZIMPHIA 2015-2016 Adolescent Questionnaire.pdf
+src/zwe_survey_phia/ZWE/documentation/07_ZIMPHIA 2015-2016 CASI Questionnaire.pdf
+src/zwe_survey_phia/ZWE/documentation/08_ZIMPHIA 2015-2016 Codebook (All Codebooks in One).xlsx
+src/zwe_survey_phia/ZWE/documentation/09_PHIA Tabulation Plan v3.6.pdf
+src/zwe_survey_phia/ZWE/documentation/10_ZIMPHIA 2015-2016 Sampling and Weighting Technical Report.pdf
+src/zwe_survey_phia/ZWE/documentation/11_ZIMPHIA 2015-2016 Sampling and Weighting Technical Report, Appendices.zip
+src/zwe_survey_phia/ZWE/geospatial/PHIA Geospatial Data Request Form  v5_ZIMPHIA-district-vmmc-coverage.docx
+src/zwe_survey_phia/ZWE/geospatial/Zimbabwe PR Geospatial Data 20210414.zip
+src/zwe_survey_phia/ZWE/ZIMPHIA data request_2021-04-26.png

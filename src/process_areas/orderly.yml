@@ -1,0 +1,57 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: All area datasets
+      filenames:
+        - bwa_areas.geojson
+        - cmr_areas.geojson
+        - ken_areas.geojson
+        - lso_areas.geojson
+        - moz_areas.geojson
+        - mwi_areas.geojson
+        - nam_areas.geojson
+        - swz_areas.geojson
+        - tza_areas.geojson
+        - uga_areas.geojson
+        - zaf_areas.geojson
+        - zmb_areas.geojson
+        - zwe_areas.geojson
+        - ago_areas.geojson
+        - bdi_areas.geojson
+        - cod_areas.geojson
+        - gab_areas.geojson
+        - rwa_areas.geojson
+        - eth_areas.geojson
+        - tcd_areas.geojson
+        - civ_areas.geojson
+        - gha_areas.geojson
+        - gin_areas.geojson
+        - lbr_areas.geojson
+        - mli_areas.geojson
+        - ner_areas.geojson
+        - sle_areas.geojson
+        - tgo_areas.geojson
+        - bfa_areas.geojson
+        - cog_areas.geojson
+        - caf_areas.geojson
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - INLA
+  - naomi
+  - readr
+  - scales
+  - sf
+  - spdep
+  - tidyr
+  - purrr
+  - stringr
+  - Matrix
+  - spud
+  - gt
+
+resources:
+  - 2023_ssa_all_levels.geojson

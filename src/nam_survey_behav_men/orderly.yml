@@ -22,7 +22,7 @@ packages:
   - naomi.utils
 
 depends:
-  nam_data_areas:
+  process_areas:
     id: latest
     use:
       depends/nam_areas.geojson: nam_areas.geojson

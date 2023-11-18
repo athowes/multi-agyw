@@ -22,7 +22,7 @@ packages:
   - naomi.utils
 
 depends:
-  cog_data_areas:
+  process_areas:
     id: latest
     use:
       depends/cog_areas.geojson: cog_areas.geojson

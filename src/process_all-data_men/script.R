@@ -6,11 +6,11 @@ priority_iso3 <- multi.utils::priority_iso3()
 analysis_level <- multi.utils::analysis_level()
 
 #' Merge all of the area datasets
-# areas <- lapply(priority_iso3[-which(priority_iso3=="BDI")], function(x) read_sf(paste0("depends/", tolower(x), "_areas.geojson")))
-areas <- lapply(priority_iso3, function(x) read_sf(paste0("depends/", tolower(x), "_areas.geojson")))
-# areas$BDI <- read_sf("bdi_areas.geojson")
+areas <- lapply(priority_iso3[-which(priority_iso3=="BDI")], function(x) read_sf(paste0("depends/", tolower(x), "_areas.geojson")))
+# areas <- lapply(priority_iso3, function(x) read_sf(paste0("depends/", tolower(x), "_areas.geojson")))
+areas$BDI <- read_sf("bdi_areas.geojson")
 # areas <- lapply(areas, function(x) mutate(x, epp_level = as.numeric(epp_level)))
-# areas[[18]]$epp_level <- as.numeric(areas[[18]]$epp_level) #' Fix non-conforming column type
+areas[[18]]$epp_level <- as.numeric(areas[[18]]$epp_level) #' Fix non-conforming column type
 areas <- bind_rows(areas)
 
 pdf("areas.pdf", h = 11, w = 6.25)

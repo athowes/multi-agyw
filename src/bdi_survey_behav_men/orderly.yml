@@ -21,6 +21,9 @@ packages:
   - tidyr
   - naomi.utils
 
-resources:
-  - bdi_areas.geojson
+depends:
+  process_areas:
+    id: latest
+    use:
+      depends/bdi_areas.geojson: bdi_areas.geojson
 

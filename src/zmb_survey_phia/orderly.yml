@@ -28,8 +28,11 @@ packages:
   - readr
   - sf
 
+resources:
+  - ZMB
+
 depends:
-  zmb_data_areas:
+  process_areas:
     id: latest
     use:
       depends/zmb_areas.geojson: zmb_areas.geojson

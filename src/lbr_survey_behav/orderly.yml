@@ -22,7 +22,7 @@ packages:
   - naomi.utils
 
 depends:
-  lbr_data_areas:
+  process_areas:
     id: latest
     use:
       depends/lbr_areas.geojson: lbr_areas.geojson

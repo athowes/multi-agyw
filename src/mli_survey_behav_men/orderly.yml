@@ -22,8 +22,8 @@ packages:
   - naomi.utils
 
 depends:
-  mli_data_areas:
-    id: 20210315-110232-c505b0a1
+  process_areas:
+    id: latest
     use:
       depends/mli_areas.geojson: mli_areas.geojson
 

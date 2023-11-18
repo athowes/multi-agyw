@@ -23,8 +23,8 @@ packages:
   - rdhs
 
 depends:
-  moz_data_areas:
-    id: latest(parameter:version == 2022)
+  process_areas:
+    id: latest
     use:
       depends/moz_areas.geojson: moz_areas.geojson
   moz_survey_phia:
