@@ -14,7 +14,7 @@ areas <- areas %>%
   mutate(center_x = center_coords[,1],
          center_y = center_coords[,2])
 
-for(i in priority_iso3) {
+for(i in unique(areas$iso3)) {
   tempdat <- areas %>%
     filter(iso3==i)
   sf::st_write(tempdat,tolower(paste0(i,"_areas.geojson")))
