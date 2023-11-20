@@ -115,7 +115,7 @@ ggsave(
   width = 6.25, height = 3.5, units = "in", dpi = 300
 )
 
-df %>%
+available_surveys_gt <- df %>%
   select(country, type, year, giftsvar, Y015_019, Y020_024, Y025_029, Y015_029) %>%
   mutate(
     giftsvar = case_when(
@@ -152,12 +152,18 @@ df %>%
     drop_trailing_zeros = TRUE,
     missing_text = "",
     sep_mark = ""
-  ) %>%
+  )
+
+saveRDS(available_surveys_gt, "available-surveys.rds")
+
+available_surveys_gt %>%
   as_latex() %>%
   as.character() %>%
   cat(file = "available-surveys.txt")
 
 #' What was the raw FSW proportion in surveys with and without a specific transactional question?
+giftsvar_surveys <- filter(df, giftsvar == 1) %>% pull(survey_id)
+
 lapply(files, function(file) {
   read_csv(file)
 }) %>%

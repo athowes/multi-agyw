@@ -8,6 +8,7 @@ artefacts:
         - available-surveys.png
         - available-surveys.csv
         - available-surveys.txt
+        - available-surveys.rds
   - data:
       description: Comparison of surveys listed on STATcompiler versus those we have
       filenames:

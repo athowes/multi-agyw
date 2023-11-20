@@ -71,6 +71,7 @@ depends:
     use:
       depends/available-surveys.png: available-surveys.png
       depends/available-surveys.csv: available-surveys.csv
+      depends/available-surveys.rds: available-surveys.rds
   plot-tikz_category-flowchart:
     id: latest
     use:
