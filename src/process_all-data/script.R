@@ -17,7 +17,7 @@ dev.off()
 #' Check on the number of areas in each country
 areas_df <- areas %>%
   st_drop_geometry() %>%
-  select(area_id, area_level) %>%
+  select(area_id, area_level, area_level_label) %>%
   mutate(iso3 = substr(area_id, 1, 3)) %>%
   left_join(
     as.data.frame(analysis_level) %>%
@@ -28,7 +28,8 @@ areas_df <- areas %>%
   group_by(iso3) %>%
   summarise(
     n = n(),
-    analysis_level = analysis_level[1]
+    analysis_level = analysis_level[1],
+    area_level_label = area_level_label[1]
   ) %>%
   mutate(
     country = fct_recode(iso3,
@@ -49,7 +50,7 @@ areas_df <- areas %>%
   )
 
 areas_df %>%
-  select(Country = country, "Number of areas" = n, "Analysis level" = analysis_level) %>%
+  select(Country = country, "Number of areas" = n, "Analysis level" = area_level_label) %>%
   gt::gt() %>%
   gt::cols_align(
     align = "left",
