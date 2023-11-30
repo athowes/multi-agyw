@@ -14,6 +14,57 @@ surveys <- create_surveys_dhs(iso3) %>%
 survey_meta <- create_survey_meta_dhs(surveys)
 
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
+
+#' GAB2019DHS: Discrepancy in region codes between survey boundaries dataset
+#' and survey datasets.
+gha2019dhs_hr <- readRDS(get_datasets("GAHR71FL.ZIP")[[1]])
+gha2019dhs_ge <- readRDS(get_datasets("GAGE71FL.ZIP")[[1]])
+
+attr(gha2019dhs_hr$hv024, "labels")
+
+gha2019dhs_ge %>% as.data.frame() %>%
+  group_by(ADM1NAME, ADM1DHS) %>%
+  summarise() %>%
+  arrange(ADM1DHS)
+
+survey_region_boundaries %>% group_by(survey_region_id, survey_region_name) %>%
+  filter(survey_id == "GAB2019DHS") %>%
+  summarise() %>% st_drop_geometry()
+
+# Recode boundaries
+
+# Area name            HR/GE  Boundaries
+# Libreville            1    1
+# Port-Gentil           2    2
+# Estuaire              3    2
+# Haut-Ogooue           4    3
+# Moyen-Ogooue          5    4
+# Ngounie               6    5
+# Nyanga                7    6
+# Ogooue-Ivindo         8    8
+# Ogooue-Lolo           9    9
+# Ogooue-Maritime      10    7
+# Woleu-Ntem           11    10
+
+survey_region_boundaries <- survey_region_boundaries %>%
+  mutate(
+    survey_region_id = case_when(
+      survey_id == "GAB2019DHS" & survey_region_name == "estuaire" ~ 3,
+      survey_id == "GAB2019DHS" & survey_region_name == "haut-ogooue" ~ 4,
+      survey_id == "GAB2019DHS" & survey_region_name == "moyen-ogooue" ~ 5,
+      survey_id == "GAB2019DHS" & survey_region_name == "ngounié" ~ 6,
+      survey_id == "GAB2019DHS" & survey_region_name == "nyanga" ~ 7,
+      survey_id == "GAB2019DHS" & survey_region_name == "ogooue-ivindo" ~ 8,
+      survey_id == "GAB2019DHS" & survey_region_name == "ogooue-lolo" ~ 9,
+      survey_id == "GAB2019DHS" & survey_region_name == "ogooue maritime" ~ 10,
+      survey_id == "GAB2019DHS" & survey_region_name == "woleu-ntem" ~ 11,
+      TRUE ~ survey_region_id
+    )
+  )
+
+
+# survey_region_areas %>% group_by(survey_id, survey_region_id, survey_region_name)
+
 surveys <- surveys_add_dhs_regvar(surveys, survey_region_boundaries)
 
 #' Allocate each area to survey region
@@ -24,6 +75,8 @@ survey_region_areas <- allocate_areas_survey_regions(areas_wide, survey_region_b
 ## Survey regions contained no areas:
 ##   survey_id survey_region_id     survey_region_name
 ##  GAB2012DHS                1 libreville-port-gentil
+# GAB2019DHS                1             libreville
+# GAB2019DHS                2            port-gentil
 
 #' Manually add the districts that intersect libreville-port-gentil
 #' survey region to survey_region_areas
@@ -36,8 +89,39 @@ gab2012dhs_region1_areas <- areas_wide %>%
   ) %>%
   select(all_of(names(survey_region_areas)))
 
+gab2019dhs_region1_areas <- areas_wide %>%
+  st_join(
+    survey_region_boundaries %>%
+      filter(survey_id == "GAB2019DHS", survey_region_id == 1),
+    left = FALSE
+  ) %>%
+  select(all_of(names(survey_region_areas)))
+
+gab2019dhs_region2_areas <- areas_wide %>%
+  st_join(
+    survey_region_boundaries %>%
+      filter(survey_id == "GAB2019DHS", survey_region_id == 2),
+    left = FALSE
+  ) %>%
+  select(all_of(names(survey_region_areas)))
+
+# Missing areas for 2012DHS
+# ggplot() +
+#   geom_sf(data = gab2012dhs_region1_areas) +
+#   geom_sf(data = survey_region_boundaries %>%
+#             filter(survey_id == "GAB2012DHS", survey_region_id == 1), fill = NA, colour = "red")
+#
+# # Missing areas for 2019DHS
+# ggplot() +
+#   geom_sf(data = gab2019dhs_region1_areas) +
+#   geom_sf(data = gab2019dhs_region2_areas) +
+#   geom_sf(data = survey_region_boundaries %>%
+#             filter(survey_id == "GAB2019DHS", survey_region_id %in% 1:2), fill = NA, colour = "red")
+
+#  Add missing areas
 survey_region_areas <- survey_region_areas %>%
-  bind_rows(gab2012dhs_region1_areas)
+  bind_rows(gab2012dhs_region1_areas, gab2019dhs_region1_areas, gab2019dhs_region2_areas)
+
 
 validate_survey_region_areas(survey_region_areas, survey_region_boundaries)
 

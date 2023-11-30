@@ -41,16 +41,18 @@ survey_region_areas <- allocate_areas_survey_regions(areas_wide, survey_region_b
 # validate_survey_region_areas(survey_region_areas, survey_region_boundaries, warn = TRUE)
 # Survey regions contained no areas:
 #   survey_id survey_region_id survey_region_name
+# COG2009AIS               11        brazzaville
 # COG2009AIS               12       pointe-noire
+# COG2011DHS               11        Brazzaville
 # COG2011DHS               12       Pointe-Noire
 
-#' Manually add the districts that intersect pointe-noire
+#' Manually add the districts that intersect pointe-noire and brazzaville
 #' survey region to survey_region_areas
 
 cog2009ais2011dhs_region1_areas <- areas_wide %>%
   st_join(
     survey_region_boundaries %>%
-      filter(survey_id == "COG2009AIS" | survey_id=="COG2011DHS", survey_region_id == 12),
+      filter(survey_id == "COG2009AIS" | survey_id=="COG2011DHS", survey_region_id == 12 | survey_region_id == 11),
     left = FALSE
   ) %>%
   select(all_of(names(survey_region_areas)))

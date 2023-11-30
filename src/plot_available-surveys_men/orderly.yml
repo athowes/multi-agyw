@@ -162,3 +162,7 @@ depends:
     id: latest
     use:
       depends/caf_survey_indicators_sexbehav.csv: caf_survey_indicators_sexbehav.csv
+  gmb_survey_behav_men:
+    id: latest
+    use:
+      depends/gmb_survey_indicators_sexbehav.csv: gmb_survey_indicators_sexbehav.csv

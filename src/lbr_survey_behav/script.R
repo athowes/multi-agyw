@@ -18,6 +18,25 @@ surveys <- surveys_add_dhs_regvar(surveys, survey_region_boundaries)
 
 #' Allocate each area to survey region
 survey_region_areas <- allocate_areas_survey_regions(areas_wide, survey_region_boundaries)
+# validate_survey_region_areas(survey_region_areas, survey_region_boundaries, warn = TRUE)
+# Survey regions contained no areas:
+#   survey_id survey_region_id survey_region_name
+# LBR2007DHS                1           monrovia
+
+#' Manually add the districts that intersect monrovia
+#' survey region to survey_region_areas
+
+lbr2007dhs_region1_areas <- areas_wide %>%
+  st_join(
+    survey_region_boundaries %>%
+      filter(survey_id == "LBR2007DHS", survey_region_id == 1),
+    left = FALSE
+  ) %>%
+  select(all_of(names(survey_region_areas)))
+
+survey_region_areas <- survey_region_areas %>%
+  bind_rows(lbr2007dhs_region1_areas)
+
 validate_survey_region_areas(survey_region_areas, survey_region_boundaries)
 
 survey_regions <- create_survey_regions_dhs(survey_region_areas)

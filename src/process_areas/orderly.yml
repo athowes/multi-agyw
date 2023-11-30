@@ -35,6 +35,11 @@ artefacts:
         - bfa_areas.geojson
         - cog_areas.geojson
         - caf_areas.geojson
+        - ben_areas.geojson
+        - gmb_areas.geojson
+        - gnb_areas.geojson
+        - sen_areas.geojson
+        - stp_areas.geojson
 
 packages:
   - dplyr

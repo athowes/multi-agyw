@@ -1,0 +1,29 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Survey indicator datasets
+      filenames:
+        - sen_survey_indicators_sexbehav.csv
+        - sen_hiv_indicators_sexbehav.csv
+
+packages:
+  - dplyr
+  - forcats
+  - haven
+  - parallel
+  - rdhs
+  - naomi
+  - readr
+  - sf
+  - spud
+  - survey
+  - tidyr
+  - naomi.utils
+
+depends:
+  process_areas:
+    id: latest
+    use:
+      depends/sen_areas.geojson: sen_areas.geojson
+

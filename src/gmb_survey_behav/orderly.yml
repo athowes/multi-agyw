@@ -1,0 +1,29 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: Survey indicator datasets
+      filenames:
+        - gmb_survey_indicators_sexbehav.csv
+        - gmb_hiv_indicators_sexbehav.csv
+
+packages:
+  - dplyr
+  - forcats
+  - haven
+  - parallel
+  - rdhs
+  - naomi
+  - readr
+  - sf
+  - spud
+  - survey
+  - tidyr
+  - naomi.utils
+
+depends:
+  process_areas:
+    id: latest
+    use:
+      depends/gmb_areas.geojson: gmb_areas.geojson
+

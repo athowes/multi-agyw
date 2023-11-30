@@ -94,7 +94,10 @@ survey_region_id <- c("Central" = 1, "Copperbelt" = 2, "Eastern" = 3,
                       "Western" = 10)
 
 
-areas %>% filter(area_level == 1) %>% select(area_id, area_name)
+areas %>%
+  filter(area_level == 1) %>%
+  select(area_id, area_name) %>%
+  st_drop_geometry()
 
 #' Note: ZAMPHIA stratification used old province boundaries from GADM.
 #'  Since then:
@@ -102,17 +105,22 @@ areas %>% filter(area_level == 1) %>% select(area_id, area_name)
 #'  * Chirundu district moved from Southern province to Lusaka.
 #'  * Shibuyunji district was moved in 2018 from Lusaka to Central. But in the PHIA boundaries, Shibuyunji
 #'    area was in Central (not existing as district per GADM level 2). Thus no net change for this district.
+#'
+#' Updates for 2023 estimates:
+#' * Itezhi-Tezhi has moved from Central province to Southern province [RETURN TO ORIGINAL PROVINCE]
+#' * Chirundu moved from Lusaka to Southern province [RETURN TO ORIGINAL PROVINCE]
+#' * Chama moved from Muchinga to Eastern province [NEW CHANGE]
+#' * Shibuyunji district was moved in 2018 from Lusaka to Central (That is correct)
 
 zmb_gadm1 <- readRDS(phia_files$gadm1)
-zmb_gadm2 <- readRDS(phia_files$gadm2)
 
 p1 <- ggplot() +
-  geom_sf(aes(fill = NAME_1), data = zmb_gadm1 %>% filter(NAME_1 %in% c("Central", "Southern", "Lusaka")), alpha = 0.6, color = NA) +
+  geom_sf(aes(fill = NAME_1), data = zmb_gadm1 %>% filter(NAME_1 %in% c("Central", "Southern", "Lusaka", "Muchinga", "Eastern")), alpha = 0.6, color = NA) +
   geom_sf(data = areas %>% filter(area_level == 2), fill = NA, color = "grey") +
   geom_sf_label(aes(label = area_name),
                 data = areas %>%
                   filter(area_level == 2,
-                         area_name %in% c("Itezhi-tezhi", "Shibuyunji", "Chirundu")),
+                         area_name %in% c("Itezhi-tezhi", "Shibuyunji", "Chirundu", "Chama")),
                 alpha = 0.3) +
   geom_sf(data = areas %>% filter(area_level == 1), fill = NA) +
   labs(fill = "ZAMPHIA strata") +
@@ -127,12 +135,12 @@ p1 <- ggplot() +
 dir.create("check")
 ggsave("check/zambia-reallocated-districts.pdf", p1, h = 6, w = 7)
 
-survey_region_area_id <- c("Central" = "ZMB",
+survey_region_area_id <- c("Central" = "ZMB_1_10gh",
                            "Copperbelt" = "ZMB_1_11",
-                           "Eastern" = "ZMB_1_12",
+                           "Eastern" = "ZMB",
                            "Luapula" = "ZMB_1_13",
-                           "Lusaka" = "ZMB_1_14",
-                           "Muchinga" = "ZMB_1_15",
+                           "Lusaka" = "ZMB_1_14fz",
+                           "Muchinga" = "ZMB_1_15pi",
                            "Northern" = "ZMB_1_16",
                            "North-Western" = "ZMB_1_19",
                            "Southern" = "ZMB",
@@ -151,8 +159,7 @@ survey_regions <- survey_regions %>%
     spread_areas(as.data.frame(areas)) %>%
     left_join(select(areas, area_id)) %>%
     st_as_sf() %>%
-    mutate(survey_region_name = case_when(area_name2 == "Itezhi-tezhi" ~ "Southern",
-                                          area_name2 == "Shibuyunji" ~ "Central",
+    mutate(survey_region_name = case_when(area_name2 == "Chama" ~ "Muchinga",
                                           area_name2 == "Chirundu" ~ "Southern",
                                           TRUE ~ area_name1)) %>%
     group_by(survey_region_name) %>%

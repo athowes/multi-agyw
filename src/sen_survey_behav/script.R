@@ -1,65 +1,23 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("cog_survey_behav")
-# setwd("src/cog_survey_behav")
+# orderly::orderly_develop_start("sen_survey_behav")
+# setwd("src/sen_survey_behav")
 
 #' ISO3 country code
-iso3 <- "COG"
+iso3 <- "SEN"
 
-areas <- read_sf("depends/cog_areas.geojson") %>% st_make_valid()
+areas <- read_sf("depends/sen_areas.geojson") %>% st_make_valid()
 areas_wide <- naomi::spread_areas(areas)
 
 surveys <- create_surveys_dhs(iso3, survey_characteristics = 24) %>%
-  filter(as.numeric(SurveyYear) > 2005) # 2005 COG DHS has only 2 regions
-                                        # not sure how to resolve so dropping for now
+  filter(as.numeric(SurveyYear) > 1998)
 
 survey_meta <- create_survey_meta_dhs(surveys)
 
 survey_region_boundaries <- create_survey_boundaries_dhs(surveys)
 surveys <- surveys_add_dhs_regvar(surveys, survey_region_boundaries)
 
-#' For the COG2009AIS, there are discrepancies between survey boundaries and
-#' the UNAIDS shapefile and cluster geography is not available.
-#' Solution: Additional level created in area hierarchy file with summed regions
-#' where survey borders do not match shapefile:
-#' * Pool/Brazzaville
-#' * Pointe-noire/Kouilou
-#' Use this hierarchy to calculate an aggregate survey dataset
-
-survey_region_boundaries %>%
-  filter(survey_id == "COG2009AIS") %>%
-  arrange(survey_region_id) %>%
-  print(n = Inf)
-
-survey_region_boundaries %>%
-  filter(survey_id == "COG2011DHS") %>%
-  arrange(survey_region_id) %>%
-  print(n = Inf)
-
-
 #' Allocate each area to survey region
 survey_region_areas <- allocate_areas_survey_regions(areas_wide, survey_region_boundaries)
-# validate_survey_region_areas(survey_region_areas, survey_region_boundaries, warn = TRUE)
-# Survey regions contained no areas:
-#   survey_id survey_region_id survey_region_name
-# COG2009AIS               11        brazzaville
-# COG2009AIS               12       pointe-noire
-# COG2011DHS               11        Brazzaville
-# COG2011DHS               12       Pointe-Noire
-
-#' Manually add the districts that intersect pointe-noire
-#' survey region to survey_region_areas
-
-cog2009ais2011dhs_region1_areas <- areas_wide %>%
-  st_join(
-    survey_region_boundaries %>%
-      filter(survey_id == "COG2009AIS" | survey_id=="COG2011DHS", survey_region_id == 12 | survey_region_id == 11),
-    left = FALSE
-  ) %>%
-  select(all_of(names(survey_region_areas)))
-
-survey_region_areas <- survey_region_areas %>%
-  bind_rows(cog2009ais2011dhs_region1_areas)
-
 validate_survey_region_areas(survey_region_areas, survey_region_boundaries)
 
 survey_regions <- create_survey_regions_dhs(survey_region_areas)
@@ -102,7 +60,7 @@ survey_other <- list(survey_sexbehav)
 
 age_group_include <- c("Y015_019", "Y020_024", "Y025_029", "Y030_034", "Y035_039",
                        "Y040_044", "Y045_049", "Y015_024", "Y025_049", "Y015_049")
-sex <- c("male")
+sex <- c("female")
 
 #' Survey indicator dataset
 survey_indicators <- calc_survey_indicators(
@@ -118,7 +76,7 @@ survey_indicators <- calc_survey_indicators(
 )
 
 #' Save survey indicator dataset
-write_csv(survey_indicators, "cog_survey_indicators_sexbehav.csv", na = "")
+write_csv(survey_indicators, "sen_survey_indicators_sexbehav.csv", na = "")
 
 #' Get prevalence estimates for different sexual behaviours
 survey_sexbehav_reduced <- survey_sexbehav %>%
@@ -148,4 +106,4 @@ hiv_indicators <- hiv_indicators %>%
   )
 
 #' Save HIV indicators dataset
-write_csv(hiv_indicators, "cog_hiv_indicators_sexbehav.csv", na = "")
+write_csv(hiv_indicators, "sen_hiv_indicators_sexbehav.csv", na = "")

@@ -167,41 +167,41 @@ ggplot(spouselivesaway, aes(x = spouselivesaway, y = spouselivesaway2, col = are
 
 dev.off()
 
-pdf("mwi-dhs-phia-comparison.pdf", h = 6, w = 6.25)
-
-ind %>%
-  filter(
-    survey_id %in% c("MWI2015DHS", "MWI2016PHIA"),
-    indicator %in% c("sexcohab", "sexnonreg")
-  ) %>%
-  pivot_wider(
-    names_from = c("indicator", "survey_id"),
-    id_cols = c("area_id", "age_group"),
-    values_from = estimate
-  ) %>%
-  mutate(
-    diff_sexcohab = sexcohab_MWI2015DHS - sexcohab_MWI2016PHIA,
-    diff_sexnonreg = sexnonreg_MWI2015DHS - sexnonreg_MWI2016PHIA
-  ) %>%
-  left_join(
-    select(areas, area_id, geometry),
-    by = "area_id"
-  ) %>%
-  st_as_sf() %>%
-  select(area_id, age_group, starts_with("diff")) %>%
-  pivot_longer(
-    cols = starts_with("diff_"),
-    names_to = "indicator",
-    values_to = "estimate"
-  ) %>%
-  ggplot(aes(fill = estimate)) +
-    geom_sf() +
-    facet_grid(indicator ~ age_group) +
-    scale_fill_viridis_c() +
-    labs(title = "MWI2015DHS - MWI2016PHIA") +
-    theme_minimal()
-
-dev.off()
+# pdf("mwi-dhs-phia-comparison.pdf", h = 6, w = 6.25)
+#
+# ind %>%
+#   filter(
+#     survey_id %in% c("MWI2015DHS", "MWI2016PHIA"),
+#     indicator %in% c("sexcohab", "sexnonreg")
+#   ) %>%
+#   pivot_wider(
+#     names_from = c("indicator", "survey_id"),
+#     id_cols = c("area_id", "age_group"),
+#     values_from = estimate
+#   ) %>%
+#   mutate(
+#     diff_sexcohab = sexcohab_MWI2015DHS - sexcohab_MWI2016PHIA,
+#     diff_sexnonreg = sexnonreg_MWI2015DHS - sexnonreg_MWI2016PHIA
+#   ) %>%
+#   left_join(
+#     select(areas, area_id, geometry),
+#     by = "area_id"
+#   ) %>%
+#   st_as_sf() %>%
+#   select(area_id, age_group, starts_with("diff")) %>%
+#   pivot_longer(
+#     cols = starts_with("diff_"),
+#     names_to = "indicator",
+#     values_to = "estimate"
+#   ) %>%
+#   ggplot(aes(fill = estimate)) +
+#     geom_sf() +
+#     facet_grid(indicator ~ age_group) +
+#     scale_fill_viridis_c() +
+#     labs(title = "MWI2015DHS - MWI2016PHIA") +
+#     theme_minimal()
+#
+# dev.off()
 
 #' Merge all of the HIV datasets
 hiv <- lapply(priority_iso3, function(x) { if(file.exists(paste0("depends/", tolower(x), "_hiv_indicators_sexbehav.csv")))

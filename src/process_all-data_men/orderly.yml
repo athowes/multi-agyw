@@ -18,7 +18,7 @@ artefacts:
       filenames:
         - spouse-comparison.pdf
         - spouse-livesaway.pdf
-        - mwi-dhs-phia-comparison.pdf
+        # - mwi-dhs-phia-comparison.pdf
 
 packages:
   - dplyr
@@ -73,6 +73,7 @@ depends:
         depends/cog_areas.geojson: cog_areas.geojson
         depends/caf_areas.geojson: caf_areas.geojson
         depends/bdi_areas.geojson: bdi_areas.geojson
+        depends/gmb_areas.geojson: gmb_areas.geojson
   - bwa_survey_behav_men:
       id: latest
       use:
@@ -352,6 +353,11 @@ depends:
       use:
         depends/cog_survey_indicators_sexbehav.csv: cog_survey_indicators_sexbehav.csv
         depends/cog_hiv_indicators_sexbehav.csv: cog_hiv_indicators_sexbehav.csv
+  - gmb_survey_behav_men:
+      id: latest
+      use:
+        depends/gmb_survey_indicators_sexbehav.csv: gmb_survey_indicators_sexbehav.csv
+        depends/gmb_hiv_indicators_sexbehav.csv: gmb_hiv_indicators_sexbehav.csv
   - caf_survey_behav_men:
       id: latest
       use:

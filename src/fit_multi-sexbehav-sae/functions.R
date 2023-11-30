@@ -11,6 +11,7 @@ multinomial_model <- function(formula, model_name) {
               control.predictor = list(link = 1),
               control.compute = list(dic = TRUE, waic = TRUE,
                                      cpo = TRUE, config = TRUE),
+              # control.inla = list(strategy = "gaussian"),
               inla.mode = "experimental",
               verbose = TRUE,
               debug = TRUE,

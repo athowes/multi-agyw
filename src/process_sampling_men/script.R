@@ -4,7 +4,7 @@
 
 #' In testing, 100 samples can be used
 #' For the final results, 1000 samples should be used
-S <- 100
+S <- 1000
 
 #' Multinomial regression model
 fit <- readRDS("depends/best-multi-sexbehav-sae-fit.rds")
