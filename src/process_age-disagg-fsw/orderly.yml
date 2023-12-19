@@ -6,6 +6,7 @@ artefacts:
       filenames:
         - age-disagg-fsw.pdf
         - age-disagg-fsw-line.pdf
+        - age-disagg-fsw-line.png
         - fsw-estimates.csv
         - thembisa-fsw-age-dist.pdf
         - palette-extension.pdf

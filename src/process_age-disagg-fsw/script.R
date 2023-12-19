@@ -150,15 +150,34 @@ extended_cbpalette <- colorRampPalette(multi.utils::cbpalette())
 
 pdf("age-disagg-fsw-line.pdf", h = 4, w = 6.25)
 
-df %>%
+age_disagg_fsw_line_fig <- df %>%
   filter(age_group != "Y015_049") %>%
-  ggplot(aes(x = age_group, y = fsw_prop, group = area_id, col = area_id)) +
+  mutate(
+    country = fct_recode(area_id,
+      "Botswana" = "BWA",
+      "Cameroon" = "CMR",
+      "Kenya" = "KEN",
+      "Lesotho" = "LSO",
+      "Mozambique" = "MOZ",
+      "Malawi" = "MWI",
+      "Namibia" = "NAM",
+      "Eswatini" = "SWZ",
+      "Tanzania" = "TZA",
+      "Uganda" = "UGA",
+      "South Africa" = "ZAF",
+      "Zambia" = "ZMB",
+      "Zimbabwe" = "ZWE"
+    )
+  ) %>%
+  ggplot(aes(x = age_group, y = fsw_prop, group = country, col = country)) +
   geom_line() +
   scale_color_manual(values = extended_cbpalette(n = 13)) +
-  labs(x = "Age group", y = "FSW proportion", col = "ISO3") +
+  labs(x = "Age group", y = "FSW proportion", col = "Country") +
   theme_minimal()
 
 dev.off()
+
+ggsave("age-disagg-fsw-line.png", age_disagg_fsw_line_fig, h = 4, w = 6.25)
 
 pdf("palette-extension.pdf", h = 4, w = 4)
 
