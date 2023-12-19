@@ -43,7 +43,7 @@ plotA <- df_3p1_subnational %>%
     theme(
       panel.spacing = unit(0.5, "lines"),
       legend.position = "bottom",
-      strip.text = element_text(face = "bold"),
+      # strip.text = element_text(face = "bold"),
       legend.title = element_text(size = 9),
       legend.text = element_text(size = 9),
     )
@@ -86,7 +86,7 @@ df_3p1_subnational %>%
   theme(
     panel.spacing = unit(0.5, "lines"),
     legend.position = "bottom",
-    strip.text = element_text(face = "bold"),
+    # strip.text = element_text(face = "bold"),
     legend.title = element_text(size = 9),
     legend.text = element_text(size = 9),
   )
@@ -139,7 +139,7 @@ plotB <- df_subnational_fsw %>%
   theme(
     panel.spacing = unit(1, "lines"),
     legend.position = "bottom",
-    strip.text = element_text(face = "bold"),
+    # strip.text = element_text(face = "bold"),
     legend.title = element_text(size = 9),
     legend.text = element_text(size = 9),
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
