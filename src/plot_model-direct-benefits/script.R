@@ -47,7 +47,7 @@ missing_districts$area_name %>% sort()
 pdf("model-direct-benefits.pdf", h = 3.5, w = 6.25)
 
 plotA <- ggplot(df, aes(fill = estimate)) +
-  geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+  geom_sf(size = 0.1) +
   scale_fill_viridis_c(option = "C", label = label_percent(), na.value = "#E6E6E6") +
   facet_grid(indicator ~ source) +
   labs(fill = "Proportion\nof women\n20-24\ncohabiting\n(2010)\n") +
@@ -56,7 +56,7 @@ plotA <- ggplot(df, aes(fill = estimate)) +
     axis.text = element_blank(),
     axis.ticks = element_blank(),
     panel.grid = element_blank(),
-    strip.text = element_text(face = "bold", size = 9),
+    # strip.text = element_text(face = "bold", size = 9),
     legend.title = element_text(size = 9),
     legend.text = element_text(size = 9),
     plot.title = element_text(face = "bold"),
