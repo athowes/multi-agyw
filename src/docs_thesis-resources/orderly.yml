@@ -62,7 +62,6 @@ artefacts:
         - depends/coverage.png
         - depends/category-flowchart.png
         - depends/age-variation.png
-        - depends/age-disagg-fsw-line.png
         - depends/aaa-variance-proportions.png
 
 depends:
@@ -93,11 +92,11 @@ depends:
   plot_model-direct-benefits:
     id: latest
     use:
-      depends/model-direct-benefits.pdf: model-direct-benefits.pdf
+      depends/model-direct-benefits.png: model-direct-benefits.png
   process_age-disagg-fsw:
     id: latest
     use:
-      depends/age-disagg-fsw-line.pdf: age-disagg-fsw-line.pdf
+      depends/age-disagg-fsw-line.png: age-disagg-fsw-line.png
   plot_age-variation:
     id: latest
     use:
@@ -136,3 +135,7 @@ depends:
     id: latest
     use:
       depends/multi-sexbehav-sae.csv: adjust-best-3p1-multi-sexbehav-sae.csv
+  plot_aids-abstract:
+    id: latest
+    use:
+      depends/thesis-slide-multi-agyw.png: thesis-slide-multi-agyw.png

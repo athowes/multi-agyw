@@ -23,11 +23,9 @@ convert_pdf_png <- function(name, dpi = 300) {
 convert_pdf_png("model-comparison")
 convert_pdf_png("fsw-logit-model-comparison")
 convert_pdf_png("coverage")
-convert_pdf_png("age-disagg-fsw-line")
 
 #' For tables-figures.Rmd
 convert_pdf_png("category-flowchart")
-convert_pdf_png("model-direct-benefits")
 convert_pdf_png("aaa-variance-proportions")
 convert_pdf_png("age-variation")
 convert_pdf_png("temporal-interpolation-ribbon")
