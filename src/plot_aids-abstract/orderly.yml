@@ -10,6 +10,7 @@ artefacts:
         - aids-abstract-A.png
         - aids-abstract-B.pdf
         - aids-abstract-B.png
+        - thesis-slide-multi-agyw.png
 
 packages:
   - dplyr

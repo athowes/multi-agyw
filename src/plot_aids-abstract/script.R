@@ -223,3 +223,44 @@ ggsave(
   plotB,
   width = 6.25, height = 3.5, units = "in", dpi = 300
 )
+
+plotC <- df_3p1_subnational %>%
+  filter(
+    indicator %in% c("One cohabiting partner", "Non-regular or multiple partner(s)")
+  ) %>%
+  mutate(
+    iso3 = reorder(iso3, iso3_sort_order)
+  ) %>%
+  ggplot(aes(x = fct_rev(iso3), y = estimate_smoothed, col = region)) +
+  geom_jitter(width = 0.1, alpha = 0.6, shape = 20) +
+  geom_point(
+    data = df_3p1_national %>%
+      filter(
+        indicator %in% c("One cohabiting partner", "Non-regular or multiple partner(s)")
+      ),
+    aes(x = fct_rev(iso3), y = estimate_smoothed),
+    shape = 21,
+    size = 2,
+    fill = "white",
+    col = "black",
+    alpha = 0.9
+  ) +
+  facet_grid(age_group ~  indicator) +
+  scale_color_manual(values = multi.utils::cbpalette()) +
+  scale_y_continuous(labels = function(x) paste0(100 * x, "%")) +
+  coord_flip() +
+  labs(
+    x = "", y = "", col = "Regions of sub-Saharan Africa",
+    caption = "Not sexually active (not shown) + one cohabiting partner +\nnon-regular or multiple partner(s) + FSW (not shown) = 100%",
+  ) +
+  guides(colour = guide_legend(override.aes = list(alpha = 0.9, size = 5))) +
+  theme_minimal() +
+  theme(
+    panel.spacing = unit(1, "lines"),
+    legend.position = "top",
+    strip.text.y = element_blank(),
+    legend.title = element_text(size = 9),
+    legend.text = element_text(size = 9)
+  )
+
+ggsave("thesis-slide-multi-agyw.png", h = 3.5, w = 6.25)
