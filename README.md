@@ -2,6 +2,9 @@
 
 Code for the paper Howes *et al.* "Spatio-temporal estimates of HIV risk group proportions for adolescent girls and young women across 13 priority countries in sub-Saharan Africa" ([PLOS Global Public Health](https://journals.plos.org/globalpublichealth/article?id=10.1371/journal.pgph.0001731))
 
+> [!NOTE]
+> This work has now been extended to include males, as well as additional countries. See the UNAIDS Sub-national HIV Estimates in Priority Populations (SHIPP) [tool](https://hivtools.unaids.org/shipp/).
+
 ## Summary
 
 New HIV infections are disproportionately common in adolescent girls and young women (AGYW).
