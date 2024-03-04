@@ -29,7 +29,7 @@ run_commit_push("zmb_survey_behav") #' [x]
 run_commit_push("zwe_survey_behav") #' [x]
 
 #' Make a plot of all available surveys for manuscript
-run_commit_push("plot_available-surveys")
+multi.utils:::run_commit_push("plot_available-surveys")
 
 #' Process all the data into one file
 run_commit_push("process_all-data")
