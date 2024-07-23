@@ -32,3 +32,12 @@ depends:
       depends/tza2016phia_survey_individuals.csv: tza2016phia_survey_individuals.csv
       depends/tza2016phia_survey_biomarker.csv: tza2016phia_survey_biomarker.csv
       depends/tza2016phia_survey_sexbehav.csv: tza2016phia_survey_sexbehav.csv
+  tza_data_survey_tza2022phia:
+    id: latest
+    use:
+      depends/tza2022phia_survey_meta.csv: tza2022phia_survey_meta.csv
+      depends/tza2022phia_survey_regions.csv: tza2022phia_survey_regions.csv
+      depends/tza2022phia_survey_clusters.csv: tza2022phia_survey_clusters.csv
+      depends/tza2022phia_survey_individuals.csv: tza2022phia_survey_individuals.csv
+      depends/tza2022phia_survey_biomarker.csv: tza2022phia_survey_biomarker.csv
+      depends/tza2022phia_survey_sexbehav.csv: tza2022phia_survey_sexbehav.csv

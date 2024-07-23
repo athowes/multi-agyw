@@ -4,6 +4,9 @@ iso3 <- c("CMR", "LSO", "MWI", "NAM", "SWZ", "TZA", "UGA", "ZMB", "ZWE", "KEN",
 reports <- paste0(tolower(iso3), "_survey_phia")
 run_commit_push(reports)
 
+# Prepare new THIS
+run_commit_push("tza_data_survey_tza2022phia")
+
 #' Prepare BAIS data in Botswana
 run_commit_push("bwa_survey_bais")
 
@@ -14,9 +17,9 @@ run_commit_push("caf_survey_mics_men")
 #' Prepare sexual behaviour datasets in all countries
 #' Cache (with .zip files) and download (DHS API) errors here!
 #' Might try using tryCatch while loop instead
-iso3 <- multi.utils::priority_iso3()
-reports <- paste0(tolower(iso3), "_survey_behav")
-run_commit_push(reports)
+# iso3 <- multi.utils::priority_iso3()
+# reports <- paste0(tolower(iso3), "_survey_behav")
+# run_commit_push(reports)
 
 #' (If the above isn't working, here are separate ones)
 run_commit_push("ago_survey_behav")
@@ -51,9 +54,9 @@ run_commit_push("zaf_survey_behav") #' [x]
 run_commit_push("zmb_survey_behav") #' [x]
 run_commit_push("zwe_survey_behav") #' [x]
 run_commit_push("caf_survey_behav")
-# run_commit_push("ben_survey_behav")
+run_commit_push("ben_survey_behav")
 run_commit_push("gmb_survey_behav")
-# run_commit_push("sen_survey_behav")
+run_commit_push("sen_survey_behav")
 
 # Same for men
 
@@ -90,15 +93,15 @@ run_commit_push("zaf_survey_behav_men") #' [x]
 run_commit_push("zmb_survey_behav_men") #' [x]
 run_commit_push("zwe_survey_behav_men") #' [x]
 run_commit_push("caf_survey_behav_men")
-# run_commit_push("ben_survey_behav_men")
+run_commit_push("ben_survey_behav_men")
 run_commit_push("gmb_survey_behav_men")
-# run_commit_push("sen_survey_behav_men")
+run_commit_push("sen_survey_behav_men")
 
-#' Make a plot of all available surveys for manuscript
-run_commit_push("plot_available-surveys")
-
-#' Same plot for men
-run_commit_push("plot_available-surveys_men")
+#' #' Make a plot of all available surveys for manuscript
+#' run_commit_push("plot_available-surveys")
+#'
+#' #' Same plot for men
+#' run_commit_push("plot_available-surveys_men")
 
 #' Process all the data into one file
 run_commit_push("process_all-data")

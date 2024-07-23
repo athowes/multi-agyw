@@ -96,7 +96,7 @@ survey_region_id <- c("Dodoma" = 1, "Arusha" = 2, "Kilimanjaro" = 3, "Tanga" = 4
                       "Kusini Pemba" = 55)
 
 survey_regions <- areas %>%
-  filter(area_level == 2) %>%
+  filter(area_level == 3) %>%
   select(survey_region_area_id = area_id,
          survey_region_name = area_name) %>%
   full_join(

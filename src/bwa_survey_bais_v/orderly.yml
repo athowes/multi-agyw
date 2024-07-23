@@ -1,0 +1,36 @@
+script: script.R
+
+artefacts:
+  - data:
+      description: BAIS IV formatted datasets
+      filenames:
+        - bwa2021bais_survey_meta.csv
+        - bwa2021bais_survey_regions.csv
+        - bwa2021bais_survey_clusters.csv
+        - bwa2021bais_survey_individuals.csv
+        - bwa2021bais_survey_biomarker.csv
+        - bwa2021bais_survey_circumcision.csv
+        - bwa2021bais_survey_sexbehav.csv
+
+displayname: BAIS V dataset recode
+
+packages:
+  - dplyr
+  - haven
+  - readr
+  - sf
+  - spud
+  - tidyr
+
+resources:
+  - baisv2021adultbio.dta
+  - baisv2021adultind.dta
+  - baisv2021child.dta
+  - baisv2021hh.dta
+  - baisv2021roster.dta
+
+depends:
+  process_areas:
+    id: latest
+    use:
+      depends/bwa_areas.geojson: bwa_areas.geojson

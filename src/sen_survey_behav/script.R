@@ -8,8 +8,9 @@ iso3 <- "SEN"
 areas <- read_sf("depends/sen_areas.geojson") %>% st_make_valid()
 areas_wide <- naomi::spread_areas(areas)
 
-surveys <- create_surveys_dhs(iso3, survey_characteristics = 24) %>%
-  filter(as.numeric(SurveyYear) > 1998)
+surveys <- create_surveys_dhs(iso3) %>%
+  filter(as.numeric(SurveyYear) > 2010)
+## issues w/downloading the 2005 & 2010 DHS (crashes R)
 
 survey_meta <- create_survey_meta_dhs(surveys)
 
@@ -21,6 +22,8 @@ survey_region_areas <- allocate_areas_survey_regions(areas_wide, survey_region_b
 validate_survey_region_areas(survey_region_areas, survey_region_boundaries)
 
 survey_regions <- create_survey_regions_dhs(survey_region_areas)
+
+rdhs::get_available_datasets(clear_cache = TRUE)
 
 #' Survey clusters dataset
 survey_clusters <- create_survey_clusters_dhs(surveys)

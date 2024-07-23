@@ -60,3 +60,6 @@ packages:
 
 resources:
   - 2023_ssa_all_levels.geojson
+  - 231120_cmr_areas.geojson
+  - eth_areas_01-12-23.geojson
+  - ago_areas_2023.geojson

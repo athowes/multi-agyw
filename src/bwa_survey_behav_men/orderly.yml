@@ -36,3 +36,13 @@ depends:
     id: latest
     use:
       depends/bwa2013bais-recode-sexbehav.csv: bwa2013bais-recode-sexbehav.csv
+  bwa_survey_bais_v:
+    id: latest
+    use:
+      depends/bwa2021bais_survey_meta.csv: bwa2021bais_survey_meta.csv
+      depends/bwa2021bais_survey_regions.csv: bwa2021bais_survey_regions.csv
+      depends/bwa2021bais_survey_clusters.csv: bwa2021bais_survey_clusters.csv
+      depends/bwa2021bais_survey_individuals.csv: bwa2021bais_survey_individuals.csv
+      depends/bwa2021bais_survey_biomarker.csv: bwa2021bais_survey_biomarker.csv
+      depends/bwa2021bais_survey_sexbehav.csv: bwa2021bais_survey_sexbehav.csv
+

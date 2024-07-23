@@ -74,6 +74,8 @@ depends:
         depends/caf_areas.geojson: caf_areas.geojson
         depends/bdi_areas.geojson: bdi_areas.geojson
         depends/gmb_areas.geojson: gmb_areas.geojson
+        depends/ben_areas.geojson: ben_areas.geojson
+        depends/sen_areas.geojson: sen_areas.geojson
   - bwa_survey_behav_men:
       id: latest
       use:
@@ -144,130 +146,130 @@ depends:
       use:
         depends/bfa_survey_indicators_sexbehav.csv: bfa_survey_indicators_sexbehav.csv
         depends/bfa_hiv_indicators_sexbehav.csv: bfa_hiv_indicators_sexbehav.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "BWA")
-      use:
-        depends/bwa_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "CMR")
-      use:
-        depends/cmr_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "KEN")
-      use:
-        depends/ken_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "LSO")
-      use:
-        depends/lso_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "MOZ")
-      use:
-        depends/moz_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "MWI")
-      use:
-        depends/mwi_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "NAM")
-      use:
-        depends/nam_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "SWZ")
-      use:
-        depends/swz_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "TZA")
-      use:
-        depends/tza_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "UGA")
-      use:
-        depends/uga_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "ZAF")
-      use:
-        depends/zaf_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "ZMB")
-      use:
-        depends/zmb_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "ZWE")
-      use:
-        depends/zwe_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "AGO")
-      use:
-        depends/ago_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "BDI")
-      use:
-        depends/bdi_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "COD")
-      use:
-        depends/cod_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "GAB")
-      use:
-        depends/gab_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "RWA")
-      use:
-        depends/rwa_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "ETH")
-      use:
-        depends/eth_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "TCD")
-      use:
-        depends/tcd_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "CIV")
-      use:
-        depends/civ_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "GHA")
-      use:
-        depends/gha_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "GIN")
-      use:
-        depends/gin_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "LBR")
-      use:
-        depends/lbr_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "MLI")
-      use:
-        depends/mli_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "NER")
-      use:
-        depends/ner_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "SLE")
-      use:
-        depends/sle_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "TGO")
-      use:
-        depends/tgo_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "BFA")
-      use:
-        depends/bfa_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "COG")
-      use:
-        depends/cog_interpolated-population.csv: interpolated_population.csv
-  - aaa_scale_pop:
-      id: latest(parameter:iso3 == "CAF")
-      use:
-        depends/caf_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "BWA")
+  #     use:
+  #       depends/bwa_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "CMR")
+  #     use:
+  #       depends/cmr_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "KEN")
+  #     use:
+  #       depends/ken_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "LSO")
+  #     use:
+  #       depends/lso_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "MOZ")
+  #     use:
+  #       depends/moz_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "MWI")
+  #     use:
+  #       depends/mwi_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "NAM")
+  #     use:
+  #       depends/nam_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "SWZ")
+  #     use:
+  #       depends/swz_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "TZA")
+  #     use:
+  #       depends/tza_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "UGA")
+  #     use:
+  #       depends/uga_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "ZAF")
+  #     use:
+  #       depends/zaf_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "ZMB")
+  #     use:
+  #       depends/zmb_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "ZWE")
+  #     use:
+  #       depends/zwe_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "AGO")
+  #     use:
+  #       depends/ago_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "BDI")
+  #     use:
+  #       depends/bdi_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "COD")
+  #     use:
+  #       depends/cod_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "GAB")
+  #     use:
+  #       depends/gab_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "RWA")
+  #     use:
+  #       depends/rwa_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "ETH")
+  #     use:
+  #       depends/eth_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "TCD")
+  #     use:
+  #       depends/tcd_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "CIV")
+  #     use:
+  #       depends/civ_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "GHA")
+  #     use:
+  #       depends/gha_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "GIN")
+  #     use:
+  #       depends/gin_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "LBR")
+  #     use:
+  #       depends/lbr_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "MLI")
+  #     use:
+  #       depends/mli_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "NER")
+  #     use:
+  #       depends/ner_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "SLE")
+  #     use:
+  #       depends/sle_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "TGO")
+  #     use:
+  #       depends/tgo_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "BFA")
+  #     use:
+  #       depends/bfa_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "COG")
+  #     use:
+  #       depends/cog_interpolated-population.csv: interpolated_population.csv
+  # - aaa_scale_pop:
+  #     id: latest(parameter:iso3 == "CAF")
+  #     use:
+  #       depends/caf_interpolated-population.csv: interpolated_population.csv
   - ago_survey_behav_men:
       id: latest
       use:
@@ -298,11 +300,11 @@ depends:
       use:
         depends/eth_survey_indicators_sexbehav.csv: eth_survey_indicators_sexbehav.csv
         depends/eth_hiv_indicators_sexbehav.csv: eth_hiv_indicators_sexbehav.csv
-  - hti_survey_behav_men:
-      id: latest
-      use:
-        depends/hti_survey_indicators_sexbehav.csv: hti_survey_indicators_sexbehav.csv
-        depends/hti_hiv_indicators_sexbehav.csv: hti_hiv_indicators_sexbehav.csv
+  #- hti_survey_behav_men:
+   #   id: latest
+    #  use:
+     #   depends/hti_survey_indicators_sexbehav.csv: hti_survey_indicators_sexbehav.csv
+      #  depends/hti_hiv_indicators_sexbehav.csv: hti_hiv_indicators_sexbehav.csv
   - tcd_survey_behav_men:
       id: latest
       use:
@@ -358,7 +360,16 @@ depends:
       use:
         depends/gmb_survey_indicators_sexbehav.csv: gmb_survey_indicators_sexbehav.csv
         depends/gmb_hiv_indicators_sexbehav.csv: gmb_hiv_indicators_sexbehav.csv
+  - sen_survey_behav_men:
+      id: latest
+      use:
+        depends/sen_survey_indicators_sexbehav.csv: sen_survey_indicators_sexbehav.csv
+        depends/sen_hiv_indicators_sexbehav.csv: sen_hiv_indicators_sexbehav.csv
   - caf_survey_behav_men:
       id: latest
       use:
         depends/caf_survey_indicators_sexbehav.csv: caf_survey_indicators_sexbehav.csv
+  - ben_survey_behav_men:
+      id: latest
+      use:
+        depends/ben_survey_indicators_sexbehav.csv: ben_survey_indicators_sexbehav.csv

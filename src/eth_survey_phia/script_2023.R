@@ -99,35 +99,6 @@ chphia <- chind %>%
 
 hh$survey_region_id <- hh$region # different in each survey dataset depending on survey stratification
 
-#' survey_region_id <- c("Tigray" = 1,
-#'                       "Afar" = 2,
-#'                       "Amhara" = 3,
-#'                       "Oromia" = 4,
-#'                       "Somali" = 5,
-#'                       "Benishangul Gumuz" = 6,
-#'                       "SNNPR" = 7,
-#'                       "Gambella" = 8,
-#'                       "Harari" = 9,
-#'                       "Addis Ababa" = 10,
-#'                       "Dire Dawa" = 11)
-#'
-#' areas %>% filter(area_level == 1) %>% select(area_id, area_name)
-#'
-#' #' SNNPR is survey_region_area_id = "ETH" after split of SNNPR and Sidama
-#' #' regions
-#'
-#' survey_region_area_id <- c("Tigray" = "ETH_1_20",
-#'                            "Afar" = "ETH_1_11",
-#'                            "Amhara" = "ETH_1_12",
-#'                            "Oromia" = "ETH_1_17",
-#'                            "Somali" = "ETH_1_19",
-#'                            "Benishangul Gumuz" = "ETH_1_13",
-#'                            "SNNPR" = "ETH",
-#'                            "Gambella" = "ETH_1_15",
-#'                            "Harari" = "ETH_1_16",
-#'                            "Addis Ababa" = "ETH_1_10",
-#'                            "Dire Dawa" = "ETH_1_14")
-
 survey_region_id <- c("Tigray" = 1,
                       "Afar" = 2,
                       "Amhara" = 3,
@@ -145,17 +116,17 @@ areas %>% filter(area_level == 1) %>% select(area_id, area_name)
 #' SNNPR is survey_region_area_id = "ETH" after split of SNNPR and Sidama
 #' regions
 
-survey_region_area_id <- c("Tigray" = "ETH_01_20",
-                           "Afar" = "ETH_01_11",
-                           "Amhara" = "ETH_01_12",
-                           "Oromia" = "ETH_01_17",
-                           "Somali" = "ETH_01_19",
-                           "Benishangul Gumuz" = "ETH_01_13",
+survey_region_area_id <- c("Tigray" = "ETH_1_20",
+                           "Afar" = "ETH_1_11",
+                           "Amhara" = "ETH_1_12",
+                           "Oromia" = "ETH_1_17",
+                           "Somali" = "ETH_1_19",
+                           "Benishangul Gumuz" = "ETH_1_13",
                            "SNNPR" = "ETH",
-                           "Gambella" = "ETH_01_15",
-                           "Harari" = "ETH_01_16",
-                           "Addis Ababa" = "ETH_01_10",
-                           "Dire Dawa" = "ETH_01_14")
+                           "Gambella" = "ETH_1_15",
+                           "Harari" = "ETH_1_16",
+                           "Addis Ababa" = "ETH_1_10",
+                           "Dire Dawa" = "ETH_1_14")
 
 survey_regions <- tibble(survey_id = survey_id,
                          survey_region_id = survey_region_id,

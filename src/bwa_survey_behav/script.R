@@ -194,6 +194,31 @@ survey_indicators <- calc_survey_indicators(
   area_bottom_level = 3
 )
 
+#' BAIS 2021 data
+bais_2021_survey_meta <- read_csv("depends/bwa2021bais_survey_meta.csv")
+bais_2021_survey_regions <- read_csv("depends/bwa2021bais_survey_regions.csv")
+bais_2021_survey_clusters <- read_csv("depends/bwa2021bais_survey_clusters.csv")
+bais_2021_survey_individuals <- read_csv("depends/bwa2021bais_survey_individuals.csv")
+bais_2021_survey_biomarker <- read_csv("depends/bwa2021bais_survey_biomarker.csv")
+bais_2021_survey_sexbehav <- read_csv("depends/bwa2021bais_survey_sexbehav.csv")
+(bais_2021_misallocation <- check_survey_sexbehav(bais_2021_survey_sexbehav))
+
+#' PHIA survey indicator dataset
+bais_2021_survey_indicators <- calc_survey_indicators(
+  bais_2021_survey_meta,
+  bais_2021_survey_regions,
+  bais_2021_survey_clusters,
+  bais_2021_survey_individuals,
+  bais_2021_survey_biomarker,
+  list(bais_2021_survey_sexbehav),
+  st_drop_geometry(areas),
+  sex = sex,
+  age_group_include = age_group_include
+)
+
+#' Combine all surveys together
+survey_indicators <- bind_rows(survey_indicators, bais_2021_survey_indicators)
+
 #' Save survey indicators dataset
 write_csv(survey_indicators, "bwa_survey_indicators_sexbehav.csv", na = "")
 
@@ -224,6 +249,28 @@ hiv_indicators <- calc_survey_hiv_indicators(
   formula = ~ indicator + survey_id + area_id + res_type + sex + age_group +
     nosex12m + sexcohab + sexnonreg + sexpaid12m
 )
+
+bais_2021_survey_sexbehav_reduced <- bais_2021_survey_sexbehav %>%
+  select(-sex12m, -sexcohabspouse, -sexnonregspouse, -giftsvar, -sexnonregplus, -sexnonregspouseplus)
+
+bais_2021_hiv_indicators <- calc_survey_hiv_indicators(
+  bais_2021_survey_meta,
+  bais_2021_survey_regions,
+  bais_2021_survey_clusters,
+  bais_2021_survey_individuals,
+  bais_2021_survey_biomarker,
+  survey_other = list(bais_2021_survey_sexbehav_reduced),
+  st_drop_geometry(areas),
+  sex = sex,
+  age_group_include = age_group_include,
+  area_top_level = 0,
+  area_bottom_level = 0,
+  formula = ~ indicator + survey_id + area_id + res_type + sex + age_group +
+    nosex12m + sexcohab + sexnonreg + sexpaid12m
+)
+
+hiv_indicators <- bind_rows(hiv_indicators, bais_2021_hiv_indicators)
+
 
 #' Keep only the stratifications with "all" in everything but the indicator itself
 hiv_indicators <- hiv_indicators %>%

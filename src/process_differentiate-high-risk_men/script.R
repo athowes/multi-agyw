@@ -17,23 +17,23 @@ df_3 <- read_csv("depends/best-multi-sexbehav-sae.csv")
 #' Add check that there are no observations missing a logit counterpart
 # stopifnot(df_3 %>% filter(is.na(prop_obs_idx)) %>% nrow() == 0)
 
-full_samples <- readRDS("depends/multi-sexbehav-sae-samples.rds")
-S <- length(full_samples)
+eta_samples <- readRDS("depends/multi-sexbehav-sae-samples.rds")
+S <- length(eta_samples)
 
-#' Just the latent field
-eta_samples <- lapply(full_samples, "[", "latent")
-
-# very big file!!
-rm(full_samples)
-
-#' For some reason "latent" is comprised of more than only the latent field
-eta_samples <- lapply(eta_samples, function(eta_sample) {
-  data.frame(eta_sample) %>%
-    tibble::rownames_to_column() %>%
-    rename(eta = 2) %>%
-    filter(substr(rowname, 1, 10) == "Predictor:") %>%
-    select(-rowname)
-})
+#' #' Just the latent field
+#' eta_samples <- lapply(full_samples, "[", "latent")
+#'
+#' # very big file!!
+#' rm(full_samples)
+#'
+#' #' For some reason "latent" is comprised of more than only the latent field
+#' eta_samples <- lapply(eta_samples, function(eta_sample) {
+#'   data.frame(eta_sample) %>%
+#'     tibble::rownames_to_column() %>%
+#'     rename(eta = 2) %>%
+#'     filter(substr(rowname, 1, 10) == "Predictor:") %>%
+#'     select(-rowname)
+#' })
 
 #' Into a matrix with a row for each observation and a column for each sample
 eta_samples_matrix <- matrix(unlist(eta_samples), ncol = S)
@@ -91,9 +91,10 @@ ncores <- cores - 2
 #' are then summarised via the mean, median, 95% credible interval
 #' ready to be added as columns to the main results dataframe.
 
+ndiv <- 1000
 full_eta_samples_df <- eta_samples_df
 full_df <- list()
-n_iter <- ceiling(n_distinct(eta_samples_df$obs_idx)/10000)
+n_iter <- ceiling(n_distinct(eta_samples_df$obs_idx)/ndiv)
 obs_idx_all <- unique(full_eta_samples_df$obs_idx)
 full_df_3 <- df_3
 
@@ -102,9 +103,9 @@ for(i in 1:n_iter) {
   start_time <- Sys.time()
 
   eta_samples_df <- full_eta_samples_df %>%
-    filter(obs_idx %in% obs_idx_all[((i-1)*10000+1):min((i*10000),nrow(full_eta_samples_df))])
+    filter(obs_idx %in% obs_idx_all[((i-1)*ndiv+1):min((i*ndiv),nrow(full_eta_samples_df))])
   df_3 <- full_df_3 %>%
-    filter(obs_idx %in% obs_idx_all[((i-1)*10000+1):min((i*10000),nrow(full_eta_samples_df))])
+    filter(obs_idx %in% obs_idx_all[((i-1)*ndiv+1):min((i*ndiv),nrow(full_eta_samples_df))])
 
   samples <- eta_samples_df %>%
     split(.$obs_idx) %>%

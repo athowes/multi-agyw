@@ -30,8 +30,8 @@ packages:
   - tidyr
 
 depends:
-  eth_data_areas:
-    id: 20220518-161831-0f63dc10
+  process_areas:
+    id: latest
     use:
       depends/eth_areas.geojson: eth_areas.geojson
 

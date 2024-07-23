@@ -5,7 +5,7 @@ artefacts:
       description: Survey indicator datasets
       filenames:
         - ben_survey_indicators_sexbehav.csv
-        - ben_hiv_indicators_sexbehav.csv
+        # - ben_hiv_indicators_sexbehav.csv
 
 packages:
   - dplyr
