@@ -60,3 +60,6 @@ sapply(na.omit(recent_ids), function(id) orderly::orderly_commit(id))
 sapply(na.omit(recent_ids), function(id) orderly::orderly_push_archive(name = report, id = id))
 
 run_commit_push("process_multi-sexbehav-sae")
+
+#' PhD revisions
+orderly::orderly_run("aaa_fit_multi-sexbehav-sae-age-space-interaction", parameters = list(iso3 == "MWI"))

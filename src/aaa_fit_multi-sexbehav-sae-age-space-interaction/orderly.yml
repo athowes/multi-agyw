@@ -15,9 +15,11 @@ artefacts:
         - multi-sexbehav-sae.csv
         - multi-sexbehav-sae.pdf
   - data:
-      description: Stacked proportion barplots
+      description: Age district effect comparison plots
       filenames:
-        - stacked-proportions.pdf
+        - age-district-plot-nosex12m.png
+        - age-district-plot-sexcohab.png
+        - age-district-plot-sexnonregplus.png
   - data:
       description: Model selection information criteria for multinomial models
       filenames:
@@ -26,15 +28,6 @@ artefacts:
       description: Random effect variance parameter posterior means
       filenames:
         - variance-proportions.csv
-  - data:
-      description: Sample size recovery diagnostic
-      filenames:
-        - sample-size-recovery.pdf
-  - data:
-      description: Coverage posterior predictive checks
-      filenames:
-        - coverage-histograms.pdf
-        - coverage-ecdf-diff.pdf
 
 parameters:
   iso3:

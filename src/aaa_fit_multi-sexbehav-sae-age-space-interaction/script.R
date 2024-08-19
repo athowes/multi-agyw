@@ -191,34 +191,27 @@ formula4 <- update(formula_baseline,
 
 #' Model 4 extended (Chris thesis revision suggestion)
 #' * age x space x category random effects (IID)
-# formula4_extended <- update(formula4,
-#   . ~ . + f(area_idx, model = "besag", graph = adjM, scale.model = TRUE, group = cat_idx,
-#             control.group = list(model = "iid"), constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01)) +
-# )
+formula4_extended <- update(formula4,
+  . ~ . + f(area_idx_copy, model = "iid", group = age_idx, replicate = cat_idx,
+            constr = TRUE, hyper = multi.utils::tau_pc(x = 0.001, u = 2.5, alpha = 0.01))
+)
 
 #' Fit the models
 
 #' Number of Monte Carlo samples
 S <- 1000
 
-formulas <- list(formula4)
-models <- list("Model 4")
-
-#' tryCatch version for safety
-try_multinomial_model <- function(...) {
-  return(tryCatch(multinomial_model(...), error = function(e) {
-    message("Error!")
-    return(NULL)
-  }))
-}
+formulas <- list(formula4, formula4_extended)
+models <- list("Model 4", "Model 4 extended")
 
 res <- purrr::pmap(
   list(formula = formulas, model_name = models, S = S),
-  try_multinomial_model
+  multinomial_model
 )
 
 #' Extract the fitted models
-res_fit <- lapply(res, "[[", 1)
+res_df <- lapply(res, "[[", 1) %>% bind_rows()
+res_fit <- lapply(res, "[[", 2)
 
 #' Add columns for local DIC, WAIC, CPO
 ic <- lapply(res_fit, function(fit) {
@@ -277,3 +270,120 @@ variance_df <- map(res_fit, function(fit)
   )
 
 write_csv(variance_df, "variance-proportions.csv", na = "")
+
+#' Artefact: Smoothed district indicator estimates for multinomial models
+res_df <- res_df %>%
+  #' Make it clear which of the estimates are raw and which are from the model (smoothed)
+  rename(
+    estimate_raw = estimate,
+    ci_lower_raw = ci_lower,
+    ci_upper_raw = ci_upper,
+    estimate_smoothed = prob_mean,
+    median_smoothed = prob_median,
+    ci_lower_smoothed = prob_lower,
+    ci_upper_smoothed = prob_upper
+  ) %>%
+  mutate(iso3 = iso3, .before = indicator) %>%
+  relocate(model, .before = estimate_smoothed)
+
+write_csv(res_df, "multi-sexbehav-sae.csv", na = "")
+
+#' Create plotting data
+res_plot <- res_df %>%
+  filter(area_id != iso3) %>%
+  pivot_longer(
+    cols = c(starts_with("estimate")),
+    names_to = c(".value", "source"),
+    names_pattern = "(.*)\\_(.*)"
+  ) %>%
+  left_join( #' Use this to make it an sf again
+    select(areas, area_id),
+    by = "area_id"
+  ) %>%
+  st_as_sf()
+
+#' Artefact: Cloropleths
+pdf("multi-sexbehav-sae.pdf", h = 8.25, w = 11.75)
+
+res_plot %>%
+  split(~indicator + model) %>%
+  lapply(function(x)
+    x %>%
+      mutate(
+        age_group = fct_recode(age_group,
+                               "15-19" = "Y015_019",
+                               "20-24" = "Y020_024",
+                               "25-29" = "Y025_029"
+        ),
+        source = fct_relevel(source, "raw", "smoothed") %>%
+          fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed")
+      ) %>%
+      ggplot(aes(fill = estimate)) +
+      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+      scale_fill_viridis_c(option = "C", label = label_percent()) +
+      facet_grid(age_group ~ survey_id + source) +
+      theme_minimal() +
+      labs(
+        title = paste0(substr(x$survey_id[1], 1, 3), ": ", x$indicator[1], " (", x$model[1], ")")
+      ) +
+      theme(
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        strip.text = element_text(face = "bold"),
+        plot.title = element_text(face = "bold"),
+        legend.position = "bottom",
+        legend.key.width = unit(4, "lines")
+      )
+  )
+
+dev.off()
+
+#' Artefact: Special revisions cloropleths
+age_district_plot <- res_plot %>%
+  mutate(year = as.numeric(substr(survey_id, 4, 7))) %>%
+  filter(year == max(year)) %>%
+  mutate(
+    age_group = fct_recode(age_group,
+                           "15-19" = "Y015_019",
+                           "20-24" = "Y020_024",
+                           "25-29" = "Y025_029"
+    ),
+    indicator_plot = fct_recode(indicator,
+                           "Not sexually active" = "nosex12m",
+                          "One cohabiting partner" = "sexcohab",
+                          "Non-regular or multiple partners(s) +" = "sexnonregplus"
+    ),
+    source = fct_relevel(source, "raw", "smoothed") %>%
+      fct_recode("Survey raw" = "raw", "Smoothed" = "smoothed"),
+    source_extended = case_when(
+      source == "Survey raw" ~ "Survey raw",
+      source == "Smoothed" & model == "Model 4" ~ "Base",
+      source == "Smoothed" & model == "Model 4 extended" ~ "Extended"
+    ),
+    source_extended = fct_relevel(source_extended, "Survey raw", "Base", "Extended")
+  ) %>%
+  split(~ indicator) %>%
+  lapply(function(x)
+    x %>%
+      ggplot(aes(fill = estimate)) +
+      geom_sf(size = 0.1, colour = scales::alpha("grey", 0.25)) +
+      scale_fill_viridis_c(option = "C", label = label_percent()) +
+      facet_grid(age_group ~ source_extended) +
+      labs(
+        title = ,
+        caption = paste0(
+          "Indicator: ", x$indicator_plot[1], "; Survey: ", x$survey_id[1], "\n",
+          "Extended includes age-district interaction effects"
+        ),
+        fill = "Estimate"
+      ) +
+      theme_minimal() +
+      theme(
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+      )
+  )
+
+imap(age_district_plot, \(x, name) ggsave(paste0("age-district-plot-", tolower(name), ".png"), x, h = 7.5, w = 6.25))
