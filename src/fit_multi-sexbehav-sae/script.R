@@ -1,5 +1,5 @@
 #' Uncomment and run the two line below to resume development of this script
-# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = FALSE, fewer_countries = FALSE))
+# orderly::orderly_develop_start("fit_multi-sexbehav-sae", parameters = list(lightweight = TRUE, fewer_countries = FALSE))
 # setwd("src/fit_multi-sexbehav-sae")
 
 sf_use_s2(FALSE)
@@ -344,6 +344,7 @@ if(include_interactions) {
 if(lightweight) {
   formulas <- list(formula2)
   models <- list("Model 2")
+  S <- 100
 }
 
 #' tryCatch version for safety
