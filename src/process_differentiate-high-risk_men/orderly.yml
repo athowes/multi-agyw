@@ -20,12 +20,15 @@ packages:
   - multi.utils
   - parallel
 
+resources:
+  - multi-sexbehav-sae-samples.rds
+
 depends:
   - fit_multi-sexbehav-sae_men:
       id: latest
       use:
         depends/best-multi-sexbehav-sae.csv: best-multi-sexbehav-sae.csv
-  - process_sampling_men:
-      id: latest
-      use:
-        depends/multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds
+  #- process_sampling_men:
+  #    id: latest
+  #    use:
+  #      depends/multi-sexbehav-sae-samples.rds: multi-sexbehav-sae-samples.rds

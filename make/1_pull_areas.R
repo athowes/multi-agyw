@@ -23,4 +23,4 @@ iso3 <- multi.utils::priority_iso3()
 #' orderly::orderly_pull_archive("moz_data_areas", remote = "naomi2", id = "latest(parameter:version == 2022)")
 #' orderly::orderly_pull_archive("eth_data_areas", remote = "naomi2", id = "latest(parameter:version == 2022)")
 
-run_commit_push("process_areas")
+orderly_run("process_areas")

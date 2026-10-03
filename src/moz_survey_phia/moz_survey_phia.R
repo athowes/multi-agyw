@@ -1,5 +1,8 @@
 #' ## Load area hierarchy
-areas <- read_sf("depends/moz_areas.geojson")
+orderly_dependency("process_areas",
+                   "latest()",
+                   "moz_areas.geojson")
+areas <- read_sf("moz_areas.geojson")
 
 #' #' Authenticate SharePoint login
 #' sharepoint <- spud::sharepoint$new("https://imperiallondon.sharepoint.com/")

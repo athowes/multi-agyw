@@ -1,0 +1,30 @@
+script: zwe_survey_phia.R
+
+parameters:
+  version:
+    default: "2022"
+  iso3:
+    default: "ZWE"
+
+artefacts:
+  - data:
+      description: PHIA survey indicator dataset
+      filenames:
+        - zwe2020phia_hiv_indicators.csv
+
+
+packages:
+  - dplyr
+  - haven
+  - naomi
+  - naomi.utils  
+  - readr  
+  - sf
+  - spud
+  - tidyr
+
+depends:
+  aaa_areas_pull:
+    id: latest(parameter:version == version && parameter:iso3 == iso3)
+    use:
+      depends/naomi_areas.geojson: naomi_areas.geojson

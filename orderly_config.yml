@@ -1,41 +1,42 @@
-remote:
-  real:
-    driver: orderly.sharepoint::orderly_remote_sharepoint
-    args:
-      url: https://imperiallondon.sharepoint.com
-      site: HIVInferenceGroup-WP
-      path: Shared Documents/orderly/multi-agyw
-  naomi:
-    driver: orderly.sharepoint::orderly_remote_sharepoint
-    args:
-      url: https://imperiallondon.sharepoint.com
-      site: HIVInferenceGroup-WP
-      path: Shared Documents/orderly/naomi-data-orderly
-  naomi2:
-    driver: orderly.sharepoint::orderly_remote_sharepoint
-    args:
-      url: https://imperiallondon.sharepoint.com
-      site: HIVInferenceGroup-WP
-      path: Shared Documents/orderly/naomi-orderly-naomi2
-  malawi:
-    driver: orderly.sharepoint::orderly_remote_sharepoint
-    args:
-      url: https://imperiallondon.sharepoint.com
-      site: HIVInferenceGroup-WP
-      path: Shared Documents/orderly/mwi-hiv-orderly
-  fertility:
-    driver: orderly.sharepoint::orderly_remote_sharepoint
-    args:
-      url: https://imperiallondon.sharepoint.com
-      site: HIVInferenceGroup-WP
-      path: Shared Documents/orderly/fertility
+# remote:
+#   real:
+#     driver: orderly.sharepoint::orderly_remote_sharepoint
+#     args:
+#       url: https://imperiallondon.sharepoint.com
+#       site: HIVInferenceGroup-WP
+#       path: Shared Documents/orderly/multi-agyw
+#   naomi:
+#     driver: orderly.sharepoint::orderly_remote_sharepoint
+#     args:
+#       url: https://imperiallondon.sharepoint.com
+#       site: HIVInferenceGroup-WP
+#       path: Shared Documents/orderly/naomi-data-orderly
+#   naomi2:
+#     driver: orderly.sharepoint::orderly_remote_sharepoint
+#     args:
+#       url: https://imperiallondon.sharepoint.com
+#       site: HIVInferenceGroup-WP
+#       path: Shared Documents/orderly/naomi-orderly-naomi2
+#   malawi:
+#     driver: orderly.sharepoint::orderly_remote_sharepoint
+#     args:
+#       url: https://imperiallondon.sharepoint.com
+#       site: HIVInferenceGroup-WP
+#       path: Shared Documents/orderly/mwi-hiv-orderly
+#   fertility:
+#     driver: orderly.sharepoint::orderly_remote_sharepoint
+#     args:
+#       url: https://imperiallondon.sharepoint.com
+#       site: HIVInferenceGroup-WP
+#       path: Shared Documents/orderly/fertility
+#
+# fields:
+#   requester:
+#     required: false
+#   author:
+#     required: false
+#
+# vault:
+#   addr: https://vault.dide.ic.ac.uk:8200
 
-fields:
-  requester:
-    required: false
-  author:
-    required: false
-
-vault:
-  addr: https://vault.dide.ic.ac.uk:8200
-
+minimum_orderly_version: 1.99.90

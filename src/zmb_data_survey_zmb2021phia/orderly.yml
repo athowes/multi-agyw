@@ -1,0 +1,39 @@
+script: script.R
+
+parameters:
+  version:
+    default: "2022"
+  iso3:
+    default: "ZMB"
+
+artefacts:
+  - data:
+      description: PHIA survey indicator dataset
+      filenames:
+        - zmb2021phia_hiv_indicators.csv
+  - data:
+      description: PHIA survey boundary comparison
+      filenames:
+        - check/zambia-reallocated-districts.pdf
+        - check/zamphia-survey-regions.pdf
+        - check/zamphia-survey-regions_clusters.pdf	
+
+packages:
+  - dplyr
+  - ggplot2
+  - naomi
+  - naomi.utils
+  - readr
+  - readxl
+  - stringr
+  - sf
+  - spud  
+  - tidyr
+
+depends:
+  aaa_areas_pull:
+    id: latest(parameter:version == version && parameter:iso3 == iso3)
+    use:
+      depends/naomi_areas.geojson: naomi_areas.geojson
+
+

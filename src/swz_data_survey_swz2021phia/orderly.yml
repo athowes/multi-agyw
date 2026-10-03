@@ -1,0 +1,40 @@
+script: swz_survey.R
+
+parameters:
+  version:
+    default: "2023"
+  iso3:
+    default: "SWZ"
+
+artefacts:
+  - data:
+      description: survey indicator dataset
+      filenames:
+        - swz2021phia_hiv_indicators.csv
+  - staticgraph:
+       description: UPHIA survey regions vs. area hierarchy
+       filenames:
+         - check/swz-phia-survey-region-boundaries.png
+
+
+packages:
+  - dplyr
+  - forcats
+  - ggplot2
+  - spud
+  - readr
+  - sf
+  - tidyr
+  - naomi
+  - naomi.utils
+
+
+
+depends:
+
+ aaa_areas_pull:
+    id: latest(parameter:version == version && parameter:iso3 == iso3)
+    use:
+      depends/naomi_areas.geojson: naomi_areas.geojson
+
+

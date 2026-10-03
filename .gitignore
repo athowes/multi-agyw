@@ -552,3 +552,167 @@ src/zwe_survey_phia/ZWE/geospatial/PHIA Geospatial Data Request Form  v5_ZIMPHIA
 src/zwe_survey_phia/ZWE/geospatial/Zimbabwe PR Geospatial Data 20210414.zip
 src/zwe_survey_phia/ZWE/ZIMPHIA data request_2021-04-26.png
 check/cog_dhs-cluster-check.pdf
+
+# ---VVV--- added by orderly ---VVV----------------
+# Don't manually edit content between these markers
+.outpack
+orderly_envir.yml
+draft
+archive
+# ---^^^--- added by orderly ---^^^----------------
+src/bwa_survey_bais_v/baisv2021adultbio.dta
+src/bwa_survey_bais_v/baisv2021adultind.dta
+src/bwa_survey_bais_v/baisv2021child.dta
+src/bwa_survey_bais_v/baisv2021hh.dta
+src/bwa_survey_bais_v/baisv2021roster.dta
+src/gha_survey_mics2017/GHA2017MICS.csv
+src/gha_survey_mics2017/GHA2017MICS.rds
+src/gha_survey_mics2017_men/GHA2017MICS.csv
+src/gha_survey_mics2017_men/GHA2017MICS.rds
+src/gmb_survey_mics2018/GMB2018MICS.csv
+src/gmb_survey_mics2018/GMB2018MICS.rds
+src/gmb_survey_mics2018_men/GMB2018MICS.csv
+src/gmb_survey_mics2018_men/GMB2018MICS.rds
+src/lso_data_survey_lso2020phia/LSO2020PHIA/datasets/LePHIA 2020 Geospatial Data (CSV).zip
+src/lso_data_survey_lso2020phia/LSO2020PHIA/datasets/LePHIA 2020 Geospatial Data (DTA).zip
+src/lso_data_survey_lso2020phia/LSO2020PHIA/datasets/LePHIA 2020 Geospatial Data (SAS).zip
+src/lso_data_survey_lso2020phia/LSO2020PHIA/datasets/LePHIA 2020 Household (CSV).zip
+src/lso_data_survey_lso2020phia/LSO2020PHIA/datasets/LePHIA 2020 Household (DTA).zip
+src/lso_data_survey_lso2020phia/LSO2020PHIA/datasets/LePHIA 2020 Household (SAS).zip
+src/lso_data_survey_lso2020phia/LSO2020PHIA/datasets/LePHIA 2020 Intermediary Weights (CSV).zip
+src/lso_data_survey_lso2020phia/LSO2020PHIA/datasets/LePHIA 2020 Intermediary Weights (DTA).zip
+src/lso_data_survey_lso2020phia/LSO2020PHIA/datasets/LePHIA 2020 Intermediary Weights (SAS).zip
+src/lso_survey_mics2018/LSO2018MICS.csv
+src/lso_survey_mics2018/LSO2018MICS.rds
+src/mics_rds/mics_surveys_catalogue.csv
+src/mics_rds/raw/2025-10-30_mics_raw.zip
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/datasets/MPHIA 2020-2021 Geospatial Data (CSV).zip
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/datasets/MPHIA 2020-2021 Geospatial Data (DTA).zip
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/datasets/MPHIA 2020-2021 Geospatial Data (SAS).zip
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/datasets/MPHIA 2020-2021 Household Interview and Biomarker Data (CSV).zip
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/datasets/MPHIA 2020-2021 Household Interview and Biomarker Data (DTA).zip
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/datasets/MPHIA 2020-2021 Household Interview and Biomarker Data (SAS).zip
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/datasets/MPHIA 2020-2021 Intermediary Weights (CSV).zip
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/datasets/MPHIA 2020-2021 Intermediary Weights (DTA).zip
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/datasets/MPHIA 2020-2021 Intermediary Weights (SAS).zip
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/MPHIA 2020-2021 Documentation.zip
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/MPHIA 2020-2021 Documentation/MPHIA 2020-2021 Data Manual Supplement Attachment 1 - Questionnaires.pdf
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/MPHIA 2020-2021 Documentation/MPHIA 2020-2021 Data Manual Supplement Attachment 2 - Codebook.pdf
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/MPHIA 2020-2021 Documentation/MPHIA 2020-2021 Data Manual Supplement Attachment 3 - Flow Diagrams for Analytic Variables.pdf
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/MPHIA 2020-2021 Documentation/MPHIA 2020-2021 Data Manual Supplement Attachment 4 - HIV Testing Methodology Diagram.pdf
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/MPHIA 2020-2021 Documentation/MPHIA 2020-2021 Data Manual Supplement Attachment 5 - Sampling and Weighting Technical Report.pdf
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/MPHIA 2020-2021 Documentation/MPHIA 2020-2021 Data Manual Supplement.pdf
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/MPHIA 2020-2021 Documentation/MPHIA 2020-2021 R Intro Code.R
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/MPHIA 2020-2021 Documentation/MPHIA 2020-2021 SAS Formats.sas
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/MPHIA 2020-2021 Documentation/MPHIA 2020-2021 SAS Intro Code.sas
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/MPHIA 2020-2021 Documentation/MPHIA 2020-2021 Stata Intro Code.do
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/PHIA2 Standard Documentation_2023-11-28.zip
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/PHIA2 Standard Documentation_2023-11-28/Guide to getting started with PHIA data 1.0.pdf
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/PHIA2 Standard Documentation_2023-11-28/PHIA 2 Data Manual Attachment 1 - Tabulation Plan v1.0.xlsx
+src/mwi_data_survey_mwi2020phia/MWI2020PHIA/documentation/PHIA2 Standard Documentation_2023-11-28/PHIA 2 Data Manual v1.0.pdf
+src/mwi_survey_mics2019/MWI2019MICS.csv
+src/mwi_survey_mics2019/MWI2019MICS.rds
+src/mwi_survey_mics2019_men/MWI2019MICS.csv
+src/mwi_survey_mics2019_men/MWI2019MICS.rds
+src/nga_survey_mics2016/NGA2016MICS.csv
+src/nga_survey_mics2016/NGA2016MICS.rds
+src/nga_survey_mics2016_men/NGA2016MICS.csv
+src/nga_survey_mics2016_men/NGA2016MICS.rds
+src/nga_survey_mics2021/NGA2021MICS.csv
+src/nga_survey_mics2021/NGA2021MICS.rds
+src/nga_survey_mics2021/nga_areas.geojson
+src/nga_survey_mics2021_men/NGA2021MICS.csv
+src/nga_survey_mics2021_men/NGA2021MICS.rds
+src/process_differentiate-high-risk/multi-sexbehav-sae-samples.rds
+src/process_differentiate-high-risk_men/multi-sexbehav-sae-samples.rds
+src/sle_survey_mics2017/SLE2017MICS.csv
+src/sle_survey_mics2017/SLE2017MICS.rds
+src/sle_survey_mics2017_men/SLE2017MICS.csv
+src/sle_survey_mics2017_men/SLE2017MICS.rds
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/datasets/SHIMS3 2021 Geospatial Data (CSV).zip
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/datasets/SHIMS3 2021 Geospatial Data (DTA).zip
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/datasets/SHIMS3 2021 Geospatial Data (SAS).zip
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/datasets/SHIMS3 2021 Household Interview and Biomarker Datasets (CSV).zip
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/datasets/SHIMS3 2021 Household Interview and Biomarker Datasets (DTA).zip
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/datasets/SHIMS3 2021 Household Interview and Biomarker Datasets (SAS).zip
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/datasets/SHIMS3 2021 Intermediary Weights (CSV).zip
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/datasets/SHIMS3 2021 Intermediary Weights (DTA).zip
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/datasets/SHIMS3 2021 Intermediary Weights (SAS).zip
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/documentation/SHIMS3 2021 Stata Intro Code.do
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/documentation/SHIMS3 2021 SAS Intro Code.sas
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/documentation/SHIMS3 2021 SAS Formats.sas
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/documentation/SHIMS3 2021 R Intro Code.R
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/documentation/SHIMS3 2021 Data Manual Supplement.pdf
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/documentation/SHIMS3 2021 Data Manual Supplement Attachment 6 - Additional Table Specifications.xlsx
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/documentation/SHIMS3 2021 Data Manual Supplement Attachment 5 - Sampling and Weighting Technical Report.pdf
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/documentation/SHIMS3 2021 Data Manual Supplement Attachment 4 - HIV Testing Methodology Diagram.pdf
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/documentation/SHIMS3 2021 Data Manual Supplement Attachment 3 - Flow Diagrams for Analytic Variables.pdf
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/documentation/SHIMS3 2021 Data Manual Supplement Attachment 2 - Codebook.pdf
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/documentation/SHIMS3 2021 Data Manual Supplement Attachment 1 - Questionnaires.pdf
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/documentation/PHIA 2 Data Manual v1.0.pdf
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/documentation/PHIA 2 Data Manual Attachment 1 - Tabulation Plan v1.0.xlsx
+src/swz_data_survey_swz2021phia/SWZ2021PHIA/documentation/Guide to getting started with PHIA data 1.0.pdf
+src/swz_survey_mics2021/SWZ2021MICS.csv
+src/swz_survey_mics2021/SWZ2021MICS.rds
+src/swz_survey_mics2021/SWZ2022MICS.csv
+src/swz_survey_mics2021_men/SWZ2021MICS.csv
+src/swz_survey_mics2021_men/SWZ2021MICS.rds
+src/swz_survey_mics2021_men/SWZ2022MICS.csv
+src/tza_data_survey_tza2022phia/TZA/THIS2_2022_unaids_dataset2.csv
+src/tza_survey_phia/TZA/THIS2_2022_unaids_dataset2.csv
+src/uga_data_survey_uga2020phia/UGA2021PHIA/datasets/UPHIA 2020-2021 Geospatial Data (CSV).zip
+src/uga_data_survey_uga2020phia/UGA2021PHIA/datasets/UPHIA 2020-2021 Geospatial Data (DTA).zip
+src/uga_data_survey_uga2020phia/UGA2021PHIA/datasets/UPHIA 2020-2021 Geospatial Data (SAS).zip
+src/uga_data_survey_uga2020phia/UGA2021PHIA/datasets/UPHIA 2020-2021 Household and Interview and Biomarker Datasets (CSV).zip
+src/uga_data_survey_uga2020phia/UGA2021PHIA/datasets/UPHIA 2020-2021 Household and Interview and Biomarker Datasets (DTA).zip
+src/uga_data_survey_uga2020phia/UGA2021PHIA/datasets/UPHIA 2020-2021 Household and Interview and Biomarker Datasets (SAS).zip
+src/uga_data_survey_uga2020phia/UGA2021PHIA/datasets/UPHIA 2020-2021 Intermediary Weights (CSV).zip
+src/uga_data_survey_uga2020phia/UGA2021PHIA/datasets/UPHIA 2020-2021 Intermediary Weights (DTA).zip
+src/uga_data_survey_uga2020phia/UGA2021PHIA/datasets/UPHIA 2020-2021 Intermediary Weights (SAS).zip
+src/uga_data_survey_uga2020phia/UGA2021PHIA/documentation/12-09-2024-18-54-24-66e338e0bbc78.zip
+src/uga_data_survey_uga2020phia/UGA2021PHIA/documentation/UPHIA 2020-2021 Data Manual Supplement Attachment 1 - Questionnaires.pdf
+src/uga_data_survey_uga2020phia/UGA2021PHIA/documentation/UPHIA 2020-2021 Data Manual Supplement Attachment 2 - Codebook.pdf
+src/uga_data_survey_uga2020phia/UGA2021PHIA/documentation/UPHIA 2020-2021 Data Manual Supplement Attachment 3 - Flow Diagrams for Analytic Variables.pdf
+src/uga_data_survey_uga2020phia/UGA2021PHIA/documentation/UPHIA 2020-2021 Data Manual Supplement Attachment 4 - Testing Methodology Diagram.pdf
+src/uga_data_survey_uga2020phia/UGA2021PHIA/documentation/UPHIA 2020-2021 Data Manual Supplement Attachment 5 - Sampling and Weighting Technical Report.pdf
+src/uga_data_survey_uga2020phia/UGA2021PHIA/documentation/UPHIA 2020-2021 Data Manual Supplement Attachment 6 - Additional Table Specifications.xlsx
+src/uga_data_survey_uga2020phia/UGA2021PHIA/documentation/UPHIA 2020-2021 Data Manual Supplement.pdf
+src/uga_data_survey_uga2020phia/UGA2021PHIA/documentation/UPHIA 2020-2021 R Intro Code.R
+src/uga_data_survey_uga2020phia/UGA2021PHIA/documentation/UPHIA 2020-2021 SAS Formats.sas
+src/uga_data_survey_uga2020phia/UGA2021PHIA/documentation/UPHIA 2020-2021 SAS Intro Code.sas
+src/uga_data_survey_uga2020phia/UGA2021PHIA/documentation/UPHIA 2020-2021 STATA Intro Code.do
+src/zmb_data_survey_zmb2021phia/gadm36_ZMB_1_sf.rds
+src/zmb_data_survey_zmb2021phia/ZMB2021PHIA/datasets/ZAMPHIA 2021 PU Package/PHIA 2 Data Manual Attachment 1 - Tabulation Plan v1.0.xlsx
+src/zmb_data_survey_zmb2021phia/ZMB2021PHIA/datasets/ZAMPHIA 2021 PU Package/PHIA 2 Data Manual v1.0.docx
+src/zmb_data_survey_zmb2021phia/ZMB2021PHIA/datasets/ZAMPHIA 2021 PU Package/ZAMPHIA 2021 Data Manual Supplement 20230417.docx
+src/zmb_data_survey_zmb2021phia/ZMB2021PHIA/ZAMPHIA 2021 Geospatial Data and Documentation.zip
+src/zmb_data_survey_zmb2021phia/ZMB2021PHIA/ZAMPHIA 2021 PU Package.zip
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/datasets/ZIMPHIA 2020 Drug Resistance Data (CSV).zip
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/datasets/ZIMPHIA 2020 Drug Resistance Data (DTA).zip
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/datasets/ZIMPHIA 2020 Drug Resistance Data (SAS).zip
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/datasets/ZIMPHIA 2020 Geospatial Data (CSV).zip
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/datasets/ZIMPHIA 2020 Geospatial Data (DTA).zip
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/datasets/ZIMPHIA 2020 Geospatial Data (SAS).zip
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/datasets/ZIMPHIA 2020 Household (CSV).zip
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/datasets/ZIMPHIA 2020 Household (DTA).zip
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/datasets/ZIMPHIA 2020 Household (SAS).zip
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/datasets/ZIMPHIA 2020 Intermediary Weights (CSV).zip
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/datasets/ZIMPHIA 2020 Intermediary Weights (DTA).zip
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/datasets/ZIMPHIA 2020 Intermediary Weights (SAS).zip
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/documentation/Guide to getting started with PHIA data 1.0.pdf
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/documentation/PHIA 2 Data Manual Attachment 1 - Tabulation Plan v1.0.xlsx
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/documentation/PHIA 2 Data Manual v1.0.pdf
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/documentation/ZIMPHIA 2020 Data Manual Supplement Attachment 1 - Questionnaires.pdf
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/documentation/ZIMPHIA 2020 Data Manual Supplement Attachment 2 - Codebook.pdf
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/documentation/ZIMPHIA 2020 Data Manual Supplement Attachment 3 - Flow Diagrams for Analytic Variables.pdf
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/documentation/ZIMPHIA 2020 Data Manual Supplement Attachment 4 - HIV Testing Methodology Diagram.pdf
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/documentation/ZIMPHIA 2020 Data Manual Supplement Attachment 5 - Sampling and Weighting Technical Report.pdf
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/documentation/ZIMPHIA 2020 Data Manual Supplement Attachment 6 - Additional Table Specifications.xlsx
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/documentation/ZIMPHIA 2020 Data Manual Supplement.pdf
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/documentation/ZIMPHIA 2020 R Intro Code.R
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/documentation/ZIMPHIA 2020 SAS Formats.sas
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/documentation/ZIMPHIA 2020 SAS Intro Code.sas
+src/zwe_data_survey_zwe2020phia/ZWE2020PHIA/documentation/ZIMPHIA 2020 STATA Intro Code.do
+src/zwe_survey_mics2019/ZWE2019MICS.csv
+src/zwe_survey_mics2019/ZWE2019MICS.rds
+check/ben_dhs-cluster-check.pdf

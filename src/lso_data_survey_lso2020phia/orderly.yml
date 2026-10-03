@@ -1,0 +1,39 @@
+script: lso_survey_phia.R
+
+parameters:
+  version:
+    default: "2022"
+  iso3:
+    default: "LSO"
+
+artefacts:
+  - data:
+      description: LePHIA 2020 survey indicator data set
+      filenames:
+        - lso2020phia_hiv_indicators.csv
+  - data:
+      description: LePHIA 2020 survey microdata
+      filenames:
+        - lso2020phia_survey_meta.csv
+        - lso2020phia_survey_regions.csv
+        - lso2020phia_survey_clusters.csv
+        - lso2020phia_survey_individuals.csv
+        - lso2020phia_survey_biomarker.csv
+        - lso2020phia_survey_circumcision.csv
+
+
+packages:
+  - dplyr
+  - forcats
+  - naomi
+  - naomi.utils
+  - readr
+  - sf  
+  - spud
+  - tidyr
+
+depends:
+  aaa_areas_pull:
+    id: latest(parameter:version == version && parameter:iso3 == iso3)
+    use:
+      depends/naomi_areas.geojson: naomi_areas.geojson
